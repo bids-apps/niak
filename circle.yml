@@ -20,13 +20,11 @@ dependencies:
 
 test:
   override:
-    - docker run --read-only -it -v ${HOME}/outputs:/outputs -v ${HOME}/data/sample_test:/bids_dataset bids/${CIRCLE_PROJECT_REPONAME,,} participant /bids_dataset /outputs --participant_label 2 :
+    - docker run --read-only -it -v ${HOME}/outputs:/outputs -v ${HOME}/data/sample_test:/bids_dataset bids/${CIRCLE_PROJECT_REPONAME,,} participant /bids_dataset /outputs --participant_label 0274 :
         timeout: 21600
-    - docker run --read-only -it -v ${HOME}/outputs:/outputs -v ${HOME}/data/sample_test:/bids_dataset bids/${CIRCLE_PROJECT_REPONAME,,} participant /bids_dataset /outputs --participant_label 3 :
+    - docker run --read-only -it -v ${HOME}/outputs:/outputs -v ${HOME}/data/sample_test:/bids_dataset bids/${CIRCLE_PROJECT_REPONAME,,} participant /bids_dataset /outputs --participant_label 0275 :
         timeout: 21600
-    - docker run --read-only -it -v ${HOME}/outputs:/outputs -v ${HOME}/data/sample_test:/bids_dataset bids/${CIRCLE_PROJECT_REPONAME,,} participant /bids_dataset /outputs --participant_label 4 :
-        timeout: 21600
-    - docker run --read-only -it -v ${HOME}/outputs:/outputs -v ${HOME}/data/sample_test:/bids_dataset bids/${CIRCLE_PROJECT_REPONAME,,} group /bids_dataset /outputs --participant_label 2 3 4 :
+    - docker run --read-only -it -v ${HOME}/outputs:/outputs -v ${HOME}/data/sample_test:/bids_dataset bids/${CIRCLE_PROJECT_REPONAME,,} group /bids_dataset /outputs --participant_label 0274 0275 :
         timeout: 21600
 
 deployment:
