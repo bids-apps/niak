@@ -47,7 +47,7 @@ jobs:
             docker run -it --read-only --volumes-from data bids/niak participant /bids_dataset /outputs --n_thread 2 --participant_label "274"
             docker run -it --read-only --volumes-from data bids/niak group /bids_dataset /outputs --n_thread 2 --participant_label "274-275"
             docker cp data:/outputs /outputs
-            sudo chmod 777 -R /outputs
+            chmod 777 -R /outputs
       - store_artifacts:
           path: /outputs
 #      - save_cache:

@@ -103,7 +103,7 @@ def main(args=None):
     parser.add_argument("--suppress_vol", default=0, help="The number of volumes that are suppressed at the begining of the time series")
 
     parser.add_argument("--skip_slice_timing", action="store_true",
-                        help="Skip all slice timing procedure")
+                        help="Skip all slice timing procedures")
 
 
 
