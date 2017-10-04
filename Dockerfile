@@ -6,7 +6,6 @@ ENV NIAK_ROOT /usr/local/niak
 ENV NIAK_CONFIG_PATH /local_config
 ENV NIAK_SANDBOX_ROOT /sandbox
 ENV NIAK_SANDBOX ${NIAK_SANDBOX_ROOT}/home
-ENV HOME ${NIAK_SANDBOX}
 ENV TERM xterm-256color
 
 # Install NIAK  
@@ -67,10 +66,11 @@ RUN pip install pyyaml
 ENV PYTHONPATH=/code/util
 RUN ln -s $NIAK_ROOT /code
 ENV TMPDIR=/outputs/tmp
+ENV HOME ${TMPDIR}
 
 ENV NIAK_CONFIG_PATH /outputs/tmp/local_config
 RUN mkdir /oasis /projects  /local-scratch
-WORKDIR /outputs
+WORKDIR /tmp
 ENTRYPOINT ["/code/util/bin/bids_app.py"]
 CMD ["--help"]
 ADD util/  ${NIAK_ROOT}/util/
