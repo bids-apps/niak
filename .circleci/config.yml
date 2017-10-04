@@ -7,12 +7,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-#      - restore_cache:
-#          keys:
-#            - v1-{{ .Branch }}
-#          paths:
-#            - /caches/app.tar
-#            - /caches/sample_test
       - run:
           name: Install dependencies
           command: |
@@ -41,32 +35,22 @@ jobs:
           name: Run tests
           command: |
             mkdir -p /outputs
-            docker create -v /bids_dataset -v  /outputs --name data alpine /bin/true
+            chmod 777  /outputs
+            [ ! "$(docker ps -a | grep data)" ] && docker create -v /bids_dataset -v  /outputs --name data alpine /bin/true
             docker cp  /caches/bids_dataset data:/
             docker run -it --read-only --volumes-from data bids/niak participant /bids_dataset /outputs --n_thread 2 --participant_label "275"
             docker run -it --read-only --volumes-from data bids/niak participant /bids_dataset /outputs --n_thread 2 --participant_label "274"
             docker run -it --read-only --volumes-from data bids/niak group /bids_dataset /outputs --n_thread 2 --participant_label "274-275"
-            docker cp data:/outputs /outputs
+            docker cp data:/outputs /
             chmod 777 -R /outputs
       - store_artifacts:
           path: /outputs
-#      - save_cache:
-#          key: v1-{{ .Branch }}-{{ epoch }}
-#          paths:
-#            - /caches/app.tar
-#            - /caches/sample_test
-#      - run:
-#          name: Save Docker image layer cache
-#          command: |
-#            mkdir -p /caches
-#            docker save -o /caches/app.tar bid/"${CIRCLE_PROJECT_REPONAME}"
-
       - deploy:
           name: Push application Docker image
           command: |
-            if [[ "${CIRCLE_BRANCH}" == "master" and -n "${DOCKER_PASS}" ]]; then
+            if [[ "${CIRCLE_BRANCH}" == "master" && -n "${DOCKER_PASS}" ]]; then
               docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASS}
               docker push bids/${CIRCLE_PROJECT_REPONAME}:latest
-              docker tag bids/${CIRCLE_PROJECT_REPONAME} bids/${CIRCLE_PROJECT_REPONAME,,}:${CIRCLE_TAG}
+              docker tag bids/${CIRCLE_PROJECT_REPONAME} bids/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_TAG}
               docker push bids/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_TAG};
             fi
