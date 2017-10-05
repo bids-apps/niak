@@ -25,11 +25,10 @@ jobs:
           command: |
             if [[ ! -e "/caches/bids_dataset" ]]; then
               mkdir -p /caches/sample_test
-              wget -c -P /caches https://github.com/BIDS-Apps/niak/releases/download/data_for_test/sample_test.tgz
+              wget -c -P /caches https://github.com/BIDS-Apps/niak/releases/download/data_for_test/bids_dataset.tgz
               cd /caches
-              tar -zxvf sample_test.tgz
-              mv sample_test bids_dataset
-              rm sample_test.tgz
+              tar -zxvf bids_dataset.tgz
+              rm bids_dataset.tgz
             fi
       - run:
           name: Run tests
