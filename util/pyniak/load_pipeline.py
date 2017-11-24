@@ -339,7 +339,7 @@ class BaseBids(object):
         try:
             log.info(self.folder_out)
             p = subprocess.Popen(self.octave_cmd)
-            run_worker(self.folder_out, 1)
+            #run_worker(self.folder_out, 1)
             p.wait()
         finally:
             self.rsync_to_finale_folder()
@@ -533,7 +533,6 @@ def run_worker(dir, num):
     while not os.path.exists("{0}/logs/tmp/".format(dir)):
         # sleep long enough to be last on the race condition TODO (FIND A BETTER WAY TO DO THAT)
         time.sleep(5)
-    # return subprocess.Popen(['ls', '-als', '/usr/local/bin'])
     return subprocess.Popen(cmd)
 
 
