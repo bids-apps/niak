@@ -12,3 +12,9 @@ This pipeline first aims at reducing various noise sources that compromise the i
 
 If the problems seems to be related to the app itself, you can always create a [new issue on our github page.](https://github.com/BIDS-Apps/niak/issues)  
 If is seems to come from NIAK itself, please [report you issues on the NIAK github page](https://github.com/SIMEXP/niak/issues)
+
+## Usage 
+Type
+```
+docker run -it --read-only --volumes-from data bids/niak --help
+```
