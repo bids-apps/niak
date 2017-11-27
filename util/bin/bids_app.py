@@ -55,10 +55,6 @@ def main(args=None):
 
     # parser.add_argument("pipeline", default=None)
 
-    parser.add_argument('analysis_level', help='Level of the analysis that will be performed. '
-                    'Multiple participant level analyses can be run independently '
-                    '(in parallel) using the same output_dir.',
-                    choices=['participant', 'group'])
 
     parser.add_argument('bids_dir', help='The directory with the input dataset '
                     'formatted according to the BIDS standard.')
@@ -68,10 +64,13 @@ def main(args=None):
                     'this folder should be prepopulated with the results of the'
                     'participant level analysis.')
 
+    parser.add_argument('analysis_level', help='Level of the analysis that will be performed. '
+                    'Multiple participant level analyses can be run independently '
+                    '(in parallel) using the same output_dir.',
+                    choices=['participant', 'group'])
+
     parser.add_argument('-v', '--version', action='version',
                         version='BIDS-App example version {}'.format(__version__))
-
-    # parser.add_argument('--config_file', '-c', help='a yaml config file with the preprocessing configs')
 
     parser.add_argument("--participant_label", nargs="+",
                         help='The label(s) of the participant(s) that should be analyzed. The label '
@@ -82,15 +81,16 @@ def main(args=None):
 
     parser.add_argument('--n_thread', default=1, help="Number of threads to compute niak")
 
-
     ## Slice timing options
-    parser.add_argument('--type_scaner', default="", help="Type of MR scanner. The only value that will "
-                                                                  "change something to the processing here is 'Siemens'"
-                                                                 ", which has different conventions for interleaved "
-                                                                  "acquisitions.")
+    parser.add_argument('--type_scaner', default="", type=str.capitalize
+                        , help="Type of MR scanner. The only value that will change something to the processing here "
+                               "is 'Siemens', which has different conventions for interleaved acquisitions."
+                        , choices=["", "Siemens"])
+
     aq_type = ['manual', 'sequential ascending',
                'sequential descending','interleaved ascending',
                'interleaved descending']
+
     parser.add_argument('--type_acquisition', default="interleaved ascending",
                         help="Type of acquisition used by the scanner. "
                              "Possible choices are 'manual', 'sequential "
@@ -100,7 +100,8 @@ def main(args=None):
     parser.add_argument("--delay_in_tr", default=0, help="The delay (s) between the last slice of the first "
                                                          "volume and the first slice of the following volume.")
 
-    parser.add_argument("--suppress_vol", default=0, help="The number of volumes that are suppressed at the begining of the time series")
+    parser.add_argument("--suppress_vol", default=0, help="The number of volumes that are suppressed at the begining of"
+                                                          " the time series")
 
     parser.add_argument("--skip_slice_timing", action="store_true",
                         help="Skip all slice timing procedures")

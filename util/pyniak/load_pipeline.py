@@ -339,7 +339,6 @@ class BaseBids(object):
         try:
             log.info(self.folder_out)
             p = subprocess.Popen(self.octave_cmd)
-            #run_worker(self.folder_out, 1)
             p.wait()
         finally:
             self.rsync_to_finale_folder()
@@ -472,7 +471,8 @@ class FmriPreprocessBids(BaseBids):
         self._pipeline_options.append("opt.slice_timing.type_scanner = '{}'".format(type_scaner))
         self._pipeline_options.append("opt.slice_timing.delay_in_tr = {}".format(delay_in_tr))
         self._pipeline_options.append("opt.slice_timing.suppress_vol = {}".format(suppress_vol))
-        self._pipeline_options.append("opt.t1_preprocess.nu_correct.arg = '-distance {}'".format(t1_preprocess_nu_correct))
+        self._pipeline_options.append("opt.t1_preprocess.nu_correct.arg = '-distance {}'"
+                                      .format(t1_preprocess_nu_correct))
         self._pipeline_options.append("opt.time_filter.hp = {}".format(hp))
         self._pipeline_options.append("opt.time_filter.lp  = {}".format(lp))
         self._pipeline_options.append("opt.smooth_vol.fwh = {}".format(smooth_vol_fwhm))
