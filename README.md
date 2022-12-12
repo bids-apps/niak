@@ -1,8 +1,9 @@
 [![Build Status](https://circleci.com/gh/BIDS-Apps/niak.png?circle-token=:circle-token)](https://circleci.com/gh/BIDS-Apps/niak) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 # Niak
 The neuroimaging analysis kit (NIAK) is a library of pipelines for the preprocessing and mining of large functional neuroimaging data, using GNU Octave or Matlab(r), and distributed under a MIT license. This includes but is not limited to the preprocessing pipeline implemented in this app. Essential documentation can be found on the [NIAK website](http://niak.simexp-lab.org/).
 
-# In this Bids-apps
+## In this Bids-apps
 
 __This app__ implements a pipeline for __preprocessing structural and functional MRI__ datasets. You can find the full description of the NIAK fmri preprocessing pipeline [here](http://niak.simexp-lab.org/pipe_preprocessing.html).
 
@@ -14,13 +15,17 @@ If the problems seems to be related to the app itself, you can always create a [
 If is seems to come from NIAK itself, please [report you issues on the NIAK github page](https://github.com/SIMEXP/niak/issues)
 
 ## Usage
+
 To run NIAK Fmri preprocessing pipeline on your bids data set:
+
 ```
 docker run -it --rm  -v /path/to/bids_dataset:/bids_dataset:ro -v path_to_result_dir:/outputs  bids/niak /bids_dataset /outputs participant  --participant_label "XXX-YYY"
 
 docker run -it --rm  -v /path/to/bids_dataset:/bids_dataset:ro -v path_to_result_dir:/outputs  bids/niak /bids_dataset /outputs group  --participant_label "XXX-YYY"
 ```
+
 For more details, type:
+
 ```
 docker run  bids/niak --help
 ```
