@@ -16,7 +16,7 @@ jobs:
     - run:
         name: Install dependencies
         command: |
-          sudo apt-get update && sudo apt-get isntall openssl
+          sudo apt-get update && sudo apt-get install openssl
 
     - run:
         name: Build Docker image
