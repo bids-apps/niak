@@ -3,19 +3,19 @@ function [in,out,opt] = niak_brick_report_connectome(in,out,opt)
 %
 % SYNTAX: [IN,OUT,OPT] = NIAK_BRICK_REPORT_CONNECTOME(IN,OUT,OPT)
 %
-% IN.INDIVIDUAL (string) a .mat file with the quantization data for the 
+% IN.INDIVIDUAL (string) a .mat file with the quantization data for the
 %     individual overlays.
-% IN.AVERAGE    (string) a .mat file with the quantization data for the 
+% IN.AVERAGE    (string) a .mat file with the quantization data for the
 %     average overlays.
-% IN.NETWORK    (string) a .mat file with the quantization data for the 
+% IN.NETWORK    (string) a .mat file with the quantization data for the
 %     network overlay.
 %
-% OUT.RMAP (string) the name of the rmap.html report. 
+% OUT.RMAP (string) the name of the rmap.html report.
 % OUT.NETWORK (string) the name of the javascript data for the networks.
-% 
+%
 % OPT.LABEL_NETWORK (cell of strings) string labels for each network.
 % OPT.LABEL_SUBJECT (cell of strings) string labels for each network.
-% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but 
+% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but
 %    update IN, OUT and OPT.
 %
 % Copyright (c) Pierre Bellec
@@ -49,13 +49,13 @@ out = psom_struct_defaults ( out , {  'rmap' , 'network' } , {  NaN , NaN });
 
 if nargin < 3
     opt = struct;
-end    
+end
 
 opt = psom_struct_defaults ( opt , ...
     { 'label_network' , 'label_subject' , 'flag_test' }, ...
     { NaN             , NaN             , false         });
 
-if opt.flag_test 
+if opt.flag_test
     return
 end
 
@@ -77,7 +77,7 @@ hf = fopen(file_rmap);
 str_rmap = fread(hf,Inf,'uint8=>char')';
 fclose(hf);
 
-%% Update rmap 
+%% Update rmap
 str_rmap = strrep(str_rmap,'$ORIGINX',sprintf('%1.3f',quant_ind.origin(1)));
 str_rmap = strrep(str_rmap,'$ORIGINY',sprintf('%1.3f',quant_ind.origin(2)));
 str_rmap = strrep(str_rmap,'$ORIGINZ',sprintf('%1.3f',quant_ind.origin(3)));

@@ -8,13 +8,13 @@ function G = niak_build_graph(conn,opt);
 % INPUTS:
 %
 % CONN (vector) a vectorized connectivity matrix (see NIAK_MAT2VEC)
-% OPT.TYPE (string) type of binarization applied to the connectome to generate 
+% OPT.TYPE (string) type of binarization applied to the connectome to generate
 %   an undirected graph. Available options:
 %   'sparsity' keep a proportion of the largest connection (in absolute value)
 %   'sparsity_pos' keep a proportion of the largest connection (positive only)
 %   'cut_off' a cut-off on connectivity (in absolute value)
 %   'cut_off_pos' a cut-off on connectivity (only positive)
-% OPT.PARAM (depends on OPT.TYPE) the parameter of the 
+% OPT.PARAM (depends on OPT.TYPE) the parameter of the
 %   optolding. The actual definition depends of THRESH.TYPE:
 %   'sparsity' (scalar) percentage of connections
 %   'sparsity_pos' (scalar) percentage of connections
@@ -25,7 +25,7 @@ function G = niak_build_graph(conn,opt);
 % OUTPUTS:
 %
 % G (vector, boolean) a vectorized and binarized version of the graph
-%   See NIAK_VEC2MAT to get back the squared form. 
+%   See NIAK_VEC2MAT to get back the squared form.
 %
 % _________________________________________________________________________
 % SEE ALSO:
@@ -34,7 +34,7 @@ function G = niak_build_graph(conn,opt);
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Centre de recherche de l'Institut universitaire de gériatrie de Montréal, 2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -61,14 +61,14 @@ function G = niak_build_graph(conn,opt);
 opt = psom_struct_defaults(opt,{'type','param'},{NaN,NaN});
 
 switch opt.type
-        case 'sparsity'            
+        case 'sparsity'
             [val,order] = sort(abs(conn),'descend');
             G = false(size(conn));
-            G(order(1:min(ceil(opt.param * length(G)),length(G)))) = true;            
+            G(order(1:min(ceil(opt.param * length(G)),length(G)))) = true;
         case 'sparsity_pos'
             [val,order] = sort(conn,'descend');
             G = false(size(conn));
-            G(order(1:min(ceil(opt.param * length(G)),length(G)))) = true;            
+            G(order(1:min(ceil(opt.param * length(G)),length(G)))) = true;
         case 'cut_off'
             G = abs(conn)>=opt.param;
         case 'cut_off_pos'

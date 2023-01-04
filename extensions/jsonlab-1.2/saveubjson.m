@@ -5,7 +5,7 @@ function json=saveubjson(rootname,obj,varargin)
 % json=saveubjson(rootname,obj,opt)
 % json=saveubjson(rootname,obj,'param1',value1,'param2',value2,...)
 %
-% convert a MATLAB object (cell, struct or array) into a Universal 
+% convert a MATLAB object (cell, struct or array) into a Universal
 % Binary JSON (UBJSON) binary string
 %
 % author: Qianqian Fang (fangq<at> nmr.mgh.harvard.edu)
@@ -31,38 +31,38 @@ function json=saveubjson(rootname,obj,varargin)
 %                         sparse arrays, the non-zero elements will be
 %                         saved to _ArrayData_ field in triplet-format i.e.
 %                         (ix,iy,val) and "_ArrayIsSparse_" will be added
-%                         with a value of 1; for a complex array, the 
-%                         _ArrayData_ array will include two columns 
-%                         (4 for sparse) to record the real and imaginary 
-%                         parts, and also "_ArrayIsComplex_":1 is added. 
+%                         with a value of 1; for a complex array, the
+%                         _ArrayData_ array will include two columns
+%                         (4 for sparse) to record the real and imaginary
+%                         parts, and also "_ArrayIsComplex_":1 is added.
 %        opt.ParseLogical [1|0]: if this is set to 1, logical array elem
 %                         will use true/false rather than 1/0.
 %        opt.SingletArray [0|1]: if this is set to 1, arrays with a single
 %                         numerical element will be shown without a square
 %                         bracket, unless it is the root object; if 0, square
 %                         brackets are forced for any numerical arrays.
-%        opt.SingletCell  [1|0]: if 1, always enclose a cell with "[]" 
+%        opt.SingletCell  [1|0]: if 1, always enclose a cell with "[]"
 %                         even it has only one element; if 0, brackets
 %                         are ignored when a cell has only 1 element.
 %        opt.ForceRootName [0|1]: when set to 1 and rootname is empty, saveubjson
-%                         will use the name of the passed obj variable as the 
-%                         root object name; if obj is an expression and 
-%                         does not have a name, 'root' will be used; if this 
-%                         is set to 0 and rootname is empty, the root level 
+%                         will use the name of the passed obj variable as the
+%                         root object name; if obj is an expression and
+%                         does not have a name, 'root' will be used; if this
+%                         is set to 0 and rootname is empty, the root level
 %                         will be merged down to the lower level.
 %        opt.JSONP [''|string]: to generate a JSONP output (JSON with padding),
 %                         for example, if opt.JSON='foo', the JSON data is
 %                         wrapped inside a function call as 'foo(...);'
-%        opt.UnpackHex [1|0]: conver the 0x[hex code] output by loadjson 
+%        opt.UnpackHex [1|0]: conver the 0x[hex code] output by loadjson
 %                         back to the string form
 %
-%        opt can be replaced by a list of ('param',value) pairs. The param 
+%        opt can be replaced by a list of ('param',value) pairs. The param
 %        string is equivallent to a field in opt and is case sensitive.
 % output:
 %      json: a binary string in the UBJSON format (see http://ubjson.org)
 %
 % examples:
-%      jsonmesh=struct('MeshNode',[0 0 0;1 0 0;0 1 0;1 1 0;0 0 1;1 0 1;0 1 1;1 1 1],... 
+%      jsonmesh=struct('MeshNode',[0 0 0;1 0 0;0 1 0;1 1 0;0 0 1;1 0 1;0 1 1;1 1 1],...
 %               'MeshTetra',[1 2 4 8;1 3 4 8;1 2 6 8;1 5 6 8;1 5 7 8;1 3 7 8],...
 %               'MeshTri',[1 2 4;1 2 6;1 3 4;1 3 7;1 5 6;1 5 7;...
 %                          2 8 4;2 8 6;3 8 4;3 8 7;5 8 6;5 8 7],...
@@ -80,7 +80,7 @@ function json=saveubjson(rootname,obj,varargin)
 if(nargin==1)
    varname=inputname(1);
    obj=rootname;
-   if(isempty(varname)) 
+   if(isempty(varname))
       varname='root';
    end
    rootname=varname;
@@ -141,7 +141,7 @@ elseif(isstruct(item))
     txt=struct2ubjson(name,item,level,varargin{:});
 elseif(ischar(item))
     txt=str2ubjson(name,item,level,varargin{:});
-elseif(isobject(item)) 
+elseif(isobject(item))
     txt=matlabobject2ubjson(name,item,level,varargin{:});
 else
     txt=mat2ubjson(name,item,level,varargin{:});
@@ -161,17 +161,17 @@ if(ndims(squeeze(item))>2) % for 3D or higher dimensions, flatten to 2D for now
 end
 bracketlevel=~jsonopt('singletcell',1,varargin{:});
 len=numel(item); % let's handle 1D cell first
-if(len>bracketlevel) 
+if(len>bracketlevel)
     if(~isempty(name))
-        txt=[N_(checkname(name,varargin{:})) '[']; name=''; 
+        txt=[N_(checkname(name,varargin{:})) '[']; name='';
     else
-        txt='['; 
+        txt='[';
     end
 elseif(len==0)
     if(~isempty(name))
-        txt=[N_(checkname(name,varargin{:})) 'Z']; name=''; 
+        txt=[N_(checkname(name,varargin{:})) 'Z']; name='';
     else
-        txt='Z'; 
+        txt='Z';
     end
 end
 for j=1:dim(2)
@@ -203,7 +203,7 @@ end
 len=numel(item);
 forcearray= (len>1 || (jsonopt('SingletArray',0,varargin{:})==1 && level>0));
 
-if(~isempty(name)) 
+if(~isempty(name))
     if(forcearray)
         txt=[N_(checkname(name,varargin{:})) '['];
     end
@@ -219,9 +219,9 @@ for j=1:dim(2)
   for i=1:dim(1)
      names = fieldnames(item(i,j));
      if(~isempty(name) && len==1 && ~forcearray)
-        txt=[txt N_(checkname(name,varargin{:})) '{']; 
+        txt=[txt N_(checkname(name,varargin{:})) '{'];
      else
-        txt=[txt '{']; 
+        txt=[txt '{'];
      end
      if(~isempty(names))
        for e=1:length(names)
@@ -248,7 +248,7 @@ end
 item=reshape(item, max(size(item),[1 0]));
 len=size(item,1);
 
-if(~isempty(name)) 
+if(~isempty(name))
     if(len>1)
         txt=[N_(checkname(name,varargin{:})) '['];
     end

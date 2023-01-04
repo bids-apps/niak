@@ -7,47 +7,47 @@ function [files_in,files_out,opt] = niak_brick_copy(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS
 %
-% FILES_IN        
+% FILES_IN
 %   (cell of strings) a list of file names
 %
-% FILES_OUT       
-%   (cell of strings, default OPT.FOLDER_OUT/(NAME_FILES_IN)) 
+% FILES_OUT
+%   (cell of strings, default OPT.FOLDER_OUT/(NAME_FILES_IN))
 %   File name for outputs. If FILES_OUT is an empty string, the default
 %   name is generated.
 %
-% OPT           
-%   (structure) with the following fields.  
+% OPT
+%   (structure) with the following fields.
 %
 %   FLAG_FMRI
-%       (boolean, default false) if the flag is true, then NIAK_CP_FMRI is 
+%       (boolean, default false) if the flag is true, then NIAK_CP_FMRI is
 %       used instead of a system call to cp. This command copies "_extra.mat" files
 %       along with fMRI datasets.
 %
-%   FOLDER_OUT 
-%       (string, default: folder of FILES_IN{1}) If present, all default 
-%       outputs will be created in the folder FOLDER_OUT. The folder 
+%   FOLDER_OUT
+%       (string, default: folder of FILES_IN{1}) If present, all default
+%       outputs will be created in the folder FOLDER_OUT. The folder
 %       needs to be created beforehand.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
-%   FLAG_TEST 
-%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%   FLAG_TEST
+%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % COMMENTS
 %
 % FILES_IN and FILES_OUT can also be passed as strings, in which case a single
-% files is copied. 
+% files is copied.
 %
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.

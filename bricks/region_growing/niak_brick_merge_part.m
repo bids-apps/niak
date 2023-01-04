@@ -31,7 +31,7 @@ function  [files_in,files_out,opt] = niak_brick_merge_part(files_in,files_out,op
 %           from all areas are merged.
 %
 %       TSERIES
-%           (cell of strings, default same as FILES_IN.TSERIES with a 
+%           (cell of strings, default same as FILES_IN.TSERIES with a
 %           '_rois' suffix) a .mat file with a variable TSERIES.
 %           TSERIES(:,I) is the time series associated with region I in the
 %           dataset FILES_IN.TSERIES.
@@ -48,7 +48,7 @@ function  [files_in,files_out,opt] = niak_brick_merge_part(files_in,files_out,op
 %           normalization to apply on the individual time series before
 %           averaging. See OPT in NIAK_NORMALIZE_TSERIES.
 %
-%       FOLDER_OUT 
+%       FOLDER_OUT
 %           (string, default: path of FILES_IN.FMRI{1}) If present,
 %           all default outputs will be created in the folder FOLDER_OUT.
 %           The folder needs to be created beforehand.
@@ -79,7 +79,7 @@ function  [files_in,files_out,opt] = niak_brick_merge_part(files_in,files_out,op
 % If the variables cannot be found, the partition will be created, but
 % empty.
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % McConnell Brain Imaging Center,Montreal
 % Neurological Institute, McGill University, 2008-2010.
 % Research Centre of the Montreal Geriatric Institute
@@ -144,26 +144,26 @@ flag_out = isempty(opt.folder_out);
 flag_init_tseries = isempty(files_out.tseries);
 
 if flag_init_tseries
-    
+
     for num_f = 1:length(files_in.tseries)
-        
+
         [path_t,name_t,ext_t] = fileparts(files_in.tseries{num_f});
-        
+
         if flag_out
             opt.folder_out = path_t;
         end
-        
+
         if flag_init_tseries
             files_out.tseries{num_f} = cat(2,opt.folder_out,filesep,name_t,'_roi.mat');
         end
-    
+
     end
 end
 
 if ~ischar(files_out.tseries)&&ischar(files_in.tseries)
     error('The time series need to be specified in a cell of string FILES_IN.TSERIES')
 end
-    
+
 %% If the test flag is true, stop here !
 if flag_test
     return
@@ -204,7 +204,7 @@ for num_e = 1:nb_areas
     end
 
     load(files_in.part{num_e},'part');
-    
+
     if ~isempty(part)
         nb_rois_area = max(part);
         part(part~=0) = part(part~=0) + nb_rois;
@@ -222,13 +222,13 @@ hdr.file_name = files_out.space;
 niak_write_vol(hdr,mask_merge);
 
 %% Build tseries
-if ~ischar(files_out.tseries)    
+if ~ischar(files_out.tseries)
     nb_files = length(files_in.tseries);
     for num_f = 1:nb_files
         if flag_verbose
             fprintf('Building regional time series from %s to %s\n',files_in.tseries{num_f},files_out.tseries{num_f});
         end
-        
+
         data = load(files_in.tseries{num_f});
         flag_init = false;
         tseries = [];

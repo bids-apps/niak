@@ -1,11 +1,11 @@
 % Template for the NIAK region growing pipeline
 %
-% To run this pipeline, the fMRI datasets first need to be preprocessed 
+% To run this pipeline, the fMRI datasets first need to be preprocessed
 % using the NIAK fMRI preprocessing pipeline.
 %
 % WARNING: This script will clear the workspace
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 %   Research Centre of the Montreal Geriatric Institute
 %   & Department of Computer Science and Operations Research
 %   University of Montreal, Québec, Canada, 2010-2013
@@ -31,7 +31,7 @@
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 % THE SOFTWARE.
 
-clear 
+clear
 
 %%%%%%%%%%%%
 %% Grab the results from the NIAK fMRI preprocessing pipeline
@@ -43,10 +43,10 @@ opt_g.exclude_subject = {'subject1','subject2'}; % If for whatever reason some s
 opt_g.type_files = 'roi'; % Specify to the grabber to prepare the files for the region growing pipeline
 opt_g.filter.session = {'session1'}; % Just grab session 1
 opt_g.filter.run = {'rest'}; % Just grab the "rest" run
-files_in = niak_grab_fmri_preprocess('/home/toto/database/fmri_preprocess',opt_g); % Replace the folder by the path where the results of the fMRI preprocessing pipeline were stored. 
+files_in = niak_grab_fmri_preprocess('/home/toto/database/fmri_preprocess',opt_g); % Replace the folder by the path where the results of the fMRI preprocessing pipeline were stored.
 
 %%%%%%%%%%%%
-%% Options 
+%% Options
 %%%%%%%%%%%%
 opt.folder_out = ['/home/toto/database/region_growing']; % Where to store the results
 opt.thre_size = 1000; % The critical size for regions, in mm3. A threshold of 1000 mm3 will give about 1000 regions on the grey matter
@@ -54,6 +54,6 @@ opt.thre_size = 1000; % The critical size for regions, in mm3. A threshold of 10
 %%%%%%%%%%%%
 %% Run the pipeline
 %%%%%%%%%%%%
-opt.flag_test = false; % Put this flag to true to just generate the pipeline without running it. Otherwise the region growing will start. 
+opt.flag_test = false; % Put this flag to true to just generate the pipeline without running it. Otherwise the region growing will start.
 %opt.psom.max_queued = 10; % Uncomment and change this parameter to set the number of parallel threads used to run the pipeline
-[pipeline,opt] = niak_pipeline_region_growing(files_in,opt); 
+[pipeline,opt] = niak_pipeline_region_growing(files_in,opt);

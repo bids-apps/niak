@@ -11,9 +11,9 @@ function [coord,labels] = niak_read_tags(file_name)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILE_NAME     
+% FILE_NAME
 %       (string) the name of a (text) tag file.
-% 
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
@@ -73,7 +73,7 @@ coord = zeros([length(tab) 3]);
 labels = cell([length(tab) 1]);
 
 for num_l = 1:length(tab)
-    line_tab = niak_string2words(tab{num_l});    
+    line_tab = niak_string2words(tab{num_l});
     coord(num_l,:) = str2num(char(line_tab(1:3)));
     ind_num = findstr(tab{num_l},'"');
     labels{num_l} = tab{num_l}(ind_num(1)+1:ind_num(2)-1);

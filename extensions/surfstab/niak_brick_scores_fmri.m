@@ -37,23 +37,23 @@ function [in, out, opt] = niak_brick_scores_fmri(in, out, opt)
 % FILES_OUT.EXTRA
 %   (string) extra info in a .mat file.
 % FILES_OUT.PART_ORDER
-%   (string) a csv file containing the list of numerical partition labels on the left and the 
+%   (string) a csv file containing the list of numerical partition labels on the left and the
 %   order of the corresponding output volume on the right. Unless the template partition supplied
-%   in IN.PART has non-continuous partition values or doesn't start with 1, the left and the 
+%   in IN.PART has non-continuous partition values or doesn't start with 1, the left and the
 %   right column will be identical.
 %
 % OPT.FOLDER_OUT (string, default empty) if non-empty, use that to generate default results.
-% OPT.NB_SAMPS (integer, default 100) the number of replications to 
+% OPT.NB_SAMPS (integer, default 100) the number of replications to
 %      generate stability cores & maps.
-% OPT.THRESH (scalar, default 0.5) the threshold applied on stability contrast to 
+% OPT.THRESH (scalar, default 0.5) the threshold applied on stability contrast to
 %      generate PARTITION_THRESH.
 % OPT.SAMPLING.TYPE (string, default 'CBB') how to resample the features.
 %      Available options : 'bootstrap' , 'jacknife', 'window', 'CBB'
-% OPT.SAMPLING.OPT (structure) the options of the sampling. 
+% OPT.SAMPLING.OPT (structure) the options of the sampling.
 %      bootstrap : None.
 %      jacknife  : OPT.PERC is the percentage of observations
 %                  retained in each sample (default 60%)
-%      CBB       : OPT.BLOCK_LENGTH is the length of the block for bootstrap. See 
+%      CBB       : OPT.BLOCK_LENGTH is the length of the block for bootstrap. See
 %                  NIAK_BOOTSTRAP_TSERIES for default options.
 %      window    : OPT.LENGTH is the length of the window, expressed in time points
 %                  (default 60% of the # of features).
@@ -61,11 +61,11 @@ function [in, out, opt] = niak_brick_scores_fmri(in, out, opt)
 %   number generator with PSOM_SET_RAND_SEED. If left empty, no action is taken.
 % OPT.FLAG_VERBOSE (boolean, default true) turn on/off the verbose.
 % OPT.FLAG_TARGET (boolean, default false)
-%       If IN.PART has a second column, then this column is used as a binary mask to define 
-%       a "target": clusters are defined based on the similarity of the connectivity profile 
+%       If IN.PART has a second column, then this column is used as a binary mask to define
+%       a "target": clusters are defined based on the similarity of the connectivity profile
 %       in the target regions, rather than the similarity of time series.
-%       If IN.PART has a third column, this is used as a parcellation to reduce the space 
-%       before computing connectivity maps, which are then used to generate seed-based 
+%       If IN.PART has a third column, this is used as a parcellation to reduce the space
+%       before computing connectivity maps, which are then used to generate seed-based
 %       correlation maps (at full available resolution).
 % OPT.FLAG_DEAL
 %       If the partition supplied by the user does not have the appropriate
@@ -87,10 +87,10 @@ function [in, out, opt] = niak_brick_scores_fmri(in, out, opt)
 %       but update IN, FILES_OUT and OPT.
 % _________________________________________________________________________
 % COMMENTS:
-% For "window" sampling, the OPT.NB_SAMPS argument is ignored, 
+% For "window" sampling, the OPT.NB_SAMPS argument is ignored,
 % and all possible sliding windows are generated.
 %
-% If OPT.FOLDER_OUT is specified, by default all outputs are generated. 
+% If OPT.FOLDER_OUT is specified, by default all outputs are generated.
 % Otherwise, no output is generated. Individual outputs can be turned on/off
 % by assigning the output the value 'gb_niak_omitted'
 %
@@ -291,7 +291,7 @@ if opt.flag_target || opt.flag_focus
     end
 else
     part_run = part_v;
-end 
+end
 
 %% Run the stability estimation
 opt_score = rmfield(opt,{'folder_out', 'thresh', 'rand_seed', 'flag_test', 'flag_deal'});
@@ -364,7 +364,7 @@ if ~strcmp(out.partition_thresh,'gb_niak_omitted')
     FDhdr.file_name = out.partition_thresh;
     niak_write_vol(FDhdr,part_cores);
 end
- 
+
 % Seed based on the partition
 if ~strcmp(out.rmap_part,'gb_niak_omitted')
     opt_t.type_center = 'mean';
@@ -405,7 +405,7 @@ if ~strcmp(out.dual_regression,'gb_niak_omitted')
     tseries = niak_normalize_tseries(tseries);
     try
         beta = niak_lse(tseries,tseed);
-    catch 
+    catch
         warning('Dual regression was ill-conditioned')
         beta = zeros(size(tseries,1),max(part_v));
     end
@@ -444,9 +444,9 @@ end
 function new_part = remap_partition(in_part,part_order)
     % This function replaces the values in in_part according
     % to the correspondence established in part_order
-    % The values in in_part are in the right column and the 
+    % The values in in_part are in the right column and the
     % values they are replaced by are in the left column.
-    
+
     % Get the number of values that need to be remapped
     n_val = size(part_order,1);
     new_part = zeros(size(in_part));
@@ -455,5 +455,3 @@ function new_part = remap_partition(in_part,part_order)
         old_val = part_order(val_id,2);
         new_part(in_part==old_val) = new_val;
     end
-
-

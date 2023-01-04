@@ -7,7 +7,7 @@ function P = niak_build_partial_correlation(tseries,flag_vec);
 % _________________________________________________________________________
 % INPUTS:
 %
-% TSERIES       
+% TSERIES
 %       (array) time series. First dimension is time.
 %
 % FLAG_VEC
@@ -18,8 +18,8 @@ function P = niak_build_partial_correlation(tseries,flag_vec);
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% P             
-%       (square matrix or vector) Empirical partial correlation matrix. P 
+% P
+%       (square matrix or vector) Empirical partial correlation matrix. P
 %       is symmetrical with ones on the diagonal.
 %
 % _________________________________________________________________________
@@ -31,7 +31,7 @@ function P = niak_build_partial_correlation(tseries,flag_vec);
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.

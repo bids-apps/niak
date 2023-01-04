@@ -7,36 +7,36 @@ function [pipeline,opt] = niak_pipeline_region_growing(files_in,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN  
+% FILES_IN
 %
 %   FMRI.<SUBJECT>.<SESSION>.<RUN>
-%       (string) a list of fMRI datasets, acquired in the same 
-%       session (small displacements). 
-%       The field names <SUBJECT>, <SESSION> and <RUN> can be any arbitrary 
+%       (string) a list of fMRI datasets, acquired in the same
+%       session (small displacements).
+%       The field names <SUBJECT>, <SESSION> and <RUN> can be any arbitrary
 %       strings.
 %       All data in FILES_IN.<SUBJECT> should be from the same subject.
-%       Note that FMRI can also be a cell of strings, in 
+%       Note that FMRI can also be a cell of strings, in
 %       which case the label OPT.LABELS{I} will be used for FMRI{I}
 %
 %   AREAS
-%       (string, default AAL template from NIAK at 3mm isotropic) the name 
-%       of the brain parcelation template that will be used to constrain the 
+%       (string, default AAL template from NIAK at 3mm isotropic) the name
+%       of the brain parcelation template that will be used to constrain the
 %       region growing.
 %
 %   MASK
-%       (string, default FILES_IN.AREAS) a file name of a binary mask 
+%       (string, default FILES_IN.AREAS) a file name of a binary mask
 %       common to all datasets.
 %
-% OPT   
-%   (structure) with the following fields : 
-%   
+% OPT
+%   (structure) with the following fields :
+%
 %   LABELS
-%       (cell of strings, default {'file1','files2',...}) LABELS{I} will be 
-%       used as part of the name of the job for masking the brain of 
+%       (cell of strings, default {'file1','files2',...}) LABELS{I} will be
+%       used as part of the name of the job for masking the brain of
 %       dataset FILES_IN.FMRI{I} if FMRI is a cell of strings.
 %
-%   FOLDER_OUT 
-%       (string) where to write the results of the pipeline. 
+%   FOLDER_OUT
+%       (string) where to write the results of the pipeline.
 %
 %   PSOM
 %       (structure) the options of the pipeline manager. See the OPT
@@ -49,59 +49,59 @@ function [pipeline,opt] = niak_pipeline_region_growing(files_in,opt)
 %       process the data. Otherwise, PSOM_RUN_PIPELINE will be used to
 %       process the data.
 %
-%   THRE_SIZE 
-%       (integer,default 1000 mm3) threshold on the region size (maximum). 
+%   THRE_SIZE
+%       (integer,default 1000 mm3) threshold on the region size (maximum).
 %
 %   THRE_SIM
 %       (real value, default NaN) threshold on the similarity between
 %       regions (minimum). If the value is NaN, no test is applied.
 %
-%   THRE_NB_ROIS 
+%   THRE_NB_ROIS
 %       (integer, default 0) the minimum number of homogeneous
 %       regions (if no threshold are fixed on size and similarity,
 %       THRE_NB_ROIS will be the actual number of homogeneous regions).
 %
-%   SIM_MEASURE 
+%   SIM_MEASURE
 %       (string, default 'afc') the similarity measure between regions.
 %
 %   CORRECTION_IND
-%       (structure, default CORRECTION.TYPE = 'mean') the temporal 
-%       normalization to apply on the individual time series before 
+%       (structure, default CORRECTION.TYPE = 'mean') the temporal
+%       normalization to apply on the individual time series before
 %       concatenation. See OPT in NIAK_NORMALIZE_TSERIES.
 %
 %   CORRECTION_GROUP
-%       (structure, default CORRECTION.TYPE = 'mean_var') the temporal 
-%       normalization to apply on the individual time series before 
+%       (structure, default CORRECTION.TYPE = 'mean_var') the temporal
+%       normalization to apply on the individual time series before
 %       region growing. See OPT in NIAK_NORMALIZE_TSERIES.
 %
 %   CORRECTION_AVERAGE
-%       (structure, default CORRECTION.TYPE = 'mean') the temporal 
-%       normalization to apply on the individual time series before 
+%       (structure, default CORRECTION.TYPE = 'mean') the temporal
+%       normalization to apply on the individual time series before
 %       averaging in each ROI. See OPT in NIAK_NORMALIZE_TSERIES.
 %
 %   IND_ROIS
-%       (vector of integer, default all) list of ROIs labels that will 
-%       be included in the analysis. By default, the brick is processing 
-%       all the ROIs found in FILES_IN.MASK. Note that if the default 
+%       (vector of integer, default all) list of ROIs labels that will
+%       be included in the analysis. By default, the brick is processing
+%       all the ROIs found in FILES_IN.MASK. Note that if the default
 %       is used for FILE_IN.AREAS or if the file name in FILES_IN.AREAS
 %       is 'template_aal', the AAL labels are used without reading the file.
 %
-%   FLAG_SIZE 
+%   FLAG_SIZE
 %       (boolean, default 1) if FLAG_SIZE == 1, all regions that
 %       are smaller than THRE_SIZE at the end of the growing process
 %       are merged into the most functionally close neighbour iteratively
 %       unless all the regions are larger than THRE_SIZE
 %
 %   FLAG_TSERIES
-%       (boolean, default 1) if FLAG_TSERIES == 1, the average time series 
+%       (boolean, default 1) if FLAG_TSERIES == 1, the average time series
 %       within each ROI will be generated.
 %
 % _________________________________________________________________________
-% OUTPUTS : 
+% OUTPUTS :
 %
-% PIPELINE 
-%   (structure) describe all jobs that need to be performed in the 
-%   pipeline. This structure is meant to be used with the pipeline manage 
+% PIPELINE
+%   (structure) describe all jobs that need to be performed in the
+%   pipeline. This structure is meant to be used with the pipeline manage
 %   PSOM_RUN_PIPELINE.
 %
 % OPT
@@ -131,7 +131,7 @@ function [pipeline,opt] = niak_pipeline_region_growing(files_in,opt)
 % NOTE 3:
 % Please refer to the following paper for further details on the method :
 % P. Bellec; V. Perlbarg; S. Jbabdi; M. Pélégrini-Issac; J.L. Anton; H.
-% Benali, Identification of large-scale networks in the brain using fMRI. 
+% Benali, Identification of large-scale networks in the brain using fMRI.
 % Neuroimage, 2006, 29: 1231-1243.
 %
 % _________________________________________________________________________
@@ -177,7 +177,7 @@ end
 if ~isstruct(files_in)
     error('FILES_IN should be a struture!')
 else
-   
+
     if ~isfield(files_in,'fmri')
         error('I could not find the field FILES_IN.FMRI!');
     end
@@ -196,14 +196,14 @@ else
         if strcmp(name_a,'template_aal')
             flag_aal = true;
         else
-            flag_aal = false;    
+            flag_aal = false;
         end
     else
         flag_aal = true;
         niak_gb_vars;
         files_in.areas = [GB_NIAK.path_template 'roi_aal_3mm.mnc.gz'];
     end
-    
+
     if ~isfield(files_in,'mask')||isempty(files_in.mask)||strcmp(files_in.mask,'gb_niak_omitted')
         files_in.mask = files_in.areas;
     end
@@ -213,7 +213,7 @@ else
     end
 
 end
-   
+
 %% Options
 default_psom.path_logs = '';
 opt_norm_ind.type      = 'mean';
@@ -284,7 +284,7 @@ pipeline = psom_add_job(pipeline,'neighbourhood_areas','niak_brick_neighbour',fi
 %% Region growing  %%
 %%%%%%%%%%%%%%%%%%%%%
 if ~flag_aal
-    [hdr,mask] = niak_read_vol(files_in.areas); 
+    [hdr,mask] = niak_read_vol(files_in.areas);
     mask = round(mask);
     list_roi = unique(mask(:))';
     list_roi = list_roi(list_roi~=0);
@@ -293,12 +293,12 @@ else
 end
 
 for num_r = list_roi
-    clear files_in_tmp files_out_tmp opt_tmp    
+    clear files_in_tmp files_out_tmp opt_tmp
     files_in_tmp.tseries = cell([nb_files 1]);
-    for num_f = 1:nb_files        
+    for num_f = 1:nb_files
         files_in_tmp.tseries{num_f} = pipeline.(['tseries_' opt.labels{num_f}]).files_out.tseries{1};
     end
-    files_in_tmp.neig        = pipeline.neighbourhood_areas.files_out;    
+    files_in_tmp.neig        = pipeline.neighbourhood_areas.files_out;
     files_out_tmp            = [opt.folder_out 'areas' filesep 'part_areas_' num2str(num_r) '.mat'];
     opt_tmp.correction_ind   = opt.correction_ind;
     opt_tmp.correction_group = opt.correction_group;
@@ -309,21 +309,21 @@ for num_r = list_roi
     opt_tmp.var_tseries      = ['tseries_',num2str(num_r)];
     opt_tmp.var_neig         = ['neig_',num2str(num_r)];
     opt_tmp.flag_size        = opt.flag_size;
-    pipeline = psom_add_job(pipeline,['region_growing_area_' num2str(num_r)],'niak_brick_region_growing',files_in_tmp,files_out_tmp,opt_tmp);    
+    pipeline = psom_add_job(pipeline,['region_growing_area_' num2str(num_r)],'niak_brick_region_growing',files_in_tmp,files_out_tmp,opt_tmp);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %% Merging the areas  %%
 %%%%%%%%%%%%%%%%%%%%%%%%
-clear files_in_tmp files_out_tmp opt_tmp    
-files_in_tmp.tseries = cell([nb_files 1]);    
-for num_f = 1:nb_files    
+clear files_in_tmp files_out_tmp opt_tmp
+files_in_tmp.tseries = cell([nb_files 1]);
+for num_f = 1:nb_files
     files_in_tmp.tseries{num_f} = pipeline.(['tseries_' opt.labels{num_f}]).files_out.tseries{1};
 end
-for num_r = 1:length(list_roi)    
+for num_r = 1:length(list_roi)
     files_in_tmp.part{num_r} = pipeline.(['region_growing_area_' num2str(list_roi(num_r))]).files_out;
 end
-files_in_tmp.areas = pipeline.mask_areas.files_out;    
+files_in_tmp.areas = pipeline.mask_areas.files_out;
 if flag_tseries
     files_out_tmp.tseries = cell([nb_files 1]);
     for num_f = 1:nb_files
@@ -335,7 +335,7 @@ end
 files_out_tmp.space =  [opt.folder_out 'rois' filesep 'brain_rois' ext_f];
 opt_tmp.correction  = opt.correction_average;
 opt_tmp.ind_rois    = list_roi;
-pipeline = psom_add_job(pipeline,'merge_part','niak_brick_merge_part',files_in_tmp,files_out_tmp,opt_tmp);    
+pipeline = psom_add_job(pipeline,'merge_part','niak_brick_merge_part',files_in_tmp,files_out_tmp,opt_tmp);
 
 %%%%%%%%%%%%%%%%%%%%%%
 %% Run the pipeline %%

@@ -1,31 +1,31 @@
 function [in,out,opt] = niak_test_connectome_multiscale_data(in,out,opt)
 % Generate the data for the tests of NIAK_TEST_CONNECTOME_MULTISCALE
 %
-% SYNTAX: 
+% SYNTAX:
 %   [] = NIAK_TEST_CONNECTOME_MULTISCALE(IN,OUT,OPT)
 %
 % INPUTS:
 %   IN  (structure) not used
 %   OUT (structure), with the following fields (all have defaults if empty or unspecified):
-%      FMRI_RUN      (cell of strings) simulated fMRI runs 
+%      FMRI_RUN      (cell of strings) simulated fMRI runs
 %      INTER_RUN     (string) a .csv file with inter-run covariates
 %      INTRA_RUN_COV (cell of strings) .csv files with intra-run covariates
 %      INTRA_RUN_EV  (cell of strings) .csv files with intra-run events
 %      NETWORKS      (cell of strings) simulated networks
 %      PARAM         (string) a .mat file with all the parameters of the simulation.
-%      GROUND_TRUTH  (cell of strings) a .mat file with the expected results 
+%      GROUND_TRUTH  (cell of strings) a .mat file with the expected results
 %   OPT (structure) with the following fields:
 %      FOLDER_OUT    (string) where to generate the defaults
-%      RAND_SEED     (integer, default 0) the seed of the random number 
+%      RAND_SEED     (integer, default 0) the seed of the random number
 %                    generator. If left empty, nothing is done.
 %      FLAG_TEST     (boolean, default false) if true, the brick only updates
 %                    the structures IN, OUT, OPT.
 %
 % OUTPUTS:
-%   IN, OUT, OPT are updated. 
+%   IN, OUT, OPT are updated.
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -73,7 +73,7 @@ folder_out = niak_full_path(opt.folder_out);
 if isempty(out.fmri_run)
     out.fmri_run{1} = [folder_out 'fmri_run1.mnc.gz'];
     out.fmri_run{2} = [folder_out 'fmri_run2.mnc.gz'];
-end    
+end
 
 if isempty(out.networks)
     out.networks{1} = [folder_out 'network_4.mnc.gz'];
@@ -262,19 +262,19 @@ x = [ones(size(tseries_run1(mask_time,:),1),1) niak_normalize_tseries(cov_run1(m
 res_network4.run1_motion_sel_motor.connectome  = sub_correlation(E,part4);
 res_network16.run1_motion_sel_motor.connectome = sub_correlation(E,part16);
 
-% difference of correlation between run1 and run2, selecting the motor volumes. 
+% difference of correlation between run1 and run2, selecting the motor volumes.
 opt_n.type = 'mean';
 mask1 = ev_run1_c.x(:,strcmp(ev_run1_c.labels_y,'motor'))>=0.95;
 mask2 = ev_run2_c.x(:,strcmp(ev_run2_c.labels_y,'motor'))>=0.95;
 res_network4.run1_minus_run2_sel_motor.connectome  = sub_correlation(tseries_run1(mask1,:),part4) - sub_correlation(tseries_run2(mask2,:),part4);
 res_network16.run1_minus_run2_sel_motor.connectome = sub_correlation(tseries_run1(mask1,:),part16) - sub_correlation(tseries_run2(mask2,:),part16);
 
-% difference of correlation between run1 and run2, selecting the visual volumes. 
+% difference of correlation between run1 and run2, selecting the visual volumes.
 % there are not enough volumes in run2, so a NaN is produced
 res_network4.run1_minus_run2_sel_visual.connectome  = NaN;
 res_network16.run1_minus_run2_sel_visual.connectome = NaN;
 
-%% Save the true correlation matrices in a .mat file 
+%% Save the true correlation matrices in a .mat file
 save(out.ground_truth{1},'-struct','res_network4')
 save(out.ground_truth{2},'-struct','res_network16')
 save(out.param)
@@ -292,15 +292,15 @@ for xx = 1:nb_roi
             tseries_y = mean(niak_normalize_tseries(tseries(:,part==yy)),2);
             rmat(xx,yy) = corr(tseries_x,tseries_y);
             rmat(yy,xx) = rmat(xx,yy);
-        end        
+        end
     end
 end
 rmat = niak_mat2lvec(niak_fisher(rmat))';
 
 function event_c = sub_convolve(event,time_frames)
-[list_event,tmp,all_event]  = unique(event.labels_x); 
+[list_event,tmp,all_event]  = unique(event.labels_x);
 opt_m.events = [all_event(:) event.x];
 opt_m.frame_times = time_frames;
-x_cache =  niak_fmridesign(opt_m); 
+x_cache =  niak_fmridesign(opt_m);
 event_c.x = x_cache.x(:,:,1,1);
 event_c.labels_y = list_event(:);

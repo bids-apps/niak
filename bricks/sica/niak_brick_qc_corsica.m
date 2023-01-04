@@ -11,31 +11,31 @@ function [files_in,files_out,opt] = niak_brick_qc_corsica(files_in,files_out,opt
 % INPUTS:
 %
 % FILES_IN
-%   (structure) with the following fields : 
+%   (structure) with the following fields :
 %
 %   SPACE
 %       (string) The name of a file with the spatial components of the ICA.
 %
-%   TIME 
-%       (string) The name of a mat file with a variable TSERIES (2D array). 
-%       TSERIES(:,K) is the temporal distribution of the Kth ICA source. 
+%   TIME
+%       (string) The name of a mat file with a variable TSERIES (2D array).
+%       TSERIES(:,K) is the temporal distribution of the Kth ICA source.
 %
 %   MASK
 %       (string) The name of a file with a binary mask of the brain.
 %
 %   SCORE
-%       (cell of string, default 'gb_niak_omitted') each entry is a mat 
-%       file with one variable SCORE. SCORE(K) is the score of selection 
-%       for the Kth component. The maximal score across all entries of 
-%       SCORE will be derived, and used to sort components in decreasing 
-%       order of score. The scores associated with each component will be 
-%       indicated in the title, see OPT.LABELS_SCORE below. 
+%       (cell of string, default 'gb_niak_omitted') each entry is a mat
+%       file with one variable SCORE. SCORE(K) is the score of selection
+%       for the Kth component. The maximal score across all entries of
+%       SCORE will be derived, and used to sort components in decreasing
+%       order of score. The scores associated with each component will be
+%       indicated in the title, see OPT.LABELS_SCORE below.
 %
 % FILES_OUT
 %   (string, default <BASE_NAME_SPACE>_qc_corsica.pdf )
-%   a pdf figure showing the spatial distribution of the components on 
-%   axial slices after robust correction to normal distribution, as well as 
-%   the time, spectral and time frequency representation of the 
+%   a pdf figure showing the spatial distribution of the components on
+%   axial slices after robust correction to normal distribution, as well as
+%   the time, spectral and time frequency representation of the
 %   time component. The components can be ordered according to a selection
 %   score.
 %
@@ -43,7 +43,7 @@ function [files_in,files_out,opt] = niak_brick_qc_corsica(files_in,files_out,opt
 %   (structure) with the following fields :
 %
 %   LABELS_SCORE
-%       (cell of string, default {'',...,''}) LABELS_SCORE{I} will be used 
+%       (cell of string, default {'',...,''}) LABELS_SCORE{I} will be used
 %       in the title to refer to scores from FILES_IN.SCORE{I}.
 %
 %   FWHM
@@ -55,17 +55,17 @@ function [files_in,files_out,opt] = niak_brick_qc_corsica(files_in,files_out,opt
 %       above THRESHOLD in the title of the figures.
 %
 %   FOLDER_OUT
-%       (string, default: path of FILES_IN) If present, all default outputs 
-%       will be created in the folder FOLDER_OUT. The folder needs to be 
+%       (string, default: path of FILES_IN) If present, all default outputs
+%       will be created in the folder FOLDER_OUT. The folder needs to be
 %       created beforehand.
 %
 %   FLAG_VERBOSE
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
 %   FLAG_TEST
-%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
 %
 % _________________________________________________________________________
@@ -186,7 +186,7 @@ if ~ischar(files_in.score)
         score(tmp.order,num_s) = tmp.score;
     end
     score_max = max(score,[],2);
-else    
+else
     score     = zeros([size(tseries,2) 1]);
     score_max = score;
     threshold = Inf;
@@ -199,7 +199,7 @@ if flag_verbose
     fprintf('Generating a pdf summary of the ICA ...\n');
 end
 
-%% Options 
+%% Options
 opt_visu.voxel_size = hdr.info.voxel_size;
 opt_visu.fwhm       = opt.fwhm;
 opt_visu.vol_limits = [0 3];
@@ -212,8 +212,8 @@ order = order(:)';
 hspatial = figure;
 htime = figure;
 
-for num_c = order        
-    
+for num_c = order
+
     %% Score title
     if ~ischar(files_in.score)
         title_score = '(';
@@ -234,21 +234,21 @@ for num_c = order
     else
         title_score = '';
     end
-    
+
     %% Spatial distribution
     set(0, 'CurrentFigure', hspatial);
     subplot(1,1,1)
     vol_c = niak_correct_vol(vol_space(:,:,:,num_c),mask);
-    niak_montage(abs(vol_c),opt_visu);    
-    title(sprintf('Component %i %s',num_c,title_score));        
-    print(files_out,'-dpdf','-append');    
+    niak_montage(abs(vol_c),opt_visu);
+    title(sprintf('Component %i %s',num_c,title_score));
+    print(files_out,'-dpdf','-append');
     clf reset
-    
+
     %% temporal distribution
     set(0, 'CurrentFigure', htime);
     nt = size(tseries,1);
     subplot(3,1,1)
-    
+
     if isfield(hdr.info,'tr')
         if hdr.info.tr~=0
             plot(hdr.info.tr*(1:nt),tseries(:,num_c));
@@ -258,11 +258,11 @@ for num_c = order
     else
         plot(tseries(:,num_c));
     end
-    
+
     xlabel('time')
     ylabel('a.u.')
     title(sprintf('Time component %i, file %s',num_c,name_f));
-    
+
     %% Frequency distribution
     subplot(3,1,2)
     if isfield(hdr.info,'tr')
@@ -274,7 +274,7 @@ for num_c = order
     else
         niak_visu_spectrum(tseries(:,num_c),1);
     end
-    
+
     %% Time-frequency distribution
     subplot(3,1,3)
     if isfield(hdr.info,'tr')
@@ -285,7 +285,7 @@ for num_c = order
         end
     else
         niak_visu_wft(tseries(:,num_c),1);
-    end    
+    end
     print(files_out,'-dpdf','-append');
     clf reset
 end

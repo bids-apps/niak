@@ -7,23 +7,23 @@ function str2 = niak_replace_str(str1,str_find,str_replace)
 %
 % SYNTAX:
 % STR = NIAK_REPLACE_STR(STR1,STR2)
-% 
+%
 % _________________________________________________________________________
 % INPUTS:
 %
-% STR1      
+% STR1
 %       (string) an arbitrary string.
 %
-% STR_FIND      
+% STR_FIND
 %       (string) the string that needs to be replaced
 %
-% STR_REPLACE   
+% STR_REPLACE
 %       (string) the "replace by" string
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% STR2       
+% STR2
 %       (string) same as STR1, except all occurences of STR_FIND have
 %       been replaced by STR_REPLACE.
 %
@@ -55,9 +55,9 @@ function str2 = niak_replace_str(str1,str_find,str_replace)
 
 pos = findstr(str1,str_find);
 if isempty(pos)
-    
+
     str2 = str1;
-    
+
 else
     str2 = [];
 

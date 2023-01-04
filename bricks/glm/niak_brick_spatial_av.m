@@ -1,5 +1,5 @@
 function [files_in,files_out,opt] = niak_brick_spatial_av(files_in,files_out,opt)
-% Creates a time course of spatial average for a 3D+t fMRI dataset 
+% Creates a time course of spatial average for a 3D+t fMRI dataset
 %
 % SYNTAX:
 % [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_SPATIAL_AV(FILES_IN,FILES_OUT,OPT)
@@ -7,11 +7,11 @@ function [files_in,files_out,opt] = niak_brick_spatial_av(files_in,files_out,opt
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN  
+% FILES_IN
 %   (structure) with the following field :
 %
-%   FMRI 
-%   	(string) the name of a file containing an fMRI dataset. 
+%   FMRI
+%   	(string) the name of a file containing an fMRI dataset.
 %
 %   MASK
 %   	(string, default 'gb_niak_omitted') the name of a 3D binary volume.
@@ -19,15 +19,15 @@ function [files_in,files_out,opt] = niak_brick_spatial_av(files_in,files_out,opt
 %       OPT.MASK_THRESH below).
 %
 % FILES_OUT
-% 	(string, default <OPT.FOLDER_OUT>/<BASE FMRI>_spatial_av.mat) the 
-%   name a matlab file containing the following variable: 
+% 	(string, default <OPT.FOLDER_OUT>/<BASE FMRI>_spatial_av.mat) the
+%   name a matlab file containing the following variable:
 %
-%   SPATIAL_AV 
+%   SPATIAL_AV
 %       column vector of the spatial average time course.
 %
-% OPT   
+% OPT
 % 	(structure) with the following fields.
-%   Note that if a field is omitted, it will be set to a default value if 
+%   Note that if a field is omitted, it will be set to a default value if
 %   possible, or will issue an error otherwise.
 %
 %   MASK_THRESH
@@ -37,19 +37,19 @@ function [files_in,files_out,opt] = niak_brick_spatial_av(files_in,files_out,opt
 %       MASK_THRESH is left empty, the function NIAK_MASK_THRESHOLD will be
 %       used to automatically determine the threshold.
 %
-%   FOLDER_OUT 
-%   	(string, default: path of FILES_IN) 
-%       If present, all default outputs will be created in the folder 
+%   FOLDER_OUT
+%   	(string, default: path of FILES_IN)
+%       If present, all default outputs will be created in the folder
 %       FOLDER_OUT. The folder needs to be created beforehand.
 %
-%   FLAG_VERBOSE 
-%   	(boolean, default 1) 
-%       if the flag is 1, then the function prints some infos during 
+%   FLAG_VERBOSE
+%   	(boolean, default 1)
+%       if the flag is 1, then the function prints some infos during
 %       the processing.
 %
-%   FLAG_TEST 
-%   	(boolean, default 0) 
-%       if FLAG_TEST equals 1, the brick does not do anything but update 
+%   FLAG_TEST
+%   	(boolean, default 0)
+%       if FLAG_TEST equals 1, the brick does not do anything but update
 %       the default values in FILES_IN, FILES_OUT and OPT.
 %
 % _________________________________________________________________________
@@ -62,14 +62,14 @@ function [files_in,files_out,opt] = niak_brick_spatial_av(files_in,files_out,opt
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -81,7 +81,7 @@ function [files_in,files_out,opt] = niak_brick_spatial_av(files_in,files_out,opt
 %              express or implied warranty.
 %##########################################################################
 %
-% Copyright (c) Felix Carbonell, Montreal Neurological Institute, McGill 
+% Copyright (c) Felix Carbonell, Montreal Neurological Institute, McGill
 % University, 2009-2010.
 % Maintainers : felix.carbonell@mail.mcgill.ca, pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -160,7 +160,7 @@ if isempty(files_out)
     files_out = cat(2,opt.folder_out,filesep,name_f,'_spatial_av.mat');
 end
 
-if flag_test 
+if flag_test
     return
 end
 
@@ -177,9 +177,9 @@ if flag_mask
     if flag_verbose
         fprintf('Reading the brain mask ...\n%s',files_in.mask);
     end
-    [hdr_mask,mask] = niak_read_vol(files_in.mask);      
+    [hdr_mask,mask] = niak_read_vol(files_in.mask);
     mask            = mask>0;
-else      
+else
     if isempty(opt.mask_thresh)
         mask_thresh = niak_mask_threshold(vol(:,:,:,keep(1)));
         mask_thresh1=mask_thresh(1);
@@ -194,7 +194,7 @@ else
     end
     if flag_verbose
         fprintf('Defining a brain mask (lower threshold %1.2f, upper threshold %1.2f)...\n',mask_thresh1,mask_thresh2);
-    end  
+    end
     mask = squeeze(vol(:,:,:,keep(1)));
     mask = (mask>mask_thresh1)&(mask<=mask_thresh2);
 end
@@ -203,11 +203,11 @@ weighted_mask = squeeze(vol(:,:,:,keep(1))).*mask ;
 %% Creates spatial_av:
 if flag_verbose
     fprintf('Computing the spatial average at each time point ...\n');
-end  
+end
 spatial_av = niak_spatial_av(vol,weighted_mask);
 
 %% Save the result
 if flag_verbose
     fprintf('Saving results in %s ...\n',files_out);
-end  
+end
 save(files_out,'spatial_av');

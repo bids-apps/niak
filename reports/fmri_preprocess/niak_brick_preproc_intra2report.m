@@ -3,11 +3,11 @@ function [in,out,opt] = niak_brick_preproc_intra2report(in,out,opt)
 %
 % SYNTAX: [IN,OUT,OPT] = NIAK_BRICK_PREPROC_INTRA2REPORT(IN,OUT,OPT)
 %
-% IN.(SUBJECT) (string) The name of a .csv file with measures of intra-subject, 
+% IN.(SUBJECT) (string) The name of a .csv file with measures of intra-subject,
 %   inter-run motion levels.
 % OUT (string) the name of a .js file with one variable:
-%   dataFD 
-% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but 
+%   dataFD
+% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but
 %    update IN, OUT and OPT.
 %
 % Copyright (c) Pierre Bellec
@@ -35,22 +35,22 @@ function [in,out,opt] = niak_brick_preproc_intra2report(in,out,opt)
 % THE SOFTWARE.
 
 %% Defaults
-if ~isstruct(in) 
+if ~isstruct(in)
     error('IN should be a structure');
 end
 
-if ~ischar(out) 
+if ~ischar(out)
     error('OUT should be a string');
 end
 
 if nargin < 3
     opt = struct;
-end    
+end
 opt = psom_struct_defaults ( opt , ...
     { 'flag_test' }, ...
     { false         });
 
-if opt.flag_test 
+if opt.flag_test
     return
 end
 
@@ -58,7 +58,7 @@ end
 list_subject = fieldnames(in);
 for ss = 1:length(list_subject)
     tab_tmp = niak_read_csv_cell(in.(list_subject{ss}));
-    if ss == 1 
+    if ss == 1
         tab = tab_tmp;
     else
         tab = [ tab ; tab_tmp(2:end,:)];

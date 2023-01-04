@@ -1,17 +1,17 @@
 function spatial_av = niak_spatial_av(vol,mask)
 % Create spatial average from a volume
-% 
+%
 % SYNTAX:
 % SPATIAL_AV = NIAK_SPATIAL_AV(VOL,MASK)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL         
+% VOL
 %       (4D array) a 3D+t dataset
-% 
+%
 % MASK
-%       (3D volume, default all voxels) a binary mask of the voxels that 
+%       (3D volume, default all voxels) a binary mask of the voxels that
 %       will be included in the analysis.
 %
 % _________________________________________________________________________
@@ -24,14 +24,14 @@ function spatial_av = niak_spatial_av(vol,mask)
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -43,7 +43,7 @@ function spatial_av = niak_spatial_av(vol,mask)
 %              express or implied warranty.
 %##########################################################################
 %
-% Copyright (c) Felix Carbonell, Montreal Neurological Institute, McGill 
+% Copyright (c) Felix Carbonell, Montreal Neurological Institute, McGill
 % University, 2009.
 % Maintainers : felix.carbonell@mail.mcgill.ca, pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.

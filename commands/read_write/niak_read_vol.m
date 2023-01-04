@@ -1,5 +1,5 @@
 function [hdr,vol] = niak_read_vol(file_name)
-% Read brain image in 3D or 3D+t files (analyze, nifti, minc) 
+% Read brain image in 3D or 3D+t files (analyze, nifti, minc)
 % The data can also be zipped (see the COMMENTS section below)
 %
 % SYNTAX :
@@ -9,77 +9,77 @@ function [hdr,vol] = niak_read_vol(file_name)
 % INPUTS :
 %
 % FILE_NAME
-%    (string) a single 3D or 3D+t image file, or a matrix of image file 
+%    (string) a single 3D or 3D+t image file, or a matrix of image file
 %    names, each with a single 3D frame.
-%    Supported formats are either NIFIT (*.nii,*.img/hdr), ANALYZE 
-%    (.img/.hdr/.mat) or MINC1/MINC2 (.mnc). Extra blanks are ignored. 
-%    File separator can be / or \ on Windows. Gzipped files (with an 
-%    additional .gz) are supported. Frames must be equally spaced in 
-%    time. For single file names, wild cards are supported (mutliple 
-%    files are treated in the same way as a matrix of image files 
+%    Supported formats are either NIFIT (*.nii,*.img/hdr), ANALYZE
+%    (.img/.hdr/.mat) or MINC1/MINC2 (.mnc). Extra blanks are ignored.
+%    File separator can be / or \ on Windows. Gzipped files (with an
+%    additional .gz) are supported. Frames must be equally spaced in
+%    time. For single file names, wild cards are supported (mutliple
+%    files are treated in the same way as a matrix of image files
 %    names).
 %
 % _________________________________________________________________________
 % OUTPUTS :
 %
-% VOL           
+% VOL
 %    (3D+t or 3D array of double) the 3d or 3d+t raw data.
 %
 % HDR
-%    a structure containing a description of meta-information on the 
+%    a structure containing a description of meta-information on the
 %    data, with the following fields :
 %
-%    FILE_NAME   
-%        (empty string '') name of the file currently associated with the 
+%    FILE_NAME
+%        (empty string '') name of the file currently associated with the
 %        header.
 %
-%    TYPE   
-%        (string) the file format (either 'minc1', 'minc2','nii','img' 
+%    TYPE
+%        (string) the file format (either 'minc1', 'minc2','nii','img'
 %        or 'analyze').
 %
-%    INFO 
+%    INFO
 %        (structure) with the following subfields:
 %
-%        FILE_PARENT 
+%        FILE_PARENT
 %            (string) name of the file that was read.
 %
-%        DIMENSIONS 
-%            (vector 3*1) the number of elements in each dimensions of the 
-%            data array. Warning : the first dimension is not necessarily 
+%        DIMENSIONS
+%            (vector 3*1) the number of elements in each dimensions of the
+%            data array. Warning : the first dimension is not necessarily
 %            the "x" axis. See the DIMENSION_ORDER field below.
-%   
-%        PRECISION 
-%            (string, default 'float') the precision of data 
+%
+%        PRECISION
+%            (string, default 'float') the precision of data
 %            ('int', 'float' or 'double').
 %
-%        VOXEL_SIZE  
-%            (vector 1*3, default [1 1 1]) the size of voxels along each 
+%        VOXEL_SIZE
+%            (vector 1*3, default [1 1 1]) the size of voxels along each
 %            spatial dimension in the same order as in VOL.
 %
-%        TR  
-%            (double, default 1) the time between two volumes (in second). 
+%        TR
+%            (double, default 1) the time between two volumes (in second).
 %            This field is present only for 3D+t data.
 %
-%        MAT 
+%        MAT
 %            (2D array 4*4) an affine transform from voxel to world space.
 %
-%        DIMENSION_ORDER 
-%            (string) describes the dimensions of vol. Letter 'x' is for 
-%            'left to right, 'y' for 'posterior to anterior', 
-%            'z' for 'ventral to dorsal' and 't' is time. 
-%            Example : 'xzyt' means that dimension 1 of vol is 'x', 
+%        DIMENSION_ORDER
+%            (string) describes the dimensions of vol. Letter 'x' is for
+%            'left to right, 'y' for 'posterior to anterior',
+%            'z' for 'ventral to dorsal' and 't' is time.
+%            Example : 'xzyt' means that dimension 1 of vol is 'x',
 %            dimension 2 is 'z', etc.
 %
-%        HISTORY 
+%        HISTORY
 %            (string) the history of the file.
 %
 %    EXTRA
-%        (structure) whatever variable that is found in a file 
+%        (structure) whatever variable that is found in a file
 %        <BASE FILE_NAME>_extra.mat. See note 5 below.
 %
-%    DETAILS 
-%        (structure) Additional information, specific to the format 
-%        of the data. See NIAK_READ_HDR_MINC or NIAK_READ_HDR_NIFTI 
+%    DETAILS
+%        (structure) Additional information, specific to the format
+%        of the data. See NIAK_READ_HDR_MINC or NIAK_READ_HDR_NIFTI
 %        for more information.
 %
 % _________________________________________________________________________
@@ -115,11 +115,11 @@ function [hdr,vol] = niak_read_vol(file_name)
 % NIAK_COORD_VOX2WORLD.
 %
 % NOTE 5:
-% If the name of the file is of the form toto.ext, the reader will look for 
+% If the name of the file is of the form toto.ext, the reader will look for
 % a file toto_extra.mat. If such a file exist, it is assumed to contain matlab
-% variables and is loaded in HDR.EXTRA. This generic mechanism makes it easy to 
-% attach custom information to a file which may not be easy to achieve in a 
-% consistent way for all data formats. 
+% variables and is loaded in HDR.EXTRA. This generic mechanism makes it easy to
+% attach custom information to a file which may not be easy to achieve in a
+% consistent way for all data formats.
 %
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
 % Centre de recherche de l'institut de Griatrie de Montral,
@@ -148,7 +148,7 @@ function [hdr,vol] = niak_read_vol(file_name)
 % THE SOFTWARE.
 
 niak_gb_vars
-  
+
 if ~ischar(file_name)
     error('niak_read_vol: FILE_NAME should be a string or a matrix of strings')
 end
@@ -156,10 +156,10 @@ end
 nb_file = size(file_name,1);
 
 if nb_file > 1
-    
-    %% Multiple files have been selected. 
+
+    %% Multiple files have been selected.
     for num_f = 1:nb_file
-        
+
         if nargout == 2
             [hdr_tmp,vol_tmp] = niak_read_vol(deblank(file_name(num_f,:)));
             if num_f == 1
@@ -169,7 +169,7 @@ if nb_file > 1
         else
             hdr_tmp = niak_read_vol(deblank(file_name(num_f,:)));
         end
-        
+
         hdr(num_f) = hdr_tmp;
     end
 
@@ -177,7 +177,7 @@ else
 
     %% Single file (either 3D or 3D+t)
     file_name = deblank(file_name);
-    
+
     if ~exist(file_name,'file')
 
         %% The file does not exist ... check for wild cards !
@@ -197,7 +197,7 @@ else
             end
             return
         end
-            
+
         file_name2 = [path_f char(cell_name.name)];
         if length(file_name2)==0
             error('Couldn''t find any file fitting the description %s',file_name)
@@ -218,17 +218,17 @@ else
 
             case GB_NIAK.zip_ext
 
-                %% The file is zipped... Unzip it first and restart reading              
+                %% The file is zipped... Unzip it first and restart reading
 
                 [path_f_tmp,name_f,type] = fileparts(name_f);
                 file_extra = [path_f filesep name_f '_extra.mat'];
                 file_tmp_gz = niak_file_tmp([name_f type GB_NIAK.zip_ext]);
-                
+
                 [succ,msg] = system(cat(2,'cp "',file_name,'" ',file_tmp_gz));
                 if succ~=0
                     error(msg)
                 end
-                
+
                 instr_unzip = cat(2,GB_NIAK.unzip,' "',file_tmp_gz,'"');
 
                 [succ,msg] = system(instr_unzip);
@@ -248,9 +248,9 @@ else
                 if psom_exist(file_extra)
                     hdr.extra = load(file_extra);
                 end
-                
+
             case {'.mnc'}
-                
+
                 %% This is either a minc1 or minc2 file
                 if nargout == 2
                     [hdr,vol] = niak_read_minc(file_name);
@@ -261,9 +261,9 @@ else
                 if psom_exist(file_extra)
                     hdr.extra = load(file_extra);
                 end
-                
+
             case {'.nii','.img'}
-                
+
                 %% This is a nifti file (either one file .nii, or two files
                 %% .img/hdr
                 if nargout == 2
@@ -275,7 +275,7 @@ else
                 if strcmp(type,'.nii')&&psom_exist(file_extra)
                     hdr.extra = load(file_extra);
                 end
-                
+
             otherwise
 
                 %% Unsupported extension

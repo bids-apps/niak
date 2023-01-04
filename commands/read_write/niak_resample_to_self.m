@@ -3,7 +3,7 @@ function [] = niak_resample_to_self(file_name,opt)
 % _________________________________________________________________________
 % SUMMARY NIAK_RESAMPLE_TO_SELF
 %
-% Apply MINCRESAMPLE to resample a volume in its own space, i.e. such that 
+% Apply MINCRESAMPLE to resample a volume in its own space, i.e. such that
 % the direction cosines are x, y and z
 %
 % SYNTAX:
@@ -12,10 +12,10 @@ function [] = niak_resample_to_self(file_name,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILE_NAME      
+% FILE_NAME
 %       (string) name of the file to resample (can be 3D+t).
 %
-% OPT            
+% OPT
 %       (structure) same as in NIAK_BRICK_RESAMPLE_VOL
 %
 % _________________________________________________________________________

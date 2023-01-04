@@ -1,43 +1,43 @@
 function [in,out,opt] = niak_brick_montage(in,out,opt)
-% Generate a figure with a montage of sagital slices in the volume 
+% Generate a figure with a montage of sagital slices in the volume
 %
 % SYNTAX: [IN,OUT,OPT] = NIAK_BRICK_VOL2IMG(IN,OUT,OPT)
 %
 % IN.SOURCE (string) the file name of a 3D volume
-% IN.TARGET (string, default '') the file name of a 3D volume defining the target space. 
-%   If left empty, or unspecified, OUT is the world space associated with IN.SOURCE 
-%   i.e. the volume is resamples to have no direction cosines. 
-% OUT.MONTAGE (string) the file name for the figure. The extension will determine the type. 
-% OUT.COLORMAP (string, default 'gb_niak_omitted') the file name for a figure with the color map. 
-% OUT.QUANTIZATION (string, default 'gb_niak_omitted') the file name for a .mat file with variables DATA and SIZE_SLICE. 
-%   DATA(N) is the data point associated with the Nth color. 
-%   SIZE_SLICE (vector 1x2) the size of a slice. 
+% IN.TARGET (string, default '') the file name of a 3D volume defining the target space.
+%   If left empty, or unspecified, OUT is the world space associated with IN.SOURCE
+%   i.e. the volume is resamples to have no direction cosines.
+% OUT.MONTAGE (string) the file name for the figure. The extension will determine the type.
+% OUT.COLORMAP (string, default 'gb_niak_omitted') the file name for a figure with the color map.
+% OUT.QUANTIZATION (string, default 'gb_niak_omitted') the file name for a .mat file with variables DATA and SIZE_SLICE.
+%   DATA(N) is the data point associated with the Nth color.
+%   SIZE_SLICE (vector 1x2) the size of a slice.
 % OPT.NB_SLICES (scalar, default Inf) the number of slices to produce (with a parameter
-%   Inf, all possible slices will be generated). 
-% OPT.COLORMAP (string, default 'gray') The type of colormap. Anything supported by 
+%   Inf, all possible slices will be generated).
+% OPT.COLORMAP (string, default 'gray') The type of colormap. Anything supported by
 %   the instruction `colormap` will work, as well as 'hot_cold' (see niak_hot_cold).
 %   This last color map always centers on zero.
-% OPT.NB_COLOR (default 256) the number of colors to use in quantization. If Inf is 
-%   specified, all values are included in the colormap. This is handy for integer 
+% OPT.NB_COLOR (default 256) the number of colors to use in quantization. If Inf is
+%   specified, all values are included in the colormap. This is handy for integer
 %   values images (e.g. parcellation).
 % OPT.IND (scalar, default 1) for 4D volume, IND is the temporal index of the volume to use
-%   starting from 1. 
+%   starting from 1.
 % OPT.QUALITY (default 90) for jpg images, set the quality of the outputs (from 0, bad, to 100, perfect).
-% OPT.THRESH (scalar, default []) if empty, does nothing. If a scalar, any value 
-%   below threshold becomes transparent. If two values, anything between these two 
-%   values become transparent. 
+% OPT.THRESH (scalar, default []) if empty, does nothing. If a scalar, any value
+%   below threshold becomes transparent. If two values, anything between these two
+%   values become transparent.
 % OPT.LIMITS (vector 1x2) the limits for the colormap. By defaut it is using [min,max].
-%    If a string is specified, the function will implement an adaptative strategy. 
-% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but 
+%    If a string is specified, the function will implement an adaptative strategy.
+% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but
 %    update IN, OUT and OPT.
 %
 % The montage is generated in voxel space associated with the target. If no target is specified,
-% the source space is resampled with direction cosines, and the field of view is adjusted 
-% such that it includes all of the voxels. Only nearest neighbour interpolation is 
+% the source space is resampled with direction cosines, and the field of view is adjusted
+% such that it includes all of the voxels. Only nearest neighbour interpolation is
 % available. For 4D data, the median volume is extracted.
 %
-% If OUT is a string, only OUT.MONTAGE is generated. 
-% 
+% If OUT is a string, only OUT.MONTAGE is generated.
+%
 % Copyright (c) Pierre Bellec
 % Centre de recherche de l'Institut universitaire de griatrie de Montral, 2016.
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -78,12 +78,12 @@ end
 out = psom_struct_defaults( out , ...
     { 'montage' , 'colormap'        , 'quantization'    }, ...
     { NaN       , 'gb_niak_omitted' , 'gb_niak_omitted' });
-    
+
 opt = psom_struct_defaults ( opt , ...
     { 'ind' , 'nb_color' , 'quality' , 'thresh' , 'nb_slices' , 'type_view' , 'limits' , 'colormap' , 'flag_test' }, ...
     { 1     , 256        , 90        , []       , Inf         , 'sagital'   , []       , 'gray'     , false       });
 
-if opt.flag_test 
+if opt.flag_test
     return
 end
 
@@ -129,7 +129,7 @@ case 'sagital'
             end
         end
     end
-otherwise 
+otherwise
     error('Only sagital slices are supported')
 end
 
@@ -158,12 +158,12 @@ end
 opt.nb_color = length(bins)-1;
 
 switch opt.colormap
-	case 'hot_cold'   
+	case 'hot_cold'
     if (opt.limits(2)>0) && (opt.limits(1)<0)
         per_hot = opt.limits(2)/(opt.limits(2)-opt.limits(1));
     elseif opt.limits(2)<=0
         per_hot = 0;
-    else 
+    else
         per_hot = 1;
     end
     cm = niak_hot_cold(opt.nb_color,per_hot);
@@ -213,5 +213,5 @@ if ~strcmp(out.quantization,'gb_niak_omitted')
         min_img = climits(1);
     end
     max_img = climits(2);
-    save(out.quantization,'data','size_slice','origin','voxel_size','min_img','max_img');    
+    save(out.quantization,'data','size_slice','origin','voxel_size','min_img','max_img');
 end

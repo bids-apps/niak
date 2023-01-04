@@ -4,7 +4,7 @@ function tseries = niak_vol2tseries(vol,mask)
 % TSERIES = NIAK_VOL2TSERIES(VOL,MASK)
 %
 % VOL      (4D array) A 3D+t dataset.
-% MASK     (3D volume, default all voxels) a binary mask of the voxels that 
+% MASK     (3D volume, default all voxels) a binary mask of the voxels that
 %          will be included in the time*space array.
 % TSERIES  (2D array) a time*space array with the time series of the voxel in
 %          MASK (in the same order as in find(MASK)).
@@ -12,7 +12,7 @@ function tseries = niak_vol2tseries(vol,mask)
 % Maintainer : pierre.bellec@criugm.qc.ca
 
 % Montreal Neurological Institute, 2008-2010.
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2010-2014
 % Permission is hereby granted, free of charge, to any person obtaining a copy

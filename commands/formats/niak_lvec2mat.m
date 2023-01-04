@@ -7,15 +7,15 @@ function mat = niak_lvec2mat(vec);
 % _________________________________________________________________________
 % INPUTS:
 %
-% LVEC          
-%   (vector) a vectorized version of mat. Low-triangular and diagonal 
+% LVEC
+%   (vector) a vectorized version of mat. Low-triangular and diagonal
 %   values are kept.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% MAT           
-%   (array) a square matrix. MAT is symmetric. Diagonal elements are also 
+% MAT
+%   (array) a square matrix. MAT is symmetric. Diagonal elements are also
 %   specified in VEC.
 %
 % _________________________________________________________________________
@@ -25,11 +25,11 @@ function mat = niak_lvec2mat(vec);
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
-% Keywords : 
+% Keywords :
 
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal
@@ -62,4 +62,3 @@ mask_l = mask_l';
 mask_l(eye(size(mask_l))>0) = 0;
 mat2 = mat';
 mat(mask_l) = mat2(mask_l);
-

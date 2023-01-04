@@ -4,43 +4,43 @@ function trend = niak_make_trends(opt)
 % SUMMARY NIAK_MAKE_TRENDS
 %
 % Create temporal an spatial trends to be include in the design matrix.
-% 
+%
 % SYNTAX:
 % TREND = NIAK_MAKE_TRENDS(OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% 
-% OPT         
+%
+% OPT
 %       structure with the following fields :
 %
 %       NB_TRENDS_TEMPORAL
-%           (integer, default 3) number of cubic spline temporal trends to 
-%           be removed per 6 minutes of scanner time. Temporal trends are 
+%           (integer, default 3) number of cubic spline temporal trends to
+%           be removed per 6 minutes of scanner time. Temporal trends are
 %           modeled by cubic splines, so for a 6 minute run.
-%           N_TEMPORAL<=3 will model a polynomial trend of degree N_TEMPORAL 
-%           in frame times, and N_TEMPORAL>3 will add (N_TEMPORAL-3) equally 
-%           spaced knots. N_TEMPORAL=0 will model just the constant level 
+%           N_TEMPORAL<=3 will model a polynomial trend of degree N_TEMPORAL
+%           in frame times, and N_TEMPORAL>3 will add (N_TEMPORAL-3) equally
+%           spaced knots. N_TEMPORAL=0 will model just the constant level
 %           and no temporal trends. N_TEMPORAL=-1 will not remove anything.
 %
-%       NB_TRENDS_SPATIAL 
-%           (integer, default 1) order of the polynomial in the spatial 
-%           average (SPATIAL_AV)  weighted by first non-excluded frame; 
+%       NB_TRENDS_SPATIAL
+%           (integer, default 1) order of the polynomial in the spatial
+%           average (SPATIAL_AV)  weighted by first non-excluded frame;
 %           0 will remove no spatial trends.
 %
 %       EXCLUDE
-%           (vector, default []) a list of frames that should be excluded 
-%           from the analysis. 
+%           (vector, default []) a list of frames that should be excluded
+%           from the analysis.
 %
 %       TR
 %           (real number, default 1) the repetition time of the time series
 %
 %       CONFOUNDS
-%           (matrix, default []) extra columns for the design matrix that 
-%           are not convolved with the HRF, e.g. movement artifacts. 
-%           If a matrix, the same columns are used for every slice; 
-%           if a 3D array, the first two dimensions are the matrix, 
+%           (matrix, default []) extra columns for the design matrix that
+%           are not convolved with the HRF, e.g. movement artifacts.
+%           If a matrix, the same columns are used for every slice;
+%           if a 3D array, the first two dimensions are the matrix,
 %           the third is the slice.
 %
 %       SPATIAL_AV
@@ -55,22 +55,22 @@ function trend = niak_make_trends(opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% TREND       
-%       (3D array) temporal, spatial trends and additional 
+% TREND
+%       (3D array) temporal, spatial trends and additional
 %       confounds for every slice.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -126,7 +126,7 @@ n = length(keep);
 % Create temporal trends:
 
 n_spline = round(n_temporal*opt.tr*n/360);
-if n_spline>=0 
+if n_spline>=0
    trend=((2*keep-(max(keep)+min(keep)))./(max(keep)-min(keep)))';
    if n_spline<=3
       temporal_trend=(trend*ones(1,n_spline+1)).^(ones(n,1)*(0:n_spline));
@@ -140,16 +140,16 @@ if n_spline>=0
    end
 else
    temporal_trend=[];
-end 
+end
 
 % Create spatial trends:
 
-if n_spatial>=1 
+if n_spatial>=1
    trend=opt.spatial_av(keep)-mean(opt.spatial_av(keep));
    spatial_trend=(trend*ones(1,n_spatial)).^(ones(n,1)*(1:n_spatial));
 else
    spatial_trend=[];
-end 
+end
 
 trend = [temporal_trend spatial_trend];
 
@@ -160,7 +160,7 @@ Trend = zeros(n,numtrends,opt.nb_slices);
 for slice=1:opt.nb_slices
    if isempty(opt.confounds)
       Trend(:,:,slice)=trend;
-   else  
+   else
       if length(size(opt.confounds))==2
          Trend(:,:,slice)=[trend opt.confounds(keep,:)];
       else

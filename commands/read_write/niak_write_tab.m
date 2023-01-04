@@ -1,8 +1,8 @@
 function  [err,msg] = niak_write_tab(file_name,tab,labels_line,labels_col)
-% Write a table into a text file. 
+% Write a table into a text file.
 % The first line and first columns are string labels, while
-% the rest of the table is a numerical array. 
-% Columns and line labels are optional 
+% the rest of the table is a numerical array.
+% Columns and line labels are optional
 %
 % SYNTAX:
 % [ERR,MSG] = NIAK_WRITE_TAB(FILE_NAME,TAB,LABELS_LINE,LABELS_COL)
@@ -10,18 +10,18 @@ function  [err,msg] = niak_write_tab(file_name,tab,labels_line,labels_col)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILE_NAME     
+% FILE_NAME
 %       (string) the name of the text file (usually ends in .dat)
 %
-% TAB   
-%       (matrix M*N) the numerical data array. 
+% TAB
+%       (matrix M*N) the numerical data array.
 %
-% LABELS_LINE        
+% LABELS_LINE
 %       (cell of strings 1*M) LABELS_LINE{NUM_L} is the label of line NUM_L in
 %       TAB.
 %
 % LABELS_COL
-%       (cell of strings 1*N) LABELS_COL{NUM_C} is the label of column 
+%       (cell of strings 1*N) LABELS_COL{NUM_C} is the label of column
 %       NUM_C in TAB.
 %
 % _________________________________________________________________________
@@ -30,7 +30,7 @@ function  [err,msg] = niak_write_tab(file_name,tab,labels_line,labels_col)
 % ERR
 %       (boolean) if ERR == 1 an error occured, ERR = 0 otherwise.
 %
-% MSG 
+% MSG
 %       (string) the error message (empty if ERR==0).
 %
 % _________________________________________________________________________
@@ -71,7 +71,7 @@ end
 [nx,ny] = size(tab);
 
 if ~exist('labels_line','var')
-    labels_line = [];   
+    labels_line = [];
 end
 
 if isempty(labels_line)
@@ -81,10 +81,10 @@ if isempty(labels_line)
 end
 
 if ~exist('labels_col','var')
-    labels_col = [];    
+    labels_col = [];
 end
 
-if isempty(labels_col)    
+if isempty(labels_col)
     for iy = 1:ny
         labels_col{iy} = sprintf('col%i',iy);
     end
@@ -96,7 +96,7 @@ end
 [hf,msg] = fopen(file_name,'w');
 if hf == -1
     err = 1;
-else 
+else
     err = 0;
 end
 
@@ -114,17 +114,17 @@ for numx = 1:(nx+1)
             if numx == 1
                 tab_str{numx,numy} = labels_col{numy-1};
             else
-                tab_str{numx,numy} = sprintf('%1.15f',tab(numx-1,numy-1));                
+                tab_str{numx,numy} = sprintf('%1.15f',tab(numx-1,numy-1));
             end
         end
     end
 end
 
-%% Get the size of each column 
+%% Get the size of each column
 max_length_col = zeros([size(tab_str,2),1]);
 
 for numy = 1:size(tab_str,2)
-    for numx = 1:size(tab_str,1)        
+    for numx = 1:size(tab_str,1)
         max_length_col(numy) = max(max_length_col(numy),length(tab_str{numx,numy}));
     end
 end
@@ -132,9 +132,9 @@ end
 %% Write the table
 
 for numx = 1:size(tab_str,1)
-    for numy = 1:size(tab_str,2)        
-        
-        if ~((numy == 1)&(max_length_col(numy)==0))            
+    for numy = 1:size(tab_str,2)
+
+        if ~((numy == 1)&(max_length_col(numy)==0))
             comp = repmat(' ',[1 max_length_col(numy)+3-length(tab_str{numx,numy})]);
             str_tab = [tab_str{numx,numy} comp];
             if numy < size(tab_str,2)
@@ -142,7 +142,7 @@ for numx = 1:size(tab_str,1)
             else
                 fprintf(hf,'%s',str_tab);
             end
-        end     
+        end
     end
     fprintf(hf,'\n');
 end

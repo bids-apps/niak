@@ -83,7 +83,7 @@ $Help = <<HELP;
 | $me does hierachial linear fitting between two files.
 |    you will have to edit the script itself to modify the
 |    fitting levels themselves
-| 
+|
 | Problems or comments should be sent to: claude\@bic.mni.mcgill.ca
 HELP
 
@@ -171,7 +171,7 @@ $t_base = "T${t_base}";
 my $source_masked = $source;
 my $target_masked = $target;
 
-if( defined($opt{source_mask}) and defined($opt{target_mask}) ) { 
+if( defined($opt{source_mask}) and defined($opt{target_mask}) ) {
   if( -e $opt{source_mask} and -e $opt{target_mask} ) {
     $source_masked = "${tmpdir}/${s_base}_masked.mnc";
     &do_cmd( 'minccalc', '-nocheck_dimensions', '-clobber',
@@ -185,12 +185,12 @@ if( defined($opt{source_mask}) and defined($opt{target_mask}) ) {
   }
 }
 
-# initial transformation supplied by the user, applied to both the 
+# initial transformation supplied by the user, applied to both the
 # source image and its mask.
 
-if( defined $opt{init_xfm} ) { 
+if( defined $opt{init_xfm} ) {
   my $source_resampled = "${tmpdir}/${s_base}_resampled.mnc";
-  &do_cmd( 'mincresample', '-clobber', '-like', $source_masked, 
+  &do_cmd( 'mincresample', '-clobber', '-like', $source_masked,
            '-transform', $opt{init_xfm}, $source_masked, $source_resampled );
   $source_masked = $source_resampled;
 
@@ -199,7 +199,7 @@ if( defined $opt{init_xfm} ) {
   if( defined( $opt{source_mask} ) ) {
     my $mask_resampled = "${tmpdir}/${s_base}_mask_resampled.mnc";
     &do_cmd( 'mincresample', '-clobber', '-like', $opt{source_mask},
-             '-nearest_neighbour', '-transform', $opt{init_xfm}, 
+             '-nearest_neighbour', '-transform', $opt{init_xfm},
              $opt{source_mask}, $mask_resampled );
     $opt{source_mask} = $mask_resampled;
   }
@@ -219,12 +219,12 @@ for ($i=0; $i<=$#conf; $i++){
        unlink( "$tmp_target\_dxyz.mnc" ) if( -e "$tmp_target\_dxyz.mnc" );
      }
    }
-   
+
    # set up intermediate files
    $tmp_xfm = "$tmpdir/$s_base\_$i.xfm";
    $tmp_source = "$tmpdir/$s_base\_$conf[$i]{blur_fwhm}";
    $tmp_target = "$tmpdir/$t_base\_$conf[$i]{blur_fwhm}";
-   
+
    print STDOUT "-+-------------------------[$i]-------------------------\n".
                 " | steps:          @{$conf[$i]{steps}}\n".
                 " | blur_fwhm:      $conf[$i]{blur_fwhm}\n".
@@ -234,7 +234,7 @@ for ($i=0; $i<=$#conf; $i++){
                 " | xfm:            $tmp_xfm\n".
                 "-+-----------------------------------------------------\n".
                 "\n";
-   
+
    # blur the masked source and target images
    my @grad_opt = ();
    push( @grad_opt, '-gradient' ) if( $conf[$i]{type} eq "dxyz" );
@@ -247,13 +247,13 @@ for ($i=0; $i<=$#conf; $i++){
      &do_cmd('mincblur', '-clobber', '-no_apodize', '-fwhm', $conf[$i]{blur_fwhm},
              @grad_opt, $target_masked, $tmp_target);
    }
-   
+
    # set up registration
    @args = ('minctracc', '-clobber', $opt{cost_function}, $opt{lsqtype},
             '-step', @{$conf[$i]{steps}}, '-simplex', $conf[$i]{simplex},
             '-tol', $conf[$i]{tolerance});
 
-   # Initial transformation will be computed from the from Principal axis 
+   # Initial transformation will be computed from the from Principal axis
    # transformation (PAT).
    push(@args, @{$conf[$i]{trans}}) if( defined $conf[$i]{trans} );
 
@@ -264,9 +264,9 @@ for ($i=0; $i<=$#conf; $i++){
    # to use the mask in minctracc)
    push(@args, '-source_mask', $opt{source_mask} ) if defined($opt{source_mask});
    push(@args, '-model_mask', $opt{target_mask}) if defined($opt{target_mask});
-   
+
    # add files and run registration
-   push(@args, "$tmp_source\_$conf[$i]{type}.mnc", "$tmp_target\_$conf[$i]{type}.mnc", 
+   push(@args, "$tmp_source\_$conf[$i]{type}.mnc", "$tmp_target\_$conf[$i]{type}.mnc",
         $tmp_xfm);
    &do_cmd(@args);
 
@@ -275,13 +275,13 @@ for ($i=0; $i<=$#conf; $i++){
    if($i > 0) {
      unlink( $prev_xfm );
    }
-   
+
    $prev_xfm = $tmp_xfm;
 }
 
 # Concatenate transformations if an initial transformation was given.
 
-if( defined $opt{init_xfm} ) { 
+if( defined $opt{init_xfm} ) {
   &do_cmd( 'xfmconcat', $opt{init_xfm}, $prev_xfm, $outxfm );
 } else {
   &do_cmd( 'mv', '-f', $prev_xfm, $outxfm );
@@ -295,10 +295,9 @@ if(defined($outfile)){
 }
 
 
-sub do_cmd { 
+sub do_cmd {
    print STDOUT "@_\n" if $opt{verbose};
    if(!$opt{fake}){
       system(@_) == 0 or die;
    }
 }
-       

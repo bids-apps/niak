@@ -7,8 +7,8 @@ function [files_in,files_out,opt] = niak_brick_glm_connectome_perm(files_in,file
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN 
-%   (cell of string) a series of .mat files (each one corresponding to one scale) with the 
+% FILES_IN
+%   (cell of string) a series of .mat files (each one corresponding to one scale) with the
 %   following variables:
 %
 %   MODEL_GROUP.X
@@ -30,7 +30,7 @@ function [files_in,files_out,opt] = niak_brick_glm_connectome_perm(files_in,file
 %      (scalar) the total number of discoveries across all scales.
 %
 %   NB_DISC_NULL
-%      (vector) NB_DISC_NULL(S) is the number of discoveries under the null 
+%      (vector) NB_DISC_NULL(S) is the number of discoveries under the null
 %      hypothesis of no association for the Sth permutation sample.
 %
 %   P_NB_DISC
@@ -41,17 +41,17 @@ function [files_in,files_out,opt] = niak_brick_glm_connectome_perm(files_in,file
 %   (structure) with the following fields:
 %
 %   FDR
-%      (scalar, default 0.05) the level of acceptable false-discovery rate 
+%      (scalar, default 0.05) the level of acceptable false-discovery rate
 %      for the t-maps.
 %
 %   TYPE_FDR
-%      (string, default 'BH-global') how the FDR is controled. 
+%      (string, default 'BH-global') how the FDR is controled.
 %      See the TYPE argument of NIAK_GLM_FDR.
 %
 %   NB_SAMPS
 %      (integer, default 1000) the number of samples under the null hypothesis
 %      used to test the significance of the number of discoveries.
-%   
+%
 %   RAND_SEED
 %       (scalar, default []) The specified value is used to seed the random
 %       number generator with PSOM_SET_RAND_SEED. If left empty, no action
@@ -61,8 +61,8 @@ function [files_in,files_out,opt] = niak_brick_glm_connectome_perm(files_in,file
 %       (boolean, default 0) if the flag is 1, then the function does not
 %       do anything but update the defaults of FILES_IN, FILES_OUT and OPT.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
 % _________________________________________________________________________
@@ -80,8 +80,8 @@ function [files_in,files_out,opt] = niak_brick_glm_connectome_perm(files_in,file
 %
 % The input files are generated with NIAK_BRICK_GLM_CONNECTOME
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -114,7 +114,7 @@ if ~exist('files_in','var')||~exist('files_out','var')||~exist('opt','var')
     error('niak:brick','syntax: [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_GLM_CONNECTOME_PERM(FILES_IN,FILES_OUT,OPT).\n Type ''help niak_brick_glm_connectome_perm'' for more info.')
 end
 
-%% Files in 
+%% Files in
 if ~iscellstr(files_in)
     error('FILES_IN should be a cell of strings')
 end
@@ -154,9 +154,9 @@ for num_e = 1:length(files_in);
         results = load(files_in{num_e},'multisite','nb_discovery','perc_discovery','type_measure','vol_discovery');
         glm(num_e,:) = results.multisite.model;
     else
-        results = load(files_in{num_e},'model_group','nb_discovery','perc_discovery','type_measure','vol_discovery');        
+        results = load(files_in{num_e},'model_group','nb_discovery','perc_discovery','type_measure','vol_discovery');
         glm(num_e) = results.model_group;
-    end    
+    end
     nb_disc_scale(num_e) = sum(results.nb_discovery);
     perc_disc_scale(num_e) = mean(results.perc_discovery);
     vol_disc_scale(num_e) = results.vol_discovery;
@@ -167,7 +167,7 @@ end
 vol_disc = sum(vol_disc_scale);
 perc_disc = mean(perc_disc_scale);
 
-%% Generate samples under the null 
+%% Generate samples under the null
 if opt.nb_samps>0
     if opt.flag_verbose
         fprintf('Estimate the significance of the number of findings ...\n')
@@ -176,7 +176,7 @@ if opt.nb_samps>0
     p_perc_disc = 0;
     vol_disc_null = zeros([opt.nb_samps 1]);
     perc_disc_null = zeros([opt.nb_samps 1]);
-    
+
     opt_glm.test = 'ttest';
     for num_s = 1:opt.nb_samps
         if opt.flag_verbose
@@ -185,9 +185,9 @@ if opt.nb_samps>0
         if d.flag_multisite
             res_null = struct();
             for ss = 1:length(results.multisite.list_site)
-                glm_null(:,ss) = niak_permutation_glm(glm(:,ss));                
+                glm_null(:,ss) = niak_permutation_glm(glm(:,ss));
             end
-            for num_e = 1:size(glm_null,1)                            
+            for num_e = 1:size(glm_null,1)
                 for ss = 1:length(results.multisite.list_site)
                     res_null(ss) = niak_glm(glm_null(num_e,ss),opt_glm);
                     if ss == 1
@@ -201,13 +201,13 @@ if opt.nb_samps>0
                 std_eff = sqrt(1./std_eff);
                 ttest = eff./std_eff;
                 pce = 2*(1-normcdf(abs(ttest)));
-                [fdr_null,test_null] = niak_glm_fdr(pce,opt.type_fdr,opt.fdr,type_measure); 
+                [fdr_null,test_null] = niak_glm_fdr(pce,opt.type_fdr,opt.fdr,type_measure);
                 nb_disc_null = sum(test_null,1);
                 perc_disc_null(num_s) = perc_disc_null(num_s) + mean(nb_disc_null/size(fdr_null,1));
 
                 switch type_measure
                     case 'correlation'
-                        ttest_mat = niak_lvec2mat (ttest);        
+                        ttest_mat = niak_lvec2mat (ttest);
                     case 'glm'
                         ttest_mat = reshape (ttest,[sqrt(length(ttest)),sqrt(length(ttest))]);
                     otherwise
@@ -217,19 +217,19 @@ if opt.nb_samps>0
                     vol_disc_null(num_s) = vol_disc_null(num_s) + sum(ttest_mat(test_null(:)).^2);
                 else
                     vol_disc_null(num_s) = vol_disc_null(num_s) + max(ttest_mat(:).^2);
-                end 
-            end            
+                end
+            end
         else
-            glm_null = niak_permutation_glm(glm);        
+            glm_null = niak_permutation_glm(glm);
             for num_e = 1:length(glm_null)
-                res_null = niak_glm(glm_null(num_e),opt_glm);            
+                res_null = niak_glm(glm_null(num_e),opt_glm);
                 [fdr_null,test_null] = niak_glm_fdr(res_null.pce,opt.type_fdr,opt.fdr,type_measure);
                 nb_disc_null = sum(test_null,1);
                 perc_disc_null(num_s) = perc_disc_null(num_s) + mean(nb_disc_null/size(fdr_null,1));
 
                 switch type_measure
                     case 'correlation'
-                        ttest_mat = niak_lvec2mat (res_null.ttest);        
+                        ttest_mat = niak_lvec2mat (res_null.ttest);
                     case 'glm'
                         ttest_mat = reshape (res_null.ttest,[sqrt(length(res_null.ttest)),sqrt(length(res_null.ttest))]);
                     otherwise
@@ -239,7 +239,7 @@ if opt.nb_samps>0
                     vol_disc_null(num_s) = vol_disc_null(num_s) + sum(ttest_mat(test_null(:)).^2);
                 else
                     vol_disc_null(num_s) = vol_disc_null(num_s) + max(ttest_mat(:).^2);
-                end            
+                end
             end
         end
         perc_disc_null = perc_disc_null/length(files_in);
@@ -251,8 +251,8 @@ if opt.nb_samps>0
 else
     p_perc_disc = NaN;
     p_vol_disc = NaN;
-    vol_disc_null = NaN;    
+    vol_disc_null = NaN;
 end
 
-%% Save the results 
+%% Save the results
 save(files_out,'vol_disc','nb_disc_scale','perc_disc_scale','vol_disc_scale','p_vol_disc','perc_disc','vol_disc_null','perc_disc_null','p_perc_disc');

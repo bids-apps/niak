@@ -7,8 +7,8 @@ function [files_in,files_out,opt] = niak_brick_glm_fir_perm(files_in,files_out,o
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN 
-%   (cell of string) a series of .mat files (each one corresponding to one scale) with the 
+% FILES_IN
+%   (cell of string) a series of .mat files (each one corresponding to one scale) with the
 %   following variables:
 %
 %   MODEL_GROUP.X
@@ -30,7 +30,7 @@ function [files_in,files_out,opt] = niak_brick_glm_fir_perm(files_in,files_out,o
 %      (scalar) the total number of discoveries across all scales.
 %
 %   NB_DISC_NULL
-%      (vector) NB_DISC_NULL(S) is the number of discoveries under the null 
+%      (vector) NB_DISC_NULL(S) is the number of discoveries under the null
 %      hypothesis of no association for the Sth permutation sample.
 %
 %   P_NB_DISC
@@ -41,17 +41,17 @@ function [files_in,files_out,opt] = niak_brick_glm_fir_perm(files_in,files_out,o
 %   (structure) with the following fields:
 %
 %   FDR
-%      (scalar, default 0.05) the level of acceptable false-discovery rate 
+%      (scalar, default 0.05) the level of acceptable false-discovery rate
 %      for the t-maps.
 %
 %   TYPE_FDR
-%      (string, default 'BH') how the FDR is controled. 
+%      (string, default 'BH') how the FDR is controled.
 %      Available options:
 %         'BH': a BH procedure on the full set of FIR.
 %         'LSL': a GBH procedure controlling the FDR on the full set of FIR
-%             but using the grouping of tests per FIR, with a least-slope 
+%             but using the grouping of tests per FIR, with a least-slope
 %             estimation of the number of discoveries. See NIAK_FDR.
-%         'local': only control of the FDR across time points for each network. 
+%         'local': only control of the FDR across time points for each network.
 %             Do not correct for the number of networks.
 %         'uncorrected': do not correct p-values, OPT.FDR is used as significance
 %             threshold on the p-values.
@@ -59,7 +59,7 @@ function [files_in,files_out,opt] = niak_brick_glm_fir_perm(files_in,files_out,o
 %   NB_SAMPS
 %      (integer, default 1000) the number of samples under the null hypothesis
 %      used to test the significance of the number of discoveries.
-%   
+%
 %   RAND_SEED
 %       (scalar, default []) The specified value is used to seed the random
 %       number generator with PSOM_SET_RAND_SEED. If left empty, no action
@@ -69,8 +69,8 @@ function [files_in,files_out,opt] = niak_brick_glm_fir_perm(files_in,files_out,o
 %       (boolean, default 0) if the flag is 1, then the function does not
 %       do anything but update the defaults of FILES_IN, FILES_OUT and OPT.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
 % _________________________________________________________________________
@@ -88,8 +88,8 @@ function [files_in,files_out,opt] = niak_brick_glm_fir_perm(files_in,files_out,o
 %
 % The input files are generated with NIAK_BRICK_GLM_FIR
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -122,7 +122,7 @@ if ~exist('files_in','var')||~exist('files_out','var')||~exist('opt','var')
     error('niak:brick','syntax: [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_GLM_CONNECTOME_PERM(FILES_IN,FILES_OUT,OPT).\n Type ''help niak_brick_glm_connectome_perm'' for more info.')
 end
 
-%% Files in 
+%% Files in
 if ~iscellstr(files_in)
     error('FILES_IN should be a cell of strings')
 end
@@ -158,9 +158,9 @@ vol_disc_scale = zeros(length(files_in),1);
 q_hetero = Inf;
 nt = zeros([length(files_in),1]);
 nn = zeros([length(files_in),1]);
-for num_e = 1:length(files_in);    
+for num_e = 1:length(files_in);
     results = load(files_in{num_e},'model_group','nb_discovery','perc_discovery','type_measure','ttest','vol_discovery');
-    [nt(num_e),nn(num_e)] = size(results.ttest);    
+    [nt(num_e),nn(num_e)] = size(results.ttest);
     glm(num_e) = results.model_group;
     nb_disc_scale(num_e) = sum(results.nb_discovery);
     perc_disc_scale(num_e) = mean(results.perc_discovery);
@@ -169,7 +169,7 @@ end
 vol_disc = sum(vol_disc_scale);
 perc_disc = mean(perc_disc_scale);
 
-%% Generate samples under the null 
+%% Generate samples under the null
 if opt.nb_samps>0
     if opt.flag_verbose
         fprintf('Estimate the significance of the number of findings ...\n')
@@ -183,9 +183,9 @@ if opt.nb_samps>0
         if opt.flag_verbose
             niak_progress(num_s,opt.nb_samps);
         end
-        glm_null = niak_permutation_glm(glm);        
+        glm_null = niak_permutation_glm(glm);
         for num_e = 1:length(glm_null)
-            res_null = niak_glm(glm_null(num_e),opt_glm);                        
+            res_null = niak_glm(glm_null(num_e),opt_glm);
             [fdr_null,test_null] = sub_fdr(res_null.pce,opt.type_fdr,opt.fdr,nt(num_e),nn(num_e));
             nb_disc_null = sum(test_null,1);
             perc_disc_null(num_s) = perc_disc_null(num_s) + mean(nb_disc_null/size(fdr_null,1));
@@ -193,7 +193,7 @@ if opt.nb_samps>0
                 vol_disc_null(num_s) = vol_disc_null(num_s) + sum(res_null.ttest(test_null(:)).^2);
             else
                 vol_disc_null(num_s) = vol_disc_null(num_s) + max(res_null.ttest(:).^2);
-            end  
+            end
         end
         perc_disc_null = perc_disc_null/length(files_in);
         p_vol_disc = p_vol_disc + double(vol_disc_null(num_s)>=vol_disc);
@@ -204,10 +204,10 @@ if opt.nb_samps>0
 else
     p_perc_disc = NaN;
     p_vol_disc = NaN;
-    vol_disc_null = NaN;    
+    vol_disc_null = NaN;
 end
 
-%% Save the results 
+%% Save the results
 save(files_out,'vol_disc','nb_disc_scale','perc_disc_scale','vol_disc_scale','p_vol_disc','vol_disc_null','perc_disc','perc_disc_null','p_perc_disc');
 
 %%%%%%%
@@ -222,18 +222,18 @@ switch type_fdr
     case {'global','BH'}
         [fdr,test_q] = niak_fdr(pce(:),'BH',q);
         fdr = reshape(fdr,[nt nn]);
-        test_q = reshape(test_q,[nt nn])>0; 
-        
+        test_q = reshape(test_q,[nt nn])>0;
+
     case 'LSL'
         [fdr,test_q] = niak_fdr(pce_m,'LSL',q);
-        
+
     case {'local','BH-local'}
         [fdr,test_q] = niak_fdr(pce_m,'BH',q);
-        
+
     case 'uncorrected'
         fdr = pce_m;
         test_q = fdr <= q;
-        
+
     otherwise
         error('%s is an unknown procedure to control the FDR',type_fdr)
 end

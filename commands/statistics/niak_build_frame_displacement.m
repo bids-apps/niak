@@ -8,7 +8,7 @@ function [fd,mask] = niak_build_frame_displacement(transf,thresh);
 % INPUTS:
 %
 % TRANSF
-%   (4*4*N array) TRANSF(:,:,n) is an lsq6 transformation, usually seen 
+%   (4*4*N array) TRANSF(:,:,n) is an lsq6 transformation, usually seen
 %   as a "voxel-to-world" space transform.
 %
 % THRESH
@@ -17,7 +17,7 @@ function [fd,mask] = niak_build_frame_displacement(transf,thresh);
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% FD             
+% FD
 %   (vector N-1x1) the frame displacement between successive frames
 %
 % MASK
@@ -33,14 +33,14 @@ function [fd,mask] = niak_build_frame_displacement(transf,thresh);
 % For an overview of the "scrubbing" of volumes with excessive motion, see:
 %
 %   J. D. Power, K. A. Barnes, Abraham Z. Snyder, B. L. Schlaggar, S. E. Petersen
-%   Spurious but systematic correlations in functional connectivity MRI networks 
+%   Spurious but systematic correlations in functional connectivity MRI networks
 %   arise from subject motion
 %   NeuroImage Volume 59, Issue 3, 1 February 2012, Pages 2142–2154
 %
 %   Note that the scrubbing is based solely on the FD index, and that DVARS is not
 %   derived. The paper of Power et al. included both indices.
 %
-% Copyright (c) Pierre Bellec 
+% Copyright (c) Pierre Bellec
 % Research Centre of the Montreal Geriatric Institute
 % & Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2013
@@ -81,5 +81,5 @@ if nargout > 1
     mask2(1:(end-1)) = mask2(1:(end-1))|mask(2:end);
     mask2(2:end) = mask2(2:end)|mask(1:(end-1));
     mask2(3:end) = mask2(3:end)|mask(1:(end-2));
-    mask = mask2;    
+    mask = mask2;
 end

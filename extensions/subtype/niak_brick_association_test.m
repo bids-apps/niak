@@ -13,9 +13,9 @@ function [files_in,files_out,opt] = niak_brick_association_test(files_in, files_
 %
 %   WEIGHT
 %       (string) a .mat file with two variables.
-%       WEIGHT_MAT is a (#subjects)x(#subtype) matrix of weights. 
+%       WEIGHT_MAT is a (#subjects)x(#subtype) matrix of weights.
 %       LIST_SUBJECT is a (#subjects)x1 cell array of strings, with the subject
-%       labels for each row of WEIGHT_MAT. 
+%       labels for each row of WEIGHT_MAT.
 %
 %   MODEL
 %       (string) a .csv files coding for the pheno data. Is expected to
@@ -29,7 +29,7 @@ function [files_in,files_out,opt] = niak_brick_association_test(files_in, files_
 %       (string) path to the .mat file containing the fitted GLM and FDR results
 %
 %   CSV
-%       (string, default 'results_overview.csv') path to the .csv file 
+%       (string, default 'results_overview.csv') path to the .csv file
 %       containing the overview of significant results passing FDR
 %
 % OPT
@@ -61,11 +61,11 @@ function [files_in,files_out,opt] = niak_brick_association_test(files_in, files_
 %
 %      <NAME>
 %         (scalar) the weight of the covariate NAME in the contrast.
-% 
+%
 %   INTERACTION
 %      (structure array, optional) with multiple entries and the following
 %      fields:
-%          
+%
 %      LABEL
 %         (string) a label for the interaction covariate.
 %
@@ -133,7 +133,7 @@ function [files_in,files_out,opt] = niak_brick_association_test(files_in, files_
 %   FLAG_FILTER_NAN
 %      (boolean, default true) if the flag is true, any observation
 %      associated with a NaN in MODEL.X is removed from the model.
-%   
+%
 %   FLAG_VERBOSE
 %       (boolean, default true) turn on/off the verbose.
 %
@@ -179,7 +179,7 @@ else
                 { 'stats'           , 'csv'             },...
                 { 'gb_niak_omitted' , 'gb_niak_omitted' });
 end
-  
+
 %% Sanity Checks
 % Since we don't know which optional parameters were set, we'll remove the
 % empty default values again so they don't cause trouble downstream
@@ -230,7 +230,7 @@ if isfield(opt, 'interaction')
             end
         end
     end
-end  
+end
 
 %% If the test flag is true, stop here !
 if opt.flag_test == 1

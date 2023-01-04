@@ -8,26 +8,26 @@ function [pipe,opt] = niak_test_connectome_multiscale(path_test,opt)
 % INPUTS:
 %
 % PATH_TEST (string) where to store the results of the tests
-% OPT.FLAG_TEST (boolean, default false) if FLAG_TEST == true, the demo will 
+% OPT.FLAG_TEST (boolean, default false) if FLAG_TEST == true, the demo will
 %   just generate the test PIPELINE.
 % OPT.PSOM (structure) the options of the pipeline manager. See the OPT
-%   argument of PSOM_RUN_PIPELINE. Note that the field PSOM.PATH_LOGS will be 
+%   argument of PSOM_RUN_PIPELINE. Note that the field PSOM.PATH_LOGS will be
 %   set up by the pipeline.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% PIPELINE (structure) a formal description of the test pipeline. 
+% PIPELINE (structure) a formal description of the test pipeline.
 %   See PSOM_RUN_PIPELINE.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
-% The data for the tests can be generated with 
+% The data for the tests can be generated with
 %   NIAK_TEST_CONNECTOME_MULTISCALE_DATA
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -113,12 +113,12 @@ pipe.(name).opt.param.run1_motion_sel_motor.intra_run.projection      = {'motion
 pipe.(name).opt.param.run1_motion_sel_motor.intra_run.select(1).label = 'motor';
 pipe.(name).opt.param.run1_motion_sel_motor.intra_run.select(1).min   = 0.95;
 
-% difference of correlation between run1 and run2, selecting the motor volumes. 
+% difference of correlation between run1 and run2, selecting the motor volumes.
 pipe.(name).opt.param.run1_minus_run2_sel_motor.inter_run.contrast.run1 = 1;
 pipe.(name).opt.param.run1_minus_run2_sel_motor.intra_run.select(1).label = 'motor';
 pipe.(name).opt.param.run1_minus_run2_sel_motor.intra_run.select(1).min   = 0.95;
 
-% difference of correlation between run1 and run2, selecting the visual volumes. 
+% difference of correlation between run1 and run2, selecting the visual volumes.
 pipe.(name).opt.param.run1_minus_run2_sel_visual.inter_run.contrast.run1 = 1;
 pipe.(name).opt.param.run1_minus_run2_sel_visual.intra_run.select(1).label = 'visual';
 pipe.(name).opt.param.run1_minus_run2_sel_visual.intra_run.select(1).min   = 0.95;

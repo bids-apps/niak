@@ -1,7 +1,7 @@
 function vol_c = niak_correct_vol(vol,mask)
-% Correct the distribution of a 3D random field to zero mean/unit variance 
+% Correct the distribution of a 3D random field to zero mean/unit variance
 % The function fits a Gaussian distribution on the histogram of the volume
-% insie a mask, with parameters initialized by the median and the median 
+% insie a mask, with parameters initialized by the median and the median
 % absolute deviation to the median.
 %
 % SYNTAX:
@@ -10,16 +10,16 @@ function vol_c = niak_correct_vol(vol,mask)
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL       
+% VOL
 %       (3D array)
 %
-% MASK      
+% MASK
 %       (binary 3D array)
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% VOL_C     
+% VOL_C
 %       (3D array) same as VOL, with corrected distribution.
 %
 % _________________________________________________________________________

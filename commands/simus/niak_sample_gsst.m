@@ -1,7 +1,7 @@
 function [tseries,opt] = niak_sample_gsst(opt)
 % Sample from a Gaussian process with a separable space-time structure
 %
-% SYNTAX : 
+% SYNTAX :
 % [TSERIES,OPT] = NIAK_SAMPLE_GSST(OPT)
 %
 % _________________________________________________________________________
@@ -11,21 +11,21 @@ function [tseries,opt] = niak_sample_gsst(opt)
 %       (structure) with the following fields :
 %
 %       TIME
-%           (structure) with the following fields : 
+%           (structure) with the following fields :
 %
-%           T  
+%           T
 %               (integer), number of time samples
 %
 %           TR
 %               (scalar, default 3s), the time between two volumes
 %
 %           TYPE
-%               (string, default 'exponential') the type of temporal 
+%               (string, default 'exponential') the type of temporal
 %               correlation model. Choices: 'exponential', 'exact',
 %               'independent'.
 %
-%           PAR 
-%               (vector) : the parameters of the parametric temporal 
+%           PAR
+%               (vector) : the parameters of the parametric temporal
 %               correlation model. It depends on OPT.TIME.TYPE:
 %
 %                   'independent' : no PAR is necessary.
@@ -44,7 +44,7 @@ function [tseries,opt] = niak_sample_gsst(opt)
 %               necessary with the 'homogeneous' model.
 %
 %           VARIANCE
-%               (vector, default 1) VARIANCE(I) is the variance 
+%               (vector, default 1) VARIANCE(I) is the variance
 %               of region I. If VARIANCE is a scalar, the same variance is
 %               used for all regions.
 %
@@ -52,14 +52,14 @@ function [tseries,opt] = niak_sample_gsst(opt)
 %               (string, default 'exact') the type of spatial correlation
 %               model. Choices : 'exact', 'homogeneous',
 %               'independent'.
-%         
-%           PAR 
-%               (vector, default 'exact') : the parameters of the 
-%               parametric spatial correlation model. It depends 
+%
+%           PAR
+%               (vector, default 'exact') : the parameters of the
+%               parametric spatial correlation model. It depends
 %               on OPT.SPACE.TYPE:
 %
-%                   'homogeneous' : two parameters, NB_ROIS and AFC. See 
-%                       the help of NIAK_CORR_MODEL_HOMOGENEOUS. 
+%                   'homogeneous' : two parameters, NB_ROIS and AFC. See
+%                       the help of NIAK_CORR_MODEL_HOMOGENEOUS.
 %
 %                   'exact' : PAR is a N*N definite-positive matrix
 %                       defining the spatial correlation.
@@ -69,7 +69,7 @@ function [tseries,opt] = niak_sample_gsst(opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% TSERIES 
+% TSERIES
 %       (array, size T*N) the simulated time series (in columns) (Y).
 %
 % OPT
@@ -78,8 +78,8 @@ function [tseries,opt] = niak_sample_gsst(opt)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, 
-% McConnell Brain Imaging Center,Montreal, Neurological Institute, 
+% Copyright (c) Pierre Bellec,
+% McConnell Brain Imaging Center,Montreal, Neurological Institute,
 % McGill University, 2008-2010
 % Centre de recherche de l'institut de Gériatrie de Montréal
 % Département d'informatique et de recherche opérationnelle
@@ -133,24 +133,24 @@ niak_set_defaults
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 switch opt.time.type
-    
+
     case 'exponential'
-        
+
         Dt = tr*abs(meshgrid(1:t)-meshgrid(1:t)');
         Rt = niak_corr_model_exponential(Dt,opt.time.par);
-        
+
     case 'exact'
-        
+
         Rt = opt.time.par;
-        
+
     case 'independent'
-        
+
         Rt = eye([t t]);
-        
+
     otherwise
-        
+
         error('%s is an unknown time correlation model',opt.time.type);
-        
+
 end
 
 sqrtRt = chol(Rt);
@@ -162,22 +162,22 @@ sqrtRt = chol(Rt);
 switch opt.space.type
 
     case 'homogeneous'
-        
+
         Rs = niak_corr_model_homogeneous(opt.space.par.afc,opt.space.par.nb_rois);
         n = sum(opt.space.par.nb_rois);
-        
+
     case 'exact'
-        
+
         Rs = opt.space.par;
-        
+
     case 'independent'
-        
+
         Rs = eye([n n]);
-        
+
     otherwise
-        
+
         error('%s is an unkown spatial correlation model.',opt.space.type)
-        
+
 end
 if isempty(opt.space.variance)
     std_vec = ones([n 1]);

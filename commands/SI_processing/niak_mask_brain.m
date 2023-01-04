@@ -3,28 +3,28 @@ function mask = niak_mask_brain(vol,opt)
 %
 % SYNTAX:
 % MASK = NIAK_MASK_BRAIN(VOL,OPT)
-% 
-% _________________________________________________________________________
-% INPUTS: 
 %
-% VOL       
+% _________________________________________________________________________
+% INPUTS:
+%
+% VOL
 %       (4D array) a 3D or 3D+t dataset
 %
-% OPT       
-%       (structure, optional) with the following fields:   
-%       
-%       FWHM 
-%           (real value, default 0) the FWHM of the blurring kernel in 
+% OPT
+%       (structure, optional) with the following fields:
+%
+%       FWHM
+%           (real value, default 0) the FWHM of the blurring kernel in
 %           voxel size unit. A value of 0 for FWHM will skip the smoothing step.
-%       
-%       VOXEL_SIZE 
+%
+%       VOXEL_SIZE
 %           (vector of size [3 1] or [4 1], default [3 3 3]) the resolution
 %           in the respective dimensions, i.e. the space in mmm
 %           between two voxels in x, y, and z (yet the unit is
 %           irrelevant and just need to be consistent with
 %           the filter width (fwhm)). The fourth element is ignored.
 %
-%       FLAG_REMOVE_EYES 
+%       FLAG_REMOVE_EYES
 %           (boolean, default 0) if FLAG_REMOVE_EYES == 1, an
 %           attempt is done to remove the eyes from the mask. Work only for
 %           fMRI !
@@ -36,7 +36,7 @@ function mask = niak_mask_brain(vol,opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% MASK          
+% MASK
 %       (3D array) binary mask of the inside of the brain
 %
 % _________________________________________________________________________
@@ -44,7 +44,7 @@ function mask = niak_mask_brain(vol,opt)
 %
 % Otsu, N.
 % A Threshold Selection Method from Gray-Level Histograms.
-% IEEE Transactions on Systems, Man, and Cybernetics, Vol. 9, No. 1, 1979, 
+% IEEE Transactions on Systems, Man, and Cybernetics, Vol. 9, No. 1, 1979,
 % pp. 62-66.
 %
 % _________________________________________________________________________
@@ -55,8 +55,8 @@ function mask = niak_mask_brain(vol,opt)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Use the "Otsu" algorithm to separate two Gaussian distributions in an 
-% histogram of the mean of the absolute values of all volumes. This is a 
+% Use the "Otsu" algorithm to separate two Gaussian distributions in an
+% histogram of the mean of the absolute values of all volumes. This is a
 % port from the FORTRAN "spider" library, by Joachim Frank.
 %
 %
@@ -121,7 +121,7 @@ if flag_remove_eyes
     [val,ind] = max(list_size);
     mask = mask == ind;
 end
- 
+
 function seuil = otsu(hist)
 % An implementation of the Otsu algorithm to separate two Gaussian
 % distribution in an histogram.
@@ -143,7 +143,7 @@ for i = 1:(ngr-1)
     s = somme*p-a;
     d = p*(1-p);
     if (d>=eps)
-        s = s*s/d;        
+        s = s*s/d;
         if (s >= smax)
             smax = s;
             amax = a;

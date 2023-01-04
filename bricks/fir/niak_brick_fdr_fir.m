@@ -9,12 +9,12 @@ function [files_in,files_out,opt] = niak_brick_fdr_fir(files_in,files_out,opt)
 %
 % FILES_IN
 %    (structure) with the following fields:
-% 
+%
 %    FIR
-%        (string or cell of strings) Each entry is the name of a .mat file, 
+%        (string or cell of strings) Each entry is the name of a .mat file,
 %        which contains the following variables:
-%       (NETWORK).FIR(:,I,J) is the time series of region I at trial J. 
-%       (NETWORK).NORMALIZE.TYPE and (NETWORK).NORMALIZE.TIME_SAMPLING are the 
+%       (NETWORK).FIR(:,I,J) is the time series of region I at trial J.
+%       (NETWORK).NORMALIZE.TYPE and (NETWORK).NORMALIZE.TIME_SAMPLING are the
 %          OPT parameters of NIAK_NORMALIZE_FIR.
 %       The name NETWORK can be changed with OPT.NETWORK below.
 %
@@ -28,7 +28,7 @@ function [files_in,files_out,opt] = niak_brick_fdr_fir(files_in,files_out,opt)
 %       (string) A .mat file which contains two variables TEST_FIR
 %       and TEST_DIFF.
 %
-% OPT           
+% OPT
 %   (structure) with the following fields:
 %
 %   FDR
@@ -39,8 +39,8 @@ function [files_in,files_out,opt] = niak_brick_fdr_fir(files_in,files_out,opt)
 %       Available options: 'LSL', 'TST', 'BH', 'BY'. See NIAK_FDR.
 %       All procedures control for the global false discovery rate
 %       over all tests (i.e. all time point and all regions for test
-%       on the significance of the average FIR; all time points and 
-%       all pairs of regions for test on the significance of the 
+%       on the significance of the average FIR; all time points and
+%       all pairs of regions for test on the significance of the
 %       difference of the average FIR).
 %
 %   NETWORK
@@ -50,16 +50,16 @@ function [files_in,files_out,opt] = niak_brick_fdr_fir(files_in,files_out,opt)
 %       (boolean, default 0) if the flag is 1, then the function does not
 %       do anything but update the defaults of FILES_IN, FILES_OUT and OPT.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function
 %       prints some infos during the processing.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_BUILD_FIR, NIAK_PIPELINE_STABILITY_FIR
@@ -67,8 +67,8 @@ function [files_in,files_out,opt] = niak_brick_fdr_fir(files_in,files_out,opt)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2010-2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -96,7 +96,7 @@ function [files_in,files_out,opt] = niak_brick_fdr_fir(files_in,files_out,opt)
 if ~exist('files_in','var')||~exist('files_out','var')||~exist('opt','var')
     error('niak:brick','syntax: [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_FDR_FIR(FILES_IN,FILES_OUT,OPT).\n Type ''help niak_brick_fdr_fir'' for more info.')
 end
-   
+
 %% Files in
 list_fields   = {'fir' , 'partition' };
 list_defaults = {NaN   , NaN         };
@@ -132,9 +132,9 @@ for num_e = 1:length(files_in.fir)
     if ~mask_ok(num_e)
         warning('The FIR did not have the minimum number of trials required in OPT.NB_MIN_FIR. I am going to use the data from this subject.')
         continue
-    end        
+    end
     fir_net(:,:,num_e) = data.(network).fir_mean;
-end    
+end
 if any(mask_ok)
     fir_net = fir_net(:,:,mask_ok);
 else
@@ -175,8 +175,8 @@ if opt.flag_verbose
     fprintf('Testing the significance of differences in FIR responses ...\n')
 end
 
-dmean  = zeros(nt,nn,nn); 
-dstd   = zeros(nt,nn,nn); 
+dmean  = zeros(nt,nn,nn);
+dstd   = zeros(nt,nn,nn);
 dttest = zeros(nt,nn,nn);
 ddf    = zeros(nt,nn,nn); % degrees of freedom
 dpce   = zeros(nt,nn,nn); % two-tailed p-values
@@ -191,8 +191,8 @@ end
 
 % Re-organize the results of the test
 nn2 = nn*(nn-1)/2;
-test_diff.mean  = zeros(nt,nn2); 
-test_diff.std   = zeros(nt,nn2); 
+test_diff.mean  = zeros(nt,nn2);
+test_diff.std   = zeros(nt,nn2);
 test_diff.ttest = zeros(nt,nn2);
 test_diff.df    = zeros(nt,nn2); % degrees of freedom
 test_diff.pce   = zeros(nt,nn2); % two-tailed p-values
@@ -204,7 +204,7 @@ for num_t = 1:nt
     test_diff.pce(num_t,:)   = niak_mat2vec(squeeze(dpce(num_t,:,:)));
 end
 
-% The FDR test 
+% The FDR test
 switch opt.type_fdr
     case {'LSL','TST'}
         [test_diff.fdr,test_diff.test] = niak_fdr(test_diff.pce,opt.type_fdr,opt.fdr);

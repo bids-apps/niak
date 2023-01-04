@@ -6,62 +6,62 @@ function [] = niak_montage(vol,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL           
+% VOL
 %       (3D array) a 3D volume
 %
-% OPT           
+% OPT
 %       (structure, optional) has the following fields:
 %
-%       NB_ROWS 
-%           (integer, default : optimized for a square montage) the number 
+%       NB_ROWS
+%           (integer, default : optimized for a square montage) the number
 %           of rows in the montage.
-%               
-%       NB_COLUMNS 
-%           (integer, default : optimized for a square montage) the number 
+%
+%       NB_COLUMNS
+%           (integer, default : optimized for a square montage) the number
 %           of columns in the montage.
 %
-%       VOXEL_SIZE 
-%           (vector 1*3, default [1 1 1]) resolution in x, y and z 
+%       VOXEL_SIZE
+%           (vector 1*3, default [1 1 1]) resolution in x, y and z
 %           dimensions (used if smoothing the volume).
 %
-%       TYPE_SLICE 
-%           (string, default 'axial') the plane of slices in the montage. 
-%           Available options : 'axial', 'coronal', 'sagital', 'all'. 
-%           This option assumes the volume is in 'xyz' convention (left to 
-%           right, posterior to anterior, ventral to dorsal). With 'all' 
+%       TYPE_SLICE
+%           (string, default 'axial') the plane of slices in the montage.
+%           Available options : 'axial', 'coronal', 'sagital', 'all'.
+%           This option assumes the volume is in 'xyz' convention (left to
+%           right, posterior to anterior, ventral to dorsal). With 'all'
 %           option, three subplots will be made, one for each slice type.
 %
-%       VOL_LIMITS 
-%           (vector 1*2, default [min(vol(:)) max(vol(:))]) limits of the 
+%       VOL_LIMITS
+%           (vector 1*2, default [min(vol(:)) max(vol(:))]) limits of the
 %           color scaling.
 %
-%       TYPE_COLOR 
-%           (string, default 'jet') colormap name. Any regular type of 
-%			matlab colormap can be used. Additional options : 
-%				'jet_rev' a revert jet color map (red for low values, 
-%					blue for high values). Good for representing 
+%       TYPE_COLOR
+%           (string, default 'jet') colormap name. Any regular type of
+%			matlab colormap can be used. Additional options :
+%				'jet_rev' a revert jet color map (red for low values,
+%					blue for high values). Good for representing
 %					distances.
-%				'hot_cold' designed for maps with both positive & 
-%					negative matrices.					
+%				'hot_cold' designed for maps with both positive &
+%					negative matrices.
 %
-%       FWHM 
-%           (double, default 0) smooth the image with a isotropic Gaussian 
+%       FWHM
+%           (double, default 0) smooth the image with a isotropic Gaussian
 %           kernel of SMOOTH fwhm (in voxels).
 %
-%       TYPE_FLIP 
-%           (string, default 'rot90') make rotation and flip of the slice 
-%           representation. see NIAK_FLIP_VOL for options. 
+%       TYPE_FLIP
+%           (string, default 'rot90') make rotation and flip of the slice
+%           representation. see NIAK_FLIP_VOL for options.
 %           'rot90' will work for axial slices of a volume oriented
-%           from left to right, from anterior to posterior, and 
-%           from ventral to dorsal. In this case, left is left on the 
+%           from left to right, from anterior to posterior, and
+%           from ventral to dorsal. In this case, left is left on the
 %           image.
 %
-%       FLAG_COLORBAR 
-%           (boolean, default 1) if flag_colorbar is true, a colorbar is 
+%       FLAG_COLORBAR
+%           (boolean, default 1) if flag_colorbar is true, a colorbar is
 %           included in the figure.
 %
-%       COMMENT 
-%           (string, default '') a string that will appear in all figure 
+%       COMMENT
+%           (string, default '') a string that will appear in all figure
 %           titles.
 %
 % _________________________________________________________________________
@@ -75,7 +75,7 @@ function [] = niak_montage(vol,opt)
 % If both the number of rows ans the number of columns are specified, the
 % number of slices are adapted to match the montage.
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Montreal Neurological Institute, 2008-2010
 % Departement d'informatique et de recherche operationnelle
 % Centre de recherche de l'institut de Geriatrie de Montreal
@@ -110,17 +110,17 @@ gb_list_defaults  = {'axial'      , [min(vol(:)) max(vol(:))] , 'jet'        , 0
 niak_set_defaults
 
 switch type_color
-	case 'hot_cold'   
+	case 'hot_cold'
     if (opt.vol_limits(2)>0) && (opt.vol_limits(1)<0)
         per_hot = opt.vol_limits(2)/(opt.vol_limits(2)-opt.vol_limits(1));
     elseif opt.vol_limits(2)<=0
         per_hot = 0;
-    else 
+    else
         per_hot = 1;
     end
-    c = niak_hot_cold(256,per_hot);    
-    colormap(c)   
-    
+    c = niak_hot_cold(256,per_hot);
+    colormap(c)
+
 	case 'jet_rev'
 		c = jet(256);
 		c = c(end:-1:1,:);
@@ -145,7 +145,7 @@ switch type_slice
     case 'all'
 
     list_view = {'axial','sagital','coronal'};
-    
+
     for num_v = 1:length(list_view)
         opt.type_slice = list_view{num_v};
         subplot(3,1,num_v)
@@ -169,7 +169,7 @@ end
 
 if nb_columns == 0
     M = ceil(nz/N);
-else    
+else
     M = nb_columns;
 end
 
@@ -190,7 +190,7 @@ end
 if strcmp(type_flip,'rot270')||strcmp(type_flip,'rot90')
     vol2 = zeros([ny*N nx*M]);
 else
-    vol2 = zeros([nx*N ny*M]);    
+    vol2 = zeros([nx*N ny*M]);
 end
 
 [indy,indx] = find(ones([M,N]));
@@ -205,13 +205,13 @@ for num_z = 1:nz
 end
 
 imagesc(vol2,double(vol_limits));
-if strcmp(type_flip,'rot270')||strcmp(type_flip,'rot90')    
+if strcmp(type_flip,'rot270')||strcmp(type_flip,'rot90')
     %axis([1 ny*N 1 nx*M]);
     siz_tot = [size(vol2).*voxel_size([2 1])];
-    siz_tot = siz_tot/sum(siz_tot);    
+    siz_tot = siz_tot/sum(siz_tot);
     set(gca,'DataAspectRatio',[siz_tot 1]);
 else
-    %axis([1 nx*N 1 ny*M]);    
+    %axis([1 nx*N 1 ny*M]);
     set(gca,'DataAspectRatio',[size(vol2).*voxel_size([1 2]) 1]);
 end
 

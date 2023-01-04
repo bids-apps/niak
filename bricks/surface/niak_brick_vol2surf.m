@@ -10,55 +10,55 @@ function [files_in,files_out,opt] = niak_brick_vol2surf(files_in,files_out,opt)
 % FILES_IN
 %    (structure) with the following fields:
 %
-%    VOL        
+%    VOL
 %        (string) a file name of a 3D or 3D+t dataset.
 %
 %    SURF
-%        (string or cell of strings, default gray/white/middle surfaces for the 
-%        2009 non-linear symmetric ICBM template) case string: the surface 
-%        used to interpolate. Case cell of string size n x k: multiple 
-%        surfaces are provided (SURF(k,:) is one surface, all surfaces are 
-%        concatenated in the second dimension). Interpolation is performed on all 
-%        surfaces and the max value (in absolute value) is retained. 
+%        (string or cell of strings, default gray/white/middle surfaces for the
+%        2009 non-linear symmetric ICBM template) case string: the surface
+%        used to interpolate. Case cell of string size n x k: multiple
+%        surfaces are provided (SURF(k,:) is one surface, all surfaces are
+%        concatenated in the second dimension). Interpolation is performed on all
+%        surfaces and the max value (in absolute value) is retained.
 %
-% FILES_OUT       
+% FILES_OUT
 %    (string, default <BASE FILES_IN.VOL>_surf.mat) a MAT file with one
-%    variable DATA. DATA(t,v) is the interpolated value of VOL(:,:,:,t) at 
-%    node v of the surface. See FILES_IN.SURF for further comments on the case 
+%    variable DATA. DATA(t,v) is the interpolated value of VOL(:,:,:,t) at
+%    node v of the surface. See FILES_IN.SURF for further comments on the case
 %    of multiple surfaces.
 %
-% OPT           
-%    (structure) with the following fields.  
+% OPT
+%    (structure) with the following fields.
 %
 %    INTERPOLATION
-%        (string, default 'nearest_neighbour') The interpolation scheme. 
+%        (string, default 'nearest_neighbour') The interpolation scheme.
 %        available options : 'linear' , 'cubic' , 'nearest_neighbour'
 %
-%    FLAG_VERBOSE 
-%        (boolean, default 1) if the flag is 1, then the function 
+%    FLAG_VERBOSE
+%        (boolean, default 1) if the flag is 1, then the function
 %        prints some infos during the processing.
 %
-%    FLAG_TEST 
-%        (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%        do anything but update the default values in FILES_IN, 
+%    FLAG_TEST
+%        (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%        do anything but update the default values in FILES_IN,
 %        FILES_OUT and OPT.
-%        
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%           
+%
 % _________________________________________________________________________
 % COMMENTS;
 %
-% This is a simple wraper of VOLUME_OBJECT_EVALUATE, part of the MINC 
+% This is a simple wraper of VOLUME_OBJECT_EVALUATE, part of the MINC
 % bundle. It will eventually be replaced by a pure matlab implementation,
 % but that may take a while. This brick requires the minc tools to work.
-%  
+%
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Departement d'informatique et de recherche operationnelle,
 % Universite de Montreal, 2012
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -90,7 +90,7 @@ if ~exist('files_in','var')
     error('niak:brick','syntax: [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_VOL2SURF(FILES_IN,FILES_OUT,OPT).\n Type ''help niak_brick_vol2surf'' for more info.')
 end
 
-%% Input files 
+%% Input files
 files_in = psom_struct_defaults(files_in,{'vol','surf'},{NaN,''});
 
 if isempty(files_in.surf)

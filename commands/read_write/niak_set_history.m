@@ -7,36 +7,36 @@ function hdr2 = niak_set_history(hdr,opt)
 %
 % SYNTAX
 % HDR2 = NIAK_SET_HISTORY(HDR,OPT)
-% 
+%
 % _________________________________________________________________________
 % INPUTS:
 %
-% HDR           
+% HDR
 %       (structure) header of a 3D or 3D+t data file (see NIAK_READ_VOL).
 %
-% OPT           
+% OPT
 %       (struture) with the following fields :
 %
-%       COMMAND 
+%       COMMAND
 %           (string, default '') the name of the command applied.
 %
-%       FILES_IN   
-%           (structure, cell of strings or strings, default struct()) List 
+%       FILES_IN
+%           (structure, cell of strings or strings, default struct()) List
 %           of input files.
 %
-%       FILES_OUT  
-%           (structure, cell of strings or strings, default struct() ) List 
+%       FILES_OUT
+%           (structure, cell of strings or strings, default struct() ) List
 %           of output files.
 %
-%       COMMENT 
+%       COMMENT
 %           (string, default struct()) user-specified comment.
-% 
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% HDR2          
+% HDR2
 %       (structure) same as HDR, yet the HDR.INFO.HISTORY has a new line.
-% 
+%
 % _________________________________________________________________________
 % COMMENTS:
 %
@@ -92,7 +92,7 @@ str_hist = [str_hist niak_files2str(opt.files_out,'out:')]; % List of outputs
 %% Comment
 if ~isempty(opt.comment)
     str_hist = [str_hist ' ,COMMENT: ' opt.comment];
-end   
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Updating the header  %%
@@ -110,5 +110,5 @@ end
 if (isempty(hdr2.info.history))|strcmp(hdr2.info.history,char(10))
     hdr2.info.history = [str_hist char(10)];
 else
-    hdr2.info.history = [hdr2.info.history char(10) str_hist char(10)];    
+    hdr2.info.history = [hdr2.info.history char(10) str_hist char(10)];
 end

@@ -1,5 +1,5 @@
 function files = niak_grab_bids(path_data,opt)
-% Grab the T1w+fMRI scans in a BIDS dataset 
+% Grab the T1w+fMRI scans in a BIDS dataset
 % http://bids.neuroimaging.io
 %
 % SYNTAX:
@@ -9,52 +9,52 @@ function files = niak_grab_bids(path_data,opt)
 % INPUTS:
 %
 % PATH_DATA
-%   (string, default [pwd filesep], aka './') full path to one site of 
+%   (string, default [pwd filesep], aka './') full path to one site of
 %   a BIDS dataset
 %
-% OPT 
+% OPT
 %   (structure) grabber options
-%    
+%
 %   FUNC_HINT
-%       (string) A hint to pick one out of many fmri input for exemple 
+%       (string) A hint to pick one out of many fmri input for exemple
 %       if the fmri study includes "sub-XX_task-rest-a_hint_bold.nii.gz"
 %       and "sub-XX_task-rest-a_thing_bold.nii.gz" and the "hint" flavor
 %       needs to be selected, opt.func_hint = 'hint', would do the trick.
-%       
+%
 %   ANAT_HINT
-%       (string, defaut = T1w) A hint to pick one out of many anat input. 
-%       If no hint is give the first file to be listed by the OS will be picked. 
-%       If you want to select a different input than T1w, let say 
+%       (string, defaut = T1w) A hint to pick one out of many anat input.
+%       If no hint is give the first file to be listed by the OS will be picked.
+%       If you want to select a different input than T1w, let say
 %       sub-XX_ses-XX_FLAIR_run-001.nii.gz input the following option:
-%       opt.anat_hint = "FLAIR" 
+%       opt.anat_hint = "FLAIR"
 %
 %   TASK_TYPE
-%       (string, default = rest) The type of task, explicitely named in bids 
+%       (string, default = rest) The type of task, explicitely named in bids
 %       file name
 %
 %   MAX_SUBJECTS
 %       (int, default = 0) 0 return all subjects. Used to put an upper limit
-%       on the number of subjects that are returned (nice an simple 
+%       on the number of subjects that are returned (nice an simple
 %       debugging feature).
 %
 %   SUBJECT_LIST
 %       (cellarray of int) The only subject to be returned
-%   
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % FILES
-%   (structure) with the following fields, ready to feed into 
+%   (structure) with the following fields, ready to feed into
 %   NIAK_PIPELINE_FMRI_PREPROCESS :
 %
 %       <SUBJECT>.FMRI.<SESSION>.<RUN>
-%          (string) a list of fMRI datasets, acquired in the 
-%          same session (small displacements). 
-%          The field names <SUBJECT> and <SESSION> can be any arbitrary 
+%          (string) a list of fMRI datasets, acquired in the
+%          same session (small displacements).
+%          The field names <SUBJECT> and <SESSION> can be any arbitrary
 %          strings. The <RUN> input is optional
 %
-%      <SUBJECT>.ANAT 
-%          (string) anatomical volume, from the same subject as in 
+%      <SUBJECT>.ANAT
+%          (string) anatomical volume, from the same subject as in
 %          FILES_IN.<SUBJECT>.FMRI
 % _________________________________________________________________________
 % SEE ALSO:
@@ -160,8 +160,8 @@ for num_f = 1:length(list_dir)
                 continue
             end
         else
-            continue   
-        end   
+            continue
+        end
 
         list_sub_dir = dir([path_data, subject_dir]);
         all_sessions = {};
@@ -177,14 +177,14 @@ for num_f = 1:length(list_dir)
             all_sessions = {'0'};
         end
 
-%        add session and sub numbers   a 
+%        add session and sub numbers   a
         for n_ses = 1:length(all_sessions(:,1))
             if all_sessions{1} == '0'
                 session_path = strcat(path_data, subject_dir);
                 session_id = "sess1";
                 no_session = true;
             else
-                ses_name = all_sessions(n_ses,1){1}   ;         
+                ses_name = all_sessions(n_ses,1){1}   ;
                 session_id = ["sess" all_sessions(n_ses,2){1}];
                 session_path = strcat(path_data, subject_dir, filesep, ses_name);
                 no_session = false;
@@ -196,7 +196,7 @@ for num_f = 1:length(list_dir)
             anat_regex = ['(', subject_dir, '.*', anat_hint, '.*(nii|mnc).*)'] ;
             list_anat_dir = dir(anat_path) ;
             list_fmri_dir = dir(fmri_path) ;
-            
+
             anat_match = {} ;
             for n_f = 1:length(list_anat_dir) ;
                 m = regexpi(list_anat_dir(n_f).name, anat_regex, 'tokens');
@@ -214,15 +214,15 @@ for num_f = 1:length(list_dir)
                     if length(run_num)
                         fmri.(session_id).(['task' task_type 'run' run_num{1}{1}]) = full_path ;
                     else
-                        fmri.(session_id).(['task' task_type]) = full_path ;           
+                        fmri.(session_id).(['task' task_type]) = full_path ;
                     end
                 end
             end
-            
-        end      
-        
-        % TODO figure out a way to pick the right anat file if there is more thant one 
-        if length(anat_match)             
+
+        end
+
+        % TODO figure out a way to pick the right anat file if there is more thant one
+        if length(anat_match)
             anat= anat_match{1} ;
             %% TODO add more filters options
             % only return subject if anat and one func is found
@@ -234,7 +234,7 @@ for num_f = 1:length(list_dir)
                         break;
                     end
                 end
-            end 
+            end
         end
         clear fmri anat
     end

@@ -1,13 +1,13 @@
 function [files_in,files_out,opt] = niak_brick_civet(files_in,files_out,opt)
-% Run the CIVET pipeline on a T1 anatomical image. 
+% Run the CIVET pipeline on a T1 anatomical image.
 %
-% Possible outputs include the estimated transformation to the MNI152 
-% template (linear/lsq9 and non-linear), non-uniformity corrected volumes 
-% in the native and template space, segmentation in white matter/grey 
-% matter/CSF in native and template spaces, partial volume effect estimates 
-% in native and template spaces, a mask of the brain in native and template 
-% spaces. 
-% 
+% Possible outputs include the estimated transformation to the MNI152
+% template (linear/lsq9 and non-linear), non-uniformity corrected volumes
+% in the native and template space, segmentation in white matter/grey
+% matter/CSF in native and template spaces, partial volume effect estimates
+% in native and template spaces, a mask of the brain in native and template
+% spaces.
+%
 % For more information on the CIVET pipeline, see :
 % http://wiki.bic.mni.mcgill.ca/index.php/CIVET
 %
@@ -17,59 +17,59 @@ function [files_in,files_out,opt] = niak_brick_civet(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN 
+% FILES_IN
 %   (structure) with the following fields :
 %
-%   ANAT 
-%      (string) a file with an individual T1 anatomical volume. If 
-%      previous results of civet are used (see below), this should be 
+%   ANAT
+%      (string) a file with an individual T1 anatomical volume. If
+%      previous results of civet are used (see below), this should be
 %      an empty string.
 %
-%   CIVET 
-%      (structure) If OPT.CIVET is specified to import results of a 
-%      previously generated results using CIVET, this field will be 
-%      updated to indicate all files of the original results that have 
-%      been copied and renamed. This is usefull in pipeline mode for 
+%   CIVET
+%      (structure) If OPT.CIVET is specified to import results of a
+%      previously generated results using CIVET, this field will be
+%      updated to indicate all files of the original results that have
+%      been copied and renamed. This is usefull in pipeline mode for
 %      proper handling of inputs/outputs dependencies.
 %
-% FILES_OUT  
-%   (structure) with the following fields. Note that if a field is an 
-%   empty string, a default value will be used to name the outputs. If 
-%   a field is ommited, the output won't be saved at all (this is 
-%   equivalent to setting up the output file names to 
+% FILES_OUT
+%   (structure) with the following fields. Note that if a field is an
+%   empty string, a default value will be used to name the outputs. If
+%   a field is ommited, the output won't be saved at all (this is
+%   equivalent to setting up the output file names to
 %   'gb_niak_omitted').
 %
 %
-%   TRANSFORMATION_LIN 
+%   TRANSFORMATION_LIN
 %      (string, default transf_<BASE_ANAT>_native_to_stereolin.xfm)
 %      Linear transformation from native to stereotaxic space (lsq9).
 %
-%   TRANSFORMATION_NL 
+%   TRANSFORMATION_NL
 %      (string, default transf_<BASE_ANAT>_stereolin_to_stereonl.xfm)
 %      Non-linear transformation from linear stereotaxic space to
 %      stereotaxic space.
 %
-%   TRANSFORMATION_NL_GRID 
+%   TRANSFORMATION_NL_GRID
 %      (string, default transf_<BASE_ANAT>_stereolin_to_stereonl_grid.mnc)
 %      Deformation field for non-linear transformation.
 %
-%   ANAT_NUC 
+%   ANAT_NUC
 %      (string, default <BASE_ANAT>_nuc_native.<EXT>)
 %      t1 image partially corrected for non-uniformities (without
 %      mask), in native space.
-%       
-%   ANAT_NUC_STEREOLIN 
+%
+%   ANAT_NUC_STEREOLIN
 %      (string, default <BASE_ANAT>_nuc_stereolin.<EXT>)
-%      original t1 image transformed in stereotaxic space using the 
+%      original t1 image transformed in stereotaxic space using the
 %      lsq9 transformation, fully corrected for non-uniformities (with mask)
 %
-%   ANAT_NUC_STEREONL 
+%   ANAT_NUC_STEREONL
 %      (string, default <BASE_ANAT>_nuc_stereonl.<EXT>)
-%      original t1 image transformed in stereotaxic space using the 
+%      original t1 image transformed in stereotaxic space using the
 %      non-linear transformation, fully corrected for non-uniformities (with
 %      mask)
-%       
-%   MASK 
+%
+%   MASK
 %      (string, default <BASE_ANAT>_mask_native.<EXT>)
 %      brain mask in native space.
 %
@@ -81,43 +81,43 @@ function [files_in,files_out,opt] = niak_brick_civet(files_in,files_out,opt)
 %      (string, default <BASE_ANAT>_mask_stereonl.<EXT>)
 %      brain mask in stereotaxic (non-linear) space.
 %
-%   CLASSIFY 
+%   CLASSIFY
 %      (string, default <BASE_ANAT>_classify_stereolin.<EXT>)
 %      final masked discrete tissue classification in stereotaxic
 %      (linear) space after correction for partial volumes.
 %
-%   PVE_WM 
+%   PVE_WM
 %      (string, default <BASE_ANAT>_wm_stereolin.<EXT>)
 %      partial volume estimates for white matter in stereotaxic space.
 %
-%   PVE_GM 
+%   PVE_GM
 %      (string, default <BASE_ANAT>_gm_stereolin.<EXT>)
 %      partial volume estimates for grey matter in stereotaxic (linear)
 %      space.
 %
-%   PVE_CSF 
+%   PVE_CSF
 %      (string, default <BASE_ANAT>_csf_stereolin.<EXT>)
-%      partial volume estimates for cerebro-spinal fluids in 
+%      partial volume estimates for cerebro-spinal fluids in
 %      stereotaxic (linear) space.
 %
-%   VERIFY 
+%   VERIFY
 %      (string, default <BASE_ANAT>_verify.png)
 %      quality control image for registration and classification
 %
-%   
-% OPT   
+%
+% OPT
 %   (structure) with the following fields:
 %
-%   N3_DISTANCE 
-%      (real number, default 200 mm)  N3 spline distance in mm 
-%      (suggested values: 200 for 1.5T scan; 25 for 3T scan). 
+%   N3_DISTANCE
+%      (real number, default 200 mm)  N3 spline distance in mm
+%      (suggested values: 200 for 1.5T scan; 25 for 3T scan).
 %
 %   CIVET_COMMAND
 %      (string, default
 %      GB_NIAK_PATH_CIVET/CIVET_Processing_Pipeline)
 %      The command used to invoke CIVET.
 %
-%   FOLDER_OUT 
+%   FOLDER_OUT
 %      (string, default: path of FILES_IN) If present,
 %      all default outputs will be created in the folder FOLDER_OUT.
 %      The folder needs to be created beforehand.
@@ -127,12 +127,12 @@ function [files_in,files_out,opt] = niak_brick_civet(files_in,files_out,opt)
 %      folder will not be removed after completion of the job. This
 %      might be useful to get access to the logs of CIVET.
 %
-%   FLAG_TEST 
-%      (boolean, default: 0) if FLAG_TEST equals 1, the brick does not 
-%      do anything but update the default values in FILES_IN, 
+%   FLAG_TEST
+%      (boolean, default: 0) if FLAG_TEST equals 1, the brick does not
+%      do anything but update the default values in FILES_IN,
 %      FILES_OUT and OPT.
 %
-%   FLAG_VERBOSE 
+%   FLAG_VERBOSE
 %      (boolean, default: 1) If FLAG_VERBOSE == 1, write
 %      messages indicating progress.
 %
@@ -141,20 +141,20 @@ function [files_in,files_out,opt] = niak_brick_civet(files_in,files_out,opt)
 %      to process the data. Instead, a copy/renaming of previously
 %      generated results will be used. All of the following fields need
 %      to be specified :
-%               
-%      FOLDER 
-%         (string) The path of a folder with CIVET results. If 
-%         this field is specified, the brick is not going to run 
-%         CIVET but will rather copy and rename files from the 
+%
+%      FOLDER
+%         (string) The path of a folder with CIVET results. If
+%         this field is specified, the brick is not going to run
+%         CIVET but will rather copy and rename files from the
 %         previously processed CIVET results.
 %         The field ANAT will be ignored in this case.
 %
-%      ID 
-%         (string) If results of a previous CIVET processing are 
+%      ID
+%         (string) If results of a previous CIVET processing are
 %         used, an ID has to be specified for the subject.
 %
-%      PREFIX 
-%         (string) If results of a previous CIVET processing are 
+%      PREFIX
+%         (string) If results of a previous CIVET processing are
 %         used, a prefix has to be specified for the database.
 %
 % _________________________________________________________________________
@@ -171,8 +171,8 @@ function [files_in,files_out,opt] = niak_brick_civet(files_in,files_out,opt)
 % COMMENTS:
 %
 % The outputs of the CIVET pipeline will never be zipped, even if the
-% inputs were zipped. That's a bit tough, but zipping the minc outputs is 
-% simply too much work. 
+% inputs were zipped. That's a bit tough, but zipping the minc outputs is
+% simply too much work.
 %
 % Copyright (c) Pierre Bellec, Francois Chouinard-Decorte
 %   Montreal Neurological Institute, 2008-2010.
@@ -227,7 +227,7 @@ gb_name_structure = 'opt';
 gb_list_fields   = {'flag_keep_tmp' , 'civet_command' , 'flag_test' ,'folder_out' , 'flag_verbose' , 'n3_distance' , 'civet'           };
 gb_list_defaults = {0               , ''              , 0           , ''          , 1              , 200           , 'gb_niak_omitted' };
 niak_set_defaults
-  
+
 if isempty(civet_command)
     civet_command = cat(2,GB_NIAK.path_civet,filesep,'CIVET_Processing_Pipeline');
 end
@@ -246,7 +246,7 @@ end
 opt.folder_out = niak_full_path(opt.folder_out);
 
 if ~flag_civet
-    
+
     %% A file FILES_IN.ANAT has been specified, parse its base name and
     %% folder
     [path_anat,name_anat,ext_anat] = fileparts(files_in.anat);
@@ -256,7 +256,7 @@ if ~flag_civet
     end
 
     if strcmp(ext_anat,GB_NIAK.zip_ext)
-        [tmp,name_anat,ext_anat] = fileparts(name_anat);        
+        [tmp,name_anat,ext_anat] = fileparts(name_anat);
         flag_zip = 1;
     else
         flag_zip = 0;
@@ -267,76 +267,76 @@ if ~flag_civet
     else
         folder_anat = opt.folder_out;
     end
-    
-    %% Generate temporary names to run the CIVET pipeline.   
+
+    %% Generate temporary names to run the CIVET pipeline.
     if ~flag_test
-        civet_folder = niak_path_tmp('_civet');   
+        civet_folder = niak_path_tmp('_civet');
     else
         civet_folder = [filesep 'tmp' filesep];
     end
     civet_id = 'coco';
-    civet_prefix = 'anat';        
-    
+    civet_prefix = 'anat';
+
 else
-    
+
     %% Previsouly generated CIVET results have been specified. Use the
     %% CIVET folder, prefix and id to name the outputs.
-    
+
     name_anat = cat(2,opt.civet.prefix,'_',opt.civet.id);
     ext_anat = '.mnc';
     flag_zip = 0;
-    
+
     if isempty(opt.folder_out)
-        folder_anat = opt.civet.folder;        
+        folder_anat = opt.civet.folder;
     else
         folder_anat = opt.folder_out;
     end
-    
+
     civet_folder = opt.civet.folder;
     civet_id = opt.civet.id;
     civet_prefix = opt.civet.prefix;
-    
+
     files_in.anat = 'gb_niak_omitted';
-    
+
 end
-       
+
 %% Generating the default outputs of the NIAK brick and civet
-if strcmp(files_out.transformation_lin,'')    
-    files_out.transformation_lin = cat(2,folder_anat,'transf_',name_anat,'_native_to_stereolin.xfm');        
+if strcmp(files_out.transformation_lin,'')
+    files_out.transformation_lin = cat(2,folder_anat,'transf_',name_anat,'_native_to_stereolin.xfm');
 end
 files_civet.transformation_lin = cat(2,civet_folder,civet_id,filesep,'transforms',filesep,'linear',filesep,civet_prefix,'_',civet_id,'_t1_tal.xfm');
 
-if strcmp(files_out.transformation_nl,'')    
-    files_out.transformation_nl = cat(2,folder_anat,'transf_',name_anat,'_stereolin_to_stereonl.xfm');    
+if strcmp(files_out.transformation_nl,'')
+    files_out.transformation_nl = cat(2,folder_anat,'transf_',name_anat,'_stereolin_to_stereonl.xfm');
 end
 files_civet.transformation_nl = cat(2,civet_folder,civet_id,filesep,'transforms',filesep,'nonlinear',filesep,civet_prefix,'_',civet_id,'_nlfit_It.xfm');
 
-if strcmp(files_out.transformation_nl_grid,'')    
-    files_out.transformation_nl_grid = cat(2,folder_anat,'transf_',name_anat,'_stereolin_to_stereonl_grid.mnc');    
+if strcmp(files_out.transformation_nl_grid,'')
+    files_out.transformation_nl_grid = cat(2,folder_anat,'transf_',name_anat,'_stereolin_to_stereonl_grid.mnc');
 end
 files_civet.transformation_nl_grid = cat(2,civet_folder,civet_id,filesep,'transforms',filesep,'nonlinear',filesep,civet_prefix,'_',civet_id,'_nlfit_It_grid_0.mnc');
 
-if strcmp(files_out.anat_nuc,'')    
-    files_out.anat_nuc = cat(2,folder_anat,name_anat,'_nuc_native',ext_anat);    
+if strcmp(files_out.anat_nuc,'')
+    files_out.anat_nuc = cat(2,folder_anat,name_anat,'_nuc_native',ext_anat);
 end
 files_civet.anat_nuc = cat(2,civet_folder,civet_id,filesep,'native',filesep,civet_prefix,'_',civet_id,'_t1_nuc.mnc');
 
-if strcmp(files_out.anat_nuc_stereolin,'')    
-    files_out.anat_nuc_stereolin = cat(2,folder_anat,name_anat,'_nuc_stereolin',ext_anat);    
+if strcmp(files_out.anat_nuc_stereolin,'')
+    files_out.anat_nuc_stereolin = cat(2,folder_anat,name_anat,'_nuc_stereolin',ext_anat);
 end
 files_civet.anat_nuc_stereolin = cat(2,civet_folder,civet_id,filesep,'final',filesep,civet_prefix,'_',civet_id,'_t1_final.mnc');
 
-if strcmp(files_out.anat_nuc_stereonl,'')    
-    files_out.anat_nuc_stereonl = cat(2,folder_anat,name_anat,'_nuc_stereonl',ext_anat);        
+if strcmp(files_out.anat_nuc_stereonl,'')
+    files_out.anat_nuc_stereonl = cat(2,folder_anat,name_anat,'_nuc_stereonl',ext_anat);
 end
 files_civet.anat_nuc_stereonl = cat(2,civet_folder,civet_id,filesep,'final',filesep,civet_prefix,'_',civet_id,'_t1_nl.mnc');
 
-if strcmp(files_out.mask,'')    
+if strcmp(files_out.mask,'')
     files_out.mask = cat(2,folder_anat,name_anat,'_mask_native',ext_anat);
 end
 files_civet.mask = cat(2,civet_folder,civet_id,filesep,'mask',filesep,civet_prefix,'_',civet_id,'_skull_mask_native.mnc');
 
-if strcmp(files_out.mask_stereolin,'')    
+if strcmp(files_out.mask_stereolin,'')
     files_out.mask_stereolin = cat(2,folder_anat,name_anat,'_mask_stereolin',ext_anat);
 end
 files_civet.mask_stereolin = cat(2,civet_folder,civet_id,filesep,'mask',filesep,civet_prefix,'_',civet_id,'_skull_mask.mnc');
@@ -344,19 +344,19 @@ files_civet.mask_stereolin = cat(2,civet_folder,civet_id,filesep,'mask',filesep,
 if strcmp(files_out.mask_stereonl,'')
     files_out.mask_stereonl = cat(2,folder_anat,name_anat,'_mask_stereonl',ext_anat);
 end
-files_civet.mask_stereonl = ''; 
+files_civet.mask_stereonl = '';
 
-if strcmp(files_out.classify,'')    
+if strcmp(files_out.classify,'')
     files_out.classify = cat(2,folder_anat,name_anat,'_classify_stereolin',ext_anat);
 end
 files_civet.classify = cat(2,civet_folder,civet_id,filesep,'classify',filesep,civet_prefix,'_',civet_id,'_pve_classify.mnc');
 
-if strcmp(files_out.pve_wm,'')    
+if strcmp(files_out.pve_wm,'')
     files_out.pve_wm = cat(2,folder_anat,name_anat,'_wm_stereolin',ext_anat);
 end
 files_civet.pve_wm = cat(2,civet_folder,civet_id,filesep,'classify',filesep,civet_prefix,'_',civet_id,'_pve_wm.mnc');
 
-if strcmp(files_out.pve_gm,'')    
+if strcmp(files_out.pve_gm,'')
     files_out.pve_gm = cat(2,folder_anat,name_anat,'_gm_stereolin',ext_anat);
 end
 files_civet.pve_gm = cat(2,civet_folder,civet_id,filesep,'classify',filesep,civet_prefix,'_',civet_id,'_pve_gm.mnc');
@@ -375,7 +375,7 @@ if flag_civet
     files_in.civet = files_civet;
 end
 
-if flag_test == 1    
+if flag_test == 1
     return
 end
 
@@ -387,11 +387,11 @@ end
 %% to run the CIVET pipeline on the anatomical volume
 
 if ~flag_civet
-       
+
     if flag_verbose
         fprintf('Running CIVET on volume %s. This is going to take a while ! (roughly one hour)\n',files_in.anat);
     end
-    
+
     %% Copy the anatomical volume in a temporary folder, under a
     %% civet-compliant name.
     flag = niak_mkdir(civet_folder);
@@ -407,7 +407,7 @@ if ~flag_civet
     if succ~=0
         error(msg);
     end
-    
+
     %% Run CIVET in spawn mode
     niak_gb_vars
     instr_civet = cat(2,civet_command,' -sourcedir ',civet_folder,' -targetdir ',civet_folder,' -prefix ',civet_prefix,' -run ',civet_id,' -spawn -no-surfaces -N3-distance ',num2str(n3_distance));
@@ -415,7 +415,7 @@ if ~flag_civet
     if flag
         error(str)
     end
-   
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -434,7 +434,7 @@ for num_r = 1:length(list_results)
         if flag_verbose
             fprintf('Copying %s to %s\n',name_civet,name_res);
         end
-        
+
         switch list_results{num_r}
 
             case 'mask_stereonl'
@@ -454,7 +454,7 @@ for num_r = 1:length(list_results)
                 hf2 = fopen(name_res,'w');
                 xfm_info = fread(hf,Inf,'uint8=>char')';
                 cell_info = niak_string2lines(xfm_info);
-            
+
                 for num_l = 1:length(cell_info)
                     if num_l~=length(cell_info)
                         fprintf(hf2,'%s\n',cell_info{num_l});
@@ -474,9 +474,9 @@ for num_r = 1:length(list_results)
                     warning(str)
                 end
         end
-                               
-    end              
-    
+
+    end
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -487,7 +487,7 @@ if ~flag_civet
     if flag_verbose
         fprintf('Cleaning temporary files.\n')
     end
-    
+
     if ~flag_keep_tmp
         try
             str = rmdir(civet_folder,'s');
@@ -495,7 +495,7 @@ if ~flag_civet
             warning(str);
         end
     end
-    
+
 end
 
 fprintf('Done !\n')

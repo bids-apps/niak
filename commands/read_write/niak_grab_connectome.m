@@ -8,7 +8,7 @@ function files = niak_grab_connectome(path_data)
 % INPUTS:
 %
 % PATH_DATA
-%   (string, default [pwd filesep], aka './') full path to the outputs of 
+%   (string, default [pwd filesep], aka './') full path to the outputs of
 %   NIAK_CONNECTOME
 %
 % _________________________________________________________________________

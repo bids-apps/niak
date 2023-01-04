@@ -1,5 +1,5 @@
-% This is a script to define important NIAK variables. Whenever needed, 
-% NIAK commands will call this script to initialize the variables. If NIAK 
+% This is a script to define important NIAK variables. Whenever needed,
+% NIAK commands will call this script to initialize the variables. If NIAK
 % does not behave the way you want, this might be the place to fix that.
 %
 % IF a variable called FLAG_GB_NIAK_FAST_GB is found in memory and is true,
@@ -40,7 +40,7 @@
 global GB_NIAK = struct()
 
 if isfield(GB_NIAK, 'loaded')
-    return    
+    return
 else
     GB_NIAK.loaded = true ;
 end
@@ -60,12 +60,12 @@ if exist('psom_gb_vars.m','file')
     GB_NIAK.language_version = gb_psom_language_version;
     GB_NIAK.OS = gb_psom_OS;
     GB_NIAK.user = gb_psom_user;
-else 
+else
     % tmpfile
     GB_NIAK.tmp = [tempdir filesep];
 
     % Is the environment Octave or Matlab ?
-    if exist('OCTAVE_VERSION','builtin')    
+    if exist('OCTAVE_VERSION','builtin')
         GB_NIAK.language = 'octave'; %% this is octave !
     else
         GB_NIAK.language = 'matlab'; %% this is not octave, so it must be matlab
@@ -76,7 +76,7 @@ else
         GB_NIAK.language_version = OCTAVE_VERSION;
     else
         GB_NIAK.language_version = version;
-    end 
+    end
 
 
     if max(niak_find_str_cell(comp,tag_unix))>0

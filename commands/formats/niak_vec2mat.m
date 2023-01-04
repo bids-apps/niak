@@ -8,8 +8,8 @@ function mat = niak_vec2mat(vec,val_diag);
 %
 % INPUTS:
 %
-% VEC           
-%       (vector) a vectorized version of a symmetric matrix (without 
+% VEC
+%       (vector) a vectorized version of a symmetric matrix (without
 %       diagonal elements).
 %
 % VAL_DIAG
@@ -18,8 +18,8 @@ function mat = niak_vec2mat(vec,val_diag);
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% MAT           
-%       (array) a square matrix. MAT is symmetric. Diagonal elements are 
+% MAT
+%       (array) a square matrix. MAT is symmetric. Diagonal elements are
 %       one.
 %
 % _________________________________________________________________________
@@ -29,11 +29,11 @@ function mat = niak_vec2mat(vec,val_diag);
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
-% Keywords : 
+% Keywords :
 
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal

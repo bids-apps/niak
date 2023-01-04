@@ -18,7 +18,7 @@ function str_files = niak_files2str(files,pref)
 % STR_FILES     (string) all file names in FILES are concatenated in a
 %               string of the form '[PREFfilename1]', '[PREFfilename2]' ...
 %
-% COMMENTS : 
+% COMMENTS :
 % Copyright (c) Pierre Bellec 01/2008
 
 % Permission is hereby granted, free of charge, to any person obtaining a copy

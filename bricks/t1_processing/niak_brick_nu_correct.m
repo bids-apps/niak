@@ -1,6 +1,6 @@
 function [files_in,files_out,opt] = niak_brick_nu_correct(files_in,files_out,opt)
 % Non-uniformity correction on an MR scan. See comments for details on the
-% algorithm. 
+% algorithm.
 %
 % SYNTAX:
 % [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_NU_CORRECT(FILES_IN,FILES_OUT,OPT)
@@ -8,24 +8,24 @@ function [files_in,files_out,opt] = niak_brick_nu_correct(files_in,files_out,opt
 % _________________________________________________________________________
 % INPUTS
 %
-% FILES_IN        
+% FILES_IN
 %   (structure) with the following fields :
 %
 %   VOL
 %      (string) the file name of an MR volume (typically T1 or T2).
 %
 %   MASK
-%      (string, default 'gb_niak_omitted') the file name of a binary 
-%      mask of a region of interest. If unspecified (or equal to 
+%      (string, default 'gb_niak_omitted') the file name of a binary
+%      mask of a region of interest. If unspecified (or equal to
 %     'gb_niak_omitted'), no mask is used.
 %
 % FILES_OUT
-%   (structure) with the following fields.  Note that if a field is an 
-%   empty string, a default value will be used to name the outputs. 
-%   If a field is ommited, the output won't be saved at all (this is 
-%   equivalent to setting up the output file names to 
-%   'gb_niak_omitted'). 
-%                       
+%   (structure) with the following fields.  Note that if a field is an
+%   empty string, a default value will be used to name the outputs.
+%   If a field is ommited, the output won't be saved at all (this is
+%   equivalent to setting up the output file names to
+%   'gb_niak_omitted').
+%
 %   VOL_NU
 %      (string, default <FILES_IN.VOL>_NU.<EXT>) The non-uniformity
 %      corrected T1 scan.
@@ -34,29 +34,29 @@ function [files_in,files_out,opt] = niak_brick_nu_correct(files_in,files_out,opt
 %      (string, default <FILES_IN.VOL>_NU.IMP) The estimated
 %      intensity mapping.
 %
-% OPT           
+% OPT
 %   (structure) with the following fields:
 %
 %   ARG
-%     (string, default '-distance 200') any argument that will be 
-%     passed to the NU_CORRECT command (see comments below). The 
-%     '-distance' option sets the N3 spline distance in mm (suggested 
-%     values: 200 for 1.5T scan; 50 for 3T scan). 
+%     (string, default '-distance 200') any argument that will be
+%     passed to the NU_CORRECT command (see comments below). The
+%     '-distance' option sets the N3 spline distance in mm (suggested
+%     values: 200 for 1.5T scan; 50 for 3T scan).
 %
-%   FLAG_VERBOSE 
+%   FLAG_VERBOSE
 %     (boolean, default: 1) If FLAG_VERBOSE == 1, write
 %     messages indicating progress.
 %
-%   FLAG_TEST 
-%     (boolean, default: 0) if FLAG_TEST equals 1, the brick does not 
-%     do anything but update the default values in FILES_IN, 
+%   FLAG_TEST
+%     (boolean, default: 0) if FLAG_TEST equals 1, the brick does not
+%     do anything but update the default values in FILES_IN,
 %     FILES_OUT and OPT.
 %
-%   FOLDER_OUT 
-%     (string, default: path of FILES_IN) If present, all default 
-%     outputs will be created in the folder FOLDER_OUT. The folder 
+%   FOLDER_OUT
+%     (string, default: path of FILES_IN) If present, all default
+%     outputs will be created in the folder FOLDER_OUT. The folder
 %     needs to be created beforehand.
-%             
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
@@ -76,16 +76,16 @@ function [files_in,files_out,opt] = niak_brick_nu_correct(files_in,files_out,opt
 %   infos.
 %
 % NOTE 2:
-%   The correction method is N3 [1], and should work with any MR volume 
-%   including raw (non-stereotaxic) data.  The performance of this method 
+%   The correction method is N3 [1], and should work with any MR volume
+%   including raw (non-stereotaxic) data.  The performance of this method
 %   can be enhanced by supplying a mask for the region of interest.
 %
 %   [1] J.G. Sled, A.P. Zijdenbos and A.C. Evans, "A non-parametric method
 %       for automatic correction of intensity non-uniformity in MRI data",
 %       in "IEEE Transactions on Medical Imaging", vol. 17, n. 1,
-%       pp. 87-97, 1998 
+%       pp. 87-97, 1998
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,
 % Montreal Neurological Institute, McGill University, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -154,15 +154,15 @@ if strcmp(opt.folder_out,'')
     opt.folder_out = path_f;
 end
 
-if isempty(files_out.vol_nu)    
+if isempty(files_out.vol_nu)
     files_out.vol_nu = [opt.folder_out,filesep,name_f,'_nu',ext_f];
 end
 
-if isempty(files_out.vol_imp)    
+if isempty(files_out.vol_imp)
     files_out.vol_imp = [opt.folder_out,filesep,name_f,'_nu.imp'];
 end
 
-if flag_test == 1    
+if flag_test == 1
     return
 end
 
@@ -173,7 +173,7 @@ end
 if flag_verbose
     msg = 'Non-uniformity correction on an MR volume';
     stars = repmat('*',[1 length(msg)]);
-    fprintf('\n%s\n%s\n%s\n',stars,msg,stars);    
+    fprintf('\n%s\n%s\n%s\n',stars,msg,stars);
 end
 
 %% Temporary file names
@@ -227,4 +227,3 @@ if ~strcmp(files_out.vol_imp,'gb_niak_omitted')
 end
 
 system(['rm -rf ' path_tmp]);
-

@@ -58,5 +58,3 @@ opt_mat.limits = [-1,1];
 ['mencoder mf://' folder_out filesep 'png' filesep '*.png -ovc lavc -lavcopts vcodec=msmpeg4v2 -mf fps=5 -o ' folder_out filesep 'corr_' db_name '.avi']
 % Generate the video
  system(['mencoder mf://' folder_out filesep 'png' filesep '*.png -ovc lavc -lavcopts vcodec=msmpeg4v2 -mf fps=5 -o ' folder_out filesep 'corr_' db_name '.avi']);
-
-

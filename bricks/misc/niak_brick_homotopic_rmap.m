@@ -1,5 +1,5 @@
 function [files_in,files_out,opt] = niak_brick_homotopic_rmap(files_in,files_out,opt)
-% Compute correlations between homotopic regions. 
+% Compute correlations between homotopic regions.
 %
 % SYNTAX:
 % [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_HOMOTOPIC_RMAP(FILES_IN,FILES_OUT,OPT)
@@ -10,41 +10,41 @@ function [files_in,files_out,opt] = niak_brick_homotopic_rmap(files_in,files_out
 % FILES_IN
 %    (string) a file name of a 3D+t dataset .
 %
-% FILES_OUT       
+% FILES_OUT
 %    (string) a 3D volume where each voxel has the value of the correlation between
-%    this voxel and its symmetric in stereotaxic space. 
+%    this voxel and its symmetric in stereotaxic space.
 %
-% OPT           
-%    (structure) with the following fields.  
+% OPT
+%    (structure) with the following fields.
 %
 %    FLAG_FISHER
 %        (boolean, default true) if the flag is true, the correlation coefficients
-%        are Fisher-transformed. 
+%        are Fisher-transformed.
 %
-%    FLAG_VERBOSE 
-%        (boolean, default 1) if the flag is 1, then the function 
+%    FLAG_VERBOSE
+%        (boolean, default 1) if the flag is 1, then the function
 %        prints some infos during the processing.
 %
-%    FLAG_TEST 
-%        (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%        do anything but update the default values in FILES_IN, 
+%    FLAG_TEST
+%        (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%        do anything but update the default values in FILES_IN,
 %        FILES_OUT and OPT.
-%        
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%           
+%
 % _________________________________________________________________________
 % COMMENTS
 %
-% This module assumes that the fMRI data has been resampled in stereotaxic 
+% This module assumes that the fMRI data has been resampled in stereotaxic
 % symmetric space. Otherwise the results are meaningless.
 %
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2014
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -88,12 +88,12 @@ end
 opt = psom_struct_defaults( opt , ...
       { 'flag_fisher' , 'flag_verbose' ,'flag_test'} , ...
       { false         , true           , false     } );
-      
+
 if opt.flag_test == 1
     return
 end
 
-%% The brick starts here 
+%% The brick starts here
 
 % Read the input 3D+t fMRI time series
 [hdr,vol] = niak_read_vol(files_in);

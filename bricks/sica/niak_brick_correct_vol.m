@@ -11,43 +11,43 @@ function [files_in,files_out,opt] = niak_brick_correct_vol(files_in,files_out,op
 % _________________________________________________________________________
 % INPUTS
 %
-%  * FILES_IN        
-%       (structure) with the following fields : 
+%  * FILES_IN
+%       (structure) with the following fields :
 %
 %       SPACE
 %           (string) a 4D datasets with multiple space components.
-%       
+%
 %       MASK
 %           (string) a mask of the brain.
 %
-%  * FILES_OUT       
-%       (string, default <BASE_NAME FILES_IN.SPACE>_corr.<EXT>) 
-%       File name for output. If FILES_OUT is absent or an empty string, 
+%  * FILES_OUT
+%       (string, default <BASE_NAME FILES_IN.SPACE>_corr.<EXT>)
+%       File name for output. If FILES_OUT is absent or an empty string,
 %       the default will be used.
 %
-%  * OPT           
-%       (structure) with the following fields.  
+%  * OPT
+%       (structure) with the following fields.
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, all default 
-%           outputs will be created in the folder FOLDER_OUT. The folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, all default
+%           outputs will be created in the folder FOLDER_OUT. The folder
 %           needs to be created beforehand.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function
 %           prints some infos during the processing.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % values. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO
 %
@@ -57,7 +57,7 @@ function [files_in,files_out,opt] = niak_brick_correct_vol(files_in,files_out,op
 % COMMENTS
 %
 % This conversion to pseudo-z scores is similar to what was done, e.g., in
-% 
+%
 % McKeown et al, Analysis of fMRI data by blind separation into independent
 % spatial components. Hum Brain Mapp, Vol. 6, No. 3. (1998), pp. 160-188.
 %

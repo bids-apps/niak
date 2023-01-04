@@ -7,14 +7,14 @@ function [files_in,files_out,opt] = niak_brick_component_supp(files_in,files_out
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN  
+% FILES_IN
 %    (structure) with the following fields :
 %
-%    FMRI 
-%        (string) 
+%    FMRI
+%        (string)
 %        the original fMRI 3D+t data
 %
-%    SPACE 
+%    SPACE
 %        (string)
 %        a 3D+t dataset. Volume K is the spatial distribution of the Kth
 %        source estimaed through ICA.
@@ -24,46 +24,46 @@ function [files_in,files_out,opt] = niak_brick_component_supp(files_in,files_out
 %        A file name of a binary mask of the brain that was used in
 %        NIAK_BRICK_SICA.
 %
-%    TIME 
+%    TIME
 %        (string)
 %        a text file. Column Kth is the temporal distribution of the Kth
 %        ica source.
 %
-%    COMPSEL 
+%    COMPSEL
 %        (cell of strings)
-%        The name of a mat file with two variables SCORE and ORDER. 
-%        SCORE(I) is the selection score of component ORDER(I). 
+%        The name of a mat file with two variables SCORE and ORDER.
+%        SCORE(I) is the selection score of component ORDER(I).
 %        Components are ranked by descending selection scores.
 %        If the variable SCORE cannot be found, every score will be set
 %        to 0.
 %
-% FILES_OUT 
-%    (string, default <BASE FMRI>_p.<EXT FMRI>) 
+% FILES_OUT
+%    (string, default <BASE FMRI>_p.<EXT FMRI>)
 %    file name for the fMRI data after component suppression.
 %
-% OPT   
+% OPT
 %    (structure) with the following fields (any omitted field will be
 %    set to default value if possible, and will produce an error
 %    otherwise) :
 %
-%    THRESHOLD 
-%        (scalar, default 0.15) 
-%        a threshold to apply on the score for suppression (scores 
-%        above the thresholds are selected). If the threshold is -Inf, 
+%    THRESHOLD
+%        (scalar, default 0.15)
+%        a threshold to apply on the score for suppression (scores
+%        above the thresholds are selected). If the threshold is -Inf,
 %        all components will be suppressed. If the threshold is Inf, no
 %        component will be suppressed (the algorithm is basically
-%        copying the file, expect that the data is masked inside the 
+%        copying the file, expect that the data is masked inside the
 %        brain).
 %
-%    FOLDER_OUT 
-%        (string, default: path of FILES_IN.SPACE) 
-%        If present, all default outputs will be created in the folder 
+%    FOLDER_OUT
+%        (string, default: path of FILES_IN.SPACE)
+%        If present, all default outputs will be created in the folder
 %        FOLDER_OUT. The folder needs to be created beforehand.
 %
-%    FLAG_VERBOSE 
+%    FLAG_VERBOSE
 %        (boolean, default 1) gives progression infos
 %
-%    FLAG_TEST 
+%    FLAG_TEST
 %        (boolean, default 0) if FLAG_TEST equals 1, the
 %        brick does not do anything but update the default
 %        values in FILES_IN, FILES_OUT and OPT.
@@ -85,7 +85,7 @@ function [files_in,files_out,opt] = niak_brick_component_supp(files_in,files_out
 % _________________________________________________________________________
 % REFERENCES
 %
-% Perlbarg, V., Bellec, P., Anton, J.-L., Pelegrini-Issac, P., Doyon, J. and 
+% Perlbarg, V., Bellec, P., Anton, J.-L., Pelegrini-Issac, P., Doyon, J. and
 % Benali, H.; CORSICA: correction of structured noise in fMRI by automatic
 % identification of ICA components. Magnetic Resonance Imaging, Vol. 25,
 % No. 1. (January 2007), pp. 35-46.
@@ -95,7 +95,7 @@ function [files_in,files_out,opt] = niak_brick_component_supp(files_in,files_out
 % spatial components. Hum Brain Mapp, Vol. 6, No. 3. (1998), pp. 160-188.
 %
 % _________________________________________________________________________
-% SEE ALSO : 
+% SEE ALSO :
 % NIAK_BRICK_SICA, NIAK_COMPONENT_SEL, NIAK_BRICK_COMPONENT_SUPP, NIAK_SICA
 % NIAK_PIPELINE_CORSICA
 % _________________________________________________________________________
@@ -179,8 +179,8 @@ end
 list_supp = [];
 
 for num_s = 1:length(files_in.compsel)
-    data = load(files_in.compsel{num_s});    
-    if isfield(data,'score')        
+    data = load(files_in.compsel{num_s});
+    if isfield(data,'score')
         comps = data.order((data.score)>=threshold);
     else
         comps = data.order;

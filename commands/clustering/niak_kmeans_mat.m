@@ -25,7 +25,7 @@ function [part,gi,i_intra,i_inter] = niak_kmeans_mat(data,opt,flag_opt);
 %           (string, default 'random_partition') the strategy to
 %           initialize the kmeans. Available options are :
 %
-%           'random_partition' : self-explanatory. 
+%           'random_partition' : self-explanatory.
 %
 %           'random_point' : randomly select some data points as
 %               centroids.
@@ -38,20 +38,20 @@ function [part,gi,i_intra,i_inter] = niak_kmeans_mat(data,opt,flag_opt);
 %               well as OPT.TYPE_SIMILARITY.
 %
 %           'kmeans++' : use the k-means++ method. See  Arthur, D. and
-%               Vassilvitskii, S. (2007). "k-means++: the advantages of 
-%               careful seeding". Proceedings of the eighteenth annual 
+%               Vassilvitskii, S. (2007). "k-means++: the advantages of
+%               careful seeding". Proceedings of the eighteenth annual
 %               ACM-SIAM symposium on Discrete algorithms. pp. 1027–1035.
 %
 %           'user-specified' : use OPT.INIT as inial centroids of the
 %               partition.
 %
 %       HIERARCHICAL
-%           (structure, default struct()) option of 
-%           NIAK_HIERARCHICAL_CLUSTERING, if that procedure is used for 
+%           (structure, default struct()) option of
+%           NIAK_HIERARCHICAL_CLUSTERING, if that procedure is used for
 %           initialization (see OPT.TYPE_INIT above).
 %
 %       TYPE_SIMILARITY
-%           (string, default 'product') the similarity measure used to 
+%           (string, default 'product') the similarity measure used to
 %           perform the hierarchical clustering. Available option :
 %
 %           'euclidian' : use the opposite of the euclidian distance (see
@@ -85,10 +85,10 @@ function [part,gi,i_intra,i_inter] = niak_kmeans_mat(data,opt,flag_opt);
 %			clusters is back to the one specified.
 %
 %       CONVERGENCE_RATE
-%           (scalar, 0.01) 1-the minimal dice coefficient between two clusters at two 
-%           distinct iterations (clusters with zero overlap are excluded). Up to 
-%           OPT.NB_TESTS_CYCLE are tested. A value of 0.01 means that if 99% of clusters 
-%           are identical between two steps of the algorithm (in the sense of DICE), then 
+%           (scalar, 0.01) 1-the minimal dice coefficient between two clusters at two
+%           distinct iterations (clusters with zero overlap are excluded). Up to
+%           OPT.NB_TESTS_CYCLE are tested. A value of 0.01 means that if 99% of clusters
+%           are identical between two steps of the algorithm (in the sense of DICE), then
 %           the algorithm stops.
 %
 %       NB_ITER_MAX
@@ -179,33 +179,33 @@ opt_rep.flag_verbose = false;
 %% Initialization of cluster centers
 gi = zeros([K T]);
 switch opt.type_init
-    
+
     case 'random_point'
-        
+
         %% Initialization using random points
         perm_init = randperm(N);
         gi = data(perm_init(1:K),:);
-        
+
     case 'random_partition'
-        
+
         %% Initialization using random partition
         part(:,part_curr) = ceil(K*rand([N 1]));
         gi = centre_gravite(data,part(:,1),opt.p,K);
-        
+
     case 'pca'
-        
+
         %% Initialization using eigen vectors
         [eig_val,eig_vec] = niak_pca(data);
         gi = eig_vec(:,1:K)';
-        
+
     case 'user-specified'
-        
+
         %% Initialization used the user-specified centroids
         gi = opt.init';
         clear init
-        
+
     case 'hierarchical'
-        
+
         if opt.flag_verbose
             fprintf('Initialization using hierarchical clustering\n')
         end
@@ -229,7 +229,7 @@ switch opt.type_init
         for num_i = 1:K
             gi(num_i,:) = mean(data(part_init==num_i,:),1);
         end
-        
+
     case 'kmeans++'
         for num_k = 1:K
             if num_k==1
@@ -244,7 +244,7 @@ switch opt.type_init
             A = attraction(data,gi(1:num_k,:),opt.p,num_k,A);
         end
     otherwise
-        
+
         error('%s is an unknwon type of initialisation. Please check the value of OPT.TYPE_INIT',opt.type_init);
 end
 
@@ -255,40 +255,40 @@ if opt.flag_verbose
     fprintf('Average DICE with previous iterations: ');
 end
 
-while ( changement == 1 ) && ( N_iter < opt.nb_iter_max )    
-    
-    %% Build the centers and the attraction to the centers 
+while ( changement == 1 ) && ( N_iter < opt.nb_iter_max )
+
+    %% Build the centers and the attraction to the centers
     if N_iter ~= 1
         gi = centre_gravite(data,part(:,part_curr),opt.p,K,ind_change,gi);
     end
     if (N_iter>1)||~strcmp(opt.type_init,'kmeans++')
         A = attraction(data,gi,opt.p,ind_change,A);
     end
-    
+
     %% Update partition
-    [A_min,part_bis] = min(A,[],2);     
+    [A_min,part_bis] = min(A,[],2);
     part_old = part_curr;
     part_curr = mod(part_curr,opt.nb_tests_cycle)+1;
-    part(:,part_curr) = part_bis;    
-    
-    %% Deal with empty clusters    
+    part(:,part_curr) = part_bis;
+
+    %% Deal with empty clusters
     if ~strcmp(opt.type_death,'none')&&(length(unique(part(:,part_curr)))~=K)
-        switch opt.type_death            
+        switch opt.type_death
             case 'singleton'
-                
+
                 part(:,part_curr) = sub_singleton(A_min,part(:,part_curr),K);
-                
+
             case 'split'
-                
+
                 part(:,part_curr) = sub_split(A,part(:,part_curr),K,opt.p);
-                                 
+
             case 'bisect'
-                
-                part(:,part_curr) = sub_bisect(data,A,part(:,part_curr),K,opt.p,opt_rep);                              
-        end    
+
+                part(:,part_curr) = sub_bisect(data,A,part(:,part_curr),K,opt.p,opt_rep);
+        end
     end
-    
-    %% Check for cycles and list the clusters that have changed    
+
+    %% Check for cycles and list the clusters that have changed
     list_test = 1:size(part,2);
     list_test = list_test(list_test~=part_curr);
     mdice_all = 0;
@@ -302,10 +302,10 @@ while ( changement == 1 ) && ( N_iter < opt.nb_iter_max )
         end
     end
     deplacements = (1-mdice_all);
-    changement = deplacements>opt.convergence_rate;        
+    changement = deplacements>opt.convergence_rate;
     N_iter = N_iter + 1;
     if opt.flag_verbose
-        fprintf(' %1.2f -',deplacements);        
+        fprintf(' %1.2f -',deplacements);
     end
 end
 
@@ -331,7 +331,7 @@ if nargout>2
     p_classe_OK = p_classe(mask_OK);
     g = (1/sum(p_classe_OK))*sum(gi_OK.*(p_classe_OK*ones([1,T])),1);
     i_inter = sum(sum(p_classe_OK.*sum((gi_OK-(ones([sum(mask_OK) 1])*g)).^2,2)))/sum(p_classe_OK);
-    
+
     % Final intra-class inertia
     i_intra = zeros([K 1]);
     for num_c = 1:K
@@ -408,7 +408,7 @@ end
 function part = sub_singleton(A_min,part,K);
 ind_dead = find(~ismember(1:K,part));
 [val,order] = sort(A_min,'descend');
-for num_d = 1:length(ind_dead)    
+for num_d = 1:length(ind_dead)
     part(order(num_d)) = ind_dead(num_d);
 end
 
@@ -441,10 +441,10 @@ while num_r>0
     ind_rep = find(part==order(num_target));
     if length(ind_rep)>2
         ind_rep = ind_rep(randperm(length(ind_rep)));
-        part(ind_rep(1:floor(length(ind_rep)/2))) = list_ind(num_r);        
+        part(ind_rep(1:floor(length(ind_rep)/2))) = list_ind(num_r);
         nb_rep = nb_rep+1;
         num_r = num_r-1;
-    end    
+    end
     num_target = num_target-1;
 end
 
@@ -475,13 +475,13 @@ num_target = length(order);
 nb_rep = 0;
 num_r = length(list_ind);
 while (num_r>0)&&(num_target>0)
-    ind_rep = find(part==order(num_target));    
+    ind_rep = find(part==order(num_target));
     if length(ind_rep)>2
         opt_rep.p = p(part==order(num_target));
         part_tmp = niak_kmeans_clustering(data(part==order(num_target),:)',opt_rep);
         part(ind_rep(part_tmp==2)) = list_ind(num_r);
         nb_rep = nb_rep+1;
         num_r = num_r-1;
-    end    
-    num_target = num_target-1;    
+    end
+    num_target = num_target-1;
 end

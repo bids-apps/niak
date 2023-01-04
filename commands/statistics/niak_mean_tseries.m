@@ -8,7 +8,7 @@ function tseries_m = niak_mean_tseries(tseries,clusters,atoms)
 % INPUTS:
 %
 % TSERIES
-%   (2D array) TSERIES is a 2D array where each column of TSERIES is 
+%   (2D array) TSERIES is a 2D array where each column of TSERIES is
 %   a time series.
 %
 % CLUSTERS
@@ -20,18 +20,18 @@ function tseries_m = niak_mean_tseries(tseries,clusters,atoms)
 % OUTPUTS :
 %
 % TSERIES_M
-%       (2D array) TSERIES_M(:,I) is the average of all time series such 
+%       (2D array) TSERIES_M(:,I) is the average of all time series such
 %       that (CLUSTERS==I) has an overlap with the associated ATOMS.
 %
 % _________________________________________________________________________
 % COMMENTS :
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de geriatrie 
-% de Montreal, Departement d'informatique et de recherche operationnelle, 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de geriatrie
+% de Montreal, Departement d'informatique et de recherche operationnelle,
 % Universite de Montreal, 2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
-% Keywords : 
+% Keywords :
 
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal
@@ -55,7 +55,7 @@ function tseries_m = niak_mean_tseries(tseries,clusters,atoms)
 %% Initialization and syntax checks %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Syntax 
+%% Syntax
 if ~exist('tseries','var')||~exist('clusters','var')||~exist('clusters','var')
     error('Syntax : TSERIES_N = NIAK_MEAN_TSERIES(TSERIES,CLUSTERS,ATOMS) ; for more infos, type ''help niak_mean_tseries''.')
 end

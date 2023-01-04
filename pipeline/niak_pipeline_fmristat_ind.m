@@ -7,13 +7,13 @@ function pipeline = niak_pipeline_fmristat_ind(files_in,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN  
-%   (structure) with the following fields : 
+% FILES_IN
+%   (structure) with the following fields :
 %
 %   FMRI
 %       (string) an fMRI dataset.
 %
-%   MASK 
+%   MASK
 %       (string, default 'gb_niak_omitted') a binary mask of the brain. If
 %       omitted, a mask will be computed from the volume.
 %
@@ -23,13 +23,13 @@ function pipeline = niak_pipeline_fmristat_ind(files_in,opt)
 %
 %   SLICING
 %       (string, default 'gb_niak_omitted') the name of a file containing
-%       relative slice acquisition times i.e. absolute acquisition time of 
-%       a slice is FRAME_TIMES+SLICE_TIMES. If omitted, the differences in 
+%       relative slice acquisition times i.e. absolute acquisition time of
+%       a slice is FRAME_TIMES+SLICE_TIMES. If omitted, the differences in
 %       slice timing will be ignored.
 %       See the description of FILES_IN.SLICING in NIAK_BRICK_FMRI_DESIGN
 %
-% OPT   
-%   (structure) with the following fields : 
+% OPT
+%   (structure) with the following fields :
 %
 %   LABEL
 %       (string) a string that will be used to name the outputs.
@@ -37,13 +37,13 @@ function pipeline = niak_pipeline_fmristat_ind(files_in,opt)
 %   CONTRAST
 %       (structure)
 %
-%   FOLDER_OUT 
-%       (string) where to write the results of the pipeline. 
+%   FOLDER_OUT
+%       (string) where to write the results of the pipeline.
 %
 %   FLAG_TEST
-%       (boolean, default false) If FLAG_TEST is true, the pipeline will 
-%       just produce a pipeline structure, and will not actually process 
-%       the data. Otherwise, PSOM_RUN_PIPELINE will be used to process the 
+%       (boolean, default false) If FLAG_TEST is true, the pipeline will
+%       just produce a pipeline structure, and will not actually process
+%       the data. Otherwise, PSOM_RUN_PIPELINE will be used to process the
 %       data.
 %
 %   PSOM
@@ -52,9 +52,9 @@ function pipeline = niak_pipeline_fmristat_ind(files_in,opt)
 %       Note that the field PSOM.PATH_LOGS will be set up by the pipeline.
 %
 % _________________________________________________________________________
-% OUTPUTS : 
+% OUTPUTS :
 %
-% PIPELINE 
+% PIPELINE
 %   (structure) describe all jobs that need to be performed in the
 %   pipeline.
 %
@@ -69,7 +69,7 @@ function pipeline = niak_pipeline_fmristat_ind(files_in,opt)
 % 3. Estimation of the parameters of the model, and statistical tests.
 %
 % _________________________________________________________________________
-% Copyright (c) Felix Carbonell, Montreal Neurological Institute, McGill 
+% Copyright (c) Felix Carbonell, Montreal Neurological Institute, McGill
 % University, 2010.
 % Pierre Bellec, Centre de recherche de l'institut de gériatrie de Montréal
 % Université de Montréal, 2010.
@@ -134,14 +134,14 @@ end
 %%%%%%%%%%%%%%%%%%%%%
 pipeline = struct();
 if flag_spatial_av % If the user requested a correction for spatial_av
-    name_job_av         = cat(2,'spatial_av_',label);                            
+    name_job_av         = cat(2,'spatial_av_',label);
     files_in_tmp.fmri   = files_session{num_r};
     files_in_tmp.mask   = files_in.mask;
     files_out_tmp       = [opt.folder_out name_job_av '.mat'];
     opt_tmp             = opt.spatial_av;
     opt_tmp.exclude     = opt.exclude;
     opt_tmp.mask_thresh = opt.mask_thresh;
-    pipeline            = psom_add_job(pipeline,name_job_av,'niak_brick_spatial_av',files_in_tmp,files_out_tmp,opt_tmp);                
+    pipeline            = psom_add_job(pipeline,name_job_av,'niak_brick_spatial_av',files_in_tmp,files_out_tmp,opt_tmp);
 end % if flag_spatial_av
 
 %%%%%%%%%%%%%%%%%
@@ -160,7 +160,7 @@ if (~isfield(opt_tmp,'nb_trends_spatial'))&&ismember(opt.spatial_normalization,{
     opt_tmp.nb_trends_spatial = 1;
 end
 pipeline = psom_add_job(pipeline,name_job_design,'niak_brick_fmri_design',files_in_tmp,files_out_tmp,opt_tmp);
-            
+
 %%%%%%%%%%%%
 %% fmrilm %%
 %%%%%%%%%%%%
@@ -192,7 +192,7 @@ end
 if (~isfield(opt_tmp,'pcnt'))&&ismember(opt.spatial_normalization,{'scaling_glb_av','all_glb_av'})
     opt_tmp.pcnt = 1;
 end
-pipeline = psom_add_job(pipeline,name_job_design,'niak_brick_fmri_lm',files_in_tmp,files_out_tmp,opt_tmp);                                  
+pipeline = psom_add_job(pipeline,name_job_design,'niak_brick_fmri_lm',files_in_tmp,files_out_tmp,opt_tmp);
 
 %%%%%%%%%%%%%%%%%%%%%%
 %% Run the pipeline %%

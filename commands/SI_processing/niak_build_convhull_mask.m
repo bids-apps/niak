@@ -88,10 +88,10 @@ if nb_splits>1
     ind = find(mask);
     [x,y,z] = ind2sub(size(mask),ind);
     y0 = max(1,min(y)-2);
-    y1 = min(size(mask,2),max(y)+2);    
+    y1 = min(size(mask,2),max(y)+2);
     dy = floor((y1-y0)/nb_splits);
     chunks = y0:dy:y1;
-    chunks(end) = y1;    
+    chunks(end) = y1;
     mask_c = zeros(size(mask));
     opt.nb_splits = 1;
     opt.flag_verbose = false;
@@ -105,10 +105,10 @@ if nb_splits>1
                 perc = ceil(100*num_c/(length(chunks)-1));
                 fprintf('%i - ',perc);
             end
-        end        
+        end
         mask_c(:,chunks(num_c):chunks(num_c+1),:) = niak_build_convhull_mask(mask(:,chunks(num_c):chunks(num_c+1),:),opt);
     end
-    
+
     if flag_verbose
         fprintf('\n')
     end
@@ -239,14 +239,14 @@ switch p
     case 2
         % really simple for 2-d
         nrmls = (xyz(tess(:,1),:) - xyz(tess(:,2),:)) * [0 1;-1 0];
-        
+
         % Any degenerate edges?
         del = sqrt(sum(nrmls.^2,2));
         degenflag = (del<(max(del)*10*eps));
         if sum(degenflag)>0
             warning('inhull:degeneracy',[num2str(sum(degenflag)), ...
                 ' degenerate edges identified in the convex hull'])
-            
+
             % we need to delete those degenerate normal vectors
             nrmls(degenflag,:) = [];
             nt = size(nrmls,1);
@@ -274,7 +274,7 @@ switch p
         if sum(degenflag)>0
             warning('inhull:degeneracy',[num2str(sum(degenflag)), ...
                 ' degenerate simplexes identified in the convex hull'])
-            
+
             % we need to delete those degenerate normal vectors
             nrmls(degenflag,:) = [];
             nt = size(nrmls,1);
@@ -329,6 +329,3 @@ end
 if flag_verbose
     fprintf('\n')
 end
-
-
-

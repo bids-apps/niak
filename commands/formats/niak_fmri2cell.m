@@ -8,25 +8,25 @@ function [fmri_c,label] = niak_fmri2cell(fmri,flag_subject);
 % INPUTS:
 %
 % FMRI
-%   The canonical form of FMRI is a structure with the following fields : 
+%   The canonical form of FMRI is a structure with the following fields :
 %   <SUBJECT>.<SESSION>.<RUN> or <SUBJECT>.fmri.<SESSION>.<RUN>
 %      (string) the file name of an fMRI dataset.
 %
 % FLAG_SUBJECT
-%   (boolean, default true) if the flag is false, the function ignores the 
-%   <SUBJECT> IDs. 
+%   (boolean, default true) if the flag is false, the function ignores the
+%   <SUBJECT> IDs.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % FMRI_C
-%   (cell of string) FMRI_C{I} is the Ith entry of FMRI (ordered by 
+%   (cell of string) FMRI_C{I} is the Ith entry of FMRI (ordered by
 %   subject / session / run, in this order).
 %
 % LABEL
 %   (structure) with multiple entries. LABEL(I) has the following fields:
-%   
-%   SUBJECT 
+%
+%   SUBJECT
 %      (string) the name of the subject for FMRI_C{I}
 %
 %   SESSION
@@ -37,7 +37,7 @@ function [fmri_c,label] = niak_fmri2cell(fmri,flag_subject);
 %
 %   NAME
 %      (string) SUBJECT_SESSION_RUN
-%    
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_FMRI2STRUCT
@@ -47,11 +47,11 @@ function [fmri_c,label] = niak_fmri2cell(fmri,flag_subject);
 %
 % NIAK_FMRI2STRUCT is first applied to get a full structure input.
 %
-% The following command can be used to build a cell of strings with 
+% The following command can be used to build a cell of strings with
 % all the names:
 %   label_c = {label.name};
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Research Centre of the Montreal Geriatric Institute
 % & Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2012
@@ -81,7 +81,7 @@ if nargin < 2
     flag_subject = true;
 end
 
-if ~flag_subject    
+if ~flag_subject
     fmri2.subject = fmri;
     [fmri_c,label] = niak_fmri2cell(fmri2);
     label = rmfield(label,'subject');
@@ -101,7 +101,7 @@ for num_s = 1:length(list_subject)
     for num_sess = 1:length(list_session)
         session = list_session{num_sess};
         list_run = fieldnames(fmri.(subject).(session));
-        for num_r = 1:length(list_run) 
+        for num_r = 1:length(list_run)
             run = list_run{num_r};
             nb_e = nb_e+1;
             label(nb_e).subject = subject;

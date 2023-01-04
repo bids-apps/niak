@@ -11,7 +11,7 @@ function [part,order,sil,intra,inter,hier,nb_classes] = niak_consensus_clusterin
 %   (2D array K*S) STAB(:,I) is a vectorized stability matrix.
 %
 % OPT
-%   (structure) with the following fields (absent fields will be assigned 
+%   (structure) with the following fields (absent fields will be assigned
 %   a default value):
 %
 %   NB_CLASSES
@@ -21,7 +21,7 @@ function [part,order,sil,intra,inter,hier,nb_classes] = niak_consensus_clusterin
 %
 %   CLUSTERING
 %       (structure, optional) This structure describes
-%       the clustering algorithm used to estimate a consensus clustering on 
+%       the clustering algorithm used to estimate a consensus clustering on
 %       each stability matrix, with the following fields :
 %
 %       TYPE
@@ -29,8 +29,8 @@ function [part,order,sil,intra,inter,hier,nb_classes] = niak_consensus_clusterin
 %           Available options : 'hierarchical'
 %
 %       OPT
-%           (structure, default see NIAK_HIERARCHICAL_CLUSTERING) options 
-%           that will be  sent to the  clustering command. The exact list 
+%           (structure, default see NIAK_HIERARCHICAL_CLUSTERING) options
+%           that will be  sent to the  clustering command. The exact list
 %           of options depends on CLUSTERING.TYPE:
 %              'hierarchical' : see NIAK_HIERARCHICAL_CLUSTERING
 %
@@ -42,7 +42,7 @@ function [part,order,sil,intra,inter,hier,nb_classes] = niak_consensus_clusterin
 % OUTPUTS:
 %
 % PART
-%   (matrix N*S) PART(:,s) is the consensus partition associated with 
+%   (matrix N*S) PART(:,s) is the consensus partition associated with
 %   STAB(:,s), with the number of clusters optimized using the summary
 %   statistics.
 %
@@ -52,24 +52,24 @@ function [part,order,sil,intra,inter,hier,nb_classes] = niak_consensus_clusterin
 %
 % SIL
 %   (matrix S*N) SIL(s,n) is the mean stability contrast associated with
-%   STAB(:,s) and n clusters (the partition being defined using HIER{s}, 
+%   STAB(:,s) and n clusters (the partition being defined using HIER{s},
 %   see below).
 %
 % INTRA
 %   (matrix, S*N) INTRA(s,n) is the mean within-cluster stability
-%   associated with STAB(:,s) and n clusters (the partition being defined 
+%   associated with STAB(:,s) and n clusters (the partition being defined
 %   using HIER{s}, see below).
 %
 % INTER
-%   (matrix, S*N) INTER(s,n) is the mean maximal between-cluster stability 
-%   associated with STAB(:,s) and n clusters (the partition being defined 
+%   (matrix, S*N) INTER(s,n) is the mean maximal between-cluster stability
+%   associated with STAB(:,s) and n clusters (the partition being defined
 %   using HIER{s}, see below).
 %
 % HIER
 %   (cell of array) HIER{S} is the hierarchy associated with STAB(:,s)
 %
 % NB_CLASSES
-%   (vector) same as OPT.NB_CLASSES (updated if it was left empty). 
+%   (vector) same as OPT.NB_CLASSES (updated if it was left empty).
 %
 % _________________________________________________________________________
 % SEE ALSO:
@@ -84,17 +84,17 @@ function [part,order,sil,intra,inter,hier,nb_classes] = niak_consensus_clusterin
 % the maximal between cluster average stability (noted a and b in the
 % documentation, respectively).
 %
-% If OPT.NB_CLASSES is specified, HIER, INTRA and INTER are not derived 
+% If OPT.NB_CLASSES is specified, HIER, INTRA and INTER are not derived
 % (they are left filled with zeros).
 %
 % See the following publication regarding consensus clustering on stability
 % matrices and the use of stability contrast to select the number of
-% clusters : 
+% clusters :
 %  P. Bellec; P. Rosa-Neto; O.C. Lyttelton; H. Benalib; A.C. Evans,
-%  Multi-level bootstrap analysis of stable clusters in resting-State fMRI. 
-%  Neuroimage 51 (2010), pp. 1126-1139 
+%  Multi-level bootstrap analysis of stable clusters in resting-State fMRI.
+%  Neuroimage 51 (2010), pp. 1126-1139
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Centre de recherche de l'institut de Gériatrie de Montréal
 % Département d'informatique et de recherche opérationnelle
 % Université de Montréal, 2010-2011
@@ -137,7 +137,7 @@ opt.clustering = psom_struct_defaults(opt.clustering,list_fields,list_defaults);
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 if opt.flag_verbose
     fprintf('Consensus clustering ...\n     Percentage done : ');
-    perc_verb = 0.1;    
+    perc_verb = 0.1;
 end
 
 nb_s = size(stab,2);
@@ -162,15 +162,15 @@ for num_s = 1:nb_s
     switch opt.clustering.type
 
         case 'hierarchical'
-            
+
             hier{num_s} = niak_hierarchical_clustering(mat,opt.clustering.opt);
 
         otherwise
 
             error('%s is an unkown type of consensus clustering',opt.clustering.type)
 
-    end    
-    if isempty(opt.nb_classes)     
+    end
+    if isempty(opt.nb_classes)
         [sil(:,num_s),intra(:,num_s),inter(:,num_s)] = niak_build_avg_silhouette(mat,hier{num_s},false);
         [sil_max,ind_max] = max(sil(:,num_s));
         opt_t.thresh = ind_max;

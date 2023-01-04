@@ -1,23 +1,23 @@
 function coord_w = niak_coord_vox2world(coord_v,mat);
-% Convert coordinates from voxel to world space 
+% Convert coordinates from voxel to world space
 %
 % coord_w = niak_coord_vox2world(coord_v,mat)
 %
-% coord_v (matrix N*3) each row is a vector of 3D coordinates 
+% coord_v (matrix N*3) each row is a vector of 3D coordinates
 %   in voxel space.
 % mat (matrix 4*4) an affine transformation from voxel to world
-%   coordinates. See the help of niak_read_vol for more infos. It is 
+%   coordinates. See the help of niak_read_vol for more infos. It is
 %   generally the hdr.info.mat field of the header of a volume file.
-% coord_w (matrix N*3) each row is a vector of 3D coordinates in 
+% coord_w (matrix N*3) each row is a vector of 3D coordinates in
 %   world space.
 %
 % SEE ALSO:
 %   niak_coord_world2vol, niak_read_vol
 %
 % COMMENTS:
-%   Voxel coordinates are expected to start from 1. 
+%   Voxel coordinates are expected to start from 1.
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.

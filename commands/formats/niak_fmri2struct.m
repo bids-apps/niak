@@ -8,21 +8,21 @@ function fmri_s = niak_fmri2struct(fmri,label,flag_cell);
 % INPUTS:
 %
 % FMRI
-%    The canonical form of FMRI is a structure with the following fields : 
+%    The canonical form of FMRI is a structure with the following fields :
 %    <SUBJECT>.<SESSION>.<RUN> or <SUBJECT>.fmri.<SESSION>.<RUN>
 %       (string) the file name of an fMRI dataset.
 %       The SESSION level can be replaced by a cell of strings, in which case
 %       a default label is used (sess1_run1, sess1_run2, etc)
-%       The RUN level can be replaced by a cell of strings, in which case 
+%       The RUN level can be replaced by a cell of strings, in which case
 %       a default label is used (run1, run2, etc for runs).
 %       If a fmri field is present for one subject, it is assumed to contain
 %       the <SESSION> fields and all other fields are ignored.
 %    Another possible form for FMRI is a cell of strings, where each entry
-%    is an fMRI dataset. In this case, the second argument LABEL is 
+%    is an fMRI dataset. In this case, the second argument LABEL is
 %    mandatory.
 %
 % LABEL
-%    (structure, necessary if FMRI is a cell of strings) LABEL(I) is a 
+%    (structure, necessary if FMRI is a cell of strings) LABEL(I) is a
 %    structure with fields SUBJECT / SESSION / RUN, indicating the labels
 %    associated with FMRI{I}
 %
@@ -35,9 +35,9 @@ function fmri_s = niak_fmri2struct(fmri,label,flag_cell);
 %
 % FMRI_S
 %    Same as FMRI, organized in the form of a structure (except for the RUN
-%    level, which can be either a structure or a cell of strings, depending 
+%    level, which can be either a structure or a cell of strings, depending
 %    on FLAG_CELL).
-%    
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_FMRI2CELL
@@ -45,7 +45,7 @@ function fmri_s = niak_fmri2struct(fmri,label,flag_cell);
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Research Centre of the Montreal Geriatric Institute
 % & Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2012
@@ -106,16 +106,16 @@ for num_s = 1:length(list_subject)
         if flag_cell
             fmri_s.(subject).sess1 = files_sub;
         else
-            for num_e = 1:length(files_sub)            
+            for num_e = 1:length(files_sub)
                 fmri_s.(subject).sess1.(sprintf('run%i',num_e)) = files_sub{num_e};
             end
         end
         continue
-    end    
+    end
     list_session = fieldnames(files_sub);
     for num_sess = 1:length(list_session)
         session = list_session{num_sess};
-        files_sess = files_sub.(session);        
+        files_sess = files_sub.(session);
         if iscellstr(files_sess)
             if flag_cell
                 fmri_s.(subject).(session) = files_sess;

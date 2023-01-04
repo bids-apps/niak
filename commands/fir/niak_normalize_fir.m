@@ -8,29 +8,29 @@ function fir_c = niak_normalize_fir(fir,baseline,opt)
 % INPUTS:
 %
 % FIR
-%    (array TxN) T time samples, N regions. Each column is 
+%    (array TxN) T time samples, N regions. Each column is
 %    a (mean) response to a stimulus in a brain region.
 %
 % BASELINE
-%    (array T2xN) T2 time samples, N regions. Each column is a series of 
+%    (array T2xN) T2 time samples, N regions. Each column is a series of
 %    observation at baseline.
 %
 % OPT
 %    (structure) with the following fields:
 %
 %    TYPE
-%        (string) the type of applied normalization of the response. 
+%        (string) the type of applied normalization of the response.
 %        Available options:
 %
-%        'fir' : (1) Correction to a zero mean at baseline; 
+%        'fir' : (1) Correction to a zero mean at baseline;
 %                (2) Express changes as a percentage of the baseline.
-%            
-%        'fir_shape' : correction to a zero mean at baseline and a unit 
-%           energy of the response.  
+%
+%        'fir_shape' : correction to a zero mean at baseline and a unit
+%           energy of the response.
 %
 %    TIME_SAMPLING
 %        (scalar) the time between two samples of the response.
-%    
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
@@ -69,7 +69,7 @@ function fir_c = niak_normalize_fir(fir,baseline,opt)
 %
 % _________________________________________________________________________
 % SEE ALSO:
-% NIAK_PIPELINE_STABILITY_FIR, NIAK_STABILITY_FIR, NIAK_BRICK_FIR, 
+% NIAK_PIPELINE_STABILITY_FIR, NIAK_STABILITY_FIR, NIAK_BRICK_FIR,
 % NIAK_BRICK_FIR_TSERIES
 %
 % _________________________________________________________________________
@@ -127,18 +127,18 @@ end
 fir_m = mean(baseline,1);
 if ndims(fir) == 2
     fir_c = fir - repmat(fir_m , [size(fir,1) 1]);
-    if strcmp(opt.type,'fir_shape')        
+    if strcmp(opt.type,'fir_shape')
         weights = repmat(sqrt(sum(fir_c.^2,1)*opt.time_sampling),[size(fir_c,1) 1]);
         fir_c = fir_c./weights;
     elseif strcmp(opt.type,'fir')
         fir_c = 100*fir_c./repmat(fir_m, [size(fir,1) 1]);
     end
-else 
+else
     fir_c = fir - repmat(fir_m , [size(fir,1) 1 size(fir,3)]);
-    if strcmp(opt.type,'fir_shape')        
+    if strcmp(opt.type,'fir_shape')
         weights = repmat(sqrt(sum(fir_c.^2,1)*opt.time_sampling),[size(fir_c,1) 1 1]);
         fir_c = fir_c./weights;
-    elseif strcmp(opt.type,'fir')    
+    elseif strcmp(opt.type,'fir')
         fir_c = 100*fir_c./repmat(fir_m, [size(fir,1) 1 size(fir,3)]);
     end
 end

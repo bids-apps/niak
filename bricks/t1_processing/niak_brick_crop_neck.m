@@ -5,16 +5,16 @@ function [in,out,opt] = niak_brick_crop_neck(in,out,opt)
 %
 % FILES_IN (string) a T1 scan.
 % FILES_OUT (string) a T1 scan, with neck cropped
-% OPT.CROP_NECK (scalar) the percentage of the field of view to crop. Must be between 0 and 1. 
+% OPT.CROP_NECK (scalar) the percentage of the field of view to crop. Must be between 0 and 1.
 % OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick only checks
-%   IN, OUT, OPT but does not do anything. 
+%   IN, OUT, OPT but does not do anything.
 % OPT.FLAG_VERBOSE (boolean, default true) if the flag is true, verbose progress info
 %
-% NOTE: the crop is implemented in voxel space, along the axis that fits most 
-%   closely with ventro-dorsal (z) axis. Slices that are closer to the neck are 
-%   suppressed first. This can be the first or the last slices in voxel space, 
-%   depending on storage conventions. 
-% See license information in the code. 
+% NOTE: the crop is implemented in voxel space, along the axis that fits most
+%   closely with ventro-dorsal (z) axis. Slices that are closer to the neck are
+%   suppressed first. This can be the first or the last slices in voxel space,
+%   depending on storage conventions.
+% See license information in the code.
 
 % Copyright (c) Pierre Bellec, Department of Computer Science and Operations Research
 % University of Montreal, 2016
@@ -55,7 +55,7 @@ opt = psom_struct_defaults( opt , { 'crop_neck' , 'flag_test' , 'flag_verbose' }
 if (opt.crop_neck < 0)||(opt.crop_neck>1)
     error('OPT.CROP_NECK needs to be comprised between 0 and 1')
 end
-if opt.flag_test 
+if opt.flag_test
     return
 end
 
@@ -76,7 +76,7 @@ if step(ind)>0
           vol = vol(nb_slice+1:end,:,:);
       case 2
           vol = vol(:,nb_slice+1:end,:);
-      case 3 
+      case 3
           vol = vol(:,:,nb_slice+1:end);
     end
     start(ind) = start(ind) + nb_slice*step(ind);
@@ -87,7 +87,7 @@ else
           vol = vol(1:(end-nb_slice),:,:);
       case 2
           vol = vol(:,1:(end-nb_slice),:);
-      case 3 
+      case 3
           vol = vol(:,:,1:(end-nb_slice));
     end
 end

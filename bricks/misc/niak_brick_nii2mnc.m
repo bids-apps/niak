@@ -6,13 +6,13 @@ function [files_in,files_out,opt] = niak_brick_nii2mnc(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN  
+% FILES_IN
 %   (string) a relative or full path.
 %
-% FILES_OUT 
+% FILES_OUT
 %   (string, default FILES_IN) a relative or full path name
 %
-% OPT   
+% OPT
 %   (structure) with the following fields :
 %
 %   FLAG_RECURSIVE
@@ -22,8 +22,8 @@ function [files_in,files_out,opt] = niak_brick_nii2mnc(files_in,files_out,opt)
 %      (string, default '') an argument that will be added in
 %      the system call to the NII2MNC function.
 %
-%   FLAG_VERBOSE 
-%      (boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%      (boolean, default 1) if the flag is 1, then the function prints
 %      some infos during the processing.
 %
 %   FLAG_ZIP
@@ -107,20 +107,20 @@ list_dir = list_all(mask_dir);
 niak_mkdir(files_out);
 
 for num_f = 1:length(list_files)
-    
+
     file_name = list_files{num_f};
     source_file = [files_in filesep file_name];
-    
+
     [path_tmp,name_tmp,ext] = fileparts(file_name);
-    
+
     if strcmp(ext,GB_NIAK.zip_ext)
         [path_tmp,name_tmp,ext] = fileparts(name_tmp);
         ext = [ext GB_NIAK.zip_ext];
-    end        
-    
+    end
+
     switch ext
         case {['.nii' GB_NIAK.zip_ext]}
-            
+
             target_file = [files_out filesep name_tmp '.mnc'];
             tmp_file = niak_file_tmp('.nii');
             instr_cp0 = ['cp ' source_file ' ' tmp_file GB_NIAK.zip_ext];
@@ -132,29 +132,29 @@ for num_f = 1:length(list_files)
                 instr_cp = char(instr_cp,[GB_NIAK.zip ' ' target_file]);
             end
             msg = sprintf('Convert %s to %s\n',source_file,target_file);
-            
+
         case {'.nii','.img'}
-            
+
             target_file = [files_out filesep name_tmp '.mnc'];
             instr_cp = ['nii2mnc ',arg_nii2mnc,' ',source_file,' ',target_file];
             if flag_zip
                 instr_cp = char(instr_cp,[GB_NIAK.zip ' ' target_file]);
             end
             msg = sprintf('Convert %s to %s\n',source_file,target_file);
-            
+
         case '.hdr'
-            
+
             target_file = '';
             instr_cp = '';
             msg = sprintf('Skipping the header file %s\n',source_file);
-                        
+
         otherwise
-            
+
             target_file = [files_out filesep file_name];
             instr_cp = ['cp -f ' source_file ' ' target_file];
             msg = sprintf('Copy %s to %s\n',source_file,target_file);
     end
-    
+
     if ~strcmp(source_file,target_file)
         if flag_verbose
             fprintf('%s',msg)
@@ -165,17 +165,17 @@ for num_f = 1:length(list_files)
                 warning(err_msg)
             end
         end
-                
+
     end
-    
+
 
 end
 
 if flag_recursive
-    
+
     for num_d = 1:length(list_dir)
-        
+
         niak_brick_nii2mnc([files_in filesep list_dir{num_d}],[files_out filesep list_dir{num_d}],opt);
-        
+
     end
 end

@@ -1,6 +1,6 @@
 function int = niak_build_integration(tseries,part,flag_vec)
 % Compute integration measures within and between networks,
-% given a set of regional time series and a partition of regions into 
+% given a set of regional time series and a partition of regions into
 % networks.
 %
 % SYNTAX:
@@ -9,11 +9,11 @@ function int = niak_build_integration(tseries,part,flag_vec)
 % _________________________________________________________________________
 % INPUTS:
 %
-% TSERIES       
+% TSERIES
 %       (2D array) TSERIES(:,i) is the time series of the ith region
 %
-% PART          
-%       (vector) find(PART==j) is the list of region in network j. In other 
+% PART
+%       (vector) find(PART==j) is the list of region in network j. In other
 %       words, PART(i) is the number of the network of region i.
 %
 % FLAG_VEC
@@ -24,12 +24,12 @@ function int = niak_build_integration(tseries,part,flag_vec)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% INT           
-%       (structure or vector, depending on FLAG_VEC) 
+% INT
+%       (structure or vector, depending on FLAG_VEC)
 %
 %       case structure
 %
-%           INT.TOTAL 
+%           INT.TOTAL
 %               (scalar) the total integration of the system.
 %
 %           INT.INTRA
@@ -39,12 +39,12 @@ function int = niak_build_integration(tseries,part,flag_vec)
 %               (scalar) the total inter-system integration.
 %
 %           INT.MAT
-%               (matrix) the matrix of intra/inter system integration. 
+%               (matrix) the matrix of intra/inter system integration.
 %
 %       case vector
 %
-%           the elements of the structure have been vectorized in an 
-%           arbitrary order, and the redundant elements of MAT have been 
+%           the elements of the structure have been vectorized in an
+%           arbitrary order, and the redundant elements of MAT have been
 %           suppressed. See NIAK_VEC2INT to recover the structure version.
 %
 % _________________________________________________________________________
@@ -57,12 +57,12 @@ function int = niak_build_integration(tseries,part,flag_vec)
 % Details on hierarchical measures of integration can be found in the
 % following publication :
 % G. Marrelec; P. Bellec; A. Krainik; H. Duffau; M. Pélégrini-Issac; S.
-% Lehéricy;H. Benali; J. Doyon, 
-% Regions, Systems, and the Brain: Hierarchical Measures of Functional 
-% Integration in fMRI. 
+% Lehéricy;H. Benali; J. Doyon,
+% Regions, Systems, and the Brain: Hierarchical Measures of Functional
+% Integration in fMRI.
 % Medical Image Analysis, 2008, 4: 484-496.
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -98,7 +98,7 @@ R = niak_build_correlation(tseries);
 if nb_class > 1
     for num1 = 2:nb_class
         for num2 = 1:num1-1
-            Mint(num1,num2) = 0.5*log(det(R(part==num1,part==num1))*det(R(part==num2,part==num2))/det(R((part==num1)|(part==num2),(part==num1)|(part==num2))));            
+            Mint(num1,num2) = 0.5*log(det(R(part==num1,part==num1))*det(R(part==num2,part==num2))/det(R((part==num1)|(part==num2),(part==num1)|(part==num2))));
             if ~flag_vec
                 Mint(num2,num1) = Mint(num1,num2);
             end

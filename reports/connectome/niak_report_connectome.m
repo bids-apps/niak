@@ -7,25 +7,25 @@ function [pipeline,opt] = niak_report_connectome(in,opt)
 %   The name of a .mat file with two variables FILES_IN (the input files) and
 %   OPT (the options), describing the parameters of the pipeline.
 % IN.BACKGROUND (string) a brain volume to use as a background for each brain map.
-% IN.INDIVIDUAL.(SEED).(SUBJECT) (string) an individual connectivity map, for a 
-%   a given subject and seed.  
-% IN.AVG.(SEED) (string) the average map associated with a seed. 
-% IN.NETWORK (string)  a file name of a mask of brain networks (network I is filled 
+% IN.INDIVIDUAL.(SEED).(SUBJECT) (string) an individual connectivity map, for a
+%   a given subject and seed.
+% IN.AVG.(SEED) (string) the average map associated with a seed.
+% IN.NETWORK (string)  a file name of a mask of brain networks (network I is filled
 %  with Is, 0 is for the background).
 %
 % OPT (structure) with the following fields:
 %   FOLDER_OUT (string) the path where to store the results.
-%   AVG.THRESH (scalar, default [-0.15 0.25]) if empty, does nothing. 
-%     If a scalar, any value below threshold becomes transparent. If two values, 
-%     anything between these two values become transparent. 
-%   AVG.LIMITS (vector 1x2, default [-0.3 0.5]) the limits for the colormap. 
-%     By defaut it is using [min,max]. If a string is specified, the function 
+%   AVG.THRESH (scalar, default [-0.15 0.25]) if empty, does nothing.
+%     If a scalar, any value below threshold becomes transparent. If two values,
+%     anything between these two values become transparent.
+%   AVG.LIMITS (vector 1x2, default [-0.3 0.5]) the limits for the colormap.
+%     By defaut it is using [min,max]. If a string is specified, the function
 %     will implement an adaptative strategy.
-%   IND.THRESH (scalar, default [-0.15 0.35]) if empty, does nothing. 
-%     If a scalar, any value below threshold becomes transparent. If two values, 
-%     anything between these two values become transparent. 
-%   IND.LIMITS (vector 1x2, default [-0.5 0.8]) the limits for the colormap. 
-%     By defaut it is using [min,max]. If a string is specified, the function 
+%   IND.THRESH (scalar, default [-0.15 0.35]) if empty, does nothing.
+%     If a scalar, any value below threshold becomes transparent. If two values,
+%     anything between these two values become transparent.
+%   IND.LIMITS (vector 1x2, default [-0.5 0.8]) the limits for the colormap.
+%     By defaut it is using [min,max]. If a string is specified, the function
 %     will implement an adaptative strategy.
 %   PSOM (structure) options for PSOM. See PSOM_RUN_PIPELINE.
 %   FLAG_VERBOSE (boolean, default true) if true, verbose on progress.
@@ -81,7 +81,7 @@ opt.ind = psom_struct_defaults( opt.ind , ...
 opt.avg = psom_struct_defaults( opt.avg , ...
     { 'thresh'   , 'limits'     }, ...
     { [-0.15 0.25] , [-0.3 0.5]   });
-    
+
 opt.folder_out = niak_full_path(opt.folder_out);
 opt.psom.path_logs = [opt.folder_out 'logs' filesep];
 

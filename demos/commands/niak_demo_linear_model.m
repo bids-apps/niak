@@ -1,7 +1,7 @@
 function [stab,tseries,opt] = niak_demo_linear_model(opt)
 % This is a script to demonstrate how to specify linear models
 %
-% The code is organized by blocks which can be copy/pasted and executed in 
+% The code is organized by blocks which can be copy/pasted and executed in
 % a Matlab or Octave session.
 %
 % _________________________________________________________________________
@@ -63,7 +63,7 @@ test.single_sex_reg.projection.space = {'age'};
 test.single_sex_reg.projection.ortho = {'sex'};
 model_n.single_sex_reg = niak_normalize_model(model_raw,test.single_sex_reg);
 
-%% test of the interaction between age and sex 
+%% test of the interaction between age and sex
 test.single_sex_int.contrast.sex = 0;
 test.single_sex_int.contrast.age = 0;
 test.single_sex_int.contrast.sex_x_age = 1;

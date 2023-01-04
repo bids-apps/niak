@@ -7,7 +7,7 @@ function versions = niak_version()
 % _________________________________________________________________________
 % INPUTS :
 %
-%   
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
@@ -21,7 +21,7 @@ function versions = niak_version()
 %                   RELEASE.RELEASE release number.
 %
 % _________________________________________________________________________
-% COMMENTS : 
+% COMMENTS :
 %
 %
 % Copyright (c) Christian L. Dansereau, Centre de recherche de l'Institut universitaire de gériatrie de Montréal, 2011.
@@ -51,7 +51,7 @@ function versions = niak_version()
 %%%%%%%%%%%%%%%%%
 %%     SVN     %%
 %%%%%%%%%%%%%%%%%
-% SVN not used anymore 
+% SVN not used anymore
 %    versions.svn = psom_version_svn();
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -74,6 +74,6 @@ function versions = niak_version()
         versions.release(k).name = 'niak';
         versions.release(k).release = GB_NIAK.version;
     end
-   
+
 
 end

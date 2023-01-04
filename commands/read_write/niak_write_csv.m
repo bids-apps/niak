@@ -1,7 +1,7 @@
 function  [err,msg] = niak_write_csv(file_name,tab,opt)
-% Write a table into a CSV (comma-separated values) text file. 
+% Write a table into a CSV (comma-separated values) text file.
 % The first row and first column can be used as string labels, while
-% the rest of the table is a numerical array. 
+% the rest of the table is a numerical array.
 %
 % SYNTAX:
 % [ERR,MSG] = NIAK_WRITE_CSV(FILE_NAME,TAB,OPT)
@@ -9,33 +9,33 @@ function  [err,msg] = niak_write_csv(file_name,tab,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILE_NAME     
+% FILE_NAME
 %   (string) the name of the text file (usually ends in .csv)
 %
-% TAB   
-%   (matrix M*N) the numerical data array. 
+% TAB
+%   (matrix M*N) the numerical data array.
 %
 %
-% OPT           
-%   (structure) with the following fields.  
+% OPT
+%   (structure) with the following fields.
 %
 %   LABELS_X
-%      (cell of strings 1*M, default {}) LABELS_X{NUM_R} is the label 
+%      (cell of strings 1*M, default {}) LABELS_X{NUM_R} is the label
 %      of row NUM_R in TAB.
 %
 %   LABELS_Y
-%      (cell of strings 1*N, default {}) LABELS_X{NUM_C} is the label 
+%      (cell of strings 1*N, default {}) LABELS_X{NUM_C} is the label
 %      of column NUM_C in TAB.
 %
 %   LABELS_ID
-%      (string) the first cell of the tab. 
+%      (string) the first cell of the tab.
 %
 %   FLAG_QUOTES
-%      (boolean, default true) if the flag is true, the string labels are 
-%      written between ". 
+%      (boolean, default true) if the flag is true, the string labels are
+%      written between ".
 %
 %   SEPARATOR
-%      (string, default ',') The character used to separate values. 
+%      (string, default ',') The character used to separate values.
 %
 %   PRECISION
 %      (integer, default 15) The number of decimals used to write the
@@ -47,7 +47,7 @@ function  [err,msg] = niak_write_csv(file_name,tab,opt)
 % ERR
 %   (boolean) if ERR == 1 an error occured, ERR = 0 otherwise.
 %
-% MSG 
+% MSG
 %   (string) the error message (empty if ERR==0).
 %
 % _________________________________________________________________________
@@ -57,8 +57,8 @@ function  [err,msg] = niak_write_csv(file_name,tab,opt)
 % COMMENTS:
 %
 % Copyright (c) Pierre Bellec
-%               Centre de recherche de l'institut de 
-%               Gériatrie de Montréal, Département d'informatique et de recherche 
+%               Centre de recherche de l'institut de
+%               Gériatrie de Montréal, Département d'informatique et de recherche
 %               opérationnelle, Université de Montréal, 2008-2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -107,7 +107,7 @@ end
 [hf,msg] = fopen(file_name,'w');
 if hf == -1
     err = 1;
-else 
+else
     err = 0;
 end
 
@@ -128,7 +128,7 @@ for numx = 1:(nx+1)
                 if ~isempty(opt.labels_x{numx-1})
                     if opt.flag_quotes
                         tab_str{numx,numy} = ['"' opt.labels_x{numx-1} '"'];
-                    else 
+                    else
                         tab_str{numx,numy} = opt.labels_x{numx-1};
                     end
                 else
@@ -137,7 +137,7 @@ for numx = 1:(nx+1)
             end
         else
             if numx == 1
-                if ~isempty(opt.labels_y)&&~isempty(opt.labels_y{numy-1})                
+                if ~isempty(opt.labels_y)&&~isempty(opt.labels_y{numy-1})
                     if opt.flag_quotes
                         tab_str{numx,numy} = ['"' opt.labels_y{numy-1} '"'];
                     else
@@ -146,7 +146,7 @@ for numx = 1:(nx+1)
                 else
                     tab_str{numx,numy} = '';
                 end
-                    
+
             else
                 tab_str{numx,numy} = sprintf(str_num,tab(numx-1,numy-1));
             end
@@ -161,14 +161,14 @@ else
     startx = 1;
 end
 for numx = startx:size(tab_str,1)
-    for numy = 1:size(tab_str,2)        
-        
+    for numy = 1:size(tab_str,2)
+
         if ~(numy == ny+1)
             fprintf(hf,'%s %s',tab_str{numx,numy},opt.separator);
         else
             fprintf(hf,'%s\n',tab_str{numx,numy});
-        end     
-    end    
+        end
+    end
 end
 
 fclose(hf);

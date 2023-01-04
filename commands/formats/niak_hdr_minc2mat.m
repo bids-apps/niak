@@ -3,7 +3,7 @@ function [mat] = niak_hdr_minc2mat(direction_cosine,step,start)
 %
 % SYNTAX:
 % MAT = NIAK_HDR_MINC2MAT(DIRECTION_COSINE,STEP,START)
-% 
+%
 % _________________________________________________________________________
 % INPUTS:
 %
@@ -33,7 +33,7 @@ function [mat] = niak_hdr_minc2mat(direction_cosine,step,start)
 % SEE ALSO:
 % NIAK_READ_HDR_MINC, NIAK_WRITE_MINC, NIAK_HDR_MAT2MINC
 %
-% Copyright (c) Pierre Bellec, McConnel Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnel Brain Imaging Center, Montreal
 % Neurological Institute, McGill University, Montreal, Canada.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.

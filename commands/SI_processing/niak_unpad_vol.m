@@ -11,7 +11,7 @@ function vol = niak_unpad_vol(vol_m,pad_size);
 %       (3D array) a 3D volume.
 %
 % PAD_SIZE
-%       (integer) remove PAD_SIZE elements at the begining/end of each 
+%       (integer) remove PAD_SIZE elements at the begining/end of each
 %       dimension of the volume.
 %
 % _________________________________________________________________________

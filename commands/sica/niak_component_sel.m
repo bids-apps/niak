@@ -1,32 +1,32 @@
 function [selection,selecvector,selecinfo] = niak_component_sel(tc_cell,regressors,thr_p_s,nbsamp,nbclass,indextype,selthres,is_verbose)
-% Automatic selection of regressors explaining prior time courses 
+% Automatic selection of regressors explaining prior time courses
 % using stepwise regression
 %
 % SYNTAX:
 % [SELECTION,SELECVECTOR,SELECINFO] = NIAK_COMPONENT_SEL(TC_CELL,REGRESSORS,THR_P_S,NB_SAMP,WW,NBCLASS,INDEXTYPE,SELTHRES,IS_VERBOSE)
-% 
+%
 % _________________________________________________________________________
 % INPUTS:
-% 
+%
 % TC_CELL
 %       (cell array) Prior time courses in column of each region
 %
 % REGRESSORS
 %       (2D array). Regressors used to explain TC_CELL (in column)
 %
-% THR_P_S           
+% THR_P_S
 %       (real value) p-value for stepwise regression
 %
-% NBSAMP            
+% NBSAMP
 %       (integer) number of process repetition for score computation
 %
 % NBCLASS
 %       (integer) number of clusters used for the kmeans clustering
 %
 % INDEXTYPE
-%       (string) type of computed score. 
-%       'freq' : frequency of selection of the regressor 
-%       'inertia' : relative part of inertia explained by the clusters 
+%       (string) type of computed score.
+%       'freq' : frequency of selection of the regressor
+%       'inertia' : relative part of inertia explained by the clusters
 %       "selecting" the regressor
 %
 % SELTHRES
@@ -45,13 +45,13 @@ function [selection,selecvector,selecinfo] = niak_component_sel(tc_cell,regresso
 %       (structure) some intermediary results
 %
 % IS_VERBOSE
-%       ('on' or 'off') gives progression infos (includes a graphical wait 
+%       ('on' or 'off') gives progression infos (includes a graphical wait
 %       bar highly unstable in batch mode)
-%       
+%
 % _________________________________________________________________________
 % REFERENCE
 %
-% Perlbarg, V., Bellec, P., Anton, J.-L., Pelegrini-Issac, P., Doyon, J. and 
+% Perlbarg, V., Bellec, P., Anton, J.-L., Pelegrini-Issac, P., Doyon, J. and
 % Benali, H.; CORSICA: correction of structured noise in fMRI by automatic
 % identification of ICA components. Magnetic Resonance Imaging, Vol. 25,
 % No. 1. (January 2007), pp. 35-46.
@@ -97,21 +97,21 @@ for numRoi=1:length(tc_cell)
         [T,N]=size(X)
         mtmp = zeros(T,N);
         mtmp(:,I) = 1;
-        X=X(mtmp==0);        
-        N-length(I)        
-        X=reshape(X,T,N-length(I));            
+        X=X(mtmp==0);
+        N-length(I)
+        X=reshape(X,T,N-length(I));
     end
 
     [T,N] = size(X);
     selecvector = zeros(1,size(regressors,2));
-   
+
     nbClust = 0;
-    
+
     opt_kmeans.nb_classes = nbclass;
     opt_kmeans.type_death = 'none';
     opt_kmeans.nb_iter = 1;
     opt_kmeans.flag_verbose = 0;
-    
+
     if flag_verbose
         fprintf('     Percentage done : ');
         curr_perc = -1;
@@ -125,26 +125,26 @@ for numRoi=1:length(tc_cell)
                 curr_perc = new_perc;
             end
         end
-        
-        [P,Y,I_intra,I_inter] = niak_kmeans_clustering(X,opt_kmeans);        
-        
+
+        [P,Y,I_intra,I_inter] = niak_kmeans_clustering(X,opt_kmeans);
+
         I_total = sum(I_intra)+I_inter;
         inertia = I_intra/I_total + I_inter/(length(I_intra)*I_total);
-                
+
         siz_p = zeros([1 max(P)]);
         for num_p = 1:max(P)
-            siz_p(num_p) = sum(P==num_p);            
+            siz_p(num_p) = sum(P==num_p);
         end
-        
-        OK = siz_p > 3;        
-        
+
+        OK = siz_p > 3;
+
         if sum(OK) == 0
             [val_max,i_max] = max(siz_p);
             OK(i_max) = 1;
-        end        
-                
+        end
+
         [selection,num_comp_cell,Freq_tmp,nbRegions,Inert_tmp]=niak_sub_get_stepwise_comp(Y(:,OK),regressors,thr_p_s,inertia);
-        
+
         FreqSel(s,:) =  Freq_tmp/nbRegions;
         nbClust = nbClust + nbRegions;
         InertSel(s,:) = Inert_tmp;
@@ -152,20 +152,20 @@ for numRoi=1:length(tc_cell)
 
         selecinfo(s).compsel = num_comp_cell;
         selecinfo(s).inertia = inertia;
-        
+
     end
     tFreq(numRoi,:) = mean(FreqSel,1);
-    tInert(numRoi,:) = mean(InertSel,1);    
-    
+    tInert(numRoi,:) = mean(InertSel,1);
+
 end
 
 if flag_verbose
     fprintf('\n');
 end
-        
+
 Freq = max(tFreq,[],1);
 Inert = max(tInert,[],1);
-if strcmp(indextype,'freq') 
+if strcmp(indextype,'freq')
     selection = find(Freq>selthres);
     selecvector = Freq;
 elseif strcmp(indextype,'inertia')
@@ -203,7 +203,7 @@ clear regressors;
 Freq = zeros(1,size(X,2));
 Inert = zeros(1,size(X,2));
 for k=1:nb_regions
-    Y = data_tc(:,k);    
+    Y = data_tc(:,k);
     [M,num_X,Ftmp,ptmp]=niak_sub_do_stepwise_regression(Y,X,thr_p,0);
     F(:,k)=Ftmp;
     p(:,k)=ptmp;
@@ -221,7 +221,7 @@ function [M,num_X,F_out,p_out]=niak_sub_do_stepwise_regression(Y,X,thr,visu)
 % stepwise regression forward-backward
 %
 % [M,num_X,F_out,p_out]=niak_sub_do_stepwise_regression(Y,X,thr,visu)
-% 
+%
 % INPUTS
 % Y         signal to explain
 % X         matrix of regressors in column
@@ -268,23 +268,23 @@ while test == 0
     % forward
     taille = taille+1;
     n_r = length(liste_unselect);
-    
-    for k=1:n_r       
-    
+
+    for k=1:n_r
+
         Xk = X(:,liste_unselect(k));
         if isempty(reg)
             reg_c = Xk;
         else
             reg_c = [reg Xk];
         end
-      
+
         Ychap(:,liste_unselect(k)) = reg_c*((reg_c'*reg_c)^(-1))*(reg_c'*Y);
-        
+
         R2(liste_unselect(k)) = (1/(nt-1))*Ychap(:,liste_unselect(k))'*Ychap(:,liste_unselect(k));
         F(liste_unselect(k)) = (nt-taille-1)*(R2(liste_unselect(k)) - R1)/(1-R2(liste_unselect(k)));
         p(liste_unselect(k)) = 1-sub_spm_Fcdf(F(liste_unselect(k)),1,nt-taille-1);
         p(isnan(p))=Inf;
-        
+
     end
     out=out+1;
     if out==1
@@ -316,7 +316,7 @@ while test == 0
     end
     F = zeros(size(liste_reg));
     p = zeros(size(liste_reg));
-    
+
     if test == 0
         % backward
         n_r = length(liste_select);
@@ -337,7 +337,7 @@ while test == 0
         if score_b>thr
             num_cand_b = liste_reg(find(p>thr));
             for j=1:length(num_cand_b)
-                if num_cand_b(j) ~= num_cand_f 
+                if num_cand_b(j) ~= num_cand_f
                     for q=1:length(num_cand_b)
                         I=find(num_X~=num_cand_b(q));
                         reg = reg(:,I);

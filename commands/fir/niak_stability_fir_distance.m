@@ -8,18 +8,18 @@ function dist = niak_stability_fir_distance(fir_all,opt);
 % INPUTS:
 %
 % FIR_ALL
-%    (array T*N*R) T time samples, N regions, R repetitions. Each column is 
+%    (array T*N*R) T time samples, N regions, R repetitions. Each column is
 %    a sample of the response to a stimulus in a brain region.
 %
 % OPT
-%    (structure) the options to normalize the average FIR. See the OPT 
+%    (structure) the options to normalize the average FIR. See the OPT
 %    argument in NIAK_NORMALIZE_FIR
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % DIST
-%    (vector) a vectorized version of l2-norm of the difference between 
+%    (vector) a vectorized version of l2-norm of the difference between
 %    average responses
 %
 % _________________________________________________________________________

@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
 # Make this into a working system first
-sudo apt-get update 
+sudo apt-get update
 
 # Install dependencies
 echo Installing dependencies
 sudo apt-get install build-essential g++ cmake cmake-curses-gui bison flex \
  freeglut3 freeglut3-dev libxi6 libxi-dev libxmu6 libxmu-dev \
- libxmu-headers imagemagick libjpeg62 -y 
+ libxmu-headers imagemagick libjpeg62 -y
 
 # Add the certificate for the backports
-gpg --keyserver pgpkeys.mit.edu --recv-key  8B48AD6246925553      
+gpg --keyserver pgpkeys.mit.edu --recv-key  8B48AD6246925553
 gpg -a --export 8B48AD6246925553 | sudo apt-key add -
 
 # Add the backports
@@ -21,11 +21,11 @@ if [ -z "${check}" ]
   sudo apt-get install python-software-properties
   sudo add-apt-repository "deb http://http.debian.net/debian wheezy-backports main"
 fi
-sudo apt-get update 
+sudo apt-get update
 
 # Install Octave
 echo Install Octave
-sudo apt-get -t wheezy-backports install "octave" -y 
+sudo apt-get -t wheezy-backports install "octave" -y
 # Install additional dependecies
 echo Install additional Octave dependencies
 sudo apt-get -t wheezy-backports install "liboctave-dev" -y
@@ -39,8 +39,8 @@ then
 	echo Download niak
 	sudo apt-get install unzip
 	wget http://www.nitrc.org/frs/download.php/7149/${nversion}.zip -P /home/${usr}
-	unzip /home/${usr}/${nversion}.zip 
-	rm /home/${usr}/${nversion}.zip 
+	unzip /home/${usr}/${nversion}.zip
+	rm /home/${usr}/${nversion}.zip
 fi
 
 # Edit .octaverc

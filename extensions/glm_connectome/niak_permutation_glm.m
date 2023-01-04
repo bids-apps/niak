@@ -1,5 +1,5 @@
 function glm_perm = niak_permutation_glm(glm,flag_null);
-% Permutation of a GLM under the null hypothesis of no interaction with a trait 
+% Permutation of a GLM under the null hypothesis of no interaction with a trait
 %
 % SYNTAX:
 % DATA_PERM = NIAK_PERMUTATION_GLM(DATA,FLAG_NULL)
@@ -16,15 +16,15 @@ function glm_perm = niak_permutation_glm(glm,flag_null);
 %   Y
 %      (array N*S) N observations, S units
 %
-%   C 
+%   C
 %      (vector P*1) a contrast vector. It has to have exactly
 %      one 1 and otherwise 0s. Contrast with multiple covariates
 %      are not supported.
 %
 % FLAG_NULL
-%   (boolean, default true) turn on/off the null hypothesis (when it's off, 
-%   the function can be used to build confidence intervals rather than hypothesis 
-%   testing). 
+%   (boolean, default true) turn on/off the null hypothesis (when it's off,
+%   the function can be used to build confidence intervals rather than hypothesis
+%   testing).
 %
 % _________________________________________________________________________
 % OUTPUTS:
@@ -38,17 +38,17 @@ function glm_perm = niak_permutation_glm(glm,flag_null);
 %
 % _________________________________________________________________________
 % REFERENCE:
-% 
-% Anderson M (2001) Permutation tests for univariate or multivariate analysis 
-% of variance and regression. 
-% Canadian Journal of Fisheries and Aquatic Sciences 58: 626–639. 
+%
+% Anderson M (2001) Permutation tests for univariate or multivariate analysis
+% of variance and regression.
+% Canadian Journal of Fisheries and Aquatic Sciences 58: 626–639.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % If FLAG_NULL is off, the estimated effects are added back to the data sample
-% after permutation of the residuals. This can be used to bootstrap the data 
-% and build confidence intervals. 
+% after permutation of the residuals. This can be used to bootstrap the data
+% and build confidence intervals.
 %
 % If FLAG_NULL is on and the contrast is on the intercept, the sign of the data
 % is randomly reassigned, such that the samples will have a zero mean on average.
@@ -93,7 +93,7 @@ for num_e = 1:length(glm)
         if any(~glm(num_e).c)
             [beta,E] = niak_lse(glm(num_e).y,glm(num_e).x(:,~glm(num_e).c));
             glm_perm(num_e).y = glm(num_e).x(:,~glm(num_e).c)*beta + E(perm_obs,:);
-        else 
+        else
             glm_perm(num_e).y = glm(num_e).y(perm_obs,:);
         end
         if length(unique(glm(num_e).x(:,glm(num_e).c==1)))==1 % the contrast is on the intercept

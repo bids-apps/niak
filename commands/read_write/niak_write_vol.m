@@ -7,50 +7,50 @@ function [] = niak_write_vol(hdr,vol)
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL          
+% VOL
 %    (3D or 4D array) a 3D or 3D+t dataset
 %
-% HDR           
+% HDR
 %    (structure) a header structure (usually modified from the
 %    output of NIAK_READ_VOL). The following fields are of
 %    particular importance :
 %
-%    FILE_NAME   
-%        (string) a single 4D fMRI image file with multiple frames, or 
+%    FILE_NAME
+%        (string) a single 4D fMRI image file with multiple frames, or
 %        a matrix of image file names, each with a single 3D frame,
-%        either NIFIT (*.nii,*.img/hdr) ANALYZE (.img/hdr) or MINC 
-%        (.mnc) format. 
-%        Extra blanks are ignored. Frames are assumed to be equally 
+%        either NIFIT (*.nii,*.img/hdr) ANALYZE (.img/hdr) or MINC
+%        (.mnc) format.
+%        Extra blanks are ignored. Frames are assumed to be equally
 %        spaced in time.
-%        If the file name contains an additional extension '.gz', the 
+%        If the file name contains an additional extension '.gz', the
 %        output will be zipped using 'gzip'.
 %
-%    TYPE   
-%        (string) the output format (either 'minc1', 'minc2', 'nii', 
+%    TYPE
+%        (string) the output format (either 'minc1', 'minc2', 'nii',
 %        'img' or 'analyze').
 %
-%    INFO 
+%    INFO
 %        (structure, optional) with the following (optional) fields :
-%           
-%        PRECISION      
+%
+%        PRECISION
 %            (string, default 'float') the
 %            precision for writting data ('int', 'float' or
 %            'double').
 %
-%        VOXEL_SIZE     
+%        VOXEL_SIZE
 %            (vector 1*3, default [1 1 1]) the
 %            size of voxels along each spatial dimension in the same
 %            order as in vol.
 %
-%        TR     
-%            (double, default 1) the time between two volumes (in 
+%        TR
+%            (double, default 1) the time between two volumes (in
 %            second)
 %
-%        MAT 
-%            (2D array 4*4, default identity) an affine transform 
+%        MAT
+%            (2D array 4*4, default identity) an affine transform
 %            from voxel to world space.
 %
-%        DIMENSION_ORDER 
+%        DIMENSION_ORDER
 %            (string, default 'xyz') describes the dimensions of
 %            VOL. Letter 'x' is for 'left to right, 'y' for
 %            'posterior to anterior', 'z' for 'ventral to dorsal' and
@@ -58,20 +58,20 @@ function [] = niak_write_vol(hdr,vol)
 %            VOL is 'x', dimension 2 is 'z', etc.
 %
 %        EXTRA
-%            (structure) whatever field that is found here is saved 
-%            as a variable in a file <BASE FILE_NAME>_extra.mat 
-%            This feature is only supported when a single file is 
+%            (structure) whatever field that is found here is saved
+%            as a variable in a file <BASE FILE_NAME>_extra.mat
+%            This feature is only supported when a single file is
 %            created.
 %
-%        HISTORY 
+%        HISTORY
 %            (string, default '') history of the operations applied to
 %            the data.
 %
-%    DETAILS 
-%        (structure, optional in minc format) This field contains some 
-%        format-specific information, but is not necessary to write a 
-%        file. If present, the information will be inserted in the new 
-%        file. Note that the fields of HDR.INFO override HDR.DETAILS. 
+%    DETAILS
+%        (structure, optional in minc format) This field contains some
+%        format-specific information, but is not necessary to write a
+%        file. If present, the information will be inserted in the new
+%        file. Note that the fields of HDR.INFO override HDR.DETAILS.
 %        See NIAK_WRITE_MINC for more information under the minc format.
 %
 % _________________________________________________________________________
@@ -83,7 +83,7 @@ function [] = niak_write_vol(hdr,vol)
 %
 % Case 2: HDR.FILE_NAME is a matrix of strings
 %
-%   Each row of file names has to correspond to the one element in the fourth 
+%   Each row of file names has to correspond to the one element in the fourth
 %   dimension of VOL. One file will be written for each volume VOL(:,:,:,i) in the file
 %   HDR.FILE_NAME(i,:) after blanks have been removed.
 %
@@ -95,29 +95,29 @@ function [] = niak_write_vol(hdr,vol)
 %
 % _________________________________________________________________________
 % SEE ALSO:
-% NIAK_READ_HDR_MINC, NIAK_READ_HDR_NIFTI, NIAK_READ_MINC, NIAK_READ_VOL, 
+% NIAK_READ_HDR_MINC, NIAK_READ_HDR_NIFTI, NIAK_READ_MINC, NIAK_READ_VOL,
 % NIAK_READ_NIFTI, NIAK_WRITE_MINC, NIAK_WRITE_NIFTI
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
-% As mentioned in the description of HDR.FILE_NAME, the extension of zipped 
-% file is assumed to be .gz. The tools used to zip files is 'gzip'. This 
-% setting can be changed by changing the variables GB_NIAK_ZIP_EXT and 
+% As mentioned in the description of HDR.FILE_NAME, the extension of zipped
+% file is assumed to be .gz. The tools used to zip files is 'gzip'. This
+% setting can be changed by changing the variables GB_NIAK_ZIP_EXT and
 % GB_NIAK_UNZIP in the file NIAK_GB_VARS.
 %
-% Other fields of HDR can be used in MINC format to speed up writting. 
+% Other fields of HDR can be used in MINC format to speed up writting.
 % See the help of NIAK_WRITE_MINC.
 %
 % The field HDR.TYPE is forced by the extension of the file name:
-%   '.mnc.gz' -> ',minc1' ; '.mnc' -> 'minc2'; 
-%   '.nii' or '.nii.gz' -> 'nii'; 
+%   '.mnc.gz' -> ',minc1' ; '.mnc' -> 'minc2';
+%   '.nii' or '.nii.gz' -> 'nii';
 %   '.img' -> HDR.TYPE if it is 'img' or 'analyze', 'img' otherwise.
 %
 % If the file type is changed, HDR.DETAILS is ignored and all header fields
-% are extrapolated from HDR.INFO. The exception to this behaviour is 
-% a conversion across nifti/analyze variants, which share the structure of 
-% their details. 
+% are extrapolated from HDR.INFO. The exception to this behaviour is
+% a conversion across nifti/analyze variants, which share the structure of
+% their details.
 %
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
@@ -188,13 +188,13 @@ if nb_file > 1
 elseif ischar(file_name)
 
     %% Case 2: a single file name has been specified
-    
+
     if isempty(file_name)
         error('niak_write_vol: Please specify a non-empty file name in hdr.file_name')
     end
 
     if strcmp(file_name(end),'_')
-        
+
         %% Case 2a : A string ending by '_'
 
         nt = size(vol,4);
@@ -212,7 +212,7 @@ elseif ischar(file_name)
             case {'nii'}
                 ext_f = '.nii';
             case{'img','analyze'}
-                ext_f = '.img';                
+                ext_f = '.img';
             otherwise
                 error('niak:write: %s : unrecognized file format\n',type_f);
         end
@@ -231,13 +231,13 @@ elseif ischar(file_name)
     else
 
         %% Case 2b : a regular string
-        
+
         %% Check the type of the file
         [path_f,name_f,ext_f] = niak_fileparts(hdr.file_name);
         if isempty(path_f)
             path_f = '.';
         end
-        
+
         if ~isfield(hdr,'type')
             error('niak:write: Please specify a file format in hdr.type.')
         end
@@ -249,15 +249,15 @@ elseif ischar(file_name)
           case {'.nii','.nii.gz'}
             type_f = 'nii';
           case '.img'
-            if ismember(hdr.type,{'img','analyze'})        
+            if ismember(hdr.type,{'img','analyze'})
                 type_f = hdr.type;
-            else 
+            else
                 type_f = 'img';
             end
           otherwise
             error('%s is not a supported extension',ext_f)
         end
-        
+
         %% Check if the format has changed
         %% if it has, remove details, unless we are only moving between nifti subtypes
         if ~strcmp(type_f,hdr.type)&&~min(ismember({type_f,hdr.type},{'analyze','nii','img'}))
@@ -266,7 +266,7 @@ elseif ischar(file_name)
                 hdr = rmfield(hdr,'details');
             end
         end
-        
+
         %% Deal with extra information
         if isfield(hdr,'extra')
             extra = hdr.extra;
@@ -274,7 +274,7 @@ elseif ischar(file_name)
         else
             extra = struct();
         end
-        
+
         %% check if the path exist
         if ~exist(path_f,'dir')
             error(sprintf('Could not write %s, the folder %s does not exist !',hdr.file_name,path_f));
@@ -286,7 +286,7 @@ elseif ischar(file_name)
         else
             flag_zip = false;
         end
-        
+
         switch type_f
             case {'minc1','minc2'} % That's a minc file
                 niak_write_minc(hdr,vol);
@@ -308,7 +308,7 @@ elseif ischar(file_name)
                 error(cat(2,'niak:write: ',msg,'. There was a problem moving the compressed file from the temporary folder to its final destination'));
             end
         end
-        
+
         %% Copy extra information, only if the number of time frames match with the actual data
         if (length(fieldnames(extra))>1)&&(length(extra.time_frames)==size(vol,4))
             [path_extra,name_extra] = niak_fileparts(file_name);

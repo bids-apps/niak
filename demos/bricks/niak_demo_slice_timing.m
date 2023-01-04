@@ -8,21 +8,21 @@ function [files_in,files_out,opt] = niak_demo_slice_timing(path_demo)
 % INPUTS:
 %
 % PATH_DEMO
-%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS) 
-%       the full path to the NIAK demo dataset. The dataset can be found in 
-%       multiple file formats at the following address : 
+%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS)
+%       the full path to the NIAK demo dataset. The dataset can be found in
+%       multiple file formats at the following address :
 %       http://www.bic.mni.mcgill.ca/users/pbellec/demo_niak/
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% FILES_IN,FILES_OUT,OPT : outputs of NIAK_BRICK_SLICE_TIMING (a 
+% FILES_IN,FILES_OUT,OPT : outputs of NIAK_BRICK_SLICE_TIMING (a
 % description of input and output files with all options).
 %
 % _________________________________________________________________________
 % OUTPUT
 %
-% This function applies a slice timing correction on the functional data of 
+% This function applies a slice timing correction on the functional data of
 % subject 1 (motor condition) and use the default output name.
 %
 % _________________________________________________________________________
@@ -71,21 +71,21 @@ end
 
 %% Setting input/output files
 switch format_demo
-    
+
      case 'minc1' % If data are in minc1 format
-        
-        files_in = cat(2,path_demo,filesep,'func_motor_subject1.mnc.gz'); 
+
+        files_in = cat(2,path_demo,filesep,'func_motor_subject1.mnc.gz');
         files_out = ''; % The default output name will be used
-    
+
     case 'minc2' % If data are in minc2 format
-        
-        files_in = cat(2,path_demo,filesep,'func_motor_subject1.mnc'); 
+
+        files_in = cat(2,path_demo,filesep,'func_motor_subject1.mnc');
         files_out = ''; % The default output name will be used
-    
-    otherwise 
-        
+
+    otherwise
+
         error('niak:demo','%s is an unsupported file format for this demo. See help to change that.',GB_NIAK.format_demo)
-        
+
 end
 
 %% Options
@@ -96,4 +96,3 @@ opt.flag_test = 0; % This is not a test, the slice timing is actually performed
 [files_in,files_out,opt] = niak_brick_slice_timing(files_in,files_out,opt);
 
 %% Note that opt.interpolation_method has been updated, as well as files_out
-

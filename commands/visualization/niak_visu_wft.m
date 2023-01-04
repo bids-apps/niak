@@ -11,12 +11,12 @@ function [specgm,specgm_show,T,F] = niak_visu_wft(tseries,tr)
 % _________________________________________________________________________
 % INPUTS:
 %
-% TSERIES       
-%       (1D array T*N) one or multiple 1D signal (1st dimension is samples, 
+% TSERIES
+%       (1D array T*N) one or multiple 1D signal (1st dimension is samples,
 %       second the different signals)
 %
-% TR            
-%       (real number, default 1) the repetition time of the time series 
+% TR
+%       (real number, default 1) the repetition time of the time series
 %       (this is assuming a regular sampling).
 %
 % _________________________________________________________________________
@@ -69,7 +69,7 @@ end
 
 M = ceil(sqrt(n));
 N = ceil(n/M);
-for i = 1:n    
+for i = 1:n
     if n>1
         subplot(M,N,i);
     end
@@ -120,7 +120,7 @@ elseif strcmp(Name,'Hanning'),
 elseif strcmp(Name,'Hamming'),
     win = .54 + .46*cos(2.*pi.*t);
 elseif strcmp(Name,'Gaussian'),
-    win = exp(-t.^2*18);    
+    win = exp(-t.^2*18);
 elseif strcmp(Name,'Blackman'),
     win = .42 + .50*cos(2.*pi.*t) + .08*cos(4.*pi.*t);
 end;

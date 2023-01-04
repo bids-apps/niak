@@ -8,12 +8,12 @@ function vol = niak_part2vol(part,mask)
 % INPUTS:
 %
 % PART
-%   (array T x V) PART(t,I) is the number associated with region I for 
+%   (array T x V) PART(t,I) is the number associated with region I for
 %   volume #i
 %
 % MASK
-%   (array with arbitrary number of dimensions, coding for "space", with a 
-%   total of V elements) 
+%   (array with arbitrary number of dimensions, coding for "space", with a
+%   total of V elements)
 %   MASK==I is a binary mask of region I.
 %
 % _________________________________________________________________________
@@ -21,7 +21,7 @@ function vol = niak_part2vol(part,mask)
 %
 % VOL
 %   (size of MASK x T) the VOL(:,...,:,t) corresponds to the volues of PART(t,:),
-%   organized like MASK. In other words, the "t"th volume, the "i"th region of 
+%   organized like MASK. In other words, the "t"th volume, the "i"th region of
 %   mask is "painted" with the value PART(t,i).
 %
 % _________________________________________________________________________
@@ -29,17 +29,17 @@ function vol = niak_part2vol(part,mask)
 %
 % This function will work with any vector of scalar values PART. This means
 % that in MASK, region K will be replaced by the values found in PART(K)
-% whatever that value is, integer or scalar. 
+% whatever that value is, integer or scalar.
 %
 % PART have multiple rows and columns. In this case, VOL will be a 4D array
 % where each volume will correspond to one row of PART. (Think as colums of
 % PART as time series and VOL as a 3D+t dataset).
 %
 % Copyright (c) Pierre Bellec
-%   McConnell Brain Imaging Center, Montreal 
+%   McConnell Brain Imaging Center, Montreal
 %   Neurological Institute, McGill University, 2007-2011.
-%   Centre de recherche de l'institut de Gériatrie de Montréal, 
-%   Département d'informatique et de recherche opérationnelle, 
+%   Centre de recherche de l'institut de Gériatrie de Montréal,
+%   Département d'informatique et de recherche opérationnelle,
 %   Université de Montréal, 2011-2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.

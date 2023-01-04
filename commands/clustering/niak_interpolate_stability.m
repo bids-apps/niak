@@ -90,19 +90,19 @@ for num_sc = 1:length(list_scales_i)
     ind1 = find(list_scales<=sci);
     ind2 = find(list_scales>sci);
     if isempty(ind1)
-        ind2 = ind2(1);             
-        w(num_sc,ind2) = 1;        
+        ind2 = ind2(1);
+        w(num_sc,ind2) = 1;
     elseif isempty(ind2)
-        ind1 = ind1(end);        
+        ind1 = ind1(end);
         sc1 = list_scales(ind1);
-        sc2 = list_scales_i(num_sc);        
+        sc2 = list_scales_i(num_sc);
         w(num_sc,ind1) = (1-(sc1^(1/4))/(N^(1/4)))^(-1)*max( (sc1.^(1/4))/((sc2)^(1/4)) - ((sc1)^(1/4))/((N)^(1/4)) , 0);
     else
         ind1 = ind1(end);
         ind2 = ind2(1);
         sc1 = list_scales(ind1);
         sc2 = list_scales(ind2);
-        alpha = (sci-sc1)/(sc2-sc1);        
+        alpha = (sci-sc1)/(sc2-sc1);
         w(num_sc,ind1) = 1-alpha;
         w(num_sc,ind2) = alpha;
     end

@@ -7,7 +7,7 @@ function S = niak_build_covariance(tseries,flag_vec);
 % _________________________________________________________________________
 % INPUTS:
 %
-% TSERIES       
+% TSERIES
 %       (array) time series. First dimension is time.
 %
 % FLAG_VEC
@@ -18,7 +18,7 @@ function S = niak_build_covariance(tseries,flag_vec);
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% S             
+% S
 %       (square matrix or vector) Empirical covariance matrix. S is
 %       symmetrical.
 %
@@ -31,7 +31,7 @@ function S = niak_build_covariance(tseries,flag_vec);
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.

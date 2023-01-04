@@ -11,11 +11,11 @@ function [tseries,E,opt] = niak_sample_linear_model(X,B,opt)
 %   B : K*N matrix of (spatial) sources (each row).
 %   E : T*N matrix of noise.
 %
-% The following models are available for E : 
+% The following models are available for E :
 %   * Gaussian independent in space and time, with region-specific
 %     variances.
 %
-% SYNTAX : 
+% SYNTAX :
 % [TSERIES,E,OPT] = NIAK_SAMPLE_LINEAR_MODEL(X,B,OPT)
 %
 % _________________________________________________________________________
@@ -28,26 +28,26 @@ function [tseries,E,opt] = niak_sample_linear_model(X,B,opt)
 %       (matrix, size K*N) the matrix of space sources (B)
 %
 % OPT
-%       (structure) with the following fields : 
+%       (structure) with the following fields :
 %
 %       NOISE
 %           (string, default 'independent_space_time') the type of
-%           noise used in the simulation. Available options : 
+%           noise used in the simulation. Available options :
 %           'independent_space_time'.
 %       PAR
 %           If OPT.NOISE == 'independent_space_time'
 %
 %           (vector, size N*1) the vector of space-specific variances.
-%           If VARIANCE is a scalar, the same variance will be used in 
+%           If VARIANCE is a scalar, the same variance will be used in
 %           every region.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% TSERIES 
+% TSERIES
 %       (array, size T*N) the simulated time series (in columns) (Y).
 %
-% E 
+% E
 %       (array, size T*N) the noise sample.
 %
 % OPT
@@ -100,9 +100,9 @@ N = size(B,2);
 
 %% Setting up noise parameters
 switch opt.noise
-    
+
     case 'independent_space_time'
-        
+
         var_noise = opt.par;
         if length(var_noise) == 1
             std_noise = sqrt(var_noise) * ones([N 1]);
@@ -114,10 +114,10 @@ switch opt.noise
             end
         end
         sqrtRt = eye([T T]);
-        sqrtRs = diag(std_noise);        
-        
+        sqrtRs = diag(std_noise);
+
     otherwise
-        
+
         error('%s is an unkown type of noise',opt.noise);
 end
 

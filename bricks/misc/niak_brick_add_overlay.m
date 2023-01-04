@@ -2,17 +2,17 @@ function [in,out,opt] = niak_brick_add_overlay(in,out,opt)
 % Add an image overlay to another image
 % SYNTAX: [IN,OUT,OPT] = NIAK_BRICK_ADD_OVERLAY(IN,OUT,OPT)
 %
-% IN.BACKGROUND (string) an image. 
+% IN.BACKGROUND (string) an image.
 % IN.OVERLAY (string) another image.
-% OUT (string) the merged image. 
-% OPT.FLAG_TEST (boolean, default false) if the flag is false, 
-%   don't do anything but update default parameters. 
+% OUT (string) the merged image.
+% OPT.FLAG_TEST (boolean, default false) if the flag is false,
+%   don't do anything but update default parameters.
 % OPT.THRESHOLD (scalar) set a threshold on the overlay, to set
-%   transparency. Note that the threshold actually applies to 
-%   the image intensity. 
+%   transparency. Note that the threshold actually applies to
+%   the image intensity.
 % OPT.TRANSPARCENCY (scalar, default 0.5) the level of transparency.
 %
-% See lincense information in the code. 
+% See lincense information in the code.
 
 % Copyright (c) Pierre Bellec
 % Centre de recherche de l'Institut universitaire de griatrie de Montral, 2016.
@@ -39,7 +39,7 @@ function [in,out,opt] = niak_brick_add_overlay(in,out,opt)
 
 % Set defaults
 in = psom_struct_defaults( in , { 'background' , 'overlay' }, { NaN , NaN });
-if ~ischar(out); error('OUT should be a string'); end; 
+if ~ischar(out); error('OUT should be a string'); end;
 opt = psom_struct_defaults( opt , { 'flag_test' , 'threshold' , 'transparency' }, { false , NaN , 0.5});
 if opt.flag_test; return; end
 
@@ -57,5 +57,5 @@ img2_i = img2_i / max(img2_i(:)); % Express intensity as a fraction of the max i
 mask = img2_i > opt.threshold;
 mask = repmat(mask,[1 1 size(img2,3)]);
 img12 = img1;
-img12(mask) = (1-opt.transparency) * img2(mask) + opt.transparency * img1(mask); 
+img12(mask) = (1-opt.transparency) * img2(mask) + opt.transparency * img1(mask);
 imwrite(img12,out);

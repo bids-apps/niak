@@ -6,15 +6,15 @@ function [R,pce] = niak_build_correlation(tseries,flag_vec);
 % FLAG_VEC (boolean, default false) if FLAG_VEC == true, the matrix is
 %   "vectorized" and the redundant elements are suppressed. Use
 %   NIAK_VEC2MAT to unvectorize it.
-% R (square matrix or vector) Empirical correlation matrix. R is 
+% R (square matrix or vector) Empirical correlation matrix. R is
 %   symmetrical with ones on the diagonal.
-% PCE (same size as R) PCE(i) is the p-value of significant testing of R, 
+% PCE (same size as R) PCE(i) is the p-value of significant testing of R,
 %   under a Gaussian i.i.d. assumption.
-%   
+%
 % See licensing information in the code.
 
-% Copyright (c) Pierre Bellec, 
-% McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec,
+% McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % Keywords : statistics, correlation

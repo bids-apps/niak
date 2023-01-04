@@ -7,20 +7,20 @@ function [files_in,files_out,opt] = niak_brick_component_sel(files_in,files_out,
 % _________________________________________________________________________
 % INPUTS
 %
-% FILES_IN  
+% FILES_IN
 %   (structure) with the following fields :
 %
-%   FMRI 
+%   FMRI
 %      (string) the original fMRI 3D+t data
 %
-%   COMPONENT 
+%   COMPONENT
 %      (string) a 2D text array with the temporal distribution of sICA.
 %
-%   MASK 
+%   MASK
 %      (string) a path to a binary mask (the spatial a priori).
 %
-%   TRANSFORMATION 
-%      (string, default 'gb_niak_omitted') a transformation file from 
+%   TRANSFORMATION
+%      (string, default 'gb_niak_omitted') a transformation file from
 %      the functional space to the mask space. If it is omitted, the
 %      original mask will be used. If 'identity' is used, the mask
 %      will be resampled at the resolution of the functional space,
@@ -33,29 +33,29 @@ function [files_in,files_out,opt] = niak_brick_component_sel(files_in,files_out,
 %      correlation with each signal of interest will be automatically
 %      attributed a selection score of 0.
 %
-% FILES_OUT 
+% FILES_OUT
 %   (string, default <base COMPONENT>_<base MASK>_compsel.mat) The name
 %   of a mat file with two variables SCORE and ORDER. SCORE(I) is the
-%   selection score of component ORDER(I). Components are ranked by 
+%   selection score of component ORDER(I). Components are ranked by
 %   descending selection scores.
 %
-% OPT   
+% OPT
 %   (structure) with the following fields :
 %
-%   NB_CLUSTER 
-%      (default 0). The number of spatial clusters used in stepwise 
-%      regression. If NB_CLUSTER == 0, the number of clusters is set 
-%      to (nb_vox/10), where nb_vox is the number of voxels in the 
+%   NB_CLUSTER
+%      (default 0). The number of spatial clusters used in stepwise
+%      regression. If NB_CLUSTER == 0, the number of clusters is set
+%      to (nb_vox/10), where nb_vox is the number of voxels in the
 %      region.
 %
-%   P 
+%   P
 %      (real number, 0<P<1, default 0.0001) the p-value of the stepwise
 %      regression.
 %
-%   NB_SAMPS 
+%   NB_SAMPS
 %      (default 50) the number of kmeans repetition.
 %
-%   TYPE_SCORE 
+%   TYPE_SCORE
 %      (string, default 'freq') Score function. 'freq' for the
 %      frequency of selection of the regressor and 'inertia' for the
 %      relative part of inertia explained by the clusters "selecting"
@@ -66,15 +66,15 @@ function [files_in,files_out,opt] = niak_brick_component_sel(files_in,files_out,
 %      number generator with PSOM_SET_RAND_SEED for each job. If left empty,
 %      the generator is not initialized.
 %
-%   FOLDER_OUT 
+%   FOLDER_OUT
 %      (string, default: path of FILES_IN.SPACE) If present,
 %      all default outputs will be created in the folder FOLDER_OUT.
 %      The folder needs to be created beforehand.
 %
-%   FLAG_VERBOSE 
+%   FLAG_VERBOSE
 %      (boolean, default 1) gives progression infos
 %
-%   FLAG_TEST 
+%   FLAG_TEST
 %      (boolean, default 0) if FLAG_TEST equals 1, the
 %      brick does not do anything but update the default
 %      values in FILES_IN, FILES_OUT and OPT.
@@ -96,7 +96,7 @@ function [files_in,files_out,opt] = niak_brick_component_sel(files_in,files_out,
 % _________________________________________________________________________
 % REFERENCES
 %
-% Perlbarg, V., Bellec, P., Anton, J.-L., Pelegrini-Issac, P., Doyon, J. and 
+% Perlbarg, V., Bellec, P., Anton, J.-L., Pelegrini-Issac, P., Doyon, J. and
 % Benali, H.; CORSICA: correction of structured noise in fMRI by automatic
 % identification of ICA components. Magnetic Resonance Imaging, Vol. 25,
 % No. 1. (January 2007), pp. 35-46.
@@ -106,8 +106,8 @@ function [files_in,files_out,opt] = niak_brick_component_sel(files_in,files_out,
 % spatial components. Hum Brain Mapp, Vol. 6, No. 3. (1998), pp. 160-188.
 %
 % _________________________________________________________________________
-% SEE ALSO : 
-% 
+% SEE ALSO :
+%
 % NIAK_BRICK_SICA, NIAK_COMPONENT_SEL, NIAK_BRICK_COMPONENT_SUPP, NIAK_SICA
 %
 % _________________________________________________________________________
@@ -254,7 +254,7 @@ end
 if flag_verbose
     fprintf('%s\n',msg)
 else
-    
+
 end
 [hdr_roi,mask_roi] = niak_read_vol(file_mask_tmp);
 mask_roi = mask_roi>0.9;
@@ -289,7 +289,7 @@ if ~strcmp(files_in.component_to_keep,'gb_niak_omitted')
     val_xoi = zeros([size(XOI,2) 1]);
     XOI = niak_correct_mean_var(XOI,'mean_var');
     coroi = (1/(size(A,1)-1))*XOI'*tseries_ica;
-    
+
     for num_c = 1:size(XOI,2)
        [val_tmp,ind_tmp] = max(coroi(num_c,:));
        val_xoi(num_c) = val_tmp;
@@ -299,7 +299,7 @@ else
     val_xoi = [];
     num_xoi = [];
 end
-       
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  Stepwise regression %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -309,7 +309,7 @@ if flag_verbose
 end
 
 if nb_vox <= 20
-    
+
     if flag_verbose
         fprintf('There is hardly any data falling in the mask of interest (%i voxels). No component is selected.\n',nb_vox);
     end
@@ -328,12 +328,12 @@ else
         opt.nb_cluster = nb_cluster;
     end
 
-    %% Computing score and score significance            
+    %% Computing score and score significance
     [intersec,selecVector,selecInfo] = niak_component_sel(sigs,tseries_ica,opt.p,opt.nb_samps,opt.nb_cluster,opt.type_score,0,'on');
 
     %% Reordering scores
     for num_c = 1:length(val_xoi)
-        if flag_verbose            
+        if flag_verbose
             fprintf('temporal ICA component %i has the highest correlation with the component of interest number %i (%1.3f). His initial selection score %1.3f is now set to 0.\n',num_xoi(num_c),num_c,val_xoi(num_c),selecVector(num_xoi(num_c)));
         end
         selecVector(num_xoi(num_c)) = 0;

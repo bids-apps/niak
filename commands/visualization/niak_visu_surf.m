@@ -1,9 +1,9 @@
 function [ a, cb ] = niak_visu_surf( data, surf, opt);
 % Basic viewer for surface data.
-% 
+%
 % SYNTAX:
 % [ A, CB ] = NIAK_VISU_SURF( DATA , SURFACE , [ OPT ] );
-% 
+%
 % _________________________________________________________________________
 % INPUTS :
 %
@@ -12,7 +12,7 @@ function [ a, cb ] = niak_visu_surf( data, surf, opt);
 %
 % SURFACE
 %   (structure) with the following fields:
-%   
+%
 %   COORD
 %      (matrix 3 x V) coordinates of nodes
 %
@@ -26,18 +26,18 @@ function [ a, cb ] = niak_visu_surf( data, surf, opt);
 %      (string, default: name of DATA) title to be included in the figure.
 %
 %   STYLE
-%      (string, default: 'full') defines the organization of the montage. 
+%      (string, default: 'full') defines the organization of the montage.
 %      Available options:
 %         'full': left/right bottom/top back/front
 %         'lr'  : left/right
-%       
+%
 %   LIMIT
-%      (vector 1 x 2, default [min(DATA) max(DATA)]) Min/Max for the scale 
+%      (vector 1 x 2, default [min(DATA) max(DATA)]) Min/Max for the scale
 %      associated with DATA.
-% 
+%
 %   BACKGROUND
-%      (string or vector 1 x 3, default 'white') background colour, 
-%      any matlab ColorSpec, such as 'white' (default), 'black'=='k', 
+%      (string or vector 1 x 3, default 'white') background colour,
+%      any matlab ColorSpec, such as 'white' (default), 'black'=='k',
 %      'r'==[1 0 0], [1 0.4 0.6] (pink) etc.
 %      Letter and line colours are inverted if background is dark (mean<0.5).
 %
@@ -49,7 +49,7 @@ function [ a, cb ] = niak_visu_surf( data, surf, opt);
 %   MATERIAL
 %      (string, default 'shiny') The type of material for rendering.
 %      Available options: 'shiny', 'dull', 'metal'
-%      Type "help material" for more info. 
+%      Type "help material" for more info.
 %
 %   LIGHTING
 %      (string, default 'phong') The type of light for rendering.
@@ -57,14 +57,14 @@ function [ a, cb ] = niak_visu_surf( data, surf, opt);
 %      Type "help lighting" for more info.
 %
 %   COLORMAP
-%      (string or matrix, default jet(256) with white associated with 
+%      (string or matrix, default jet(256) with white associated with
 %      the minimum) any acceptable argument for colormap.
 %
 % _________________________________________________________________________
 % OUTPUTS :
 %
 % A
-%    (vector) handles to the axes, left to right, top to bottom. 
+%    (vector) handles to the axes, left to right, top to bottom.
 %
 % CB
 %    (scalar) handle to the colorbar.
@@ -73,7 +73,7 @@ function [ a, cb ] = niak_visu_surf( data, surf, opt);
 % COMMENTS
 %
 % Copyright (c) Keith Worsley, McGill University, 2008.
-% Updated by Pierre Bellec, 
+% Updated by Pierre Bellec,
 % Centre de recherche de l'institut de Gériatrie de Montréal,
 % Département d'informatique et de recherche opérationnelle,
 % Université de Montréal, 2012.
@@ -91,7 +91,7 @@ end
 list_fields   = { 'style' , 'limit' , 'title'      , 'background' , 'lighting' , 'material' , 'shading' , 'colormap' };
 list_defaults = { 'lr'    , clim    , inputname(1) , 'white'      , 'phong'    , 'dull'     , 'flat'    , cm         };
 
-if nargin<3 
+if nargin<3
     opt = psom_struct_defaults(struct(),list_fields,list_defaults);
 else
     opt = psom_struct_defaults(opt,list_fields,list_defaults);
@@ -148,13 +148,13 @@ switch opt.style
                                [1-0.055-w1    0.03 w1    h1] };
             list_tri = { tl  , ...
                          1:t , ...
-                         tr  , ... 
+                         tr  , ...
                          tl  , ...
                          1:t , ...
-                         tr  , ... 
+                         tr  , ...
                          1:t , ...
                          1:t };
-            
+
             list_ver = { vl  , ...
                          1:v , ...
                          vr  , ...
@@ -163,15 +163,15 @@ switch opt.style
                          vr  , ...
                          1:v , ...
                          1:v };
-       
+
             list_view = { [ -90 0   ] , ...
                           [ 0   90  ] , ...
                           [ 90  0   ] , ...
                           [ 90  0   ] , ...
                           [ 0   -90 ] , ...
-                          [ -90 0   ] , ...                      
-                          [ 180 0   ] , ...                      
-                          [ 0   0   ]};                     
+                          [ -90 0   ] , ...
+                          [ 180 0   ] , ...
+                          [ 0   0   ]};
 
         else % just one hemisphere
             list_positions = { [0.055         0.62 h*3/4 w ] , ...
@@ -183,11 +183,11 @@ switch opt.style
 
             list_tri = { tl  , ...
                          1:t , ...
-                         1:t  , ... 
+                         1:t  , ...
                          tl  , ...
                          1:t , ...
                          1:t };
- 
+
            list_ver = { vl  , ...
                          1:v , ...
                          1:v  , ...
@@ -200,7 +200,7 @@ switch opt.style
                           [ 180 0   ] , ...
                           [ 90  0   ] , ...
                           [ 0   -90 ] , ...
-                          [ 0   0   ]};                     
+                          [ 0   0   ]};
         end
 
     case 'lr'
@@ -209,38 +209,38 @@ switch opt.style
                                [0         0.12 h*3/2 w ] , ...
                                [1-0-h*3/2 0.12 h*3/2 w ] };
             list_tri = { tl  , ...
-                         tr  , ... 
+                         tr  , ...
                          tl  , ...
                          tr  };
-            
+
             list_ver = { vl  , ...
                          vr  , ...
                          vl  , ...
                          vr  };
-       
+
             list_view = { [ -90 0   ] , ...
                           [ 90  0   ] , ...
                           [ 90  0   ] , ...
-                          [ -90 0   ]};                     
+                          [ -90 0   ]};
     otherwise
         error('%s is an unknown style',opt.style);
 end
 
-for num_v = 1:length(list_view)   
+for num_v = 1:length(list_view)
     a(num_v)=axes('position',list_positions{num_v});
     w = (length(list_tri{num_v})==length(tr))&&flag_cut&&(list_tri{num_v}(end)==tr(end));
     trisurf(surf.tri(list_tri{num_v},:)-double(w)*cuv,surf.coord(1,list_ver{num_v}),surf.coord(2,list_ver{num_v}),surf.coord(3,list_ver{num_v}),...
         double(data(list_ver{num_v})),'EdgeColor','none');
     view(list_view{num_v}(1),list_view{num_v}(2));
-     daspect([1 1 1]); 
-     axis tight; 
-     camlight; 
+     daspect([1 1 1]);
+     axis tight;
+     camlight;
      axis vis3d off;
      lighting(opt.lighting)
-     material(opt.material)       
+     material(opt.material)
     %shading(opt.shading)
 end
- 
+
 id0=[0 0 cuv 0 0 cuv 0 0];
 for i=1:length(a)
     set(a(i),'CLim',opt.limit);

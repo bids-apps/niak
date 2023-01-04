@@ -1,5 +1,5 @@
 function [results,opt] = niak_glm_multisite(model,opt)
-% Least-square estimates in a linear model Y = X.BETA + E 
+% Least-square estimates in a linear model Y = X.BETA + E
 %
 % [RESULTS,OPT] = NIAK_GLM_MULTISITE( MODEL , [OPT] )
 %
@@ -13,7 +13,7 @@ function [results,opt] = niak_glm_multisite(model,opt)
 %      (2D array size T*N) each column of Y are samples of one variable.
 %
 %   X
-%      (2D array size T*K) each column of X is a explaining factor with the 
+%      (2D array size T*K) each column of X is a explaining factor with the
 %      same number of rows as Y.
 %
 %   C
@@ -43,20 +43,20 @@ function [results,opt] = niak_glm_multisite(model,opt)
 %
 %   TTEST
 %      (vector, size [1 N]) TTEST(n) is a t-test associated with the estimated
-%      weights and the specified contrast (see C above). (only available if 
+%      weights and the specified contrast (see C above). (only available if
 %      OPT.TEST is 'ttest')
 %
 %   FTEST
 %      (vector, size [1 N]) TTEST(n) is a F test associated with the estimated
-%      weights and the specified contrast (see C above). (only available if 
+%      weights and the specified contrast (see C above). (only available if
 %      OPT.TEST is 'ftest')
 %
 %   PCE
-%      (vector,size [1 N]) PCE(n) is the per-comparison error associated with 
+%      (vector,size [1 N]) PCE(n) is the per-comparison error associated with
 %      TTEST(n) (bilateral test). (only available if OPT.TEST is 'ttest')
 %
 %   EFF
-%      (vector, size [1 N]) the effect associated with the contrast and the 
+%      (vector, size [1 N]) the effect associated with the contrast and the
 %      regression coefficients (only available if OPT.TEST is 'ttest')
 %
 %   STD_EFF
@@ -79,7 +79,7 @@ function [results,opt] = niak_glm_multisite(model,opt)
 %
 % On the METAL approach to combine multisite statistics:
 %
-% Cristen J. Willer, Yun Li and Gonçalo R. Abecasis. METAL: fast and efficient 
+% Cristen J. Willer, Yun Li and Gonçalo R. Abecasis. METAL: fast and efficient
 % meta-analysis of genomewide association scans. Bioinformatics, application note,
 % Vol. 26 no. 17 2010, pages 2190–2191 doi:10.1093/bioinformatics/btq340
 %
@@ -132,9 +132,9 @@ end
 list_fields    = { 'test'  , 'flag_verbose', 'multisite'};
 list_defaults  = { 'ttest' , true         , []         };
 opt = psom_struct_defaults(opt,list_fields,list_defaults);
-  
+
 if ~isempty(opt.multisite) && size(model,2)<2
-    
+
     list_site = unique(opt.multisite);
     list_site = list_site(list_site>0); % remove site zero  corresponding to excluded site
 
@@ -145,16 +145,16 @@ if ~isempty(opt.multisite) && size(model,2)<2
         site = list_site(ss);
         mask_site = (opt.multisite == site);
 
-        x1 = model.x(mask_site,:);        
+        x1 = model.x(mask_site,:);
         mask_intercept = min(x1==repmat(x1(1,:),[size(x1,1) 1]),[],1)>0;
         x1(:,~mask_intercept) = niak_normalize_tseries(x1(:,~mask_intercept),'mean');
         % Check if there is already an intercept, if not add one
-        c  = model.c;                
+        c  = model.c;
         if ~any(mask_intercept)
             x1 = [ones(size(x1,1),1),x1]; % add intercept;
             c = [0;c];
         end
-          
+
         k=k+1;
         multisite.model(k).c = c;
         multisite.model(k).x = x1;
@@ -163,7 +163,7 @@ if ~isempty(opt.multisite) && size(model,2)<2
     end
     model = multisite.model;
 end
-    
+
 %% Compute the models
 for ss = 1:size(model,2)
     if opt.flag_verbose
@@ -174,12 +174,12 @@ for ss = 1:size(model,2)
     %% Estimate the group-level model -- single site data
     y_x_c.x = model(ss).x;
     y_x_c.y = model(ss).y;
-    y_x_c.c = model(ss).c; 
+    y_x_c.c = model(ss).c;
     [multisite.results(ss), opt_glm_gr] = niak_glm(y_x_c , opt_glm_gr);
 end
-       
+
 if size(model,2)>1
-    
+
     eff = zeros(size(multisite.results(ss).eff));
     std_eff = zeros(size(multisite.results(ss).std_eff));
 
@@ -193,12 +193,12 @@ if size(model,2)>1
     std_eff = sqrt(1./std_eff);
     ttest   = eff./std_eff;
     pce     = 2*(1-normcdf(abs(ttest)));
-    
+
     results.ttest   = ttest;
     results.pce     = pce;
     results.eff     = eff;
     results.std_eff = std_eff;
-    
+
 else
     %% Single site
     results = multisite.results;

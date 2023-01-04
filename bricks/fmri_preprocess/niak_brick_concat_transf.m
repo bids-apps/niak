@@ -2,10 +2,10 @@ function [files_in,files_out,opt] = niak_brick_concat_transf(files_in,files_out,
 % Concatenate multiple transformations in xfm format.
 % [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_CONCAT_TRANSF(FILES_IN,FILES_OUT,OPT)
 %
-% FILES_IN (cell of strings) FILES_IN{I} is the name of the Ith transformation 
+% FILES_IN (cell of strings) FILES_IN{I} is the name of the Ith transformation
 %   file in xfm format.
 % FILES_OUT (string) the concatenated transformation.
-% OPT.FLAG_TEST (boolean, default: 0) if FLAG_TEST equals 1, the brick does not 
+% OPT.FLAG_TEST (boolean, default: 0) if FLAG_TEST equals 1, the brick does not
 %   do anything but update the default values in FILES_IN, FILES_OUT and OPT.
 %
 % Note 1: The structures FILES_IN, FILES_OUT and OPT are updated with default
@@ -19,7 +19,7 @@ function [files_in,files_out,opt] = niak_brick_concat_transf(files_in,files_out,
 % Copyright (c) Pierre Bellec, see license information in the code.
 
 % Montreal Neurological Institute, 2008-2010
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2010-2014
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -66,7 +66,7 @@ gb_name_structure = 'opt';
 gb_list_fields = {'flag_test'};
 gb_list_defaults = {0};
 niak_set_defaults
-        
+
 if flag_test == 1
     return
 end
@@ -84,4 +84,3 @@ instr_concat = cat(2,instr_concat,' ',files_out);
 if flag~=0
     error(str);
 end
-   

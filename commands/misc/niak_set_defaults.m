@@ -8,28 +8,28 @@
 % be affected.
 %
 % _________________________________________________________________________
-% INPUTS : 
+% INPUTS :
 % There is no input per say, as this is a script and not a function.
-% The following variables still need to exist in the workspace before 
-% calling the script : 
+% The following variables still need to exist in the workspace before
+% calling the script :
 %
-% GB_NAME_STRUCTURE   
+% GB_NAME_STRUCTURE
 %       (string) the name of the structure to test.
 %
-% GB_LIST_FIELDS      
+% GB_LIST_FIELDS
 %       (cell of strings) names of fields.
 %
-% GB_LIST_DEFAULTS    
-%       (cell) the default values. A Nan will produce an error message and 
+% GB_LIST_DEFAULTS
+%       (cell) the default values. A Nan will produce an error message and
 %       exit if no value is defined in the field.
 %
 % _________________________________________________________________________
 % OUTPUTS :
 %
-% All fields listed in GB_LIST_FIELDS are checked in the structure 
-% GB_NAME_STRUCTURE, and default values are applied if they don't exist. 
-% In addition, the listed fields are uploaded as variables. A warning is 
-% issued if unlisted fields are found in GB_NAME_STRUCTURE. Values of the 
+% All fields listed in GB_LIST_FIELDS are checked in the structure
+% GB_NAME_STRUCTURE, and default values are applied if they don't exist.
+% In addition, the listed fields are uploaded as variables. A warning is
+% issued if unlisted fields are found in GB_NAME_STRUCTURE. Values of the
 % structure are updated.
 %
 % COMMENTS:
@@ -59,17 +59,17 @@
 %% Test if the structure exist, otherwise initialize an empty one
 try
     %GB_NIAK.struct = evalin('caller',gb_name_structure); % for some reason it does not seem to work in octave
-    
+
     eval(sprintf('GB_NIAK.struct = %s;',gb_name_structure));
 catch
     GB_NIAK.struct = struct([]);
 end
-   
+
 %% Loop on every field
 GB_NIAK.nb_fields = length(gb_list_fields);
 
 for num_f = 1:GB_NIAK.nb_fields
-    
+
     GB_NIAK.field = gb_list_fields{num_f};
     GB_NIAK.val = gb_list_defaults{num_f};
     GB_NIAK.flag_field = isfield(GB_NIAK.struct,GB_NIAK.field);
@@ -80,11 +80,11 @@ for num_f = 1:GB_NIAK.nb_fields
             if isnan(GB_NIAK.val)
                 error(cat(2,'niak:defaults: Please specify field ',GB_NIAK.field,' in structure ',gb_name_structure,' !\n'))
             end
-        end        
+        end
         GB_NIAK.struct(1).(GB_NIAK.field) = GB_NIAK.val;
-    end    
-                    
-    % Upload the field as a variable   
+    end
+
+    % Upload the field as a variable
 
     %assignin('caller',field,GB_NIAK.struct.(field));
     instr_upload = sprintf('%s = GB_NIAK.struct.%s;',GB_NIAK.field,GB_NIAK.field);

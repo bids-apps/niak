@@ -3,21 +3,21 @@ function opt = niak_update_fwhm(opt)
 % SUMMARY NIAK_UPDATE_FWHM
 %
 % Updates the values of fwhm and df required for smoothing autocorrelations
-% 
+%
 % SYNTAX:
 % OPT = NIAK_UPDATE_FWHM(OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% X_CACHE 
-% structure with the fields TR, X ,and W, obtained from niak_fmridesign 
+% X_CACHE
+% structure with the fields TR, X ,and W, obtained from niak_fmridesign
 %
-% TREND       
-% 3D array) of the temporal,spatial trends and additional confounds for 
+% TREND
+% 3D array) of the temporal,spatial trends and additional confounds for
 % every slice, obtained from niak_make_trends.
-% 
-% OPT         
+%
+% OPT
 %       structure with the following fields :
 %
 %       MATRIX_X
@@ -29,25 +29,25 @@ function opt = niak_update_fwhm(opt)
 %       NUMLAGS
 %           (integer, default 1) The order (p) of the autoregressive model.
 %
-%       EXCLUDE: 
-%           is a list of frames that should be excluded from the analysis. 
+%       EXCLUDE:
+%           is a list of frames that should be excluded from the analysis.
 %           Default is [].
 %
 %       NUM_HRF_BASES
-%           row vector indicating the number of basis functions for the hrf 
-%           for each response, either 1 or 2 at the moment. At least one basis 
+%           row vector indicating the number of basis functions for the hrf
+%           for each response, either 1 or 2 at the moment. At least one basis
 %           functions is needed to estimate the magnitude, but two basis functions
 %           are needed to estimate the delay.
 %
 %       NB_RESPONSE
 %           number of respnses in the model, determined by the matrix x_cache
 %           with niak_fmridesign.
-%     
+%
 %       WHICH_STATS
-%            Number of Contrasts X 9 binary matrix correspondings to the 
+%            Number of Contrasts X 9 binary matrix correspondings to the
 %            desired statistical outputs
 %
-%       FWHM       
+%       FWHM
 %           Structure with the fields COR (default = -100) and DATA.
 %
 %       DF
@@ -56,28 +56,28 @@ function opt = niak_update_fwhm(opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% OPT         
+% OPT
 %       Updated structure with the additional fields:
 %
-%       FWHM       
-%          (real number) Estimated value of the FWHM. 
+%       FWHM
+%          (real number) Estimated value of the FWHM.
 %
 %       DF
-%          Structure with the field RESID, COR, T and F, degrees of freedom 
-%          of the residuals, correlations, t and F statistics, respectively. 
-%       
+%          Structure with the field RESID, COR, T and F, degrees of freedom
+%          of the residuals, correlations, t and F statistics, respectively.
+%
 % _________________________________________________________________________
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -158,14 +158,14 @@ for slice=1:numslices
     x=pinv(cpinvX(j,:)');
     if numlags==1
        CovX1=cpinvX(:,k1)*cpinvX(:,k1-1)';
-       corX2(1:numcontrasts,slice)=(diag(CovX1)./diag(CovX0)).^2; 
+       corX2(1:numcontrasts,slice)=(diag(CovX1)./diag(CovX0)).^2;
        Covx1=x(:,k1)*x(:,k1-1)';
        corX2(numcontrasts+1,slice)=(sum(diag(Covx1*CovX0(j,j)))/(p+(p<=0))).^2*(p>0);
     else
        for lag=1:numlags
           CovX1=cpinvX(:,1:(n-lag))*cpinvX(:,(lag+1):n)';
           corX2(1:numcontrasts,slice)=corX2(1:numcontrasts,slice)+ ...
-             (diag(CovX1)./diag(CovX0)).^2; 
+             (diag(CovX1)./diag(CovX0)).^2;
           Covx1=x(:,1:(n-lag))*x(:,(lag+1):n)';
           corX2(numcontrasts+1,slice)=corX2(numcontrasts+1,slice)+ ...
              (sum(diag(Covx1*CovX0(j,j)))/(p+(p<=0))).^2*(p>0);
@@ -173,7 +173,7 @@ for slice=1:numslices
     end
  end
  corX2 = mean(corX2,2);
- 
+
 if FWHM_COR(1)<0
    df_target = -FWHM_COR(1);
    df_proportion = 0.9;

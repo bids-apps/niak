@@ -14,11 +14,11 @@ function [p,model_w] = niak_white_test_hetero(model,opt)
 %      (2D array size T*N) each column of Y are observations of one variable.
 %
 %   X
-%      (2D array size T*K) each column of X is a explaining factor with the 
+%      (2D array size T*K) each column of X is a explaining factor with the
 %      same number of rows as Y.
 %
 %   LABELS_X
-%      (cell of strings, optional) LABELS_X{T} is the label of observation T, 
+%      (cell of strings, optional) LABELS_X{T} is the label of observation T,
 %      associated with X(T,:) and Y(T,:). By default the label is 'sampT'
 %
 %   LABELS_Y
@@ -26,7 +26,7 @@ function [p,model_w] = niak_white_test_hetero(model,opt)
 %      associated with X(:,K). By default the label is 'covK'.
 %
 %   MASK_TEST
-%      (vector, boolean, size K*1, default true) a binary mask of the covariates 
+%      (vector, boolean, size K*1, default true) a binary mask of the covariates
 %      that are suspected to cause heteroskedasticity. By default the whole model X
 %      is used.
 %
@@ -41,7 +41,7 @@ function [p,model_w] = niak_white_test_hetero(model,opt)
 %
 %   X
 %      (2D array) the covariates used to perform the white's test (i.e. intercept,
-%      the covariates X(:,MASK_TEST), the square version of X_TEST, as well as all the 
+%      the covariates X(:,MASK_TEST), the square version of X_TEST, as well as all the
 %      interaction terms)
 %
 %   Y
@@ -53,13 +53,13 @@ function [p,model_w] = niak_white_test_hetero(model,opt)
 %   LABELS_Y
 %      (cell of strings, optional) LABELS_Y{K} is the label of covariate K,
 %      associated with MODEL_W.X(:,K). Labels are derived from MODEL.LABELS_X.
-%      Interaction terms are noted LABEL1_x_LABEL2 and squared terms are 
+%      Interaction terms are noted LABEL1_x_LABEL2 and squared terms are
 %      labeled LABEL.^2. The intercept is labeled 'intercept'.
 %
 % _________________________________________________________________________
 % REFERENCE:
 %
-% H. White, “A Heteroscedasticity Consistent Covariance Matrix Estimator and a 
+% H. White, “A Heteroscedasticity Consistent Covariance Matrix Estimator and a
 % Direct Test of Heteroscedasticity,’’ Econometrica, vol. 48, 1980, pp. 817–818.
 %
 % See also:
@@ -67,7 +67,7 @@ function [p,model_w] = niak_white_test_hetero(model,opt)
 %
 % _________________________________________________________________________
 % DEMO:
-%  
+%
 % Generate samples with a gross heteroscedasticity:
 %
 % model.x = [ones(100,1) [zeros(50,1) ; ones(50,1)] randn([100 1])];
@@ -93,7 +93,7 @@ function [p,model_w] = niak_white_test_hetero(model,opt)
 % model. At every attempt to add a covariate, the function checks that the resulting
 % model is not degenerate using RCOND on the cross-product matrix.
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Centre de recherche de l'Institut universitaire de gériatrie de Montréal, 2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -166,8 +166,8 @@ end
 %% SUBFUNCTIONS
 
 function model_s = sub_square_model(model)
-% Add the square of the covariates as well as the interaction terms in a model. Always add an intercept. 
-% That's equivalent to the x2fx function in Matlab. 
+% Add the square of the covariates as well as the interaction terms in a model. Always add an intercept.
+% That's equivalent to the x2fx function in Matlab.
 
 mask_intercept = min(model.x == repmat(model.x(1,:),[size(model.x,1) 1]),[],1);
 model_s = model;

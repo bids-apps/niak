@@ -34,9 +34,9 @@ function [files_in, files_out, opt] = niak_brick_stability_average(files_in, fil
 %
 %   CASE
 %       (integer, default 1) the case variable that selects whether the
-%       variable OPT.NAME_DATA in FILES_IN will be expected to be a cell of 
-%       strings that points to variables in FILES_IN to be averaged (CASE 1) or 
-%       if it will be expected to be a matrix that will be averaged (CASE 2). 
+%       variable OPT.NAME_DATA in FILES_IN will be expected to be a cell of
+%       strings that points to variables in FILES_IN to be averaged (CASE 1) or
+%       if it will be expected to be a matrix that will be averaged (CASE 2).
 %       This is an overview of how OPT.NAME_DATA is treated in either case
 %
 %       CASE = 1
@@ -104,7 +104,7 @@ end
 
 % FILES_IN
 if ~ischar(files_in)&&~iscellstr(files_in)
-    error('FILES_IN should be a string or cell of strings');    
+    error('FILES_IN should be a string or cell of strings');
 end
 
 % FILES_OUT
@@ -138,7 +138,7 @@ switch opt.case
             fprintf('Case 1. We expect a cell of strings to average\n');
         end
         out.stab = struct();
-        
+
         for f_ind = 1:num_files
             data_file = files_in{f_ind};
             data = load(data_file);
@@ -160,9 +160,9 @@ switch opt.case
             elseif ~iscellstr(data.(opt.name_data))
                 error(['A cell of strings was expected but %s in %s was of '...
                        'type %s\n'], opt.name_data, data_file,...
-                      class(data.(opt.name_data))); 
+                      class(data.(opt.name_data)));
             end
-            
+
             if f_ind == 1
                 % first file
                 out.scale_names = data.(opt.name_data);
@@ -199,9 +199,9 @@ switch opt.case
         % Average the stability matrices
         for sc_ind = 1:num_scales
             scale_name = out.scale_names{sc_ind};
-            out.stab.(scale_name) = out.stab.(scale_name) / num_files;    
+            out.stab.(scale_name) = out.stab.(scale_name) / num_files;
         end
-        
+
         % Save the results
         if opt.flag_verbose
             fprintf('Write the resuts ...\n     %s\n',files_out);
@@ -220,7 +220,7 @@ switch opt.case
             if opt.flag_verbose
                 fprintf(sprintf('I am loading file #%d now.\n    %s\n', f_ind, data_file));
             end
-            
+
             sought_fields = {opt.name_data, opt.name_scale_in};
             % Checks
             if ~all(isfield(data, sought_fields))
@@ -228,7 +228,7 @@ switch opt.case
                 miss_ind = ~isfield(data, sought_fields);
                 error('Could not find field %s in %s\n',sought_fields{miss_ind}, data_file);
             elseif ~ismatrix(data.(opt.name_data))
-                error('A matrix was expected but %s in %s was of type %s\n', opt.name_data, data_file, class(data.(opt.name_data))); 
+                error('A matrix was expected but %s in %s was of type %s\n', opt.name_data, data_file, class(data.(opt.name_data)));
             end
 
             if f_ind == 1

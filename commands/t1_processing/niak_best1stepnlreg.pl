@@ -65,7 +65,7 @@ my @conf = (
    'blur_fwhm'    => 2,
    'iterations'   => 10,
    },
-  
+
    );
 
 my($Help, $Usage, $me);
@@ -86,7 +86,7 @@ $Help = <<HELP;
 | $me does hierachial non-linear fitting between two files
 |    you will have to edit the script itself to modify the
 |    fitting levels themselves
-| 
+|
 | Problems or comments should be sent to: rotor\@cmr.uq.edu.au
 HELP
 
@@ -202,12 +202,12 @@ for ($i=0; $i<=$#conf; $i++){
        unlink( "$tmp_target\_blur.mnc" ) if( -e "$tmp_target\_blur.mnc" );
      }
    }
-   
+
    # set up intermediate files
    $tmp_xfm = "$tmpdir/$s_base\_$i.xfm";
    $tmp_source = "$tmpdir/$s_base\_$conf[$i]{blur_fwhm}";
    $tmp_target = "$tmpdir/$t_base\_$conf[$i]{blur_fwhm}";
-   
+
    print STDOUT "-+-[$i]\n".
                 " | step:           $conf[$i]{step}\n".
                 " | blur_fwhm:      $conf[$i]{blur_fwhm}\n".
@@ -216,7 +216,7 @@ for ($i=0; $i<=$#conf; $i++){
                 " | target:         $tmp_target\n".
                 " | xfm:            $tmp_xfm\n".
                 "\n";
-   
+
    # blur the source and target files if required.
    if(!-e "$tmp_source\_blur.mnc"){
       &do_cmd('mincblur', '-no_apodize', '-fwhm', $conf[$i]{blur_fwhm},
@@ -226,15 +226,15 @@ for ($i=0; $i<=$#conf; $i++){
       &do_cmd('mincblur', '-no_apodize', '-fwhm', $conf[$i]{blur_fwhm},
               $target, $tmp_target);
    }
-   
+
    # set up registration
    @args = ('minctracc',  @def_minctracc_args,
             '-iterations', $conf[$i]{iterations},
             '-step', $conf[$i]{step}, $conf[$i]{step}, $conf[$i]{step},
-            '-lattice_diam', $conf[$i]{step} * 3, 
-                             $conf[$i]{step} * 3, 
+            '-lattice_diam', $conf[$i]{step} * 3,
+                             $conf[$i]{step} * 3,
                              $conf[$i]{step} * 3);
-   
+
    # transformation
    if($i == 0) {
       push(@args, (defined $opt{init_xfm}) ? ('-transformation', $opt{init_xfm}) : '-identity')
@@ -248,12 +248,12 @@ for ($i=0; $i<=$#conf; $i++){
      push(@args, '-source_mask', $opt{source_mask} );
      push(@args, '-model_mask', $opt{target_mask} );
    }
-   
+
    # add files and run registration
-   push(@args, "$tmp_source\_blur.mnc", "$tmp_target\_blur.mnc", 
+   push(@args, "$tmp_source\_blur.mnc", "$tmp_target\_blur.mnc",
         ($i == $#conf) ? $outxfm : $tmp_xfm);
    &do_cmd(@args);
-  
+
    # remove previous xfm to keep tmpdir usage to a minimum.
    # (could also remove the previous blurred images).
 
@@ -263,7 +263,7 @@ for ($i=0; $i<=$#conf; $i++){
      unlink( $prev_xfm );
    }
 
-   # define starting xfm for next iteration. 
+   # define starting xfm for next iteration.
 
    $prev_xfm = ($i == $#conf) ? $outxfm : $tmp_xfm;
 }
@@ -276,10 +276,9 @@ if(defined($outfile)){
 }
 
 
-sub do_cmd { 
+sub do_cmd {
    print STDOUT "@_\n" if $opt{verbose};
    if(!$opt{fake}){
       system(@_) == 0 or die;
    }
 }
-       

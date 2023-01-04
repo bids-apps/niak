@@ -14,20 +14,20 @@ function [pipeline,opt] = niak_test_mask_brain_t1_sve(path_test,opt)
 % INPUTS:
 %
 % PATH_TEST
-%       (string, default GB_NIAK_PATH_TEST_SVE in the file NIAK_TEST_GB_VARS) 
-%       the full path to the NIAK SVE test dataset. Note that the SVE 
+%       (string, default GB_NIAK_PATH_TEST_SVE in the file NIAK_TEST_GB_VARS)
+%       the full path to the NIAK SVE test dataset. Note that the SVE
 %       database is expected to have been converted into MINC format.
 %
 % OPT
-%       (structure, optional) with the following fields : 
+%       (structure, optional) with the following fields :
 %
 %       NUM_SUBJECT
 %           (vector, default 1:40) the list of subjects that will be
 %           processed.
 %
 %       FLAG_TEST
-%           (boolean, default false) if FLAG_TEST == true, the test will 
-%           just generate the PIPELINE and OPT structure, otherwise it will 
+%           (boolean, default false) if FLAG_TEST == true, the test will
+%           just generate the PIPELINE and OPT structure, otherwise it will
 %           process the pipeline.
 %
 %       PSOM
@@ -122,7 +122,7 @@ for num_s = num_subject
     opt_tmp.flag_test = true;
     [files_in_tmp,files_out_tmp,opt_tmp] = niak_brick_mask_brain_t1(files_in_tmp,files_out_tmp,opt_tmp);
     opt_tmp.flag_test = false;
-    
+
     name_job = ['mask_S' subject];
     pipeline.(name_job).command = 'niak_brick_mask_brain_t1(files_in,files_out,opt);';
     pipeline.(name_job).files_in = files_in_tmp;

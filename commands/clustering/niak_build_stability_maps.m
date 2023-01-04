@@ -7,7 +7,7 @@ function [partition_cores,partition_adjusted,partition_threshold,stability_maps,
 %
 % _________________________________________________________________________
 % INPUTS:
-%   
+%
 % PART
 %   (vector N*1) PART==I defines the Ith cluster
 %
@@ -15,15 +15,15 @@ function [partition_cores,partition_adjusted,partition_threshold,stability_maps,
 % 	(matrix N*N) S(R,T) is the stability between regions R and T.
 %
 % OPT
-%   (structure) with the following fields.  
+%   (structure) with the following fields.
 %
 %   PERCENTILE
 %       (string, default 0.5) Value (0 to 1) percentile of stable
 %       regions used to build stability maps.
 %
 %   MIN_SIZE_CORE
-%       (integer, default 2) the minimum size of a stability core in terms 
-%       of number of atoms (unless the cluster is smaller than the number 
+%       (integer, default 2) the minimum size of a stability core in terms
+%       of number of atoms (unless the cluster is smaller than the number
 %       specified)
 %
 %   THRESHOLD
@@ -36,30 +36,30 @@ function [partition_cores,partition_adjusted,partition_threshold,stability_maps,
 %
 % _________________________________________________________________________
 % OUTPUTS:
-%   
+%
 % PARTITION_CORES
-%   (vector N*1) PARTITION_CORES is the core of the consensus partition, 
-%   which is to say the OPT.PERCENTILE regions of each cluster that have 
+%   (vector N*1) PARTITION_CORES is the core of the consensus partition,
+%   which is to say the OPT.PERCENTILE regions of each cluster that have
 %   the highest average stability with that cluster.
 %
 % PARTITION_ADJUSTED
-%   (vector N*1) PARTITION_ADJUSTED is a partition where each voxel is 
-%   associated with the core cluster with maximal average stability with 
+%   (vector N*1) PARTITION_ADJUSTED is a partition where each voxel is
+%   associated with the core cluster with maximal average stability with
 %   this voxel, for K clusters.
 %
 % PARTITION_THRESHOLD
-%   (vector N*1) PARTITION_ADJUSTED is a partition identical to 
-%   PARTITION_ADJUSTED, except that only those voxels with a stability 
-%   score greater than OPT.THRESHOLD in STABILITY_MAP_ALL are assigned to 
+%   (vector N*1) PARTITION_ADJUSTED is a partition identical to
+%   PARTITION_ADJUSTED, except that only those voxels with a stability
+%   score greater than OPT.THRESHOLD in STABILITY_MAP_ALL are assigned to
 %   a cluster. Other voxels have a value of zero.
 %
 % STABILITY_MAPS
-%   (array N*K) STAB_MAPS(K,:) is the stability map associated with the 
+%   (array N*K) STAB_MAPS(K,:) is the stability map associated with the
 %   stable core of cluster K.
 %
 % STABILITY_MAP_ALL
-%   (vetor N*1) STABILITY_MAP_ALL(I) is 
-%   STABILITY_MAPS(I,PARTITION_ADJUSTED(I)), i.e. the value of the 
+%   (vetor N*1) STABILITY_MAP_ALL(I) is
+%   STABILITY_MAPS(I,PARTITION_ADJUSTED(I)), i.e. the value of the
 %   stability map associted with the adjusted cluster that includes I.
 %
 % _________________________________________________________________________
@@ -71,7 +71,7 @@ function [partition_cores,partition_adjusted,partition_threshold,stability_maps,
 %
 % The stable core of a clustering is defined as follows. First, the average
 % stability between each region and its cluster is derived. Then, regions
-% are ordered by decreasing average stability. The first OPT.PERCENTILE 
+% are ordered by decreasing average stability. The first OPT.PERCENTILE
 % portion of these regions define the stable core of the region.
 %
 % Copyright (c) Pierre Bellec
@@ -129,17 +129,17 @@ stability_map_all    = zeros([N 1]); % compound stability map
 for num_c = 1:K
     if opt.flag_verbose
         fprintf(' %i',num_c);
-    end   
+    end
     stab_vec = mean(S(part==num_c,part==num_c),2); % Average stability within the cluster
-    [tmp,order] = sort(stab_vec,'descend'); % Sort regions by decreasing average stability    
+    [tmp,order] = sort(stab_vec,'descend'); % Sort regions by decreasing average stability
     ind_c = find(part==num_c); % Get the indices of regions
     nb_atoms_core = min(max(ceil(opt.percentile * length(order)),opt.min_size_core),length(order));
     ind_core = ind_c(order(1:nb_atoms_core)); % Keep a set percentage of the most stable regions
-    partition_cores(ind_core) = num_c; % Build a vector of the core regions        
+    partition_cores(ind_core) = num_c; % Build a vector of the core regions
     stability_maps(partition_cores~=num_c,num_c) = mean(S(partition_cores~=num_c,partition_cores==num_c),2);
     if sum(partition_cores==num_c)~=1
         stability_maps(partition_cores==num_c,num_c) = (sum(S(partition_cores==num_c,partition_cores==num_c),2)-1)/(sum(partition_cores==num_c)-1);
-    end        
+    end
 end
 
 if opt.flag_verbose

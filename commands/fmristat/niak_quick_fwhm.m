@@ -4,21 +4,21 @@ function opt = niak_quick_fwhm(wresid_vol,mask,opt)
 % SUMMARY NIAK_QUICK_FWHM
 %
 % Estimate the FWHM from a 4D data
-% 
+%
 % SYNTAX:
 % FWHM = NIAK_QUICK_FWHM(WRESID_VOL,MASK,OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% WRESID_VOL         
+% WRESID_VOL
 %       (4D array) a 3D+t dataset
-% 
+%
 % MASK
-%       (3D volume, default all voxels) a binary mask of the voxels that 
+%       (3D volume, default all voxels) a binary mask of the voxels that
 %       will be included in the analysis.
 %
-% OPT         
+% OPT
 %       (structure, optional) with the following fields :
 %
 %       VOXEL_SIZE
@@ -27,7 +27,7 @@ function opt = niak_quick_fwhm(wresid_vol,mask,opt)
 %       DF
 %
 %           Structure with the following fields:
-% 
+%
 %           RESID
 %              degrees of freedom of the residuals.
 %
@@ -39,21 +39,21 @@ function opt = niak_quick_fwhm(wresid_vol,mask,opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% FWHM       
-%       (real number) Estimated value of the FWHM. 
+% FWHM
+%       (real number) Estimated value of the FWHM.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %##########################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -137,7 +137,7 @@ for slice=1:nz
             end
             mask_slice = mask(:,:,slice);
             tot=sum(mask_slice(:));
-         else 
+         else
             uz=wresid_slice-u;
             ux=diff(u(:,j1,:),1,1);
             uy=diff(u(i1,:,:),1,2);
@@ -187,4 +187,3 @@ if ~isempty(opt.df)
     fwhm = fwhm*(biasr)^(1/3);
 end
 opt.fwhm = fwhm;
-      

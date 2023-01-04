@@ -14,12 +14,12 @@ function [in,out,opt] = niak_test_files_preprocess(in,out,opt)
 %   FILES_EXTRA (cell of strings) extra files in SOURCE no found in TARGET
 %
 % OPT.PATH_RESULTS (string, default see COMMENT) the folder of the results.
-% OPT.FILES_IN (structure, default struct()) the FILES_IN structure fed 
-%   to the fMRI preprocessing pipeline. If omitted, some minimal information 
+% OPT.FILES_IN (structure, default struct()) the FILES_IN structure fed
+%   to the fMRI preprocessing pipeline. If omitted, some minimal information
 %   are gathered from OPT.PATH_RESULTS to build the list of expected outputs.
 % OPT.FLAG_TEST (boolean, default 0) if the flag is 1, then the function does not
 %   do anything but update IN, OUT, OPT
-% OPT.FLAG_VERBOSE (boolean, default 1) if the flag is 1, then the function 
+% OPT.FLAG_VERBOSE (boolean, default 1) if the flag is 1, then the function
 %   prints some infos during the processing.
 %
 % _________________________________________________________________________
@@ -34,21 +34,21 @@ function [in,out,opt] = niak_test_files_preprocess(in,out,opt)
 % COMMENTS:
 %
 % Possible results of the test:
-%   Pass:    the folder passes the integrity check. 
+%   Pass:    the folder passes the integrity check.
 %   Fail:    the folder is missing some expected files.
-%   Warning: the folder contains some additional files. These may be due 
+%   Warning: the folder contains some additional files. These may be due
 %      to a faulty cleanup in the pipeline, or the OPT.SIZE_OUTPUT
 %      parameter was set to something else than 'quality_control'
 %
-% It is possible to specify the folder of the results of the fMRI 
-% preprocessing pipeline in IN rather than the list of files. In this 
-% case, the function NIAK_GRAB_FOLDER will be used to get the list of 
-% outputs. 
+% It is possible to specify the folder of the results of the fMRI
+% preprocessing pipeline in IN rather than the list of files. In this
+% case, the function NIAK_GRAB_FOLDER will be used to get the list of
+% outputs.
 % Also in this case, and in this case only, OPT.PATH_RESULTS does not need to be specified
 % (it's using IN instead). Otherwise it is mandatory.
 %
-% It is also possible not to specify IN and specify OPT.PATH_RESULTS instead, 
-% which will be considered as if IN = OPT.PATH_RESULTS. 
+% It is also possible not to specify IN and specify OPT.PATH_RESULTS instead,
+% which will be considered as if IN = OPT.PATH_RESULTS.
 %
 % Copyright (c) Pierre Bellec
 %               Centre de recherche de l'institut de Gériatrie de Montréal,
@@ -80,7 +80,7 @@ function [in,out,opt] = niak_test_files_preprocess(in,out,opt)
 if ~exist('in','var')||~exist('out','var')
     error('niak:brick','Bad syntax, type ''help %s'' for more info.',mfilename)
 end
-   
+
 %% Options
 list_fields   = { 'files_in' , 'path_results' , 'flag_verbose' , 'flag_test' };
 list_defaults = { struct()   , ''             , true           , false       };

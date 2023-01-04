@@ -32,8 +32,8 @@ function [files_in,files_out,opt] = niak_brick_sica(files_in,files_out,opt)
 %
 %   TIME
 %      (string, default <BASE_NAME>_sica_time.mat)
-%      a mat file with a variable TSERIES (2D array). TSERIES(:,K) is 
-%      the temporal distribution of the Kth ICA source. 
+%      a mat file with a variable TSERIES (2D array). TSERIES(:,K) is
+%      the temporal distribution of the Kth ICA source.
 %
 % OPT
 %   (structure) with the following fields :
@@ -80,7 +80,7 @@ function [files_in,files_out,opt] = niak_brick_sica(files_in,files_out,opt)
 % Stanford :
 % http://www-stat.stanford.edu/wavelab/Wavelab_850/index_wavelab850.html
 % The code was mainly contributed by Scott Makeig under a GNU
-% license. See subfunctions of NIAK_SICA for details. 
+% license. See subfunctions of NIAK_SICA for details.
 %
 % The FastICA methods require the installation of the fastICA toolbox.
 %
@@ -98,11 +98,11 @@ function [files_in,files_out,opt] = niak_brick_sica(files_in,files_out,opt)
 %
 % _________________________________________________________________________
 % SEE ALSO:
-% NIAK_COMPONENT_SEL, NIAK_BRICK_COMPONENT_SUPP, NIAK_SICA, 
+% NIAK_COMPONENT_SEL, NIAK_BRICK_COMPONENT_SUPP, NIAK_SICA,
 % NIAK_PIPELINE_CORSICA, NIAK_BRICK_QC_CORSICA
 %
 % _________________________________________________________________________
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Montreal Neurological Institute, McGill University, 2008-2010.
 % Research Centre of the Montreal Geriatric Institute
 % & Department of Computer Science and Operations Research
@@ -205,7 +205,7 @@ if ~strcmp(files_in.mask,'gb_niak_omitted')
     end
     [hdr,mask] = niak_read_vol(files_in.mask);
     mask = mask>0;
-else    
+else
     if flag_verbose
         fprintf('Brain segmentation ...\n');
     end

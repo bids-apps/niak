@@ -27,9 +27,9 @@ function [files_in,files_out,opt] = niak_brick_stability_maps(files_in,files_out
 %
 %   THRESHOLD
 %       (string) a mat file with a variable THRESHOLD_STAB and a variable NB_CLASSES
-%       THRESHOLD_STAB(NB_CLASSES == SCALES_MAPS(k,2)) is the threshold to apply on the 
-%       stability map derived with SCALES_MAPS(k,2) clusters. 
-%       WARNING : this is only supported for pure individual or pure group studies. 
+%       THRESHOLD_STAB(NB_CLASSES == SCALES_MAPS(k,2)) is the threshold to apply on the
+%       stability map derived with SCALES_MAPS(k,2) clusters.
+%       WARNING : this is only supported for pure individual or pure group studies.
 %       No mixed analysis.
 %
 % FILES_OUT
@@ -74,7 +74,7 @@ function [files_in,files_out,opt] = niak_brick_stability_maps(files_in,files_out
 %       K final clusters (see OPT.SCALES_MAPS below).
 %
 % OPT
-%       (structure) with the following fields.  
+%       (structure) with the following fields.
 %
 %   SCALES_MAPS
 %       (array, default []) SCALES_MAPS(K,:) is the list of scales that will
@@ -82,12 +82,12 @@ function [files_in,files_out,opt] = niak_brick_stability_maps(files_in,files_out
 %           SCALES_MAPS(K,1) is the number of clusters used for the stability analysis
 %           SCALES_MAPS(K,2) is the number of clusters used to derive the hierarchical
 %           SCALES_MAPS(K,3) is the (final) number of consensus group clusters
-%       For an individual analysis, use SCALES_MAPS(K,2) = SCALES_MAPS(K,1), and both the 
+%       For an individual analysis, use SCALES_MAPS(K,2) = SCALES_MAPS(K,1), and both the
 %       stability and hierarchy come from the individual stability analysis.
-%       For a group analysis, SCALES_MAPS(K,1) is the number of group clusters, 
-%       SCALES_MAPS(K,2) is the number of group clusters and SCALES_MAPS(K,3) is the number 
+%       For a group analysis, SCALES_MAPS(K,1) is the number of group clusters,
+%       SCALES_MAPS(K,2) is the number of group clusters and SCALES_MAPS(K,3) is the number
 %       of consensus (group) clusters.
-%       FOR a mixed analysis, SCALES_MAPS(K,1) is the number of individual clusters, 
+%       FOR a mixed analysis, SCALES_MAPS(K,1) is the number of individual clusters,
 %       SCALES_MAPS(K,2) is the number of group clusters and SCALES_MAPS(K,3) is the number
 %       of consensus (group) clusters.
 %
@@ -96,8 +96,8 @@ function [files_in,files_out,opt] = niak_brick_stability_maps(files_in,files_out
 %       regions used to build stability maps.
 %
 %   MIN_SIZE_CORE
-%       (integer, default 2) the minimum size of a stability core in terms 
-%       of number of atoms (unless the cluster is smaller than the number 
+%       (integer, default 2) the minimum size of a stability core in terms
+%       of number of atoms (unless the cluster is smaller than the number
 %       specified)
 %
 %   THRESHOLD
@@ -107,7 +107,7 @@ function [files_in,files_out,opt] = niak_brick_stability_maps(files_in,files_out
 %
 %   FLAG_PARCEL
 %       (boolean, default false) if the flag is true, the consensus partition is broken down
-%       into spatially connected parcels. The stability cores, threshold and adjusted 
+%       into spatially connected parcels. The stability cores, threshold and adjusted
 %       partitions are derived from the parcels.
 %
 %   FOLDER_OUT
@@ -324,23 +324,23 @@ for num_i = 1:nb_scales
         val = unique(part(part~=0));
         ind_ok(val) = 1:length(val);
         part(part~=0) = ind_ok(part(part~=0));
-        vol_part_consensus = niak_part2vol(part,vol_atoms); 
+        vol_part_consensus = niak_part2vol(part,vol_atoms);
     end
     vol_part_adjusted = zeros(size(vol_part_consensus));        % A volume representing the partition derived from maximal stability
     part_core = zeros(size(part));                              % A vector representation of the stable cores of the consensus clusters
     stab_all = zeros(size(vol_part_consensus));                 % A volume representing the maximal stability of each region across all possible target core clusters
     stab_map_all = zeros([size(vol_part_consensus) nb_clust]);  % A 4D array representing the stability maps of all clusters.
-    
+
     for num_c = 1:nb_clust
         if flag_verbose
             fprintf(' %i',num_c);
         end
         stab_vec = mean(stab(part==num_c,part==num_c),2); % Average stability within the cluster
-        [tmp,order] = sort(stab_vec,'descend'); % Sort regions by decreasing average stability    
+        [tmp,order] = sort(stab_vec,'descend'); % Sort regions by decreasing average stability
         ind_c = find(part==num_c); % Get the indices of regions
         nb_atoms_core = min(max(ceil(percentile * length(order)),min_size_core),length(order));
         ind_core = ind_c(order(1:nb_atoms_core)); % Keep a set percentage of the most stable regions
-        part_core(ind_core) = num_c; % Build a vector of the core regions    
+        part_core(ind_core) = num_c; % Build a vector of the core regions
         stab_core = zeros([size(stab,1) 1]);
         stab_core(part_core~=num_c) = mean(stab(part_core~=num_c,part_core==num_c),2);
         if sum(part_core==num_c)~=1
@@ -362,11 +362,11 @@ for num_i = 1:nb_scales
     %% A "threshold" version of the adjusted partition, where only stable atoms are retained in the partition
     vol_threshold = vol_part_adjusted;
     vol_threshold(stab_all<opt.threshold) = 0;
-    
+
     if flag_verbose
         fprintf('\n');
     end
-    
+
     %% Save the partition
     if ~ischar(files_out.partition_consensus)
         if opt.flag_verbose
@@ -380,7 +380,7 @@ for num_i = 1:nb_scales
     if ~ischar(files_out.partition_core)
         if opt.flag_verbose
             fprintf('    Saving the stable cores of the consensus partition ...\n')
-        end    
+        end
         hdr.file_name = files_out.partition_core{num_i};
         niak_write_vol(hdr,niak_part2vol(part_core,vol_atoms));
     end
@@ -402,7 +402,7 @@ for num_i = 1:nb_scales
         hdr.file_name = files_out.partition_threshold{num_i};
         niak_write_vol(hdr,vol_threshold);
     end
-    
+
     %% Save the max stability map
     if ~ischar(files_out.stability_map_all)
         if opt.flag_verbose

@@ -12,7 +12,7 @@ function [mask_part,mask_dense] = niak_clustering_space_density(mask,mask_extra,
 %
 % MASK_EXTRA
 %       (3D volume)  extra voxels to be classified in the region
-%       growing process but not in the density estimation. Empty values 
+%       growing process but not in the density estimation. Empty values
 %       will result in no extra voxels.
 %
 % OPT
@@ -84,12 +84,12 @@ function [mask_part,mask_dense] = niak_clustering_space_density(mask,mask_extra,
 %   ISBN 1-57735-004-9.
 %   http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.71.1980.
 %
-%   The density of the neighbourhood of a voxel is defined by counting the 
-%   number of neighbours in the mask within a 26 neighbourhood for each 
-%   voxel. The construction of dense clusters and the propagation of labels 
-%   to non-dense voxels follow the DBSCAN algorithm, except that the 
-%   current implementation fixes an order on the label propagation, while 
-%   the original version algorithm depended on an arbitrary order of visit 
+%   The density of the neighbourhood of a voxel is defined by counting the
+%   number of neighbours in the mask within a 26 neighbourhood for each
+%   voxel. The construction of dense clusters and the propagation of labels
+%   to non-dense voxels follow the DBSCAN algorithm, except that the
+%   current implementation fixes an order on the label propagation, while
+%   the original version algorithm depended on an arbitrary order of visit
 %   of the voxels.
 %
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008 &
@@ -187,7 +187,7 @@ end
 if any(mask_todo(:))
     mask_border = mask_part;
     nb_iter = 0;
-    while (any(mask_border(:)))&&~(nb_iter>nb_iter_max) 
+    while (any(mask_border(:)))&&~(nb_iter>nb_iter_max)
         tic;
         mask_border_new = niak_morph(mask_border,['-successive D' arg_m]); % dilate the border
         mask_border_new = round(mask_border_new);

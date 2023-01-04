@@ -7,20 +7,20 @@ function iir = niak_build_intra_inter_r(tseries,part,flag_vec,flag_fisher)
 % _________________________________________________________________________
 % INPUTS:
 %
-% TSERIES       
+% TSERIES
 %   (2D array) tseries(:,i) is the time series of the ith region
 %
-% PART          
-%   (vector) find(part==j) is the list of region in cluster j. In other 
+% PART
+%   (vector) find(part==j) is the list of region in cluster j. In other
 %   words, part(i) is the number of the cluster of region i.
 %
 % FLAG_VEC
 %   (boolean, default false) if FLAG_VEC == true, the output matrix is
-%   "vectorized" using NIAK_MAT2LVEC and the redundant elements are 
+%   "vectorized" using NIAK_MAT2LVEC and the redundant elements are
 %   suppressed. Use NIAK_LVEC2MAT to unvectorize it.
-%       
+%
 % FLAG_FISHER
-%   (boolean, default true) if FLAG_FISHER is true, a Fisher transform is 
+%   (boolean, default true) if FLAG_FISHER is true, a Fisher transform is
 %   applied on the measure. See NIAK_FISHER.
 %
 % _________________________________________________________________________
@@ -28,7 +28,7 @@ function iir = niak_build_intra_inter_r(tseries,part,flag_vec,flag_fisher)
 %
 % IIR
 %   (matrix or vector) IIR(i,j) for i~=j is the correlation between the mean
-%   signal of (PART==i) and (PART==j). IIR(i) is the average correlation 
+%   signal of (PART==i) and (PART==j). IIR(i) is the average correlation
 %   between distinct pairs of elements within (PART==i). If a cluster has only
 %   one element IIR(i) equals 0.
 %
@@ -36,8 +36,8 @@ function iir = niak_build_intra_inter_r(tseries,part,flag_vec,flag_fisher)
 % COMMENTS:
 %
 % Copyright (c) Pierre Bellec
-%               Centre de recherche de l'institut de 
-%               Gériatrie de Montréal, Département d'informatique et de recherche 
+%               Centre de recherche de l'institut de
+%               Gériatrie de Montréal, Département d'informatique et de recherche
 %               opérationnelle, Université de Montréal, 2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -77,9 +77,9 @@ opt_t.correction.type = 'mean_var';
 tseries = niak_build_tseries(tseries,part(:),opt_t);
 N = niak_build_size_roi(part(:));
 
-% Build the matrix 
+% Build the matrix
 iir = niak_build_correlation(tseries);
-ir = var(tseries,[],1)';       
+ir = var(tseries,[],1)';
 mask_0 = (N==0)|(N==1);
 N(mask_0) = 10;
 ir = ((N.^2).*ir-N)./(N.*(N-1));

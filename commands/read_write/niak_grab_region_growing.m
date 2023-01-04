@@ -8,16 +8,16 @@ function files = niak_grab_region_growing(path_data,filter)
 % INPUTS:
 %
 % PATH_DATA
-%   (string, default [pwd filesep], aka './') full path to the outputs of 
-%   NIAK_PIPELINE_REGION_GROWING. There should be a file "brain_rois.EXT" 
-%   where EXT can be .mnc or .nii possibly compressed (see GB_NIAK_ZIP_EXT 
-%   in NIAK_GB_VARS.M for the extension, usually it is .gz). There should 
-%   also be a collection of files named with the following pattern : 
+%   (string, default [pwd filesep], aka './') full path to the outputs of
+%   NIAK_PIPELINE_REGION_GROWING. There should be a file "brain_rois.EXT"
+%   where EXT can be .mnc or .nii possibly compressed (see GB_NIAK_ZIP_EXT
+%   in NIAK_GB_VARS.M for the extension, usually it is .gz). There should
+%   also be a collection of files named with the following pattern :
 %   tseries_rois_<SUBJECT>_run<I>.mat
 %
-% 
+%
 % FILTER
-%   (string) a string that will be passed to select a subset of files. A 
+%   (string) a string that will be passed to select a subset of files. A
 %   file is included only if a pattern maching FILTER is found with REGEXP
 %   For example :
 %       '$run1.mat' : select only the first run for all subjects
@@ -29,21 +29,21 @@ function files = niak_grab_region_growing(path_data,filter)
 % OUTPUTS:
 %
 % FILES
-%   (structure) with the following fields, ready to feed into 
+%   (structure) with the following fields, ready to feed into
 %   NIAK_PIPELINE_STABILITY_{REST,FIR} :
 %
 %   DATA
 %       (structure) with the following fields :
 %
 %       <SUBJECT>.<SESSION>.<RUN>
-%           (cell of strings) a list of .mat files, corresponding to the 
+%           (cell of strings) a list of .mat files, corresponding to the
 %           same subject. Each .mat file contains one variable TSERIES, where
 %           TSERIES(:,I) is the time course of region I as defined by
 %           FILES.ATOMS (see below).
 %
 %   ATOMS
-%       (string) a file name of a mask of brain regions (region I is filled 
-%       with Is, 0 is for the background). The analysis will be done at the 
+%       (string) a file name of a mask of brain regions (region I is filled
+%       with Is, 0 is for the background). The analysis will be done at the
 %       level of these atomic regions. This means that the fMRI time series
 %       will be averaged in each region, and the stability analysis will be
 %       carried on these regional time series. If unspecified, the regions
@@ -118,7 +118,7 @@ for num_f = 1:length(list_files)
                 run = name_f(ind_run(end)+1:end);
                 session = name_f(ind_run(end-1)+1:ind_run(end)-1);
                 subject = name_f((length('tseries_rois_')+1):(ind_run(end-1)-1));
-                files.data.(subject).(session).(run) = [path_data name_f ext_f];                
+                files.data.(subject).(session).(run) = [path_data name_f ext_f];
             end
         end
     end

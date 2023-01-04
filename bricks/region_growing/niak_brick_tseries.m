@@ -11,10 +11,10 @@ function [files_in,files_out,opt] = niak_brick_tseries(files_in,files_out,opt)
 %   (structure) with the following fields :
 %
 %   FMRI
-%      (string or cell of string) A collection of fMRI datasets. They 
-%      need to be all in the same world and voxel space. A .mat file 
-%      can also be used instead with a variable TSERIES (the name can 
-%      actually be changed, see OPT.NAME_TSERIES) associated with a 
+%      (string or cell of string) A collection of fMRI datasets. They
+%      need to be all in the same world and voxel space. A .mat file
+%      can also be used instead with a variable TSERIES (the name can
+%      actually be changed, see OPT.NAME_TSERIES) associated with a
 %      set of ROIS, see FILES_IN.ATOMS below.
 %
 %   MASK
@@ -49,8 +49,8 @@ function [files_in,files_out,opt] = niak_brick_tseries(files_in,files_out,opt)
 %
 %   TSERIES_AVG
 %      (cell of string, default {tseries_avg_<BASE_MASK>.mat})
-%      FILES_OUT.TSERIES_MEAN{L} is derived using all entries of 
-%      FILES_IN.FMRI and FILES_IN.MASK{L}. Each entry is a MAT file 
+%      FILES_OUT.TSERIES_MEAN{L} is derived using all entries of
+%      FILES_IN.FMRI and FILES_IN.MASK{L}. Each entry is a MAT file
 %      with the following variables :
 %
 %      TSERIES_MEAN
@@ -137,7 +137,7 @@ function [files_in,files_out,opt] = niak_brick_tseries(files_in,files_out,opt)
 %
 % If extra variables TIME_FRAMES, MASK_SUPPRESSED, CONFOUNDS or LABELS_CONFOUNDS
 % are found either in a .mat file or the hdr.extra part of the header of a 3D+t
-% dataset, those are saved in the output. 
+% dataset, those are saved in the output.
 %
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008-2010.
 %       Centre de recherche de l'institut de Griatrie de Montral
@@ -214,7 +214,7 @@ if isempty(files_out.tseries)
         [path_m,name_m,ext_m] = niak_fileparts(files_in.mask{num_m});
         for num_f = 1:length(files_in.fmri)
             [path_t,name_t,ext_t] = niak_fileparts(files_in.fmri{num_f});
-            files_out.tseries{num_f,num_m} = cat(2,opt.folder_out,filesep,name_t,'_',name_m,'.mat');           
+            files_out.tseries{num_f,num_m} = cat(2,opt.folder_out,filesep,name_t,'_',name_m,'.mat');
         end
     end
 end
@@ -225,7 +225,7 @@ if isempty(files_out.tseries_avg)
     end
     for num_m = 1:length(files_in.mask)
         [path_m,name_m,ext_m] = niak_fileparts(files_in.mask{num_m});
-        files_out.tseries_avg{num_m} = cat(2,opt.folder_out,filesep,'tseries_avg_',name_m,'.mat');                  
+        files_out.tseries_avg{num_m} = cat(2,opt.folder_out,filesep,'tseries_avg_',name_m,'.mat');
     end
 end
 
@@ -261,12 +261,12 @@ opt_tseries.flag_all = opt.flag_all;
 avg_tseries = cell([length(files_in.mask) 1]);
 std_tseries = cell([length(files_in.mask) 1]);
 for num_f = 1:length(files_in.fmri)
-    
+
     if flag_verbose
         fprintf('Dataset %s...\n',files_in.fmri{num_f});
-    end    
+    end
     results = struct();
-    
+
     if ~strcmp(files_in.atoms,'gb_niak_omitted')
         data = load(files_in.fmri{num_f});
         atoms_tseries = niak_normalize_tseries(data.(opt.name_tseries),opt.correction);
@@ -287,7 +287,7 @@ for num_f = 1:length(files_in.fmri)
         end
     else
         [hdr,vol] = niak_read_vol(files_in.fmri{num_f}); % read fMRI data
-        
+
         % Implement the scrubbing mask
         if isfield(hdr,'extra')&&isfield(hdr.extra,'mask_scrubbing')
             results.mask_scrubbing = hdr.extra.mask_scrubbing;
@@ -295,7 +295,7 @@ for num_f = 1:length(files_in.fmri)
             results.mask_scrubbing = false(size(vol,4),1);
         end
         vol = vol(:,:,:,~results.mask_scrubbing);
-        
+
         % Extract time frames
         if isfield(hdr,'extra')&&isfield(hdr.extra,'time_frames')
             results.time_frames = hdr.extra.time_frames(~results.mask_scrubbing);
@@ -304,16 +304,16 @@ for num_f = 1:length(files_in.fmri)
             results.time_frames = results.time_frames(1:size(vol,4)); % An apparently useless line to get rid of a really weird bug in Octave
         end
         results.mask_suppressed = results.mask_scrubbing;
-        
+
         % Extract confounds
         if isfield(hdr,'extra')&&isfield(hdr.extra,'confounds')
             results.confounds = hdr.extra.confounds(~results.mask_scrubbing,:);
             results.labels_confounds = hdr.extra.labels_confounds;
         end
     end
-    
+
     for num_m = 1:length(files_in.mask)
-        
+
         %% Read the mask
         [hdr_mask,mask] = niak_read_vol(files_in.mask{num_m});
         mask = round(mask);
@@ -321,10 +321,10 @@ for num_f = 1:length(files_in.fmri)
             mask(~ismember(mask,ind_rois)) = 0;
         end
         list_num_roi = unique(mask(mask~=0))';
-        
+
         if flag_all
             for num_r = list_num_roi
-                results.(sprintf('tseries_%i',num_r)) = niak_build_tseries(vol,mask==num_r,opt_tseries);                
+                results.(sprintf('tseries_%i',num_r)) = niak_build_tseries(vol,mask==num_r,opt_tseries);
             end
         else
             if ~strcmp(files_in.atoms,'gb_niak_omitted')
@@ -347,7 +347,7 @@ for num_f = 1:length(files_in.fmri)
                 [tseries,tseries_std] = niak_build_tseries(vol,mask,opt_tseries); % extract the time series in the mask
             end
         end
-        
+
         if ~ischar(files_out.tseries)
             if flag_all
                 save(files_out.tseries{num_f,num_m},'-struct','results'); % Save outputs
@@ -366,7 +366,7 @@ for num_f = 1:length(files_in.fmri)
                         end
                     end
                 else
-                    results.tseries = tseries;                    
+                    results.tseries = tseries;
                     save(files_out.tseries{num_f,num_m},'-struct','results'); % Save outputs
                     if ~ischar(files_out.tseries_avg)
                         if num_m == 1
@@ -376,7 +376,7 @@ for num_f = 1:length(files_in.fmri)
                         end
                     end
                 end
-                
+
             end
         end
     end
@@ -392,7 +392,7 @@ if ~ischar(files_out.tseries_avg)
             results.tseries_std = tseries_std;
             save(files_out.tseries_avg{num_m},'-struct','results');
         else
-            results.tseries = tseries;            
+            results.tseries = tseries;
             save(files_out.tseries_avg{num_m},'-struct','results');
         end
     end

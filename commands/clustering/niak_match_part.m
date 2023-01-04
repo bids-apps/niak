@@ -6,19 +6,19 @@ function match = niak_match_part(part1,part2)
 %
 % INPUTS:
 %   PART<1,2> (vector 1xN) (PART1 == I) defines the Ith region of PART1 (same
-%      for PART2). Note that any region labels can be used, e.g. 0, 1, 2, etc 
+%      for PART2). Note that any region labels can be used, e.g. 0, 1, 2, etc
 %      or 0, 3, 7, etc or 99100, 99101, etc
 %
 % OUTPUT:
-%   MATCH.INDl<1,2> (vector 1xK<1,2>) is the list of cluster in PART<1,2> 
+%   MATCH.INDl<1,2> (vector 1xK<1,2>) is the list of cluster in PART<1,2>
 %      This is the result of find(part<1,2>
-%   MATCH.OVLP (vector 1xK2) OVLP(k) is the maximal overlap between the kth 
+%   MATCH.OVLP (vector 1xK2) OVLP(k) is the maximal overlap between the kth
 %      cluster in PART2 and a cluster of PART1.
-%   MATCH.IND2_to_1 (vector 1xK2) IND12(k) is the index of the cluster in PART1 
+%   MATCH.IND2_to_1 (vector 1xK2) IND12(k) is the index of the cluster in PART1
 %      that best overlap with cluster IND2(k) in PART2.
-%   MATCH.PART2_to_1 (vector 1xN) PART2_to_1(n) is IND2_to_1(k), where PART2(n) is 
+%   MATCH.PART2_to_1 (vector 1xN) PART2_to_1(n) is IND2_to_1(k), where PART2(n) is
 %      equal to IND2(k).
-%      
+%
 % NOTE:
 %   PART1 and PART2 can also be N-dimensional array, e.g. an image, a volume, etc.
 %
@@ -40,7 +40,7 @@ function match = niak_match_part(part1,part2)
 %   title('part2\_to\_1');
 %
 % _________________________________________________________________________
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Centre de recherche de l'institut de Gériatrie de Montréal
 % Département d'informatique et de recherche opérationnelle
 % Université de Montréal, 2014

@@ -8,12 +8,12 @@ function ssurf = niak_read_surf(file_name,flag_neigh,flag_verbose)
 % INPUTS :
 %
 % FILE_NAME
-%    (string or cell of strings, default mid surface in MNI 2009 space) 
-%    string: a single surface file. cell of strings : all the surfaces are 
+%    (string or cell of strings, default mid surface in MNI 2009 space)
+%    string: a single surface file. cell of strings : all the surfaces are
 %    concatenated.
 %
 % FLAG_NEIGH
-%    (boolean, default false) if FLAG_NEIGH is true, a neighborhood array 
+%    (boolean, default false) if FLAG_NEIGH is true, a neighborhood array
 %    is derived.
 %
 % FLAG_VERBOSE
@@ -24,7 +24,7 @@ function ssurf = niak_read_surf(file_name,flag_neigh,flag_verbose)
 % OUTPUTS :
 %
 % SSURF
-%    (structure, with the following fields) 
+%    (structure, with the following fields)
 %
 %    COORD
 %        (array 3 x v) node coordinates. v=#vertices.
@@ -40,14 +40,14 @@ function ssurf = niak_read_surf(file_name,flag_neigh,flag_verbose)
 %
 %    COLR
 %        (vector or matrix) 4 x 1 vector of colours for the whole surface,
-%        or 4 x v matrix of colours for each vertex, either uint8 in [0 255], 
+%        or 4 x v matrix of colours for each vertex, either uint8 in [0 255],
 %        or float in [0 1], only .obj files.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % .obj file is the montreal neurological institute (MNI) specific ASCII or
-% binary triangular mesh data structure. For FreeSurfer software, a slightly 
+% binary triangular mesh data structure. For FreeSurfer software, a slightly
 % different data input coding is used.
 %
 % (C) Keith Worsley, McGill University, 2008
@@ -108,7 +108,7 @@ if iscellstr(file_name)
             s.neigh(mask) = s.neigh(mask) + size(ssurf.neigh,1);
             ssurf.neigh = [ssurf.neigh ; s.neigh];
         end
-        if isfield(s,'colr') 
+        if isfield(s,'colr')
             if size(s.colr,2)==1
                 ssurf.colr = s.colr;
             else

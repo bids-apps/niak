@@ -8,7 +8,7 @@ function [pipeline,opt_pipe,files_in] = niak_demo_glm_fir(path_demo,opt)
 % INPUTS:
 %
 % PATH_DEMO
-%   (string) the full path to the preprocessed NIAK demo dataset. The dataset 
+%   (string) the full path to the preprocessed NIAK demo dataset. The dataset
 %   can be found at http://www.nitrc.org/frs/?group_id=411
 %
 % OPT
@@ -16,11 +16,11 @@ function [pipeline,opt_pipe,files_in] = niak_demo_glm_fir(path_demo,opt)
 %   will do here. Many parameters are hard-coded though (see code). In addition:
 %
 %   FILES_IN.FMRI
-%      (structure, default grab the preprocessed demoniak) the input files 
+%      (structure, default grab the preprocessed demoniak) the input files
 %      from the preprocessing to be fed in the glm_fir pipeline.
 %
 %   FOLDER_OUT
-%      (string, default PATH_DEMO/glm_fir) where to store the 
+%      (string, default PATH_DEMO/glm_fir) where to store the
 %      results of the pipeline.
 %
 % _________________________________________________________________________
@@ -34,20 +34,20 @@ function [pipeline,opt_pipe,files_in] = niak_demo_glm_fir(path_demo,opt)
 %   (structure) the option to call NIAK_PIPELINE_GLM_FIR
 %
 % FILES_IN
-%   (structure) the description of input files used to call 
+%   (structure) the description of input files used to call
 %   NIAK_PIPELINE_GLM_FIR
 %
 % _________________________________________________________________________
 % COMMENTS
 %
 % Note 1:
-% It is possible to configure the pipeline manager 
-% to use parallel computing using OPT.PSOM, see : 
+% It is possible to configure the pipeline manager
+% to use parallel computing using OPT.PSOM, see :
 % http://code.google.com/p/psom/wiki/PsomConfiguration
 %
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de griatrie de Montral, 
+% Centre de recherche de l'institut de griatrie de Montral,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2013
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -84,7 +84,7 @@ if nargin < 2
 end
 opt = psom_struct_defaults(opt, ...
       { 'files_in'            , 'folder_out'}, ...
-      { 'gb_niak_omitted'     , ''          },false);      
+      { 'gb_niak_omitted'     , ''          },false);
 if isempty(opt.folder_out)
     opt.folder_out = [path_demo.stability_fir,'glm_fir',filesep];
 end
@@ -92,13 +92,13 @@ opt.folder_out = niak_full_path(opt.folder_out);
 
 
 %% Grab the results from the NIAK fMRI preprocessing pipeline
-if ~isempty(opt.files_in)&&~strcmp(opt.files_in,'gb_niak_omitted')  
+if ~isempty(opt.files_in)&&~strcmp(opt.files_in,'gb_niak_omitted')
     files_in.fmri = opt.files_in.fmri;
 else
     %% Grab the results from the NIAK fMRI preprocessing pipeline
-    opt_g.min_nb_vol = 30; % the demo dataset is very short, so we have to lower considerably the minimum acceptable number of volumes per run 
-    opt_g.type_files = 'fir'; % Specify to the grabber to prepare the files for the stability FIR pipeline    
-    files_in = rmfield(niak_grab_fmri_preprocess(path_demo,opt_g),{'mask','areas'}); 
+    opt_g.min_nb_vol = 30; % the demo dataset is very short, so we have to lower considerably the minimum acceptable number of volumes per run
+    opt_g.type_files = 'fir'; % Specify to the grabber to prepare the files for the stability FIR pipeline
+    files_in = rmfield(niak_grab_fmri_preprocess(path_demo,opt_g),{'mask','areas'});
 end
 
 %% Duplicate one run
@@ -115,7 +115,7 @@ files_du.fmri.subject2c.session1.motor = files_in.fmri.subject2.session1.motor;
 files_du.fmri.subject2d.session1.motor = files_in.fmri.subject1.session1.motor;
 files_in = files_du;
 
-%% Now use the NIAK Cambridge s100 template twice 
+%% Now use the NIAK Cambridge s100 template twice
 files_in.networks.cambridge100 = [GB_NIAK.path_niak 'template' filesep 'basc_cambridge_sc100.mnc.gz'];
 files_in.networks.cambridge100bis = [GB_NIAK.path_niak 'template' filesep 'basc_cambridge_sc100.mnc.gz'];
 

@@ -8,14 +8,14 @@ function fir_boot = niak_stability_fir_null(fir_all);
 % INPUTS:
 %
 % FIR_ALL
-%    (array T*N*R) T time samples, N regions, R repetitions. Each column is 
+%    (array T*N*R) T time samples, N regions, R repetitions. Each column is
 %    a sample of the response to a stimulus in a brain region.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % FIR_BOOT
-%    (array T*N*R) replications of FIR_ALL under the null hypothesis of 
+%    (array T*N*R) replications of FIR_ALL under the null hypothesis of
 %    no significant average response.
 %
 % _________________________________________________________________________

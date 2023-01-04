@@ -7,15 +7,15 @@ function [files_in,files_out,opt] = niak_brick_mask_brain_t1(files_in,files_out,
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN        
+% FILES_IN
 %   (string) the name of a file with a t1 volume.
 %
-% FILES_OUT   
-%   (string, default <BASE FILES_IN>_mask.<EXT FILES_IN>) 
+% FILES_OUT
+%   (string, default <BASE FILES_IN>_mask.<EXT FILES_IN>)
 %   the name of a file with a binary mask of the brain.
-%   
-% OPT           
-%   (structure) with the following fields.  
+%
+% OPT
+%   (structure) with the following fields.
 %
 %   PERC_CONF
 %      (scalar, default 0.5) the portion of brain tissue that is
@@ -61,26 +61,26 @@ function [files_in,files_out,opt] = niak_brick_mask_brain_t1(files_in,files_out,
 %      Setting up DIST_BRAIN to Inf will result in keeping the whole
 %      mask.
 %
-%   FOLDER_OUT 
-%      (string, default: path of FILES_IN) If present, all default 
-%      outputs will be created in the folder FOLDER_OUT. The folder 
+%   FOLDER_OUT
+%      (string, default: path of FILES_IN) If present, all default
+%      outputs will be created in the folder FOLDER_OUT. The folder
 %      needs to be created beforehand.
 %
-%   FLAG_VERBOSE 
-%      (boolean, default 1) if the flag is 1, then the function 
+%   FLAG_VERBOSE
+%      (boolean, default 1) if the flag is 1, then the function
 %      prints some infos during the processing.
 %
-%   FLAG_TEST 
-%      (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%      do anything but update the default values in FILES_IN, 
+%   FLAG_TEST
+%      (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%      do anything but update the default values in FILES_IN,
 %      FILES_OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_MASK_BRAIN_T1, NIAK_CLUSTERING_SPACE_DENSITY
@@ -95,15 +95,15 @@ function [files_in,files_out,opt] = niak_brick_mask_brain_t1(files_in,files_out,
 % magnetic resonance brain images'. NeuroImage 47(4):1394-1407.
 %
 % The actual implementation was still markedly different. It is 3D rather
-% than 2D and the competitive region growing algorithm exploits the concept 
-% of spatial density rather than more standard morphomathematical 
+% than 2D and the competitive region growing algorithm exploits the concept
+% of spatial density rather than more standard morphomathematical
 % operations. Specifically, the main stages are the following :
 %
-%   1. Intensity segmentation resulting into a binary mask of most brain 
+%   1. Intensity segmentation resulting into a binary mask of most brain
 %   tissues.
 %
 %   2. Competitive region growing. The seed regions are the bigger
-%   connected components within the dense portions of the white matter. 
+%   connected components within the dense portions of the white matter.
 %   Labels are propageted to grey matter through region-growing. This
 %   method is adapted from DBSCAN and has been proposed in :
 %
@@ -119,8 +119,8 @@ function [files_in,files_out,opt] = niak_brick_mask_brain_t1(files_in,files_out,
 %   3. Holes in the brain mask are filled using morphomathematical
 %   operations.
 %
-% 	4. The spinal cord can optionally be removed from the mask. This is 
-%   done by excluding voxels that are more than 150mm apart from the center 
+% 	4. The spinal cord can optionally be removed from the mask. This is
+%   done by excluding voxels that are more than 150mm apart from the center
 %   of mass of the brain. This distance threshold can be ajusted using
 %   OPT.DIST_BRAIN . Setting it up to Inf will result in keeping
 %   everything.
@@ -234,7 +234,7 @@ opt_mask = rmfield(opt,{'folder_out','flag_test'});
 opt_mask.voxel_size = hdr.info.voxel_size;
 mask = niak_mask_brain_t1(anat,opt_mask);
 
-%% Writting output 
+%% Writting output
 if flag_verbose
     fprintf('Writting the mask in %s ...\n',files_out);
 end

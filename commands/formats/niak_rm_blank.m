@@ -8,7 +8,7 @@ function str_b = niak_rm_blank(str,list_blanks)
 %
 % SYNTAX
 % STR_B = NIAK_RM_BLANK(STR,LIST_BLANKS)
-% 
+%
 % INPUT
 % STR           (vector of strings)
 % LIST_BLANKS   (cell of string, default {}) a list of characters that
@@ -18,7 +18,7 @@ function str_b = niak_rm_blank(str,list_blanks)
 % STR_B         (vector of strings) a "deblanked" version of str
 %
 % COMMENTS
-% 
+%
 % Copyright (c) Pierre Bellec 01/2008
 %
 % Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -54,8 +54,8 @@ ind = 1:length(str);
 pos = findstr(str_b,' ');
 if length(pos)>1
     to_trash = find(pos(2:end)-pos(1:end-1)==1);
-    if ~isempty(to_trash)    
-        str_b = str_b(~ismember(ind,pos(to_trash)));    
+    if ~isempty(to_trash)
+        str_b = str_b(~ismember(ind,pos(to_trash)));
     end
 end
 

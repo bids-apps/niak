@@ -23,7 +23,7 @@ function buildFilesIn (evt) {
 	   };
 	   break;
   };
-  return filesIn 
+  return filesIn
 }
 
 var opt = {

@@ -3,7 +3,7 @@ function [files_in,files_out,opt] = niak_brick_clean(files_in,files_out,opt)
 % _________________________________________________________________________
 % SUMMARY NIAK_BRICK_CLEAN
 %
-% Clean up files (used to get rid of some intermediate outputs in a 
+% Clean up files (used to get rid of some intermediate outputs in a
 % pipeline)
 %
 % SYNTAX:
@@ -12,38 +12,38 @@ function [files_in,files_out,opt] = niak_brick_clean(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS
 %
-%  * FILES_IN        
-%       (string, cell of string or structure) 
-%       A list of files that need to exist before the clean up can start. 
-%       The files can be organized as a cell of strings or nested 
-%       structures. Typically, in a pipeline, you may want to clean the 
-%       outputs of stage N when stage N+1 is complete. 
+%  * FILES_IN
+%       (string, cell of string or structure)
+%       A list of files that need to exist before the clean up can start.
+%       The files can be organized as a cell of strings or nested
+%       structures. Typically, in a pipeline, you may want to clean the
+%       outputs of stage N when stage N+1 is complete.
 %       In this case, FILES_IN would be the list of outputs at stage N+1.
 %
-%  * FILES_OUT       
-%       (empty cell) This field is ignored. The clean-up does not produce 
+%  * FILES_OUT
+%       (empty cell) This field is ignored. The clean-up does not produce
 %       any output.
 %
-%  * OPT           
+%  * OPT
 %       (structure) with the following fields :
 %
-%       CLEAN  
-%           (string, cell of string or structure) A list of files that 
-%           need to be cleaned up. The files can be organized as a 
-%           cell of strings or nested structures. 
-%           Typically, in a pipeline, you may want to clean the outputs of 
+%       CLEAN
+%           (string, cell of string or structure) A list of files that
+%           need to be cleaned up. The files can be organized as a
+%           cell of strings or nested structures.
+%           Typically, in a pipeline, you may want to clean the outputs of
 %           stage N when stage N+1 is complete. In this case, OPT.CLEAN
 %           would be the list of outputs at stage N.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function
 %           prints some infos during the processing.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT, and OPT.
-%               
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
@@ -59,11 +59,11 @@ function [files_in,files_out,opt] = niak_brick_clean(files_in,files_out,opt)
 % _________________________________________________________________________
 % COMMENTS
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,
 % Montreal Neurological Institute, McGill University, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
-% Keywords : 
+% Keywords :
 
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal

@@ -9,9 +9,9 @@ function [] = niak_append_ps(file_name,opt_print)
 %
 % FILE_NAME
 %       (string) the name of the output eps file.
-%       
+%
 % OPT_PRINT
-%       (string, default '-dspc2') the option used to call print and 
+%       (string, default '-dspc2') the option used to call print and
 %       generate the new figure. Note that multiple options can be
 %       specified, e.g. '-r300 -dspc2'.
 %
@@ -19,12 +19,12 @@ function [] = niak_append_ps(file_name,opt_print)
 % OUTPUTS:
 %
 % FLAG_FAIL
-%       (boolean) define the outcome of NIAK_APPEND_EPS 
+%       (boolean) define the outcome of NIAK_APPEND_EPS
 %           0 : NIAK_APPEND_EPS executed successfully.
 %           1 : an error occurred.
 %
-% MESSAGE     
-%       (string)  define the error or warning message. 
+% MESSAGE
+%       (string)  define the error or warning message.
 %           empty string : NIAK_APPEND_EPS executed successfully.
 %           message : an error or warning message, as applicable.
 %
@@ -76,18 +76,18 @@ if nargin<2
 end
 
 if ~exist(file_name,'file')
-    
+
     opt_print = niak_string2words(opt_print);
     sub_print(file_name,opt_print);
-    
+
 else
     if ~exist('OCTAVE_VERSION','builtin')
       opt_print = [opt_print ' -append'];
     end
     opt_print = niak_string2words(opt_print);
-    
+
     if exist('OCTAVE_VERSION','builtin')
-        
+
         %% Generate a PS description of the current figure in a temporary file
         %% and read it
         file_eps_tmp1 = niak_file_tmp('_1.eps');
@@ -103,13 +103,13 @@ else
         if failed
             error(msg)
         end
-        
+
     else
-        
+
         sub_print(file_name,opt_print);
         flag_fail = false;
         message = '';
-        
+
     end
 end
 

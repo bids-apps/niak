@@ -17,19 +17,19 @@ function [files_in,files_out,opt] = niak_brick_boot_mean_vols(files_in,files_out
 %
 %       VOL
 %           (cell of strings) Each entry is a 3D of a 3D+t dataset.
-%      
+%
 %       TRANSFORMATION
 %           (cell of strings, default identity) Each entry is a spatial
 %           transformation to apply on the corresponding entry of VOL. The
 %           target space is the MNI152 space, with a 2 mm isotropic
 %           resolution.
 %
-%  * FILES_OUT 
-%       (structure) with the following fields.  Note that if a field is an 
-%       empty string, a default value will be used to name the outputs. 
-%       If a field is ommited, the output won't be saved at all (this is 
-%       equivalent to setting up the output file names to 
-%       'gb_niak_omitted'). 
+%  * FILES_OUT
+%       (structure) with the following fields.  Note that if a field is an
+%       empty string, a default value will be used to name the outputs.
+%       If a field is ommited, the output won't be saved at all (this is
+%       equivalent to setting up the output file names to
+%       'gb_niak_omitted').
 %
 %       MEAN (string, default <BASE FILE IN 1>_mean.mnc)
 %           The mean volume of all 3D volumes in FILES_IN
@@ -38,46 +38,46 @@ function [files_in,files_out,opt] = niak_brick_boot_mean_vols(files_in,files_out
 %           The standard-deviation volume of all 3D volumes in FILES_IN
 %
 %       MEANSTD  (string, default <BASE FILE IN 1>_meanstd.mnc)
-%           The standard-deviation volume of the mean of all 3D volumes 
+%           The standard-deviation volume of the mean of all 3D volumes
 %           in FILES_IN. This standard-deviation is estimated through
 %           i.i.d. bootstap of input volumes.
 %
-%  * OPT           
-%       (structure) with the following fields.  
+%  * OPT
+%       (structure) with the following fields.
 %
 %       FWHM
 %           (real number, default 0) a smoothing applied to each map before
-%           averaging. 
-%       
-%       FLAG_MASK 
+%           averaging.
+%
+%       FLAG_MASK
 %           (boolean, default 1) if FLAG_MASK equals one, the
-%           standard deviation will only be evaluated in a mask of the 
+%           standard deviation will only be evaluated in a mask of the
 %           brain (that's speeding up bootstrap calculations).
 %
 %       NB_SAMPS
 %           (integer, default 1000) the number of bootstrap samples used to
 %           compute the standard-deviation-of-the-mean map.
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, all default 
-%           outputs will be created in the folder FOLDER_OUT. The folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, all default
+%           outputs will be created in the folder FOLDER_OUT. The folder
 %           needs to be created beforehand.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function
 %           prints some info during the processing.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS :
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO :
 %
@@ -187,15 +187,15 @@ nb_files = length(files_in.vol);
 files_in_orig = files_in;
 
 if ~ischar(files_in.transformation)
-    
+
     if flag_verbose
         fprintf('\nResampling the individual volumes in the MNI152 space...');
     end
-    
+
     if length(files_in.transformation)~=nb_files
         error('Please specify one transformation per volume !');
     end
-    
+
     files_in_tmp = cell(size(files_in.transformation));
     for num_f = 1:nb_files
         if flag_verbose
@@ -214,7 +214,7 @@ if ~ischar(files_in.transformation)
         fprintf('\n')
     end
     files_in.vol = files_in_tmp;
-    
+
 end
 
 %% Checking the size of input volumes
@@ -255,7 +255,7 @@ if opt.fwhm>0
 end
 
 for num_f = 1:nb_files
-    
+
     if opt.fwhm>0
         files_in_s = files_in.vol{num_f};
         files_out_s = file_vol_tmp;
@@ -266,7 +266,7 @@ for num_f = 1:nb_files
     else
         [hdr,vol] = niak_read_vol(files_in.vol{num_f});
     end
-    
+
     if length(hdr.info.dimensions)==4
         vol_all(:,:,:,num_vol+1:num_vol+hdr.info.dimensions(4)) = vol;
         num_vol = num_vol + hdr.info.dimensions(4);
@@ -318,12 +318,12 @@ if ~strcmp(files_out.meanstd,'gb_niak_omitted')
 
     vol_all = reshape(vol_all,[nx*ny*nz nb_vols]);
     mean_vol = mean_vol(:);
-    
-    if flag_mask == 1      
+
+    if flag_mask == 1
         vol_all = vol_all(mask,:);
         mean_vol = mean_vol(mask);
     end
-    
+
     %% Deriving bootstrap samples
     for num_s = 1:nb_samps
         vol_tmp = mean(vol_all(:,ceil(nb_vols*rand([nb_vols 1]))),2);

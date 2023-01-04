@@ -1,5 +1,5 @@
 function [files_in,files_out,opt] = niak_brick_anat2stereonl(files_in,files_out,opt)
-% Non-linear coregistration of a T1 anatomical scan in native space to the 
+% Non-linear coregistration of a T1 anatomical scan in native space to the
 % MNI stereotaxic space.
 %
 % SYNTAX:
@@ -8,22 +8,22 @@ function [files_in,files_out,opt] = niak_brick_anat2stereonl(files_in,files_out,
 % _________________________________________________________________________
 % INPUTS:
 %
-%   FILES_IN        
+%   FILES_IN
 %       (structure) with the following fields :
 %
 %       T1
 %           (string) the file name of a T1 volume.
 %
 %       T1_MASK
-%           (string, default 'gb_niak_omitted') the file name of a binary 
-%           mask of a region of interest. If unspecified (or equal to 
-%           'gb_niak_omitted'), no mask is used (either for the T1 or for 
+%           (string, default 'gb_niak_omitted') the file name of a binary
+%           mask of a region of interest. If unspecified (or equal to
+%           'gb_niak_omitted'), no mask is used (either for the T1 or for
 %           the template).
 %
 %       TEMPLATE
 %           (string, default '') the file name of the target template. If
 %           left empty, the default will be used, i.e. the MNI-152
-%           symmetrical non-linear average (see COMMENTS below). 
+%           symmetrical non-linear average (see COMMENTS below).
 %
 %       TEMPLATE_MASK
 %           (string, default '') the file name of a binary mask of a region
@@ -32,46 +32,46 @@ function [files_in,files_out,opt] = niak_brick_anat2stereonl(files_in,files_out,
 %           COMMENTS below).
 %
 %   FILES_OUT
-%       (structure) with the following fields.  Note that if a field is an 
-%       empty string, a default value will be used to name the outputs. 
-%       If a field is ommited, the output won't be saved at all (this is 
-%       equivalent to setting up the output file names to 
-%       'gb_niak_omitted'). 
-%                       
+%       (structure) with the following fields.  Note that if a field is an
+%       empty string, a default value will be used to name the outputs.
+%       If a field is ommited, the output won't be saved at all (this is
+%       equivalent to setting up the output file names to
+%       'gb_niak_omitted').
+%
 %       TRANSFORMATION
-%           (string, default <base FILES_IN.T1>_native2stereonl.xfm) The 
+%           (string, default <base FILES_IN.T1>_native2stereonl.xfm) The
 %           non-linear transformation to the stereotaxic space.
 %
 %       TRANSFORMATION_GRID
-%           (string, default <base FILES_IN.T1>_native2stereonl_grid.<ext FILE_IN.T1>) 
-%           The grid of the non-linear transformation to the stereotaxic 
+%           (string, default <base FILES_IN.T1>_native2stereonl_grid.<ext FILE_IN.T1>)
+%           The grid of the non-linear transformation to the stereotaxic
 %           space.
 %
 %       T1_STEREONL
-%           (string, default <base FILES_IN.T1>_stereonl.<ext FILE_IN.T1>) 
+%           (string, default <base FILES_IN.T1>_stereonl.<ext FILE_IN.T1>)
 %           The T1 image resampled in stereotaxic space.
 %
-%   OPT           
+%   OPT
 %       (structure) with the following fields:
 %
 %       ARG
 %           (string, default '') any argument that will be passed to the
-%           NIAK_BESTLINREG script (see comments below). 
+%           NIAK_BESTLINREG script (see comments below).
 %
-%       FLAG_VERBOSE 
+%       FLAG_VERBOSE
 %           (boolean, default: 1) If FLAG_VERBOSE == 1, write
 %           messages indicating progress.
 %
-%       FLAG_TEST 
-%           (boolean, default: 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default: 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, all default 
-%           outputs will be created in the folder FOLDER_OUT. The folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, all default
+%           outputs will be created in the folder FOLDER_OUT. The folder
 %           needs to be created beforehand.
-%               
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
@@ -97,26 +97,26 @@ function [files_in,files_out,opt] = niak_brick_anat2stereonl(files_in,files_out,
 %   download of the latest NIAK code repository will not be enough to get
 %   this brick to work.
 %
-% NOTE 2: 
-%   The BEST1STEPNLREG script does hierachical non-linear fitting between 
-%   two files. The script needs to be manually edited to change the 
-%   parameters of the fit. Most of the work is actually done by the 
-%   MNI-AUTOREG package by Louis Collins, Andrew Janke and Steve Robbins. 
-%   This package needs to be installed independently of NIAK, as part of 
+% NOTE 2:
+%   The BEST1STEPNLREG script does hierachical non-linear fitting between
+%   two files. The script needs to be manually edited to change the
+%   parameters of the fit. Most of the work is actually done by the
+%   MNI-AUTOREG package by Louis Collins, Andrew Janke and Steve Robbins.
+%   This package needs to be installed independently of NIAK, as part of
 %   the MINC bundle. See :
 %   http://www.bic.mni.mcgill.ca/ServicesSoftware/HomePage
 %
 % NOTE 3:
 %   The default template is the so-called "mni-models_icbm152-nl-2009-1.0"
-%   by Louis Collins, Vladimir Fonov and Andrew Janke. 
+%   by Louis Collins, Vladimir Fonov and Andrew Janke.
 %   A small subset of this package is bundled in the NIAK archive releases
 %   and can be found in :
 %   <root niak>/template/mni-models_icbm152-nl-2009-1.0
 %   See the AUTHORS, COPYING and README files in this folder for details
 %   about authorship and license information (it is a BSD-like license
-%   similar to what is used in most minc tools). 
+%   similar to what is used in most minc tools).
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,
 % Montreal Neurological Institute, McGill University, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -194,7 +194,7 @@ if isempty(files_out.transformation_grid)
     files_out.transformation_grid = [opt.folder_out,filesep,name_f,'_native2stereonl_grid' ext_f];
 end
 
-if flag_test == 1    
+if flag_test == 1
     return
 end
 
@@ -205,7 +205,7 @@ end
 if flag_verbose
     msg = 'Non-linear coregistration to stereotaxic space';
     stars = repmat('*',[1 length(msg)]);
-    fprintf('\n%s\n%s\n%s\n',stars,msg,stars);    
+    fprintf('\n%s\n%s\n%s\n',stars,msg,stars);
 end
 
 %% Building the path to access the perl script
@@ -215,7 +215,7 @@ end
 
 file_script = [GB_NIAK.path_niak 'commands' filesep 't1_processing' filesep 'niak_best1stepnlreg.pl'];
 
-%% Convert inputs, if necessary 
+%% Convert inputs, if necessary
 [path_f,name_f,ext_f] = niak_fileparts(files_in.t1);
 [path_t,name_t,ext_t] = niak_fileparts(files_in.template);
 path_tmp = niak_path_tmp(['_' name_f]);
@@ -265,7 +265,7 @@ else
     end
 end
 
-instr = [file_script ' -clobber ' arg ' ' arg_mask ' ' in_t1 ' ' in_template ' ' arg_transf ' ' arg_out];    
+instr = [file_script ' -clobber ' arg ' ' arg_mask ' ' in_t1 ' ' in_template ' ' arg_transf ' ' arg_out];
 
 %% Running NIAK_BESTLINREG.PL
 if flag_verbose
@@ -289,7 +289,7 @@ end
 [path_t,name_t,ext_t] = niak_fileparts(files_out.transformation);
 file_grid = [path_t,filesep,name_t,'_grid_0.mnc'];
 [path_g,name_g,ext_g,flag_zip] = niak_fileparts(files_out.transformation_grid);
-if flag_zip    
+if flag_zip
     instr_zip = [GB_NIAK.zip ' ' file_grid];
     [status,msg] = system(instr_zip);
     if status ~= 0

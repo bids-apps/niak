@@ -4,19 +4,19 @@ function full_contrast = niak_make_contrasts(contrast,opt)
 % SUMMARY NIAK_MAKE_CONTRASTS
 %
 % Creates full contrasts for the Linear Model
-% 
+%
 % SYNTAX:
 % [FULL_CONTRAST] = NIAK_MAKE_CONTRASTS(CONTRAST,OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% CONTRAST         
+% CONTRAST
 %       matrix of contrast of interest for the responses or a structure
 %       with fields x,c,t,s for the contrast associated to the responses,
 %       confounds, temporal trends and spatial trends, respectively.
-% 
-% OPT         
+%
+% OPT
 %       structure with the following fields :
 %
 %       NB_RESPONSE
@@ -24,26 +24,26 @@ function full_contrast = niak_make_contrasts(contrast,opt)
 %           with niak_fmridesign.
 %
 %       NB_TRENDS
-%           vector of 3 components with the number of temporal trends, 
+%           vector of 3 components with the number of temporal trends,
 %           spatial trends and confounds
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% FULL_CONTRAST       
+% FULL_CONTRAST
 %       updated matrix of full contrasts of the model.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -94,19 +94,19 @@ n_confounds = opt.nb_trends(3);
 % Make full contrasts:
 
 if isstruct(contrast)
-   contrasts = contrast; 
+   contrasts = contrast;
    numcontrasts=0;
-   if isfield(contrast,'x') 
-       numcontrasts=size(contrast.x,1); 
+   if isfield(contrast,'x')
+       numcontrasts=size(contrast.x,1);
    end
-   if isfield(contrast,'c') 
-       numcontrasts=size(contrast.c,1); 
+   if isfield(contrast,'c')
+       numcontrasts=size(contrast.c,1);
    end
-   if isfield(contrast,'t') 
-       numcontrasts=size(contrast.t,1); 
+   if isfield(contrast,'t')
+       numcontrasts=size(contrast.t,1);
    end
-   if isfield(contrast,'s') 
-       numcontrasts=size(contrast.s,1); 
+   if isfield(contrast,'s')
+       numcontrasts=size(contrast.s,1);
    end
 else
     numcontrasts=size(contrast,1);
@@ -114,17 +114,16 @@ else
 end
 
 if ~isfield(contrasts,'x')
-    contrasts.x = zeros(numcontrasts,numresponses); 
+    contrasts.x = zeros(numcontrasts,numresponses);
 end
-if ~isfield(contrasts,'c') 
-   contrasts.c = zeros(numcontrasts,n_confounds); 
+if ~isfield(contrasts,'c')
+   contrasts.c = zeros(numcontrasts,n_confounds);
 end
-if ~isfield(contrasts,'t') 
-    contrasts.t=zeros(numcontrasts,n_temporal_trend); 
+if ~isfield(contrasts,'t')
+    contrasts.t=zeros(numcontrasts,n_temporal_trend);
 end
-if ~isfield(contrasts,'s') 
-    contrasts.s=zeros(numcontrasts,n_spatial_trend); 
+if ~isfield(contrasts,'s')
+    contrasts.s=zeros(numcontrasts,n_spatial_trend);
 end
 
 full_contrast = [contrasts.x contrasts.t contrasts.s contrasts.c];
-

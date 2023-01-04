@@ -1,30 +1,30 @@
 function [files_in,files_out,opt] = niak_brick_subtyping(files_in,files_out,opt)
 % Build subtypes
-% 
+%
 % SYNTAX:
 % [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_SUBTYPING(FILES_IN,FILES_OUT,OPT)
 % _________________________________________________________________________
-% 
+%
 % INPUTS:
-% 
-% FILES_IN 
+%
+% FILES_IN
 %   (structure) with the following fields:
 %
-%   DATA 
-%       (string) path to a .mat file containing a variable STACK, which is 
+%   DATA
+%       (string) path to a .mat file containing a variable STACK, which is
 %       an array (#subjects x #voxels OR vertices OR regions), see also
 %       niak_brick_network_stack
 %
 %   MASK
-%       (3D volume) file name of a binary mask of the voxels that 
+%       (3D volume) file name of a binary mask of the voxels that
 %       are included in the time*space array
-% 
-% FILES_OUT 
+%
+% FILES_OUT
 %   (structure) with the following fields:
 %
 %   SIM_FIG
 %       (string, default 'similarity_matrix.png') path to the .pdf
-%       visualization of the similarity matrix. 
+%       visualization of the similarity matrix.
 %
 %   DEN_FIG
 %       (string, default 'dendrogram.png') path to the .pdf
@@ -45,14 +45,14 @@ function [files_in,files_out,opt] = niak_brick_subtyping(files_in,files_out,opt)
 %
 %   TTEST_MAP
 %       (string, default 'ttest_subtype.nii.gz') path to ...
-% 
+%
 %   EFF_MAP
 %       (string, default 'eff_subtype.nii.gz') path to ...
 %
 %   PROVENANCE
 %       (string, default 'provenance.mat') path to ...
-% 
-% OPT 
+%
+% OPT
 %   (structure) with the following fields:
 %
 %   FOLDER_OUT
@@ -80,13 +80,13 @@ function [files_in,files_out,opt] = niak_brick_subtyping(files_in,files_out,opt)
 %       (boolean, default true) turn on/off the verbose.
 %
 %   FLAG_TEST
-%       (boolean, default false) if the flag is true, the brick does not do 
+%       (boolean, default false) if the flag is true, the brick does not do
 %       anything but updating the values of FILES_IN, FILES_OUT and OPT.
 % _________________________________________________________________________
 % OUTPUTS:
-% 
+%
 % FILES_OUT
-%       Directory containing the following: 
+%       Directory containing the following:
 %
 %   SUBTYPES.MAT
 %       (structure) with the following fields:
@@ -161,7 +161,7 @@ end
 if opt.flag_prov && isempty(files_out.provenance)
     warning('Provenance and options will not save when OPT.FLAG_PROV is true but FILES_OUT.PROVENANCE is empty')
 end
-  
+
 % If the test flag is true, stop here !
 if opt.flag_test == 1
     return
@@ -302,10 +302,3 @@ function path_array = make_paths(out_path, template, scales)
     end
 return
 end
-
-
-
-
-
-
-

@@ -6,11 +6,11 @@ function r = niak_corr(x,y);
 % R (matrix MxN) R(i,j) is the correlation between X(:,i) and Y(:,j)
 %
 % This function does simply call corr. Correlation values larger than 1
-% (resp smaller than -1) are then set to 1 (resp. -1), due to numerical errors. 
+% (resp smaller than -1) are then set to 1 (resp. -1), due to numerical errors.
 % See licensing information in the code.
 
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Geriatrie de Montral, Departement d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Geriatrie de Montral, Departement d'informatique et de recherche
 % operationnelle, Universite de Montreal, 2015.
 % Maintainer : pierre.bellec@criugm.qc.ca
 

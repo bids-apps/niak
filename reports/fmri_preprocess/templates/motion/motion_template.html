@@ -35,7 +35,7 @@
   </div>
 
   <div class="container-fluid">
-           
+
 <!-- FD plots -->
       <div class="col-sm-6">
         <div class="chart-wrapper">
@@ -55,13 +55,13 @@
       <div class="col-sm-6">
         <div class="chart-wrapper">
           <div class="chart-title">
-            fMRI time frames in native space. Select a run: 
+            fMRI time frames in native space. Select a run:
             <select id="select-BOLD" style="width: 50%"> </select>
           </div>
           <div class="chart-stage" id="motionNative">
             <img class="sliderNext" src="../assets/jsImageSlider/navbuttons.png" >
             <img class="sliderPrev" src="../assets/jsImageSlider/navbuttons.png" >
-            <canvas id="sliderNative"> 
+            <canvas id="sliderNative">
             <img id="spriteNative" class="hidden" src="$MOTION_NATIVE">
           </div>
           <div class="chart-notes">
@@ -70,7 +70,7 @@
         </div>
       </div>
 <!-- end of two -->
-      
+
 <!-- Translation plots -->
     <div class="col-sm-6">
       <div class="chart-wrapper">
@@ -95,7 +95,7 @@
         <div class="chart-stage" id="motionNative">
           <img class="sliderNext" src="../assets/jsImageSlider/navbuttons.png" >
           <img class="sliderPrev" src="../assets/jsImageSlider/navbuttons.png" >
-          <canvas id="sliderStereo"> 
+          <canvas id="sliderStereo">
           <img id="spriteStereo" class="hidden" src="$MOTION_STEREO">
         </div>
         <div class="chart-notes">
@@ -103,10 +103,10 @@
         </div>
       </div>
     </div>
-       
+
 <!-- end of two -->
- 
-<!-- Rotation plots -->      
+
+<!-- Rotation plots -->
       <div class="col-sm-6">
         <div class="chart-wrapper">
           <div class="chart-title">
@@ -120,8 +120,8 @@
           </div>
         </div>
       </div>
-      
-<!-- Registration with the session/run of reference -->      
+
+<!-- Registration with the session/run of reference -->
       <div class="col-sm-6">
         <div class="chart-wrapper">
           <div class="chart-title">
@@ -133,13 +133,13 @@
             </div>
           </div>
           <div class="chart-notes">
-            Hover the mouse over to switch between images. 
+            Hover the mouse over to switch between images.
           </div>
         </div>
       </div>
 <!-- end of two -->
-    
-  
+
+
 
     <hr>
 
@@ -156,38 +156,38 @@
   <script src="../assets/select2/select2.min.js"></script> <!--from select 2-->
   <script src="$dataMotion"></script> <!--Motion (and FD) parameters-->
   <script src="../group/listRun.js"></script> <!--List of available runs-->
-  
-  <script> 
-  
+
+  <script>
+
   // Constants
   var numFrame = 0; // Initially display the first time frame
   var percVisu = 0.7; // The BOLD montage use 70% of the window
   var percVisuStr = 100*percVisu;
   percVisuStr = percVisuStr.toString()+"%";
-  
-  // Load spacer images, to set the size of a montage in each mosaic  
+
+  // Load spacer images, to set the size of a montage in each mosaic
   var spacerNative = new Image();
   spacerNative.src = "$SPACER_NATIVE";
   var spacerStereo = new Image();
   spacerStereo.src = "$SPACER_STEREO";
-  
-  // function to draw volumes for a particular time frame. 
+
+  // function to draw volumes for a particular time frame.
   // Update canvas based on two big mosaic files
   // native: images in native space, prior to motion correction
   // stereo: images in stereostaxic space, after motion correction
   function drawMotion(frame,type) {
     var canvas = document.getElementById("slider" + type);
-    var wImg = $("#slider"+type).parent().width();    
+    var wImg = $("#slider"+type).parent().width();
     var wSpacer = {Native:spacerNative.width , Stereo:spacerStereo.width};
-    var hSpacer = {Native:spacerNative.height , Stereo:spacerStereo.height};    
-    var nbTimeFrames = (document.getElementById("spriteNative").width/wSpacer.Native)-1; 
+    var hSpacer = {Native:spacerNative.height , Stereo:spacerStereo.height};
+    var nbTimeFrames = (document.getElementById("spriteNative").width/wSpacer.Native)-1;
     var rSpacer = hSpacer[type] / wSpacer[type] ;
     var hImg = Math.round(wImg * percVisu * rSpacer);
     // Get number of time frames
-    if (canvas.width!=wImg) {   
+    if (canvas.width!=wImg) {
       canvas.width = wImg;
       canvas.height = hImg;
-    };    
+    };
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(document.getElementById("sprite"+type),
@@ -197,14 +197,14 @@
     numFrame = frame;
     return hImg
   };
-    
+
   // associate the arrows of the slider with backward/forward time shifts
   document.getElementsByClassName("sliderNext")[0].onclick = function fun() { nextTime();};
   document.getElementsByClassName("sliderNext")[1].onclick = function fun() { nextTime();};
   document.getElementsByClassName("sliderPrev")[0].onclick = function fun() {prevTime();};
   document.getElementsByClassName("sliderPrev")[1].onclick = function fun() {prevTime();};
 
-  // On load: build all figures   
+  // On load: build all figures
   $( window ).load(function() {
 
     // c3.js data for the translation parameters chart
@@ -226,7 +226,7 @@
         enabled: true
       },
     });
-  
+
     // c3.js data for the rotation parameters chart
     var chartRot = c3.generate({
       bindto: '#chartRot',
@@ -274,9 +274,9 @@
       }
     });
 
-  // function to select a time frame. It calls the drawing of canvas, 
-  // select the correct time point in the graphs, and also resize 
-  // the translation and rotation graphs based on the corresponding movies. 
+  // function to select a time frame. It calls the drawing of canvas,
+  // select the correct time point in the graphs, and also resize
+  // the translation and rotation graphs based on the corresponding movies.
   function selectTime(frame) {
     hImgNative = drawMotion(frame,"Native");
     if ($("#chartFd").height()!=hImgNative) {
@@ -290,12 +290,12 @@
     chartRot.select(['motion_rx' , 'motion_ry' , 'motion_rz'], [frame], true);
     chartFd.select(['FD' , 'scrub' ], [frame], true);
   };
-    
+
   // function to move forward by one time sample
   function nextTime() {
     nextFrame = numFrame+1;
     // Get number of time frames
-    var nbTimeFrames = (document.getElementById("spriteNative").width/spacerNative.width)-1; 
+    var nbTimeFrames = (document.getElementById("spriteNative").width/spacerNative.width)-1;
     if (nextFrame>nbTimeFrames){return} else {selectTime(nextFrame)};
     };
 
@@ -304,21 +304,21 @@
     prevFrame = numFrame - 1;
     if (prevFrame<0){return} else {selectTime(prevFrame)};
     };
-  
-  // Add key bindings, left/right arrow to move backward/forward in time  
+
+  // Add key bindings, left/right arrow to move backward/forward in time
   function reactKey(key){
-    if (key==39) { nextTime() } 
+    if (key==39) { nextTime() }
     else if (key==37) {prevTime()};
   };
   window.onkeydown = function(e) { reactKey(e.keyCode) };
-  
+
     // Create a button to select a new session
     var $eventSelect = $("#select-BOLD");
     $eventSelect.select2({
       placeholder: "Select a new session",
       data: dataRun
     });
-    $eventSelect.on("select2:select", function (e) { 
+    $eventSelect.on("select2:select", function (e) {
       var id = e.params.data.id;
       if (id>0) {
         subject = $("#select-BOLD option[value=" + id + "]").text();
@@ -328,7 +328,7 @@
     $eventSelect.val("$NUM_RUN");
     $eventSelect.trigger('change');
 
-    // Trigger the building of motion movies   
+    // Trigger the building of motion movies
     selectTime(numFrame);
     // set the size of the registration figure in tune with motion movies
     $("#registration").width(percVisuStr);
@@ -343,12 +343,12 @@
 
     // On window resizing, trigger a re-size of all graphs
     window.addEventListener("resize", function() {
-      selectTime(numFrame); 
+      selectTime(numFrame);
       chartRot.resize({height:$("#registration").height()});
     });
   });
-  
+
   </script>
- 
+
 </body>
 </html>

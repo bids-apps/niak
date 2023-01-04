@@ -1,27 +1,27 @@
 function hdr = niak_read_hdr_nifti(file_name)
-% Read the header of a NIFTI file (.NII or .HDR). 
+% Read the header of a NIFTI file (.NII or .HDR).
 % The old Analyze 7.5 is also supported, and if a .MAT file is present, the
 % affine transformation information will be included.
 % http://nifti.nimh.nih.gov/nifti-1
-% 
+%
 % SYNTAX:
 % HDR = NIAK_READ_HDR_NIFTI(FILE_NAME)
 %
 % _________________________________________________________________________
 % INPUT:
 %
-% FILE_NAME     
+% FILE_NAME
 %    (string) name of a single 3D+t minc file or a 3D minc file.
 %
 % _________________________________________________________________________
 % OUTPUT:
 %
-% HDR           
-%    (structure) contain a description of the data. For a list of fields 
+% HDR
+%    (structure) contain a description of the data. For a list of fields
 %    common to all data types, see NIAK_READ_VOL.
 %
-%    HDR.DETAILS 
-%        (structure) contains the standard fields of a nifti file. 
+%    HDR.DETAILS
+%        (structure) contains the standard fields of a nifti file.
 %        See http://nifti.nimh.nih.gov/nifti-1.
 %
 % _________________________________________________________________________
@@ -84,7 +84,7 @@ tag_OK = 0;
 num_f = 1;
 
 while ((tag_OK == 0)||(fid < 0))&&(num_f <= length(list_formats))
-    if fid > 0 
+    if fid > 0
        fclose(fid)
     end
     fid = fopen(file_name,'r',list_formats{num_f});
@@ -97,7 +97,7 @@ while ((tag_OK == 0)||(fid < 0))&&(num_f <= length(list_formats))
 end
 
 if tag_OK == 0
-    error('niak:read: Could not open file %s',file_name)    
+    error('niak:read: Could not open file %s',file_name)
 end
 
 hdr.info.machine = list_formats{num_f-1};
@@ -251,7 +251,7 @@ if exist(file_mat)
         warning('A mat file %s was found but the affine transform could not be parsed',file_mat);
     end
 end
-   
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% converting details into the informative part of the header %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -277,7 +277,7 @@ else
 end
 
 %% hdr.info.precision
-switch hdr.details.datatype    
+switch hdr.details.datatype
     case 1
         hdr.info.precision = 'binary'; % bitpix=1
     case 2
@@ -317,11 +317,11 @@ end
 %% hdr.info.voxel_size
 hdr.info.voxel_size = hdr.details.pixdim(2:4);
 
-%% hdr.info.dimensions    
+%% hdr.info.dimensions
 hdr.info.dimensions = hdr.details.dim(2:5);
 
 %% hdr.info.tr
-if length(hdr.details.pixdim)>=5 
+if length(hdr.details.pixdim)>=5
     hdr.info.tr = hdr.details.pixdim(5);
 end
 

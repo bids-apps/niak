@@ -7,21 +7,21 @@ function path_name = niak_path_tmp(ext)
 % _________________________________________________________________________
 % INPUTS:
 %
-% EXT             
+% EXT
 %       (string) An extension for the path name
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% PATH_NAME 
+% PATH_NAME
 %       (string) A (full path) name for a temporary file.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % The directory is created.
-% 
-% The temporary paths live in the temporary directory. This directory is by 
+%
+% The temporary paths live in the temporary directory. This directory is by
 % default '/tmp/', but this can be changed using the variable GB_NIAK_TMP
 % in the file NIAK_GB_VARS.
 %

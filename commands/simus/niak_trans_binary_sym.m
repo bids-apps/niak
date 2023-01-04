@@ -6,21 +6,21 @@ function proba = niak_trans_binary_sym(S,opt)
 % Return the probability of transition between states for binary symmetric
 % and independent Markov chains of order 1.
 %
-% SYNTAX : 
+% SYNTAX :
 % P = NIAK_TRANS_BINARY_SYM(S,OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
 % S
-%       (binary vector, size 1*NB_CHAINS) S(N) is the (binary) state of 
+%       (binary vector, size 1*NB_CHAINS) S(N) is the (binary) state of
 %       chain number N.
-%   
+%
 % OPT
 %       (vector, size 1*NB_CHAINS) OPT(N) is the probability that chain N
 %       stays in its current state. If OPT is a scalar, the same
 %       probability will be used for all chains.
-%          
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %

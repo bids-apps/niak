@@ -10,14 +10,14 @@ function [pipeline] = niak_pipeline_stability_estimate(files_in, opt)
 % FILES_IN
 % (struct)
 %   TSERIES
-%       (string or cell of strings) the name(s) of one or multiple .mat file, 
-%       which contains one variable TS (OPT.NAME_DATA). TS(:,I) is the time 
+%       (string or cell of strings) the name(s) of one or multiple .mat file,
+%       which contains one variable TS (OPT.NAME_DATA). TS(:,I) is the time
 %       series of region I.
 %
 %   PART_REF
 %       (string, optional) path to a .mat file containing a variable called
-%       PART which is the reference partition. If kcores is used to generate 
-%       the atom level stability maps, part_ref has to be set as the 
+%       PART which is the reference partition. If kcores is used to generate
+%       the atom level stability maps, part_ref has to be set as the
 %       reference partition.
 %
 %   PART_ROI
@@ -59,7 +59,7 @@ function [pipeline] = niak_pipeline_stability_estimate(files_in, opt)
 %          Available options : 'bootstrap' , 'jacknife'
 %
 %      OPT
-%          (structure, default empty) the options of the sampling. Depends 
+%          (structure, default empty) the options of the sampling. Depends
 %          on OPT.SAMPLING.TYPE:
 %               bootstrap : None.
 %               jacknife  : OPT.PERC is the percentage of observations
@@ -70,7 +70,7 @@ function [pipeline] = niak_pipeline_stability_estimate(files_in, opt)
 %
 %       TYPE
 %           (string, default 'hierarchical') the clustering algorithm
-%           Available options : 
+%           Available options :
 %               'kmeans': k-means (euclidian distance)
 %               'kcores' : k-means cores
 %               'hierarchical_e2': a HAC based on the eta-square distance
@@ -83,7 +83,7 @@ function [pipeline] = niak_pipeline_stability_estimate(files_in, opt)
 %           clustering command. The exact list of options depends on
 %           CLUSTERING.TYPE:
 %               'kmeans' : see OPT in NIAK_KMEANS_CLUSTERING
-%               'hierarchical' or 'hierarchical_e2': see OPT in 
+%               'hierarchical' or 'hierarchical_e2': see OPT in
 %               NIAK_HIERARCHICAL_CLUSTERING
 %
 %   AVERAGE
@@ -102,7 +102,7 @@ function [pipeline] = niak_pipeline_stability_estimate(files_in, opt)
 %           stability estimate outputs that contains the stability matrix
 %
 %   PSOM
-%       (structure) the options of the pipeline manager. See the OPT 
+%       (structure) the options of the pipeline manager. See the OPT
 %       argument of PSOM_RUN_PIPELINE. Default values can be used here.
 %       Note that the field PSOM.PATH_LOGS will be set up by the pipeline.
 %
@@ -113,9 +113,9 @@ function [pipeline] = niak_pipeline_stability_estimate(files_in, opt)
 %       (boolean, default false) if the flag is true, the brick does not do
 %       anything but updating the values of FILES_IN, FILES_OUT and OPT.
 % _________________________________________________________________________
-% OUTPUTS : 
+% OUTPUTS :
 %
-%	PIPELINE 
+%	PIPELINE
 %       (structure) describe all jobs that need to be performed in the
 %       pipeline.
 %

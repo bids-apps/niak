@@ -7,20 +7,20 @@ function [files_in,files_out,opt] = niak_brick_slice_timing(files_in,files_out,o
 % _________________________________________________________________________
 % INPUTS
 %
-% FILES_IN        
+% FILES_IN
 %    (string) a file name of a 3D+t dataset .
 %
-% FILES_OUT       
-%    (string, default <BASE_NAME>_a.<EXT>) File name for outputs. 
-%    If FILES_OUT is an empty string, the name of the outputs will be 
+% FILES_OUT
+%    (string, default <BASE_NAME>_a.<EXT>) File name for outputs.
+%    If FILES_OUT is an empty string, the name of the outputs will be
 %    the same as the inputs, with a '_a' suffix added at the end.
 %
-% OPT           
-%    (structure) with the following fields.  
+% OPT
+%    (structure) with the following fields.
 %
-%    SUPPRESS_VOL 
-%        (integer, default 0) the number of volumes that are suppressed 
-%        at the begining of the time series. 
+%    SUPPRESS_VOL
+%        (integer, default 0) the number of volumes that are suppressed
+%        at the begining of the time series.
 %
 %    INTERPOLATION
 %        (string, default 'linear') the method for temporal interpolation,
@@ -28,12 +28,12 @@ function [files_in,files_out,opt] = niak_brick_slice_timing(files_in,files_out,o
 %
 %    TYPE_ACQUISITION
 %        (string, default 'manual') the type of acquisition used by the
-%        scanner. If 'manual', SLICE_ORDER needs to be specified, 
+%        scanner. If 'manual', SLICE_ORDER needs to be specified,
 %        otherwise it will be calculated. Possible choices are
 %        'manual','sequential','sequential ascending','sequential descending',
 %        'interleaved','interleaved ascending','interleaved descending'. For
 %        interleaved modes, FIRST_NUMBER needs to be specified.
-%    
+%
 %    TYPE_SCANNER
 %        (string, default '') the type of MR scanner. The only value
 %        that will change something to the processing here is 'Siemens',
@@ -42,76 +42,76 @@ function [files_in,files_out,opt] = niak_brick_slice_timing(files_in,files_out,o
 %        MR scanner type, interleaved acquisition will start with odd
 %        slices. On Siemens scanners, it will start with odd slices if
 %        the number of slices is odd, and even slices if the number of
-%        slices is even. 
+%        slices is even.
 %
 %    FIRST_NUMBER
-%        (string, default see description) the first number when using 
+%        (string, default see description) the first number when using
 %        interleaved mode of TYPE_ACQUISITION. The default is 'odd' if
 %        OPT.TYPE_SCANNER is different of 'Siemens'. For Siemens
 %        scanner, the default will be 'odd' if the number of slices is
 %        odd, and 'even' otherwise.
-%    
+%
 %    STEP
-%        (integer, default []) the interval between the slices. 
+%        (integer, default []) the interval between the slices.
 %        If [], use the info from the header of FILES_IN.
-%    
+%
 %    NB_SLICES
 %        (integer) the number of slices to use to calculate the
 %        SLICE_ORDER. If not defined, uses the header number from
 %        FILES_IN.
-%    
+%
 %    TR
-%        (integer) the time between slices in a volume. If not defined, 
+%        (integer) the time between slices in a volume. If not defined,
 %        uses the header number from FILES_IN.
-%    
+%
 %    DELAY_IN_TR
 %        (integer, default 0) the delay between the last slice of the
 %        first volume and the first slice of the following volume.
-%    
-%    SLICE_ORDER 
-%        (vector of integer) SLICE_ORDER(i) = k means that the kth slice 
-%        was acquired in ith position. The order of the slices is 
+%
+%    SLICE_ORDER
+%        (vector of integer) SLICE_ORDER(i) = k means that the kth slice
+%        was acquired in ith position. The order of the slices is
 %        assumed to be the same in all volumes.
-%        ex : slice_order = [1 3 5 2 4 6] for 6 slices acquired in 
-%        'interleaved' mode, starting by odd slices(slice 5 was acquired 
+%        ex : slice_order = [1 3 5 2 4 6] for 6 slices acquired in
+%        'interleaved' mode, starting by odd slices(slice 5 was acquired
 %        in 3rd position). Note that the slices are assumed to be axial,
 %        i.e. slice z at time t is vol(:,:,z,t).
 %
-%    REF_SLICE	
-%        (integer, default middle slice in acquisition time) slice for 
+%    REF_SLICE
+%        (integer, default middle slice in acquisition time) slice for
 %        time 0
 %
-%    TIMING		
+%    TIMING
 %        (vector 2*1) TIMING(1) time between two slices
 %        TIMING(2) : time between last slice and next volume
 %
 %    FLAG_VARIANCE
-%        (boolean, default 1) if FLAG_VARIANCE == 1, the mean and 
+%        (boolean, default 1) if FLAG_VARIANCE == 1, the mean and
 %        variance of the time series at each voxel is preserved.
 %        This behaviour will not apply if FLAG_NU_CORRECT is on.
 %
 %    FLAG_CENTER
-%        (boolean, default false) if the flag is true, the origin of space is 
+%        (boolean, default false) if the flag is true, the origin of space is
 %        placed in the center of the field of view.
 %
 %    FLAG_REGULAR
-%        (boolean, default 1) if FLAG_REGULAR == 1, the spacing of all axis 
-%        will be set to regular in MINC files. This is done to avoid bugs in 
-%        latter stage of the analysis (MINCRESAMPLE cannot handle files with 
+%        (boolean, default 1) if FLAG_REGULAR == 1, the spacing of all axis
+%        will be set to regular in MINC files. This is done to avoid bugs in
+%        latter stage of the analysis (MINCRESAMPLE cannot handle files with
 %        irregular spacing.
 %
 %    FLAG_EVEN_ODD
 %        (boolean, default 0) if the flag is on, the mean of odd and even slices
-%        will be set to a common values (the grand mean) for each volume. This is 
+%        will be set to a common values (the grand mean) for each volume. This is
 %        applied within a brain mask.
 %
 %    FLAG_HISTORY
-%        (boolean, default 0) if FLAG_HISTORY == 1, the brick will preserve 
-%        the history of MINC files. It is often a good idea to get rid of it, 
-%        as the conversion from DICOM creates huge history that can even crash 
+%        (boolean, default 0) if FLAG_HISTORY == 1, the brick will preserve
+%        the history of MINC files. It is often a good idea to get rid of it,
+%        as the conversion from DICOM creates huge history that can even crash
 %        MINC tools and are in any case too long to be useful. On top of that
-%        the NIAK tools do not set the history consistently, so in any case it 
-%        does not matter to preserve it as it is not accurate. 
+%        the NIAK tools do not set the history consistently, so in any case it
+%        does not matter to preserve it as it is not accurate.
 %
 %    FLAG_NU_CORRECT
 %        (boolean, default false) if FLAG_NU_CORRECT == 1, the NU_CORRECT
@@ -126,31 +126,31 @@ function [files_in,files_out,opt] = niak_brick_slice_timing(files_in,files_out,o
 %        for ITER_NU_CORRECT times.
 %
 %    FLAG_SKIP
-%        (boolean,  default 0) If FLAG_SKIP == 1, the brick is not performing the 
+%        (boolean,  default 0) If FLAG_SKIP == 1, the brick is not performing the
 %        slice timing correction. All other steps (FLAG_HISTORY, SUPPRESS_VOL, etc)
-%        are applied anyway if enabled. This flag is useful if you want to get rid 
-%        of the slice timing correction in the pipeline. 
+%        are applied anyway if enabled. This flag is useful if you want to get rid
+%        of the slice timing correction in the pipeline.
 %
-%    FOLDER_OUT 
-%        (string, default: path of FILES_IN) If present, all default 
-%        outputs will be created in the folder FOLDER_OUT. The folder 
+%    FOLDER_OUT
+%        (string, default: path of FILES_IN) If present, all default
+%        outputs will be created in the folder FOLDER_OUT. The folder
 %        needs to be created beforehand.
 %
-%    FLAG_VERBOSE 
-%        (boolean, default 1) if the flag is 1, then the function 
+%    FLAG_VERBOSE
+%        (boolean, default 1) if the flag is 1, then the function
 %        prints some infos during the processing.
 %
-%    FLAG_TEST 
-%        (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%        do anything but update the default values in FILES_IN, 
+%    FLAG_TEST
+%        (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%        do anything but update the default values in FILES_IN,
 %        FILES_OUT and OPT.
-%        
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%           
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_SLICE_TIMING, NIAK_DEMO_SLICE_TIMING
@@ -161,15 +161,15 @@ function [files_in,files_out,opt] = niak_brick_slice_timing(files_in,files_out,o
 % Note 1:
 % This process changes the timing of your data ! Those changes are
 % twofold :
-% 1. Some volumes are removed at the begining/end of the acquisition 
+% 1. Some volumes are removed at the begining/end of the acquisition
 %    (see OPT.SUPPRESS_VOL).
 % 2. The time of all slices in a volume is now the time of the slice of
 %    reference.
-% It is important that these effects are taken into account if stimulus 
-% timing are considered in any further anaysis, typically in a general 
-% linear model. The influence may be negligible for some design, e.g. long 
-% blocks, and more important for other ones, e.g. event-related. Packages 
-% like fMRIstat include the slice timing in the model, so slice timing 
+% It is important that these effects are taken into account if stimulus
+% timing are considered in any further anaysis, typically in a general
+% linear model. The influence may be negligible for some design, e.g. long
+% blocks, and more important for other ones, e.g. event-related. Packages
+% like fMRIstat include the slice timing in the model, so slice timing
 % correction may not be necessary in the preprocessing. The time of frames
 % is stored in a vector time frames, which is saved in a file
 % <BASE FILES_OUT>_extra.mat. If some volumes are suppressed there will
@@ -192,31 +192,31 @@ function [files_in,files_out,opt] = niak_brick_slice_timing(files_in,files_out,o
 % Adapted to NIAK format and patched to avoid loops by P Bellec, MNI 2008.
 %
 % NOTE 4:
-% The step in the last dimension (step) is essential to determine the correct 
-% slice order. It tells us if the slices were taken going from neck to top of 
-% head or inversely. Having a positive step in z means the slices were taken 
-% from neck to top of head and that the slice order determined by this function 
+% The step in the last dimension (step) is essential to determine the correct
+% slice order. It tells us if the slices were taken going from neck to top of
+% head or inversely. Having a positive step in z means the slices were taken
+% from neck to top of head and that the slice order determined by this function
 % when given a type_acquisition option other than manual is in the correct order.
-% 
+%
 % NOTE 5:
-% The type_acquisition option (opt.type_acquisition) can have the following 
+% The type_acquisition option (opt.type_acquisition) can have the following
 % values : 'manual','sequential','sequential ascending','sequential descending',
-% 'interleaved','interleaved ascending' or 'interleaved descending'. Any other 
-% value will return an error. 'sequential' mode is equivalent to 
-% 'sequential ascending' mode and 'interleaved' mode is equivalent to 
-% 'interleaved ascending' mode. If using 'interleaved' modes, first_number must be 
-% specified in the form of 'odd' or 'even'. By default, it is set to 'manual' 
-% mode in which case a slice_order needs to be input. If a mode other than 
+% 'interleaved','interleaved ascending' or 'interleaved descending'. Any other
+% value will return an error. 'sequential' mode is equivalent to
+% 'sequential ascending' mode and 'interleaved' mode is equivalent to
+% 'interleaved ascending' mode. If using 'interleaved' modes, first_number must be
+% specified in the form of 'odd' or 'even'. By default, it is set to 'manual'
+% mode in which case a slice_order needs to be input. If a mode other than
 % 'manual' is input as well as a slice_order, the latter will be used.
 %
 % NOTE 6:
 % If the timing option is empty, a tr value and a delay_in_tr value may
 % be input, otherwise the tr and delay_in_tr values are ignored. If no values
-% are input for nb_slices and tr, they will be read from the file. 
+% are input for nb_slices and tr, they will be read from the file.
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec, Sebastien Lavoie-Courchesne
 % Montreal Neurological Institute, 2008-2010
-% Centre de recherche de l'institut de geriatrie de Montreal, 
+% Centre de recherche de l'institut de geriatrie de Montreal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2010-2016
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -292,7 +292,7 @@ if isempty(files_out)
             if strcmp(ext_f,'.gz')
                 [tmp,name_f,ext_f] = fileparts(name_f);
             end
-            
+
             name_filtered_data{num_f} = cat(2,opt.folder_out,filesep,name_f,'_a',ext_f);
         end
         files_out = char(name_filtered_data);
@@ -317,14 +317,14 @@ end
 % First number
 if isempty(opt.first_number)
     switch opt.type_scanner
-        
+
         case 'Siemens'
             if floor(size(vol,3)/2) == size(vol,3)/2
                 opt.first_number = 'even';
             else
                 opt.first_number = 'odd';
             end
-            
+
         otherwise
             opt.first_number = 'odd';
     end
@@ -333,7 +333,7 @@ end
 % TR
 if isempty(opt.tr)
     opt.tr = hdr.info.tr;
-else 
+else
     hdr.info.tr = opt.tr;
 end
 
@@ -350,9 +350,9 @@ end
 
 % slice order
 if isempty(opt.slice_order)
-    
+
     switch opt.type_acquisition
-        
+
         case 'manual'
             if (~isfield(opt,'slice_order') || isempty(opt.slice_order)) && ~opt.flag_skip
                 error('niak:brick', 'opt: slice_order must be specified when using type_acquisition manual.\n Type ''help niak_brick_slice_timing'' for more info.');
@@ -364,14 +364,14 @@ if isempty(opt.slice_order)
             else
                 opt.slice_order = opt.nb_slices:-1:1;
             end
-            
+
         case 'sequential descending'
             if opt.step > 0
                 opt.slice_order = opt.nb_slices:-1:1;
             else
                 opt.slice_order = 1:opt.nb_slices;
             end
-            
+
         case {'interleaved','interleaved ascending'}
             if opt.step > 0
                 if strcmp(opt.first_number,'odd')
@@ -390,7 +390,7 @@ if isempty(opt.slice_order)
                     error('niak:brick','opt: first_number can only be ''odd'' or ''even''.\n Type ''help niak_brick_slice_timing'' for more info.');
                 end
             end
-            
+
         case 'interleaved descending'
             if opt.step > 0
                 if strcmp(opt.first_number,'odd')
@@ -409,17 +409,17 @@ if isempty(opt.slice_order)
                     error('niak:brick','opt: first_number can only be ''odd'' or ''even''.\n Type ''help niak_brick_slice_timing'' for more info.');
                 end
             end
-            
+
         otherwise
-            
+
             error('niak:brick','opt: type_acquisition must be one of the specified values.\n Type ''help niak_brick_slice_timing'' for more info.');
-            
+
     end
-    
+
 end
 
 % Reference slice
-if isempty(ref_slice)&&~opt.flag_skip 
+if isempty(ref_slice)&&~opt.flag_skip
     ref_slice = opt.slice_order(ceil(opt.nb_slices/2));
     opt.ref_slice = ref_slice;
 elseif opt.flag_skip
@@ -506,7 +506,7 @@ if flag_even_odd
         v_e(mask_brain(:,:,2:2:end)) = v_e(mask_brain(:,:,2:2:end)) * (m_g/m_e);
         v_g(:,:,1:2:end) = v_o ;
         v_g(:,:,2:2:end) = v_e;
-        vol_a(:,:,:,num_t) = v_g;        
+        vol_a(:,:,:,num_t) = v_g;
     end
 end
 
@@ -515,19 +515,19 @@ if flag_variance&&~opt.flag_nu_correct
         msg = sprintf('Preserving the mean and variance of the time series...');
         fprintf('\n%s\n',msg);
     end
-    
+
     [nx,ny,nz,nt] = size(vol_a);
     vol_a = reshape(vol_a,[nx*ny*nz nt]);
     std_a = std(vol_a,0,2);
     moy_a = mean(vol_a,2);
     mask_a = std_a>0;
-    
+
     for num_v = 1:nt
         vol_a(mask_a,num_v) = (((vol_a(mask_a,num_v)-moy_a(mask_a))./std_a(mask_a)).*std_vol(mask_a))+moy_vol(mask_a);
     end
     vol_a = reshape(vol_a,[nx ny nz nt]);
 end
-    
+
 %% Updating the history and saving output
 if flag_verbose
     msg = sprintf('Writting results...');
@@ -572,8 +572,8 @@ if opt.flag_nu_correct
     if flag_verbose
        fprintf('\nCorrecting for non-uniformities ...\n    Iteration ')
     end
-    
-    vol_med = median(vol_a,4);    
+
+    vol_med = median(vol_a,4);
     [path_f,name_f,ext_f,flag_z,ext_s] = niak_fileparts(files_out);
     nu.in.mask = psom_file_tmp(['_mask' ext_s]);
     nu.in.vol = psom_file_tmp(['_vol' ext_s]);
@@ -583,17 +583,17 @@ if opt.flag_nu_correct
     hdr_nu.file_name = nu.in.vol;
     niak_write_vol(hdr_nu,vol_med);
     hdr_nu.file_name = nu.in.mask;
-    
+
     for num_i = 1:opt.iter_nu_correct
         if opt.flag_verbose
             fprintf('%i - ',num_i)
         end
-        
+
         % Generate a mask
         opt_m.fwhm = 2;
         mask = niak_mask_brain(vol_med,opt_m);
-    
-        % Run nu_correct on the median volume                
+
+        % Run nu_correct on the median volume
         niak_write_vol(hdr_nu,mask);
         opt_nu.arg = opt.arg_nu_correct;
         opt_nu.flag_verbose = false;
@@ -603,11 +603,11 @@ if opt.flag_nu_correct
     if opt.flag_verbose
         fprintf('\n')
     end
-    
+
     % Apply the imp file on every volume
     instr_ev = ['nu_evaluate -clobber ' nu.in.vol ' ' nu.out.vol_nu ' -mapping ' nu.out.vol_imp ];
     hdr_nu.file_name = nu.in.vol;
-    for num_v = 1:size(vol_a,4);   
+    for num_v = 1:size(vol_a,4);
         niak_progress(num_v,size(vol_a,4),5);
         niak_write_vol(hdr_nu,vol_a(:,:,:,num_v));
         [status,msg] = system(instr_ev);
@@ -615,8 +615,8 @@ if opt.flag_nu_correct
             error('The call to NU_CORRECT failed, the error message was: %s',msg)
         end
         [hdr_tmp,vol_a(:,:,:,num_v)] = niak_read_vol(nu.out.vol_nu);
-    end    
-    
+    end
+
     % Clean up
     psom_clean(nu)
 end

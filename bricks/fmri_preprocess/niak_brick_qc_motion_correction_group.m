@@ -8,18 +8,18 @@ function [files_in,files_out,opt] = niak_brick_qc_motion_correction_group(files_
 % INPUTS:
 %
 % FILES_IN
-%   (structure) with the following fields : 
+%   (structure) with the following fields :
 %
 %   FILES_IN.<SUBJECT>.TAB_COREGISTER_IND
 %       (string) a CSV file with "xcorr" and "perc_overlap" measures of
 %       between-runs coregistration. All these measures should correspond
-%       to one subject (label <SUBJECT>). 
+%       to one subject (label <SUBJECT>).
 %
 %   FILES_IN.<SUBJECT>.MOTION_PARAMETERS_IND
 %       (cell of string) multiple file names of .mat files including one
 %       variable TRANSF, such that TRANSF(:,:,I) is an estimated rigid-body
-%       motion. All these parameters should correspond to one subject 
-%       (label <SUBJECT>). 
+%       motion. All these parameters should correspond to one subject
+%       (label <SUBJECT>).
 %
 % FILES_OUT
 %   (structure) with the following fields :
@@ -42,12 +42,12 @@ function [files_in,files_out,opt] = niak_brick_qc_motion_correction_group(files_
 %   (structure) with the following fields.
 %
 %   FLAG_VERBOSE
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
 %   FLAG_TEST
-%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
 %
 % _________________________________________________________________________

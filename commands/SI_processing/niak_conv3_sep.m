@@ -11,21 +11,21 @@ function vol_c = niak_conv3_sep(vol,fx,fy,fz)
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL         
+% VOL
 %       (3D array) a volume
 %
-% FX,FY,FZ    
-%       (1D array, odd length) the respective kernels in dimensions x, y 
+% FX,FY,FZ
+%       (1D array, odd length) the respective kernels in dimensions x, y
 %       and z respectively. The first sample is for t=0, and the function
-%       is assumed to be periodic (typically, the kernel has non-zero 
-%       values clustered in the extreme portions of the vector, and has 
+%       is assumed to be periodic (typically, the kernel has non-zero
+%       values clustered in the extreme portions of the vector, and has
 %       zeros in the middle par). The length of the kernel needs to be odd.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% VOL      
-%       (3D array) the (3D) convolution (FZ*FY*FZ)*VOL, where * is 
+% VOL
+%       (3D array) the (3D) convolution (FZ*FY*FZ)*VOL, where * is
 %       convolution.
 %
 % _________________________________________________________________________
@@ -35,7 +35,7 @@ function vol_c = niak_conv3_sep(vol,fx,fy,fz)
 %
 % _________________________________________________________________________
 % COMMENTS:
-% 
+%
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -73,7 +73,7 @@ ffz = fft([fz(1:floor(mz/2)+1) zeros([1 nz]) fz(floor(mz/2)+2:mz)]');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Performing convolution along the x axis %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-vol_c = reshape(vol,[nx ny*nz]); 
+vol_c = reshape(vol,[nx ny*nz]);
 clear vol % VOL is not necessary anymore
 
 %% 1D convolution via fft along the x-axis

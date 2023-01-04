@@ -56,7 +56,7 @@ function [files_in,files_out,opt] = niak_brick_read_part(files_in,files_out,opt)
 %
 % If extra variables TIME_FRAMES, MASK_SUPPRESSED, CONFOUNDS or LABELS_CONFOUNDS
 % are found either in a .mat file or the hdr.extra part of the header of a 3D+t
-% dataset, those are saved in the output. 
+% dataset, those are saved in the output.
 %
 % Copyright (c) Pierre Bellec, Sebastian Urchs
 %   Centre de recherche de l'institut de Gériatrie de Montréal

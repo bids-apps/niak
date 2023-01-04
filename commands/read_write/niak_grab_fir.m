@@ -8,16 +8,16 @@ function files = niak_grab_fir(path_data,filter)
 % INPUTS:
 %
 % PATH_DATA
-%   (string, default [pwd filesep], aka './') full path to the outputs of 
-%   NIAK_PIPELINE_REGION_GROWING. There should be a file "brain_rois.EXT" 
-%   where EXT can be .mnc or .nii possibly compressed (see GB_NIAK_ZIP_EXT 
-%   in NIAK_GB_VARS.M for the extension, usually it is .gz). There should 
-%   also be a collection of files named with the following pattern : 
+%   (string, default [pwd filesep], aka './') full path to the outputs of
+%   NIAK_PIPELINE_REGION_GROWING. There should be a file "brain_rois.EXT"
+%   where EXT can be .mnc or .nii possibly compressed (see GB_NIAK_ZIP_EXT
+%   in NIAK_GB_VARS.M for the extension, usually it is .gz). There should
+%   also be a collection of files named with the following pattern :
 %   fir_tseries_<SUBJECT>_roi.mat
 %
-% 
+%
 % FILTER
-%   (string) a string that will be passed to select a subset of files. A 
+%   (string) a string that will be passed to select a subset of files. A
 %   file is included only if a pattern maching FILTER is found with REGEXP
 %   For example :
 %       '$run1.mat' : select only the first run for all subjects
@@ -29,22 +29,22 @@ function files = niak_grab_fir(path_data,filter)
 % OUTPUTS:
 %
 % FILES
-%   (structure) with the following fields, ready to feed into 
+%   (structure) with the following fields, ready to feed into
 %   NIAK_PIPELINE_STABILITY_{REST,FIR,GLM} :
 %
 %   DATA
 %       (structure) with the following fields :
 %
 %       <SUBJECT>
-%           (cell of strings with one entry) a .mat files. The field names 
-%           <SUBJECT> can be any arbitrary strings. Each .mat file contains 
-%           some variables FIR_MEAN, FIR_STD and FIR_ALL, where 
+%           (cell of strings with one entry) a .mat files. The field names
+%           <SUBJECT> can be any arbitrary strings. Each .mat file contains
+%           some variables FIR_MEAN, FIR_STD and FIR_ALL, where
 %           FIR_MEAN(:,I) is the estimated FIR of region I as defined by
 %           FILES.ATOMS (see below).
 %
 %   ATOMS
-%       (string) a file name of a mask of brain regions (region I is filled 
-%       with Is, 0 is for the background). The analysis will be done at the 
+%       (string) a file name of a mask of brain regions (region I is filled
+%       with Is, 0 is for the background). The analysis will be done at the
 %       level of these atomic regions. This means that the fMRI time series
 %       will be averaged in each region, and the stability analysis will be
 %       carried on these regional time series. If unspecified, the regions

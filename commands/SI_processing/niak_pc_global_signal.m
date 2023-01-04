@@ -34,8 +34,8 @@ function [pc_gs,av_gs,r] = niak_pc_global_signal(vol,mask)
 %
 % See the following reference for the definition of the estimator:
 %
-% F. Carbonell, P. Bellec, A. Shmuel. Validation of a superposition model 
-% of global and system-specific resting state activity reveals anti-correlated 
+% F. Carbonell, P. Bellec, A. Shmuel. Validation of a superposition model
+% of global and system-specific resting state activity reveals anti-correlated
 % networks.  To appear in Brain Connectivity.
 %
 % Copyright (c) Pierre Bellec, Felix Carbonell,

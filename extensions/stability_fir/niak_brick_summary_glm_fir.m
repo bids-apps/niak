@@ -7,22 +7,22 @@ function [files_in,files_out,opt] = niak_brick_summary_glm_fir(files_in,files_ou
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN 
+% FILES_IN
 %   (structure) with arbitrary fields:
 %
 %   <TEST>
-%      (cell of strings) the name of a mat file with the results of 
+%      (cell of strings) the name of a mat file with the results of
 %      NIAK_BRICK_GLM_FIR_PERM. Multiple batches of permutation
 %      analysis are merged into one result.
 %
 % FILES_OUT
-%   (string) the name of a .csv file which reports the number of 
+%   (string) the name of a .csv file which reports the number of
 %   discoveries for each test & network.
 %
 % OPT
 %   (structure) with the following fields:
 %
-%   P 
+%   P
 %      (scalar, default 0.05) the significance level of discoveries across
 %      scales.
 %
@@ -33,16 +33,16 @@ function [files_in,files_out,opt] = niak_brick_summary_glm_fir(files_in,files_ou
 %       (boolean, default 0) if the flag is 1, then the function does not
 %       do anything but update the defaults of FILES_IN, FILES_OUT and OPT.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_PIPELINE_GLM_FIR
@@ -50,8 +50,8 @@ function [files_in,files_out,opt] = niak_brick_summary_glm_fir(files_in,files_ou
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -108,11 +108,11 @@ for num_test = 1:length(list_test)
     test = list_test{num_test};
     for num_b = 1:length(files_in.(test))
         data = load(files_in.(test){num_b},'p_perc_disc','perc_disc_scale');
-        if num_b == 1            
+        if num_b == 1
             perc_disc_scale(num_test,:) = data.perc_disc_scale(:)';
         end
         p_perc_disc(num_test) = p_perc_disc(num_test) + data.p_perc_disc;
-    end    
+    end
     p_perc_disc(num_test) = p_perc_disc(num_test) / length(files_in.(test));
 end
 

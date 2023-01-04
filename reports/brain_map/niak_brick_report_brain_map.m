@@ -3,21 +3,21 @@ function [in,out,opt] = niak_brick_report_brain_map(in,out,opt)
 %
 % SYNTAX: [IN,OUT,OPT] = NIAK_BRICK_REPORT_BRAIN_MAP(IN,OUT,OPT)
 %
-% IN (cell of strings) each entry is a .mat file with the 
-%    quantization data for one overlay. 
-% OUT.INDEX (string) the name of the .html report. 
-% OUT.DATA (string) the name of the javascript data. 
+% IN (cell of strings) each entry is a .mat file with the
+%    quantization data for one overlay.
+% OUT.INDEX (string) the name of the .html report.
+% OUT.DATA (string) the name of the javascript data.
 % OPT.LABELS (cell of strings) string labels for each volume.
-% OPT.COLOR_BACKGROUND (string, default #000000) the color of the background. 
-% OPT.COLOR_FONT (string, default #FFFFFF) the color of the fonts in the viewer. 
-% OPT.OVERLAY (cell of strings) each entry is the png image of an overlay. 
-% OPT.COLORMAP (cell of strings) each entry is the png image of the colormap 
-%    associated with corresponding overlay. If only one entry is provided, 
-%    the same colormap is used for all overlays. 
+% OPT.COLOR_BACKGROUND (string, default #000000) the color of the background.
+% OPT.COLOR_FONT (string, default #FFFFFF) the color of the fonts in the viewer.
+% OPT.OVERLAY (cell of strings) each entry is the png image of an overlay.
+% OPT.COLORMAP (cell of strings) each entry is the png image of the colormap
+%    associated with corresponding overlay. If only one entry is provided,
+%    the same colormap is used for all overlays.
 % OPT.BACKGROUND (cell of strings) each entry is the png image of a background.
-%    If only one entry is provided, the same background is used for all overlays.  
-% OPT.CLASS_VIEWER (string, default 'col-sm-6') the bootstrap class for the viewer. 
-% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but 
+%    If only one entry is provided, the same background is used for all overlays.
+% OPT.CLASS_VIEWER (string, default 'col-sm-6') the bootstrap class for the viewer.
+% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but
 %    update IN, OUT and OPT.
 %
 % Copyright (c) Pierre Bellec
@@ -53,13 +53,13 @@ out = psom_struct_defaults ( out , { 'index' , 'data' } , { NaN , NaN });
 
 if nargin < 3
     opt = struct;
-end    
+end
 
 opt = psom_struct_defaults ( opt , ...
     { 'color_background' , 'color_font' , 'class_viewer' , 'overlay' , 'background' , 'colormap' , 'labels' , 'flag_test' }, ...
     { '#000000'          , '#FFFFFF'    , 'col-sm-6'     , NaN       , NaN          , NaN        , NaN      , false         });
 
-if opt.flag_test 
+if opt.flag_test
     return
 end
 
@@ -91,13 +91,13 @@ for oo = 1:length(opt.overlay)
     map = sprintf('%s        <img id="overlay%i" class="hidden" src="img/%s%s">\n',map,oo-1,name,ext);
     [~,name,ext] = niak_fileparts(opt.colormap{oo});
     map = sprintf('%s        <img id="colormap%i" class="hidden" src="img/%s%s">\n',map,oo-1,name,ext);
-    
+
     tmp_viewer = str_viewer_raw;
     tmp_viewer = strrep(tmp_viewer,'$CANVAS',sprintf('canvas%i',oo-1));
     tmp_viewer = strrep(tmp_viewer,'$CLASS',['"' opt.class_viewer '"']);
     tmp_viewer = strrep(tmp_viewer,'$LABEL',opt.labels{oo});
     tmp_viewer = strrep(tmp_viewer,'$MAP',map);
-    
+
     str_viewer = [str_viewer tmp_viewer];
 end
 

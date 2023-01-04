@@ -5,19 +5,19 @@ function [tseries,opt,X,B,E] = niak_sample_mplm(opt)
 %
 % where Bk are support representation of clusters with a weight specific
 % to each cluster, and Xk are time series sampled from a Gaussian model
-% with an AR1 structure. In this model, there are K independent partitions, 
-% with each of them featuring Ck clusters. 
-% The support representation can be of various types : 
+% with an AR1 structure. In this model, there are K independent partitions,
+% with each of them featuring Ck clusters.
+% The support representation can be of various types :
 %   'crisp' : 1 inside the cluster, 0 outside
-%   'gaussian': 1 at the medoid of the cluster x, 
-%               exp((C/N)^2 ( d(x,y)^2 / var_c) ) for any other y, 
-%               where N is the number of regions and C is the number of 
+%   'gaussian': 1 at the medoid of the cluster x,
+%               exp((C/N)^2 ( d(x,y)^2 / var_c) ) for any other y,
+%               where N is the number of regions and C is the number of
 %               clusters, y = 1,...,N are the spatial indices associated
 %               with regions, and the points are treated as a circle :
 %		d(x,y) = min(x-y,y+N-x) for y<=x
 %		d(x,y) = min(y-x,x+N-y) for x>=y
 %
-% SYNTAX : 
+% SYNTAX :
 % [TSERIES,OPT,X,B,E] = NIAK_SAMPLE_MPLM(OPT)
 %
 % _________________________________________________________________________
@@ -27,16 +27,16 @@ function [tseries,opt,X,B,E] = niak_sample_mplm(opt)
 %       (structure) with the following fields :
 %
 %       TIME
-%           (structure) with the following fields : 
+%           (structure) with the following fields :
 %
-%           T  
+%           T
 %               (integer), number of time samples
 %
 %           TR
 %               (scalar, default 3s), the time between two volumes
 %
-%           RHO 
-%               (scalar) : The coefficient of an exponential model, see 
+%           RHO
+%               (scalar) : The coefficient of an exponential model, see
 %                   the help of NIAK_CORR_MODEL_EXPONENTIAL.
 %
 %       SPACE
@@ -44,7 +44,7 @@ function [tseries,opt,X,B,E] = niak_sample_mplm(opt)
 %
 %           MPART
 %               (cell of vector) PART{K} is a partition of regions into a
-%               number of clusters. 
+%               number of clusters.
 %
 %           VARIANCE
 %               (cell of vector) VARIANCE{K}(L) is the variance of the
@@ -71,23 +71,23 @@ function [tseries,opt,X,B,E] = niak_sample_mplm(opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% TSERIES 
+% TSERIES
 %       (array, size T*N) the simulated time series (in columns) (Y).
 %
 % OPT
 %       (structure) same as the input, but with default values updated.
 %
 % X
-%	(matrix) X(:,s) is the time series associated with one cluster. All 
+%	(matrix) X(:,s) is the time series associated with one cluster. All
 %	clusters and all partitions are concatenated in columns.
 %
 % BETA
-%	(matrix) BETA(s,N) is the spatial distribution of the component 
+%	(matrix) BETA(s,N) is the spatial distribution of the component
 %	X(:,s)
 %
 % E
 %	(matrix T*N) the sample of Gaussian noise.
-% 
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_SAMPLE_GSST
@@ -181,7 +181,7 @@ for num_k = 1:K
     X(:,nb_c:(nb_c+nb_clust(num_k)-1)) = niak_sample_gsst(opt_t);
     switch opt.space.type
         case 'crisp'
-            B(nb_c:(nb_c+nb_clust(num_k)-1),:) = sub_part2supp(mpart{num_k})';    
+            B(nb_c:(nb_c+nb_clust(num_k)-1),:) = sub_part2supp(mpart{num_k})';
         case 'gaussian'
             part = mpart{num_k};
             for num_c = 1:nb_clust(num_k)
@@ -216,7 +216,7 @@ function supp = sub_part2supp(part);
 % INPUTS:
 %   PART (vector length N) a vector of integer labels coding for a partition.
 % OUTPUTS:
-%   SUPP (matrix M*K) where K is the number of labels in PART. 
+%   SUPP (matrix M*K) where K is the number of labels in PART.
 N = length(part);
 K = max(part(:));
 

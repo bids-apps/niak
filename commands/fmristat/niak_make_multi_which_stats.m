@@ -5,14 +5,14 @@ function opt = niak_make_multi_which_stats(opt)
 %
 % Constructs a binay matrix corresponding to the desired statistical
 % outputs.
-% 
+%
 % SYNTAX:
 % OPT = NIAK_MAKE_MULTI_WHICH_STATS(OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% OPT         
+% OPT
 %       structure with the following fields :
 %
 %       WHICH_STATS
@@ -24,11 +24,11 @@ function opt = niak_make_multi_which_stats(opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% OPT      
+% OPT
 %       Updated structure with the following fields :
-%       
+%
 %      WHICH_STATS
-%            Number of Contrasts X 9 binary matrix correspondings to the 
+%            Number of Contrasts X 9 binary matrix correspondings to the
 %            desired statistical outputs
 %
 %      CONTRASTS
@@ -38,14 +38,14 @@ function opt = niak_make_multi_which_stats(opt)
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -102,7 +102,7 @@ if ~isempty(which_stats)
       fst=['_t      ';'_ef     ';'_sd     ';'_rfx    ';'_conj   ';'_resid  ';'_wresid ';'not used';'_fwhm   '];
       for i=1:numcontrasts
          for j=1:3
-            which_stats(i,j)= ~isempty(strfind(ws(i,:),deblank(fst(j,:)))); 
+            which_stats(i,j)= ~isempty(strfind(ws(i,:),deblank(fst(j,:))));
          end
       end
       for j=4:9

@@ -7,11 +7,11 @@ function conn_n = niak_normalize_connectome(conn,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% CONN_N             
+% CONN_N
 %   (vector) a vectorized connectome (see NIAK_MAT2VEC, NIAK_VEC2MAT).
 %
 % OPT
-%   (structure or string) If string, see TYPE below. If structure, 
+%   (structure or string) If string, see TYPE below. If structure,
 %   the following fields are supported :
 %
 %   TYPE
@@ -32,8 +32,8 @@ function conn_n = niak_normalize_connectome(conn,opt)
 % _________________________________________________________________________
 % COMMENTS :
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de geriatrie 
-% de Montreal, Departement d'informatique et de recherche operationnelle, 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de geriatrie
+% de Montreal, Departement d'informatique et de recherche operationnelle,
 % Universite de Montreal, 2008-2011.
 % Maintainer : pbellec@criugm.qc.ca
 % See licensing information in the code.
@@ -61,7 +61,7 @@ function conn_n = niak_normalize_connectome(conn,opt)
 %% Initialization and syntax checks %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Syntax 
+%% Syntax
 if ~exist('conn','var')
     error('Syntax : CONN_N = NIAK_NORMALIZE_CONNECTOME(CONN,OPT) ; for more infos, type ''help niak_normalize_connectome''.')
 end

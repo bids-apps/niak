@@ -8,36 +8,36 @@ function [neig,ind] = niak_build_neighbour(mask,opt)
 % _________________________________________________________________________
 % INPUTS :
 %
-% MASK    
+% MASK
 %       (3D array) binary mask of one 3D-region of interest (1s inside,
 %       0s outside)
 %
 % OPT
-%       (structure) with the following fields : 
+%       (structure) with the following fields :
 %
-%       TYPE_NEIG    
-%           (integer value, default 26) 
+%       TYPE_NEIG
+%           (integer value, default 26)
 %           The parameter of neighbourhood. See NIAK_BUILD_NEIGHBOUR_MAT
 %           for more options.
 %
 %       FLAG_POSITION
-%           (boolean, default 1) if FLAG_POSITION is true, values in NEIG 
-%           are positions in the list FIND(MASK), otherwise they 
+%           (boolean, default 1) if FLAG_POSITION is true, values in NEIG
+%           are positions in the list FIND(MASK), otherwise they
 %           are linear indices in MASK, i.e. elements of FIND(MASK).
 %
 %       FLAG_WITHIN_MASK
 %           (boolean, default 1) if the flag is true, neighbours will be
 %           searched only within the mask. Otherwise, every neighbours
-%           within the field-of-view are reported. Note that if 
+%           within the field-of-view are reported. Note that if
 %           FLAG_WITHIN_MASK is false, FLAG_POSITION is false too.
-%       
+%
 %       IND
 %           (vector, default find(MASK)) The result of "find(MASK)". This
 %           option is given to avoid recomputing it at every execution.
 %
 %       COORD
 %           (matrix N*3, default coordinates of IND) the 3D coordinates of
-%           the points in mask. This option is given to avoid recomputing 
+%           the points in mask. This option is given to avoid recomputing
 %           it at every execution.
 %
 %       DECXYZ
@@ -48,14 +48,14 @@ function [neig,ind] = niak_build_neighbour(mask,opt)
 % _________________________________________________________________________
 % OUTPUTS :
 %
-% NEIG     
-%       (2D array) NEIG(i,:) is the list of neighbours of voxel i. All 
-%       numbers refer to a position in FIND(MASK(:)), unless FLAG_POSITION 
-%       is false in which case they refer to linear indices in MASK. 
-%       Because all voxels do not necessarily have the same number of 
+% NEIG
+%       (2D array) NEIG(i,:) is the list of neighbours of voxel i. All
+%       numbers refer to a position in FIND(MASK(:)), unless FLAG_POSITION
+%       is false in which case they refer to linear indices in MASK.
+%       Because all voxels do not necessarily have the same number of
 %       neighbours, 0 are used to pad each line.
 %
-% IND      
+% IND
 %       (vector) IND(i) is the linear index of the ith voxel in MASK.
 %       IND = FIND(MASK(:))
 %
@@ -156,4 +156,3 @@ end
 
 %% Reshaping the neighbor matrix
 neig(in_vol) = neig2;
-

@@ -21,9 +21,9 @@ function [files_in,files_out,opt] = niak_brick_nii3d2nii4d(files_in,files_out,op
 %  * OPT
 %       (structure) with the following fields :
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
 %
 %       FLAG_VERBOSE
@@ -45,11 +45,11 @@ function [files_in,files_out,opt] = niak_brick_nii3d2nii4d(files_in,files_out,op
 % >> niak_brick_nii3d2nii4d('my_fmri_*.img','my_fmri_4d.nii')
 %
 % Will convert all files 'my_fmri_0001.img', 'my_fmri_0002.img', ... into
-% one single 4D nifti volume called 'my_fmri_4d.nii'. 
+% one single 4D nifti volume called 'my_fmri_4d.nii'.
 %
 % NOTE 2
 %
-% All the 3D volumes need to be in the same space (both at the voxel and 
+% All the 3D volumes need to be in the same space (both at the voxel and
 % world levels). The header of the first volume will actually be used to
 % generate the 4D volume.
 %
@@ -57,8 +57,8 @@ function [files_in,files_out,opt] = niak_brick_nii3d2nii4d(files_in,files_out,op
 % NOTE 3
 %
 % To zip the output, the output file should end with 'nii.gz' instead of
-% '.nii'.  The tool used to zip files is 'gzip'. This behavior can be 
-% changed by editing the variables GB_NIAK_ZIP_EXT and GB_NIAK_UNZIP in the 
+% '.nii'.  The tool used to zip files is 'gzip'. This behavior can be
+% changed by editing the variables GB_NIAK_ZIP_EXT and GB_NIAK_UNZIP in the
 % file NIAK_GB_VARS.
 %
 % Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,

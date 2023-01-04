@@ -5,7 +5,7 @@ function S = niak_sample_markov_chain(opt)
 %
 % Generate a sample from a Markov chain.
 %
-% SYNTAX : 
+% SYNTAX :
 % [S,OPT] = NIAK_SAMPLE_MARKOV_CHAIN(OPT)
 %
 % _________________________________________________________________________
@@ -13,12 +13,12 @@ function S = niak_sample_markov_chain(opt)
 %
 % OPT
 %       (structure) with fields:
-%       
+%
 %       NB_UNITS
 %           (integer) The number of units in the Markov chain.
 %
 %       NB_SAMPS
-%           (integer) The number of samples of the chain. 
+%           (integer) The number of samples of the chain.
 %
 %       NB_STATES
 %           (integer, default 2) The number of states.
@@ -30,9 +30,9 @@ function S = niak_sample_markov_chain(opt)
 %           (string) the name of a function used to estimate the
 %           probability of transition using the command :
 %             >> p = feval(FUNC_TRANS,s,OPT.OPT_TRANS)
-%           where s is an array of the ORDER previous states of the Markov 
+%           where s is an array of the ORDER previous states of the Markov
 %           chain (units are in column) and p(k,n) is the probability that
-%           unit n will be in state k at the next step. 
+%           unit n will be in state k at the next step.
 %
 %       OPT_TRANS
 %           (any type, default []) if empty, no options is passed when
@@ -46,7 +46,7 @@ function S = niak_sample_markov_chain(opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% S 
+% S
 %       (array, size NB_SAMPS*NB_UNITS) the simulated Markov chain
 %
 % OPT
@@ -98,7 +98,7 @@ S = zeros([nb_samps,nb_units]);
 if isempty(opt.init)
     S(1:order,:) = floor(nb_states*rand([order,nb_units]));
 else
-    S(1:order,:) = init;   
+    S(1:order,:) = init;
 end
 
 for num_t = order+1:nb_samps
@@ -112,4 +112,4 @@ for num_t = order+1:nb_samps
     for num_u = 1:nb_units
         S(num_t,num_u) = find(pcum(:,num_u)>=rand(1),1)-1;
     end
-end    
+end

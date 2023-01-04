@@ -6,35 +6,35 @@ function [files_in,files_out,opt] = niak_brick_smooth_vol(files_in,files_out,opt
 % _________________________________________________________________________
 % INPUTS:
 %
-%  FILES_IN        
+%  FILES_IN
 %       (string or cell of string) a file name of a 3D+t dataset. If
 %       FILES_IN is a cell of string, the first entry is the file name of a
-%       3D+t dataset, while the second entry is used as a binary mask to 
-%       correct the edges effects of the smoothing (note that 
+%       3D+t dataset, while the second entry is used as a binary mask to
+%       correct the edges effects of the smoothing (note that
 %       values outside the mask will be set to zero). This correction will
 %       only be applied if OPT.FLAG_EDGE = 1 (see below).
 %
-%  FILES_OUT       
-%       (string, default <BASE FILES_IN>.<EXT>) File name for outputs. 
-%       NOTE that if FILES_OUT is an empty string or cell, the name of the 
-%       outputs will be the same as the inputs, with a '_s' suffix added 
+%  FILES_OUT
+%       (string, default <BASE FILES_IN>.<EXT>) File name for outputs.
+%       NOTE that if FILES_OUT is an empty string or cell, the name of the
+%       outputs will be the same as the inputs, with a '_s' suffix added
 %       at the end.
 %
-%  OPT           
+%  OPT
 %       (structure) with the following fields :
 %
-%       FWHM  
-%           (vector of size [1 3], default 6) the full width at half 
-%           maximum of the Gaussian kernel, in each dimension. If fwhm has 
+%       FWHM
+%           (vector of size [1 3], default 6) the full width at half
+%           maximum of the Gaussian kernel, in each dimension. If fwhm has
 %           length 1, an isotropic kernel is implemented.
 %
 %       FLAG_SKIP
 %           (boolean, default false) if FLAG_SKIP==1, the brick does not do
-%           anything, just copy the input on the output. 
+%           anything, just copy the input on the output.
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, all default 
-%           outputs will be created in the folder FOLDER_OUT. The folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, all default
+%           outputs will be created in the folder FOLDER_OUT. The folder
 %           needs to be created beforehand.
 %
 %       FLAG_EDGE
@@ -42,13 +42,13 @@ function [files_in,files_out,opt] = niak_brick_smooth_vol(files_in,files_out,opt
 %           applied for edges effects in the smoothing (such that a volume
 %           full of ones is left untouched by the smoothing).
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function prints 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function prints
 %           some infos during the processing.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN and 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN and
 %           FILES_OUT.
 %
 % _________________________________________________________________________
@@ -167,8 +167,8 @@ if (min(opt.fwhm) ~=0) && (flag_skip~=1)
         fprintf('Reading data ...\n');
     end
 
-    [hdr,vol] = niak_read_vol(files_in);    
-        
+    [hdr,vol] = niak_read_vol(files_in);
+
     opt_smooth.voxel_size = hdr.info.voxel_size;
     opt_smooth.fwhm = opt.fwhm;
     opt_smooth.flag_verbose = opt.flag_verbose;
@@ -178,7 +178,7 @@ if (min(opt.fwhm) ~=0) && (flag_skip~=1)
         opt_smooth.mask = mask>0;
         clear mask
     end
-    vol_s = niak_smooth_vol(vol,opt_smooth);                    
+    vol_s = niak_smooth_vol(vol,opt_smooth);
 
     %% Updating the history and saving output
     hdr = hdr(1);

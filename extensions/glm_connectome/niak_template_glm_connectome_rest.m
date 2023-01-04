@@ -1,12 +1,12 @@
 % Template for the GLM-CONNECTOME pipeline
 %
-% To run this pipeline, the fMRI datasets first need to be preprocessed 
-% using the NIAK fMRI preprocessing pipeline, and a set of functional 
-% parcelations have to be generated using the BASC pipeline. 
+% To run this pipeline, the fMRI datasets first need to be preprocessed
+% using the NIAK fMRI preprocessing pipeline, and a set of functional
+% parcelations have to be generated using the BASC pipeline.
 %
 % WARNING: This script will clear the workspace
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 %   Research Centre of the Montreal Geriatric Institute
 %   & Department of Computer Science and Operations Research
 %   University of Montreal, Québec, Canada, 2010-2012
@@ -32,7 +32,7 @@
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 % THE SOFTWARE.
 
-clear 
+clear
 
 %%%%%%%%%%%%
 %% Grabbing the results from BASC
@@ -49,7 +49,7 @@ opt_g.exclude_subject = {'subject1','subject2'}; % If for whatever reason some s
 opt_g.type_files = 'glm_connectome'; % Specify to the grabber to prepare the files for the glm_connectome pipeline
 opt_g.filter.session = {'session1'}; % Just grab session 1
 opt_g.filter.run = {'rest'}; % Just grab the "rest" run
-files_in.fmri = niak_grab_fmri_preprocess('/home/toto/database/fmri_preprocess',opt_g).fmri; % Replace the folder by the path where the results of the fMRI preprocessing pipeline were stored. 
+files_in.fmri = niak_grab_fmri_preprocess('/home/toto/database/fmri_preprocess',opt_g).fmri; % Replace the folder by the path where the results of the fMRI preprocessing pipeline were stored.
 
 %%%%%%%%%%%%
 %% Set the model
@@ -69,7 +69,7 @@ files_in.model.individual.subject2.intra_run.session1.rest.event = '/home/toto/d
 files_in.model.individual.subject2.intra_run.session1.rest.covariate = '/home/toto/database/models/individual/subject1/intra_effect_diseaserun/rest/covariate_rest.csv';
 
 %%%%%%%%%%%%
-%% Options 
+%% Options
 %%%%%%%%%%%%
 opt.folder_out = ['/home/toto/database/glm_connectome']; % Where to store the results
 opt.fdr = 0.05; % The maximal false-discovery rate that is tolerated both for individual (single-seed) maps and whole-connectome discoveries, at each particular scale (multiple comparisons across scales are addressed via permutation testing)
@@ -106,6 +106,6 @@ opt.test.effect_disease_women.group.select.values = 1;      % Keep only the wome
 %%%%%%%%%%%%
 %% Run the pipeline
 %%%%%%%%%%%%
-opt.flag_test = false; % Put this flag to true to just generate the pipeline without running it. Otherwise the region growing will start. 
+opt.flag_test = false; % Put this flag to true to just generate the pipeline without running it. Otherwise the region growing will start.
 %opt.psom.max_queued = 10; % Uncomment and change this parameter to set the number of parallel threads used to run the pipeline
-[pipeline,opt] = niak_pipeline_glm_connectome(files_in,opt); 
+[pipeline,opt] = niak_pipeline_glm_connectome(files_in,opt);

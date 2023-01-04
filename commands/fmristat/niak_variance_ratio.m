@@ -6,14 +6,14 @@ function [varatio_vol,opt] = niak_variance_ratio(vol,opt)
 % and the standart deviation of the fixed effects. Additionally, it updates
 % the structure OPT by adding an approximate value for the data
 % fwhm.
-% 
+%
 % SYNTAX:
 % [VARATIO_VOL,OPT] = NIAK_VARIANCE_RATIO(VOL,OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL         
+% VOL
 %       structure with the following fields :
 %
 %       EF
@@ -23,10 +23,10 @@ function [varatio_vol,opt] = niak_variance_ratio(vol,opt)
 %       (4D array) a 3D+n volumes of standard deviations
 %
 % MASK
-%       (3D volume, default all voxels) a binary mask of the voxels that 
-%       will be included in the analysis. 
+%       (3D volume, default all voxels) a binary mask of the voxels that
+%       will be included in the analysis.
 %
-% OPT         
+% OPT
 %       structure with the following fields :
 %
 %       MATRIX_X
@@ -39,7 +39,7 @@ function [varatio_vol,opt] = niak_variance_ratio(vol,opt)
 %       DF
 %
 %           Structure with the following fields:
-% 
+%
 %           RESID
 %              degrees of freedom of the residuals.
 %
@@ -48,28 +48,28 @@ function [varatio_vol,opt] = niak_variance_ratio(vol,opt)
 %
 %           LIMIT
 %              degrees of freedom of the residuals.
-% 
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % VARATIO_VOL
-%       (3D array) the ratio of the random effects variance divided by the 
+%       (3D array) the ratio of the random effects variance divided by the
 %       fixed effects variance.
-% OPT   
+% OPT
 %       Updated structure.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -127,7 +127,7 @@ for k=1:nz
     sigma2 = sum((resid_slice).^2,1)/df.resid;
     if is_sd
        S = squeeze(vol.sd(:,:,k,:));
-       S = (reshape(S,numpix,n))'; 
+       S = (reshape(S,numpix,n))';
        S = S.^2;
        varfix = df.data*S/df.fixed;
        sdd = (varfix>0)./sqrt(varfix*df.resid+(varfix<=0));
@@ -150,7 +150,7 @@ for k=1:nz
                betahat = XWXinv.*(matrix_x'*(W.*Y));
                R = W.*(Y-matrix_x*betahat);
                ptrS = p+sum(Sm.*W,1)-(X2*(Sm.*W.^2)).*XWXinv;
-               sigma2 = (sigma2.*ptrS+(sigma2.^2).*sum(R.^2,1))/n; 
+               sigma2 = (sigma2.*ptrS+(sigma2.^2).*sum(R.^2,1))/n;
            end
            sigma2=sigma2-minS;
         else
@@ -171,7 +171,7 @@ for k=1:nz
                     SW = diag(Sm_pix.*W);
                     ptrS = p+sum(Sm_pix.*W,1)-sum(sum((SW*WhalfX).*pinvX'));
                     sigma2_pix=(sigma2_pix.*ptrS+ ...
-                        (sigma2_pix.^2).*sum(W.*(R.^2),1))/n; 
+                        (sigma2_pix.^2).*sum(W.*(R.^2),1))/n;
                 end
                 sigma2(pix)=sigma2_pix-minS(pix);
             end

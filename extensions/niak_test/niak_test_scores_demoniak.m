@@ -8,49 +8,49 @@ function [pipeline,opt_pipe,files_in] = niak_test_scores_demoniak(path_test,opt)
 % INPUTS:
 %
 % PATH_TEST.DEMONIAK (string) the path to the (preprocessed) NIAK demo dataset.
-% PATH_TEST.REFERENCE (string) the full path to a reference version of the 
-%   results of the region growing pipeline. 
+% PATH_TEST.REFERENCE (string) the full path to a reference version of the
+%   results of the region growing pipeline.
 % PATH_TEST.RESULT (string) where to store the results of the test.
 %
 % OPT.FLAG_TARGET (boolean, default false) if FLAG_TARGET == true, no comparison
-%   with reference version of the results will be performed, but all test 
+%   with reference version of the results will be performed, but all test
 %   pipelines will still run. If this flag is used, PATH_TEST.REFERENCE
 %   does not need to be specified.
-% OPT.FILES_IN (structure, default grab the preprocessed demoniak) the input 
+% OPT.FILES_IN (structure, default grab the preprocessed demoniak) the input
 %   files for the region growing.
-% OPT.FLAG_TEST (boolean, default false) if FLAG_TEST == true, the demo will 
+% OPT.FLAG_TEST (boolean, default false) if FLAG_TEST == true, the demo will
 %   just generate the test PIPELINE.
 % OPT.PSOM (structure) the options of the pipeline manager. See the OPT
-%   argument of PSOM_RUN_PIPELINE. Note that the field PSOM.PATH_LOGS will be 
+%   argument of PSOM_RUN_PIPELINE. Note that the field PSOM.PATH_LOGS will be
 %   set up by the pipeline.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% PIPELINE (structure) a formal description of the test pipeline. 
+% PIPELINE (structure) a formal description of the test pipeline.
 %   See PSOM_RUN_PIPELINE.
 % OPT_PIPE
 %   (structure) the option to call NIAK_TEST_SCORES_DEMONIAK
 % FILES_IN
-%   (structure) the description of input files used to call 
+%   (structure) the description of input files used to call
 %   NIAK_TEST_SCORES_DEMONIAK
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
-% The preprocessed DEMONIAK dataset can be found in multiple file formats at 
+% The preprocessed DEMONIAK dataset can be found in multiple file formats at
 % the following address: http://www.nitrc.org/frs/?group_id=411
 %
 % This test will apply the region growing pipeline on the preprocessed DEMONIAK
 % dataset, and will compare the outputs to a reference version of the
 % results.
 %
-% It is possible to configure the pipeline manager to use parallel 
-% computing using OPT.PSOM, see : 
+% It is possible to configure the pipeline manager to use parallel
+% computing using OPT.PSOM, see :
 % http://code.google.com/p/psom/wiki/PsomConfiguration
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Griatrie de Montral, Dpartement d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Griatrie de Montral, Dpartement d'informatique et de recherche
 % oprationnelle, Universit de Montral, 2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.

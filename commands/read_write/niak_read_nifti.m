@@ -10,17 +10,17 @@ function [hdr,vol] = niak_read_nifti(file_name)
 % _________________________________________________________________________
 % INPUT:
 %
-% FILE_NAME         
+% FILE_NAME
 %    (string) a 3D+t or 3D minc file.
 %
 % _________________________________________________________________________
 % OUTPUT:
 %
-% VOL           
+% VOL
 %    (3D+t or 3D array of double) the fMRI or MRI data.
 %
-% HDR           
-%    a structure containing a description of the data. See NIAK_READ_VOL 
+% HDR
+%    a structure containing a description of the data. See NIAK_READ_VOL
 %    and NIAK_READ_HDR_NIFTI for details.
 %
 % _________________________________________________________________________
@@ -34,20 +34,20 @@ function [hdr,vol] = niak_read_nifti(file_name)
 % In case of multiple files data (e.g. .IMG + .HDR, or .IMG + .HDR + .MAT),
 % specify the name using the .IMG extension only.
 %
-% The affine transformation in hdr.info corresponds to the sform, if specified, or 
-% the qform (if sform unspecified and qform is), or simply the pixel dimension 
-% and offset, if neither qform or sform are specified. 
-% 
+% The affine transformation in hdr.info corresponds to the sform, if specified, or
+% the qform (if sform unspecified and qform is), or simply the pixel dimension
+% and offset, if neither qform or sform are specified.
+%
 % Part of this file is copied and modified under GNU license from
 % MRI_TOOLBOX developed by CNSP in Flinders University, Australia
 %
 % Important parts of this code are copied and modified from a matlab
-% toolbox by Jimmy Shen (pls@rotman-baycrest.on.ca) who agreed for 
-% redistribution under the MIT license. 
+% toolbox by Jimmy Shen (pls@rotman-baycrest.on.ca) who agreed for
+% redistribution under the MIT license.
 %
-% Note that the precision of the data is forced to single (32 bits). 
-% 
-% Copyright (c) Pierre Bellec, 
+% Note that the precision of the data is forced to single (32 bits).
+%
+% Copyright (c) Pierre Bellec,
 % Montreal Neurological Institute, 2008-2010
 % Departement d'informatique et de recherche operationnelle
 % Centre de recherche de l'institut de Geriatrie de Montreal
@@ -163,12 +163,12 @@ if nargout > 1
     else
         vol = squeeze(reshape(vol, [hdr.details.dim(2:4) length(vol_idx)]));
     end
-    
+
     if ((hdr.details.scl_slope~=0)&&(hdr.details.scl_slope~=1))||(hdr.details.scl_inter~=0)
         vol = hdr.details.scl_slope * single(vol) + hdr.details.scl_inter;
         hdr.details.scl_slope = 1;
         hdr.details.scl_inter = 0;
-    end  
+    end
     vol = single(vol);
     hdr.info.precision = 'float';
 end

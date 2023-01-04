@@ -11,20 +11,20 @@ function [files_in,files_out,opt] = niak_brick_anonymize_mnc(files_in,files_out,
 % _________________________________________________________________________
 % INPUTS
 %
-%  * FILES_IN  
+%  * FILES_IN
 %       (string) a full path.
 %
-%  * FILES_OUT 
+%  * FILES_OUT
 %       (string, default FILES_IN) a full path
 %
-%  * OPT   
+%  * OPT
 %       (structure) with the following fields :
 %
 %       FLAG_RECURSIVE
 %           (boolean, default true) recursively copy subfolders.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function prints 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function prints
 %           some infos during the processing.
 %
 % _________________________________________________________________________
@@ -94,48 +94,48 @@ list_dir = list_all(mask_dir);
 niak_mkdir(files_out);
 
 for num_f = 1:length(list_files)
-    
+
     file_name = list_files{num_f};
     source_file = [files_in filesep file_name];
-    
+
     [path_tmp,name_tmp,ext] = fileparts(file_name);
-    
+
     if strcmp(ext,GB_NIAK.zip_ext)
         [path_tmp,name_tmp,ext] = fileparts(name_tmp);
         ext = [ext GB_NIAK.zip_ext];
     end
-    
+
     if strcmp(ext,'.mnc')||strcmp(ext,['.mnc' GB_NIAK.zip_ext])
         target_file = [files_out filesep name_tmp ext];
         [hdr,vol] = niak_read_vol(source_file);
         hdr.file_name = target_file;
         hdr = rmfield(hdr,'details');
         hdr.info.history = '';
-        niak_write_vol(hdr,vol);        
+        niak_write_vol(hdr,vol);
         msg = sprintf('Convert %s to %s\n',source_file,target_file);
     else
         target_file = [files_out filesep file_name];
-        instr_cp = ['cp -f ' source_file ' ' target_file];        
+        instr_cp = ['cp -f ' source_file ' ' target_file];
         msg = sprintf('Copy %s to %s\n',source_file,target_file);
         [flag_err,err_msg] = system(instr_cp);
         if flag_err
             error(err_msg)
         end
-    end    
-        
+    end
+
     if ~strcmp(source_file,target_file)
         if flag_verbose
             fprintf('%s',msg)
-        end        
+        end
     end
 
 end
 
 if flag_recursive
-    
+
     for num_d = 1:length(list_dir)
-        
+
         niak_brick_anonymize_mnc([files_in filesep list_dir{num_d}],[files_out filesep list_dir{num_d}],opt);
-        
+
     end
 end

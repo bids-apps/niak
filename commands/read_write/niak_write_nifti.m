@@ -1,23 +1,23 @@
 function [] = niak_write_nifti(hdr,vol)
-% Write a 3D or 3D+t dataset into a NIFTI file 
+% Write a 3D or 3D+t dataset into a NIFTI file
 %
 % SYNTAX: [] = NIAK_WRITE_NIFTI(HDR,VOL)
 %
 % INPUTS:
 % VOL           (3D or 4D array) a 3D or 3D+t dataset
 % HDR.FILE_NAME (string) the name of the file that will be written.
-% HDR.TYPE      (string, default 'nii') the output format (either 'nii' for 
-%               NIFTI-1 one file data, 'img' for a couple '*.img'/'*.hdr' in 
+% HDR.TYPE      (string, default 'nii') the output format (either 'nii' for
+%               NIFTI-1 one file data, 'img' for a couple '*.img'/'*.hdr' in
 %               NIFTI-1 format or 'analyze' for a '*.img'/'*.hdr'/'*.mat')
-% HDR.INFO      (structure) The subfields are optional, yet they give control 
+% HDR.INFO      (structure) The subfields are optional, yet they give control
 %               on critical space information. See NIAK_WRITE_VOL for more info.
 % HDR.DETAILS   (structure) the fields are the standard list of a NIFTI header.
 %
 % OUTPUTS:
 % The data called VOL is stored into a file called FILENAME written in
-% nifti format. In the case of ANALYZE 7.5 file format, a file '.MAT' will 
+% nifti format. In the case of ANALYZE 7.5 file format, a file '.MAT' will
 % also be created with the affine transform.
-% 
+%
 % SEE ALSO:
 % NIAK_READ_HDR_NIFTI, NIAK_READ_NIFTI, NIAK_WRITE_VOL, NIAK_READ_VOL
 %
@@ -30,13 +30,13 @@ function [] = niak_write_nifti(hdr,vol)
 %   MRI_TOOLBOX developed by CNSP in Flinders University, Australia
 %
 %   Important parts of this code are copied and modified from a matlab
-%   toolbox by Jimmy Shen (pls@rotman-baycrest.on.ca), and reshared here 
-%   with agreement under a MIT license.  
+%   toolbox by Jimmy Shen (pls@rotman-baycrest.on.ca), and reshared here
+%   with agreement under a MIT license.
 %   http://www.mathworks.com/matlabcentral/fileexchange/loadFile.do?objectId=
 %   8797&objectType=file
 %
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
-% Centre de recherche de l'institut de griatrie de Montral, 
+% Centre de recherche de l'institut de griatrie de Montral,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2010-2014
 %
@@ -59,7 +59,7 @@ function [] = niak_write_nifti(hdr,vol)
 % THE SOFTWARE.
 
 %% Checking for the syntax
-if ~exist('vol','var') || ~exist('hdr','var') 
+if ~exist('vol','var') || ~exist('hdr','var')
     error('niak:write','Usage: niak_write_nifti(hdr,vol)');
 end
 
@@ -105,7 +105,7 @@ precision = hdr.info.precision;
 
 hdr.info.dimensions = size(vol);
 
-hdr.details.dim = [ndims(vol) ones(1,5) 0 0];  
+hdr.details.dim = [ndims(vol) ones(1,5) 0 0];
 if ndims(vol)<=4
     hdr.details.dim(2:(1+ndims(vol))) = size(vol);
 else
@@ -124,7 +124,7 @@ switch hdr.info.precision
         hdr.details.datatype = 2;
         hdr.details.bitpix = 8;
         vol = uint8(vol);
-    case 'int16' 
+    case 'int16'
         hdr.details.datatype = 4;
         hdr.details.bitpix = 16;
         vol = int16(vol);

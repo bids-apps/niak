@@ -8,13 +8,13 @@ function [vol_r,hdr] = niak_resample_vol(hdr,vol)
 % VOL        (3D array) brain volume, in stereotaxic space.
 % VOL_R      (3D array) same as VOL, resampled in the voxel space of TARGET
 % HDR_UP     (structure) an updated version of HDR
-% 
-% Note: The new volume is generated in the voxel space associated with the target. 
-% If no target is specified, the source space is resampled with direction cosines, 
-% and the field of view is adjusted such that it includes all of the voxels. 
-% Only nearest neighbour interpolation is available. 
 %
-% Copyright (c) Pierre Bellec 
+% Note: The new volume is generated in the voxel space associated with the target.
+% If no target is specified, the source space is resampled with direction cosines,
+% and the field of view is adjusted such that it includes all of the voxels.
+% Only nearest neighbour interpolation is available.
+%
+% Copyright (c) Pierre Bellec
 % Centre de recherche de l'Institut universitaire de griatrie de Montral, 2016.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -37,21 +37,21 @@ function [vol_r,hdr] = niak_resample_vol(hdr,vol)
 % LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 % THE SOFTWARE.
- 
+
 %% Default options
 if nargin < 2
-    error('Please specify VOL and HDR') 
+    error('Please specify VOL and HDR')
 end
 
 if ~isfield(hdr,'source')||~isfield(hdr,'target')
     hdr = struct('source',hdr,'target',[]);
 end
-    
-%% size of the source space 
+
+%% size of the source space
 dim_s = hdr.source.info.dimensions(1:3);
-    
+
 %% Extract world coordinates for the source sampling grid
-[xx_vs,yy_vs,zz_vs] = ndgrid(1:dim_s(1),1:dim_s(2),1:dim_s(3));  
+[xx_vs,yy_vs,zz_vs] = ndgrid(1:dim_s(1),1:dim_s(2),1:dim_s(3));
 slice_ws = niak_coord_vox2world([xx_vs(:) yy_vs(:) zz_vs(:)],hdr.source.info.mat);
 xx_ws = reshape(slice_ws(:,1),size(xx_vs));
 yy_ws = reshape(slice_ws(:,2),size(yy_vs));
@@ -74,18 +74,18 @@ end
 dim_t = hdr.target.info.dimensions(1:3);
 
 %% get coordinates in voxel (target) space
-[xx_vt,yy_vt,zz_vt] = ndgrid(1:dim_t(1),1:dim_t(2),1:dim_t(3));  
+[xx_vt,yy_vt,zz_vt] = ndgrid(1:dim_t(1),1:dim_t(2),1:dim_t(3));
 slice_wt = niak_coord_vox2world([xx_vt(:) yy_vt(:) zz_vt(:)],hdr.target.info.mat);
 xx_wt = reshape(slice_wt(:,1),size(xx_vt));
 yy_wt = reshape(slice_wt(:,2),size(yy_vt));
 zz_wt = reshape(slice_wt(:,3),size(zz_vt));
 
-% Build voxel coordinates from target to source space 
+% Build voxel coordinates from target to source space
 slice_vt = niak_coord_world2vox(slice_wt,hdr.source.info.mat);
 slice_vt = round(slice_vt);
 mask = (slice_vt(:,1)>=1)&(slice_vt(:,1)<=dim_s(1))&(slice_vt(:,2)>=1)&(slice_vt(:,2)<=dim_s(2))&(slice_vt(:,3)>=1)&(slice_vt(:,3)<=dim_s(3));
 slice_vt = slice_vt(mask,:);
-    
+
 % resample
 vol_r = zeros(size(xx_vt));
 ind_slice = niak_sub2ind_3d(size(vol),slice_vt(:,1),slice_vt(:,2),slice_vt(:,3));

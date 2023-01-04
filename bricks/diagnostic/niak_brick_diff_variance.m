@@ -11,42 +11,42 @@ function [files_in,files_out,opt] = niak_brick_diff_variance(files_in,files_out,
 % _________________________________________________________________________
 % INPUTS
 %
-%  * FILES_IN        
-%       (cell of strings 2*1) file names of two 3D+t dataset. 
+%  * FILES_IN
+%       (cell of strings 2*1) file names of two 3D+t dataset.
 %
-%  * FILES_OUT       
-%       (string, default <BASE_NAME FILE 1>_diff_var.<EXT>) 
+%  * FILES_OUT
+%       (string, default <BASE_NAME FILE 1>_diff_var.<EXT>)
 %       File name for output difference of variance map (variance of file 1
 %       minus variance of file 2).
 %
-%  * OPT           
-%       (structure) with the following fields.  
+%  * OPT
+%       (structure) with the following fields.
 %
 %       FLAG_STD
 %           (boolean, default 0) if FLAG_STD == 1, the difference of
 %           variance is converted in a standard deviation (i.e. a square
 %           root of the absolute value is applied).
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, all default 
-%           outputs will be created in the folder FOLDER_OUT. The folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, all default
+%           outputs will be created in the folder FOLDER_OUT. The folder
 %           needs to be created beforehand.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function
 %           prints some infos during the processing.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO
 %
@@ -130,7 +130,7 @@ if flag_test == 1
     return
 end
 
-%% Performing slice timing correction 
+%% Performing slice timing correction
 if ~strcmp(files_in{2},'gb_niak_omitted')
     [hdr2,vol2] = niak_read_vol(files_in{2});
 end

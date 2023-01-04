@@ -28,16 +28,16 @@ function [files_in,files_out,opt] = niak_brick_glm_table(files_in,files_out,opt)
 %       value if possible, or will issue an error otherwise.
 %
 %
-%       FOLDER_OUT (string, default: path of FILES_IN) 
-%           If present, all default outputs will be created in the folder 
+%       FOLDER_OUT (string, default: path of FILES_IN)
+%           If present, all default outputs will be created in the folder
 %           FOLDER_OUT. The folder needs to be created beforehand.
 %
-%       FLAG_VERBOSE (boolean, default 1) 
-%           if the flag is 1, then the function prints some infos during 
+%       FLAG_VERBOSE (boolean, default 1)
+%           if the flag is 1, then the function prints some infos during
 %           the processing.
 %
-%       FLAG_TEST (boolean, default 0) 
-%           if FLAG_TEST equals 1, the brick does not do anything but 
+%       FLAG_TEST (boolean, default 0)
+%           if FLAG_TEST equals 1, the brick does not do anything but
 %           update the default values in FILES_IN, FILES_OUT and OPT.
 %
 %
@@ -49,9 +49,9 @@ function [files_in,files_out,opt] = niak_brick_glm_table(files_in,files_out,opt)
 % This brick is a "NIAKized" overlay of the STAT_SUMMARY function from the
 % fMRIstat toolbox by Keith Worsley :
 % http://www.math.mcgill.ca/keith/fmristat/
-% 
+%
 % The labels come from the aal template:
-% Tzourio-Mazoyer N et al. Automated anatomical labelling of activations in spm using a macroscopic anatomical parcellation of the MNI MRI single subject brain. Neuroimage 2002; 15: 273-289. 
+% Tzourio-Mazoyer N et al. Automated anatomical labelling of activations in spm using a macroscopic anatomical parcellation of the MNI MRI single subject brain. Neuroimage 2002; 15: 273-289.
 % Please see NIAK_LABEL_PEAK for more info
 %
 % Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,
@@ -108,29 +108,29 @@ end
 if ~exist(files_in.design,'file')
     error(cat(2,'niak_brick_glm_level1: FILES_IN.DESIGN does not exist (',files_in.design,')'));
 end
-    
+
 %% OPTIONS
 gb_name_structure = 'opt';
 gb_list_fields = {'contrast','confounds','fwhm_cor','exclude','nb_trends_spatial','nb_trends_temporal','numlags','pcnt','num_hrf_bases','basis_type','df_limit','flag_test','folder_out','flag_verbose'};
 gb_list_defaults = {NaN,[],-100,[],0,0,1,1,[],'spectral',4,0,'',1};
 niak_set_defaults
 
-if isempty(num_hrf_bases)    
-    
+if isempty(num_hrf_bases)
+
     design = load(files_in.design);
     if  ~isfield(design,'X_cache')
         error('The file FMRI.DESIGN should be a matrix containing a matlab variable called X_cache')
     end
     nb_response = size(design.X_cache.X,2);
     opt.num_hrf_bases = ones([nb_response 1]);
-    
+
 end
 
 %% FILES_OUT
 gb_name_structure = 'files_out';
 gb_list_fields = {'df','spatial_av','mag_t','del_t','mag_ef','del_ef','mag_sd','del_sd','mag_f','cor','resid','wresid','ar','fwhm'};
 gb_list_defaults = {'gb_niak_omitted','gb_niak_omitted','gb_niak_omitted','gb_niak_omitted','gb_niak_omitted','gb_niak_omitted','gb_niak_omitted','gb_niak_omitted','gb_niak_omitted','gb_niak_omitted','gb_niak_omitted','gb_niak_omitted','gb_niak_omitted','gb_niak_omitted'};
-niak_set_defaults        
+niak_set_defaults
 
 %% Parsing base names
 [path_f,name_f,ext_f] = fileparts(files_in.fmri);
@@ -148,7 +148,7 @@ if isempty(opt.folder_out)
 else
     folder_f = opt.folder_out;
 end
-       
+
 %% Generating the default outputs of the FMRILM function and the NIAK brick
 list_contrast = fieldnames(opt.contrast);
 folder_fmri = niak_path_tmp('_fmristat');
@@ -240,7 +240,7 @@ for num_c = 1:nb_cont
     mat_contrast(1:length(cont),:) = cont(:)';
 end
 
-%% Actual call to fmrilm   
+%% Actual call to fmrilm
 [df,spatial_av] = fmrilm(files_in.fmri,output_file_base,design.X_cache,mat_contrast,exclude,which_stats,fwhm_cor,[nb_trends_temporal nb_trends_spatial pcnt],confounds,[],num_hrf_bases,basis_type,numlags,df_limit);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -260,14 +260,14 @@ mask_totej = niak_cmp_str_cell(list_fields,{'df','spatial_av'});
 list_fields = list_fields(~mask_totej);
 
 for num_l = 1:length(list_fields)
-    
+
     field_name = list_fields{num_l};
-    
+
     val_field_out = getfield(files_out,field_name);
     val_field_fmri = getfield(files_fmri,field_name);
-    
+
     if ~ischar(val_field_out)
-        
+
         %% Multiple outputs in a cell of strings
         nb_entries = length(val_field_out);
         for num_e = 1:nb_entries
@@ -277,9 +277,9 @@ for num_l = 1:length(list_fields)
                 warning(msg)
             end
         end
-        
+
     else
-        
+
         %% A single output, maybe an 'omitted' tag
         if ~strcmp(val_field_out,'gb_niak_omitted')
             instr_mv = cat(2,'mv ',val_field_fmri,' ',val_field_out);
@@ -288,10 +288,10 @@ for num_l = 1:length(list_fields)
                 warning(msg)
             end
         end
-        
+
     end
-    
+
 end
-    
+
 %% Deleting temporary files
 system(cat(2,'rm -rf ',folder_fmri));

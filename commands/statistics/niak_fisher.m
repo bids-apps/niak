@@ -22,8 +22,8 @@ function z = niak_fisher(r);
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2010-2011.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.

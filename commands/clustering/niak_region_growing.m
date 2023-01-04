@@ -38,11 +38,11 @@ function part = niak_region_growing(tseries,neig,opt)
 %
 %           'square_diff'
 %               averge square difference between the mean time series
-%               within each roi (which is a distance rather than a 
+%               within each roi (which is a distance rather than a
 %               similarity measure ...).
 %
 %       SIZE_CHUNKS
-%           (integer, default 100) Size of vector chunks. See the 
+%           (integer, default 100) Size of vector chunks. See the
 %           "comments" section below.
 %
 %       FLAG_SIZE
@@ -76,12 +76,12 @@ function part = niak_region_growing(tseries,neig,opt)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% This implementation of region growing was written in native matlab 
-% language rather than a mex to avoid the compilation stage. To keep it 
-% relatively fast, the operations were vectorized as much as possible, 
-% which necessitated to sometimes duplicate data in memory. To avoid using 
-% too much memory in large problems, the vectorized portion of the code 
-% works on chunks of vectors, whose maximal size (in terms of number of 
+% This implementation of region growing was written in native matlab
+% language rather than a mex to avoid the compilation stage. To keep it
+% relatively fast, the operations were vectorized as much as possible,
+% which necessitated to sometimes duplicate data in memory. To avoid using
+% too much memory in large problems, the vectorized portion of the code
+% works on chunks of vectors, whose maximal size (in terms of number of
 % double elements) is SIZE_CHUNKS. If the function is too slow but the
 % memory usage is OK, you may want to increase this number. On the
 % contrary, if you're getting an "out of memory" problem, lower it down.
@@ -89,7 +89,7 @@ function part = niak_region_growing(tseries,neig,opt)
 % To be able to vectorize the code, some tricks could not be employed. For
 % example, no use is made of the symmetry of the measure (which is thus
 % calculated twice), and all measures are re-calculated at each iteration.
-% At the end of the day, matlab works in such a weird way that it is still 
+% At the end of the day, matlab works in such a weird way that it is still
 % much faster this way than with a clever loop-based implementation ...
 %
 % Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,Montreal
@@ -193,22 +193,22 @@ list_ind_roi = (1:size(neig,1)); % label attached to each row
 list_roi_ind = (1:size(neig,1)); % row attached to each label
 
 while (nb_rois>thre_nb_rois)&&(nb_mnn>0)
-    
+
     %% Seek mutual nearest neighbours (MNN) that fulfill the merging
-    %% condition    
+    %% condition
     [val_sim,pos_nneig,is_mnn,ind_nneig,nneig] = sub_ismnn(val_sim,pos_nneig,neig,list_ind_roi,flag_sim,list_update,sim_mat,thre_sim,list_roi_ind);
-   
-    %% Build the list of pairs of regions to merge.   
+
+    %% Build the list of pairs of regions to merge.
     ind_mnn1 = find(is_mnn); % The indices of the row in NEIG that satisfy mnn
     list_mnn1 = list_ind_roi(is_mnn); % The labels associated with each row satisfying MNN
     list_mnn2 = nneig(is_mnn); % The label of the nearest neighbour associated with each row
-    ind_mnn2 = list_roi_ind(list_mnn2);    
+    ind_mnn2 = list_roi_ind(list_mnn2);
     mask_diag = list_mnn1<list_mnn2; % if (I,J) satisfies mnn, (J,I) does too. Use (I,J) with I<J
     list_mnn1 = list_mnn1(mask_diag);
     list_mnn2 = list_mnn2(mask_diag);
     ind_mnn1 = ind_mnn1(mask_diag);
     ind_mnn2 = ind_mnn2(mask_diag);
-    
+
     %% Number of merging, number of rois
     nb_mnn = length(list_mnn1);
     nb_rois = nb_rois-nb_mnn;
@@ -218,62 +218,62 @@ while (nb_rois>thre_nb_rois)&&(nb_mnn>0)
     if flag_verbose
         fprintf(' %i',nb_mnn);
     end
-    
+
     if (nb_rois>=thre_nb_rois)&&(nb_mnn>0)
-        
+
         %% Update tseries
-        tseries = sub_update_tseries(tseries,list_size,ind_mnn1,ind_mnn2,size_chunks);        
-        
-        %% Update size               
+        tseries = sub_update_tseries(tseries,list_size,ind_mnn1,ind_mnn2,size_chunks);
+
+        %% Update size
         list_size(ind_mnn1) = list_size(ind_mnn1)+list_size(ind_mnn2);
-        
+
         %% Update partition
         [to_replace,ind_replace] = ismember(uint32(part),list_mnn2);
         part(to_replace) = list_mnn1(ind_replace(to_replace));
-        
-        %% Update the adjacency         
+
+        %% Update the adjacency
         mask_change(is_mnn) = true;
         neig(ind_nneig) = 0; % get rid of adjacency relationships between merged regions
-       
+
         % Case 1 : Adults
         mask_adult = list_size(ind_mnn1)>thre_size;
-        if any(mask_adult)                      
+        if any(mask_adult)
             neig(ind_mnn1(mask_adult),:) = 0;
             neig(ind_mnn2(mask_adult),:) = 0;
             sim_mat(ind_mnn1(mask_adult),:) = nogo;
-            sim_mat(ind_mnn2(mask_adult),:) = nogo;                 
+            sim_mat(ind_mnn2(mask_adult),:) = nogo;
             mask_neig_adult = ismember(neig,uint32([list_mnn1(mask_adult) list_mnn2(mask_adult)]));
             mask_neig_adult = reshape(mask_neig_adult,size(neig)); % Bug in ismember for octave : the output is vectorized
             neig(mask_neig_adult) = 0;
             sim_mat(mask_neig_adult) = nogo;
             mask_change(max(mask_neig_adult,[],2)>0) = true;
         end
-       
+
         % Case 2 : Children
         list_child = find(~mask_adult);
-        for num_mnn = list_child(:)'            
+        for num_mnn = list_child(:)'
             [neig,mask_change] = sub_merge_neig(neig,list_mnn1(num_mnn),list_mnn2(num_mnn),ind_mnn1(num_mnn),ind_mnn2(num_mnn),mask_change,list_roi_ind);
         end
-                        
+
         %% Update the similarity
-        list_update = find(mask_change);        
+        list_update = find(mask_change);
         if size(neig,2)>size(sim_mat,2)
             sim_mat = [sim_mat nogo*ones([size(sim_mat,1) size(neig,2)-size(sim_mat,2)])];
         end
         sim_mat(list_update,:) = sub_measure(neig,tseries,sim_measure,nogo,size_chunks,list_size,list_update,list_roi_ind);
-        
+
         %% Remove rows that correspond to merged regions
         neig = neig(to_keep,:);
         tseries = tseries(:,to_keep);
         list_size = list_size(to_keep);
         val_sim = val_sim(to_keep);
         pos_nneig = pos_nneig(to_keep);
-        list_ind_roi = list_ind_roi(to_keep);     
+        list_ind_roi = list_ind_roi(to_keep);
         mask_roi_nan = isnan(list_roi_ind);
         list_roi_ind_update = list_roi_ind(~mask_roi_nan);
         list_roi_ind_update(to_keep) =  1:length(list_ind_roi);
         list_roi_ind_update(~to_keep) =  NaN;
-        list_roi_ind(~mask_roi_nan) = list_roi_ind_update;        
+        list_roi_ind(~mask_roi_nan) = list_roi_ind_update;
         mask_change = mask_change(to_keep);
         list_update = find(mask_change);
         sim_mat = sim_mat(to_keep,:);
@@ -315,7 +315,7 @@ if flag_size
             end
             num_e = num_e+1;
         end
-        
+
         for num_e = 1:length(ind_merge)
             num_r = ind_merge(num_e);
             if num_r~=ind_merge_with(num_e)
@@ -327,12 +327,12 @@ if flag_size
                 list_ind_roi = list_ind_roi([1:(num_r-1) (num_r+1):length(list_ind_roi)]);
                 list_roi_ind(list_roi_ind>num_r) = list_roi_ind(list_roi_ind>num_r)-1;
                 ind_merge(ind_merge>num_r) = ind_merge(ind_merge>num_r)-1;
-                ind_merge_with(ind_merge_with>num_r) = ind_merge_with(ind_merge_with>num_r)-1;           
+                ind_merge_with(ind_merge_with>num_r) = ind_merge_with(ind_merge_with>num_r)-1;
             end
         end
         ind_merge = find(list_size<=thre_size);
         nb_iter_max = nb_iter_max-1;
-    end    
+    end
 end
 
 if flag_sieve
@@ -394,11 +394,11 @@ else
 end
 for num_c = 1:(length(list_chunk)-1)
     chunk = list_chunk(num_c):list_chunk(num_c+1);
-    yi_chunk = list_roi_ind(neig(indxy(chunk)));    
+    yi_chunk = list_roi_ind(neig(indxy(chunk)));
     switch sim_measure
         case 'afc'
             sim_mat(indxy(chunk)) = (1/(size(tseries,1)-1))*sum(tseries(:,xi(chunk)).*tseries(:,yi_chunk),1);
-        case 'afc_penalized'            
+        case 'afc_penalized'
             sim_mat(indxy(chunk)) = (1/(size(tseries,1)-1))*sum(tseries(:,xi(chunk)).*tseries(:,yi_chunk),1) + abs((list_size(xi(chunk))-list_size(yi_chunk))./max([list_size(xi(chunk)) list_size(yi_chunk)],[],2))';
         case 'square_diff'
             sim_mat(indxy(chunk)) = sqrt(sum((tseries(:,xi(chunk))-tseries(:,yi_chunk)).^2,1));

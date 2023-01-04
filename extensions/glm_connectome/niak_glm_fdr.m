@@ -19,11 +19,11 @@ function [fdr,test_q] = niak_glm_fdr(pce,method,q,type_measure)
 %         but using the grouping of tests into maps, with a two-step
 %         estimation of the number of discoveries. See NIAK_FDR.
 %      'GBH-LSL' or 'LSL': a GBH procedure controlling the FDR on the full connectome
-%         but using the grouping of tests into maps, with a least-slope 
+%         but using the grouping of tests into maps, with a least-slope
 %         estimation of the number of discoveries. See NIAK_FDR.
-%      'GBH-TST+sym' or 'TST_sym': a combination of group and family 
+%      'GBH-TST+sym' or 'TST_sym': a combination of group and family
 %          approaches, and the results of the test are made symmetric.
-%      'GBH-LSL+sym' or 'LSL_sym': a combination of LSL and famil y 
+%      'GBH-LSL+sym' or 'LSL_sym': a combination of LSL and famil y
 %          approaches, and the results of the test are made symmetric.
 %      'uncorrected': just threshold the p-values using Q as a threshold. No FDR estimation
 %          is actually applied
@@ -43,13 +43,13 @@ function [fdr,test_q] = niak_glm_fdr(pce,method,q,type_measure)
 % OUTPUTS:
 %
 % FDR
-%   (array) FDR(i,j) is the false-discovery rate associated with a threshold of 
-%   PCE(i,j) in the j-th family (for 'BY' and 'BH'), or a global FDR after 
+%   (array) FDR(i,j) is the false-discovery rate associated with a threshold of
+%   PCE(i,j) in the j-th family (for 'BY' and 'BH'), or a global FDR after
 %   weighting each family by the number of potential discoveries ('GBH')
 %
 % TEST
 %   (array) TEST(i,j) is 1 if FDR(i,j)<=Q, and 0 otherwise.
-% 
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_FDR
@@ -66,7 +66,7 @@ function [fdr,test_q] = niak_glm_fdr(pce,method,q,type_measure)
 % true_pos(eye(size(true_pos))>0) = false;
 % pce(true_pos) = 0.0025*rand(size(pce(true_pos)));
 % pce = niak_mat2lvec(pce);
-% 
+%
 % method = 'LSL_sym';
 % fprintf('%s procedure:\n',method)
 % [fdr,test] = niak_glm_fdr(pce,method,0.05,'correlation');
@@ -83,8 +83,8 @@ function [fdr,test_q] = niak_glm_fdr(pce,method,q,type_measure)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2011-2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -108,11 +108,11 @@ function [fdr,test_q] = niak_glm_fdr(pce,method,q,type_measure)
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 % THE SOFTWARE.
 
-if nargin < 2 
+if nargin < 2
     method = 'BH';
 end
 
-if nargin < 3 
+if nargin < 3
     q = 0.05;
 end
 
@@ -126,33 +126,33 @@ switch method
 
     case {'family','BH-local'}
         [fdr,test_q] = niak_fdr(pce_m,'BH',q);
-        
+
     case {'global','BH-global'}
         [fdr,test_q] = niak_fdr(pce(:),'BH',q);
         fdr = sub_vec2mat(fdr',type_measure);
         test_q = sub_vec2mat(test_q',type_measure)>0;
-        
+
     case {'GBH-TST','TST','group'}
         [fdr,test_q] = niak_fdr(pce_m,'TST',q);
-        
-    case {'GBH-TST+sym','TST_sym'}        
-        [fdr,test_q] = niak_fdr(pce_m,'TST',q/2);       
+
+    case {'GBH-TST+sym','TST_sym'}
+        [fdr,test_q] = niak_fdr(pce_m,'TST',q/2);
         test_q = test_q | test_q';
-    
+
     case {'LSL','GBH-LSL'}
         [fdr,test_q] = niak_fdr(pce_m,'LSL',q);
 
-    case {'GBH-LSL+sym','LSL_sym'}        
-        [fdr,test_q] = niak_fdr(pce_m,'LSL',q/2);       
+    case {'GBH-LSL+sym','LSL_sym'}
+        [fdr,test_q] = niak_fdr(pce_m,'LSL',q/2);
         test_q = test_q | test_q';
-    
+
     case 'uncorrected'
         fdr = pce_m;
         test_q = fdr <= q;
-        
+
     otherwise
         error('%s is an unknown procedure to control the FDR',method)
-        
+
 end
 
 function pce_m = sub_vec2mat(pce,type_measure)

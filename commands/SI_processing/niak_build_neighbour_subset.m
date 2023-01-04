@@ -12,7 +12,7 @@ function [neig,ind] = niak_build_neighbour_subset(mask,subs,opt)
 % _________________________________________________________________________
 % INPUTS :
 %
-% MASK    
+% MASK
 %       (3D array) binary mask of one 3D-region of interest (1s inside,
 %       0s outside)
 %
@@ -21,15 +21,15 @@ function [neig,ind] = niak_build_neighbour_subset(mask,subs,opt)
 %       by an integer position in the list find(MASK).
 %
 % OPT
-%       (structure) with the following fields : 
+%       (structure) with the following fields :
 %
-%       TYPE_NEIG    
-%           (integer value, default 26) 
+%       TYPE_NEIG
+%           (integer value, default 26)
 %           The parameter of neighbourhood. Available options : 6 or 26
 %
 %       FLAG_POSITION
-%           (boolean, default 1) if FLAG_POSITION is true, values in SUBS 
-%           and NEIG are positions in the list FIND(MASK), otherwise they 
+%           (boolean, default 1) if FLAG_POSITION is true, values in SUBS
+%           and NEIG are positions in the list FIND(MASK), otherwise they
 %           are linear indices in MASK, i.e. elements of FIND(MASK).
 %
 %       IND
@@ -44,13 +44,13 @@ function [neig,ind] = niak_build_neighbour_subset(mask,subs,opt)
 % _________________________________________________________________________,
 % OUTPUTS :
 %
-% NEIG     
-%       (2D array) NEIG(I,:) is the list of neighbours of SUBS(I). All 
+% NEIG
+%       (2D array) NEIG(I,:) is the list of neighbours of SUBS(I). All
 %       numbers refer to a position in FIND(MASK(:)). Because all voxels
 %       do not necessarily have the same number of neighbours, 0 are
 %       used to pad each line.
 %
-% IND      
+% IND
 %       (vector) IND(i) is the linear index of the ith voxel in MASK.
 %       IND = FIND(MASK(:))
 %

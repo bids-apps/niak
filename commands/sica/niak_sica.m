@@ -3,25 +3,25 @@ function [res_ica]=niak_sica(data,opt)
 %
 % SYNTAX:
 % RES_ICA = NIAK_SICA(DATA,OPT)
-% 
+%
 % _________________________________________________________________________
 % INPUTS:
 %
-% DATA          
+% DATA
 %       (2D matrix size n*p) with p samples of n mixed channels
-% 
+%
 % OPT
 %       (structure) with the following fields
-%       
+%
 %       ALGO
 %           (string, default 'Infomax') the type of algorithm to be used
-%           for the sica decomposition. Available options : 
+%           for the sica decomposition. Available options :
 %           'Infomax', 'Fastica-Def', 'Fastica-Sym, 'Infomax-Prior'.
 %
 %       TYPE_NB_COMP
 %           (integer, default 1) How to choose the number of components:
 %           0 : choose directly the number of component to compute
-%           1 : choose the ratio of the variance to keep 
+%           1 : choose the ratio of the variance to keep
 %
 %       PARAM_NB_COMP
 %           If TYPE_NB_COMP = 0:
@@ -30,11 +30,11 @@ function [res_ica]=niak_sica(data,opt)
 %               (real value, default 0.9) ratio of the variance to keep
 %
 %       PRIOR
-%           (matrix) Used if opt.algo = 'Infomax-Prior'. Columns are the 
-%           temporal priors 
+%           (matrix) Used if opt.algo = 'Infomax-Prior'. Columns are the
+%           temporal priors
 %
 %       VERBOSE
-%           (string, default 'on') gives progression infos (includes a 
+%           (string, default 'on') gives progression infos (includes a
 %           graphical wait bar highly unstable in batch mode). Available
 %           options : 'on' or 'off'.
 %
@@ -42,7 +42,7 @@ function [res_ica]=niak_sica(data,opt)
 % OUTPUTS:
 %
 % RES_ICA
-%       (structure) with the following fields : 
+%       (structure) with the following fields :
 %
 %       S
 %           (matrix) independent components matrix (the variable is an
@@ -61,7 +61,7 @@ function [res_ica]=niak_sica(data,opt)
 % _________________________________________________________________________
 % REFERENCES
 %
-% Perlbarg, V., Bellec, P., Anton, J.-L., Pelegrini-Issac, P., Doyon, J. and 
+% Perlbarg, V., Bellec, P., Anton, J.-L., Pelegrini-Issac, P., Doyon, J. and
 % Benali, H.; CORSICA: correction of structured noise in fMRI by automatic
 % identification of ICA components. Magnetic Resonance Imaging, Vol. 25,
 % No. 1. (January 2007), pp. 35-46.
@@ -77,12 +77,12 @@ function [res_ica]=niak_sica(data,opt)
 % UCSD:
 % http://sccn.ucsd.edu/fmrlab/
 % The code was mainly contributed by Scott Makeig under a GNU
-% license. See subfunctions for details. 
+% license. See subfunctions for details.
 %
 % The FastICA methods require the installation of the fastICA toolbox.
 %
-% The number of components cannot exceed the inner dimension of the data, as 
-% indicated by the RANK function . This value is usually a couple of 
+% The number of components cannot exceed the inner dimension of the data, as
+% indicated by the RANK function . This value is usually a couple of
 % components less than the actual number of time samples of the data.
 %
 % Copyright (c) Vincent Perlbarg, U678, LIF, Inserm, UMR_S 678, Laboratoire
@@ -135,21 +135,21 @@ if isfield(opt,'algo')
             fprintf('You must specify the priors for Infomax-Prior/n');
             return
         end
-    end        
+    end
 else
     algo = 'Infomax';
 end
 
 
 if type_nb_comp == 1 %energie  conserver sans gui
-        
+
     covarianceMatrix = cov(data', 1);
     [E, D] = eig(covarianceMatrix);
     [eigenval,index] = sort(diag(D));
     index=rot90(rot90(index));
     eigenvalues=rot90(rot90(eigenval))';
     eigenvectors=E(:,index);
-	
+
     r = rank(data);
 	for i=1:r
 	    ener_ex(i) = sum(eigenvalues(1:i))/sum(eigenvalues);
@@ -178,8 +178,8 @@ if strcmp(algo,'Infomax')
     %        is_verbose = 1;
     %    case 'off'
     %        is_verbose = 0;
-    %end            
-            
+    %end
+
     [weights,sphere] = niak_sub_runica(data,'sphering','off','ncomps',nbcomp,'pca',nbcomp,'verbose',is_verbose,'maxsteps',300);
     W=weights*sphere;
     a = pinv(W);
@@ -233,7 +233,7 @@ res_ica.algo = algo;
 res_ica.contrib = contrib;
 res_ica.residus = residus';
 
-%% Subfunctions 
+%% Subfunctions
 
 % runica() - Perform Independent Component Analysis (ICA) decomposition
 %            of psychophysiological data using the infomax ICA algorithm of
@@ -784,7 +784,7 @@ end;
 
 
 
-if verbose,    
+if verbose,
     fprintf( ...
         '\nInput data size [%d,%d] = %d channels, %d frames.\n', ...
         chans,frames,chans,frames);
@@ -945,7 +945,7 @@ elseif strcmp(sphering,'off') %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         cov_data = sqrtm(cov(data'));
         rcond_data = inv(cov_data);
         sphere = inv(cov_data); % find the "sphering" matrix = spher()
-        sphere = 2.0*sphere;        
+        sphere = 2.0*sphere;
         weights = eye(ncomps,chans)*sphere; % begin with the identity matrix
         sphere = eye(chans);                 % return the identity matrix
     else % weights ~= 0
@@ -1196,7 +1196,7 @@ while step < maxsteps, %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                     step,lrate,change,(ncomps-sum(diag(signs)))/2);
             end % step > 2
         end; % if verbose
-        
+
         %
         %%%%%%%%%%%%%%%%%%%% Save current values %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %
@@ -1335,7 +1335,7 @@ end
 % posact() - Make runica() activations all RMS-positive.
 %            Adjust weights and inverse weight matrix accordingly.
 %
-% Usage: >> [actout,winvout,weightsout] = posact(data,weights,sphere) 
+% Usage: >> [actout,winvout,weightsout] = posact(data,weights,sphere)
 %
 % Inputs:
 %    data        = runica() input data
@@ -1347,7 +1347,7 @@ end
 %    winvout     = inv(weights*sphere) reoriented to match actout
 %    weightsout  = weights reoriented to match actout (sphere unchanged)
 %
-% Author: Scott Makeig, SCCN/INC/UCSD, La Jolla, 11/97 
+% Author: Scott Makeig, SCCN/INC/UCSD, La Jolla, 11/97
 
 % Copyright (C) 11/97 Scott Makeig, SCCN/INC/UCSD, scott@sccn.ucsd.edu
 %
@@ -1370,7 +1370,7 @@ end
 % Initial revision
 %
 
-% 01-25-02 reformated help & license, added links -ad 
+% 01-25-02 reformated help & license, added links -ad
 
 function [actout,winvout,weightsout] = posact(data,weights,sphere)
 

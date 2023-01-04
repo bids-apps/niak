@@ -92,25 +92,24 @@ coord = niak_mds(dist_mat,opt_mds);
 % Plot the MDS results
 clf
 if flag_disp
-    
+
     list_c = unique(part);
     nb_c = length(list_c);
     cm = jet(nb_c);
-    
+
     if nb_dim == 2
         hold on
         for num_c = 1:nb_c
             ind_c = find(part==list_c(num_c));
             plot(coord(1,ind_c),coord(2,ind_c),'o','MarkerFaceColor',cm(num_c,:),'MarkerSize',15);
         end
-                
+
     elseif nb_dim == 3
         hold on
         for num_c = 1:nb_c
             ind_c = find(part==list_c(num_c));
             plot3(coord(1,ind_c),coord(2,ind_c),coord(3,ind_c),'o','MarkerFaceColor',cm(num_c,:),'MarkerSize',15);
-        end        
-        
+        end
+
     end
 end
-

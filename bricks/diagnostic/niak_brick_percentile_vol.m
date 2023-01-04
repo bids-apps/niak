@@ -3,7 +3,7 @@ function [files_in,files_out,opt] = niak_brick_percentile_vol(files_in,files_out
 % _________________________________________________________________________
 % SUMMARY NIAK_BRICK_PERCENTILE_VOL
 %
-% Extracts percentile of the distribution of a 3D volume within a mask. 
+% Extracts percentile of the distribution of a 3D volume within a mask.
 %
 % SYNTAX:
 % [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_PERCENTILE_VOL(FILES_IN,FILES_OUT,OPT)
@@ -11,47 +11,47 @@ function [files_in,files_out,opt] = niak_brick_percentile_vol(files_in,files_out
 % _________________________________________________________________________
 % INPUTS
 %
-%  * FILES_IN        
+%  * FILES_IN
 %       (structure) with the following fields.
 %
 %       VOL
-%           (string) file name of a 3D volume. 
+%           (string) file name of a 3D volume.
 %
 %       MASK
 %           (string) file name of a binary volume. If left unspecified, a
 %           mask will be extracted from VOL using NIAK_MASK_BRAIN.
 %
-%  * FILES_OUT 
+%  * FILES_OUT
 %       (string, default <BASE VOL>_perc.dat) percentiles of the volume
 %       inside the mask, in a text file. If left empty, the default output
 %       name will be used.
 %
-%  * OPT           
-%       (structure) with the following fields.  
+%  * OPT
+%       (structure) with the following fields.
 %
 %       PERCENTILES (default [0 0.01 0.05 0.1 0.25 0.5 0.75 0.9 0.95 0.99 1])
 %           The percentiles under investigation.
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, all default 
-%           outputs will be created in the folder FOLDER_OUT. The folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, all default
+%           outputs will be created in the folder FOLDER_OUT. The folder
 %           needs to be created beforehand.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function
 %           prints some infos during the processing.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO
 % NIAK_BUILD_AUTOCORRELATION

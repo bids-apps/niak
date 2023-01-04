@@ -11,7 +11,7 @@
 %   (string, default [pwd filesep], aka './') a folder
 %
 % BLACK_LIST
-%   (string or cell of string) a list of folders, or files to 
+%   (string or cell of string) a list of folders, or files to
 %   be ignored by the grabber. Absolute names should be used
 %   (i.e. '/home/user23/database/toto' rather than 'toto'). If not, the names
 %   will be assumed to refer to the current directory.
@@ -107,7 +107,7 @@ files = files(:);
 ind_dir = find(is_dir);
 for num_d = 1:length(ind_dir)
     if (nargin < 2) || ~ismember(files_loc{ind_dir(num_d)},black_list)
-        files = [ files ; niak_grab_folder([files_loc{ind_dir(num_d)} filesep],black_list,false) ];    
+        files = [ files ; niak_grab_folder([files_loc{ind_dir(num_d)} filesep],black_list,false) ];
     end
 end
 

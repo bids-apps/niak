@@ -8,37 +8,37 @@ function [labels_x,ind_x,model_select] = niak_model_select (model, opt)
 % MODEL.LABELS_Y (cell of strings 1*K) LABELS_Y{K} is the label of the Kth covariate
 %
 % OPT.SELECT
-%   (structure, optional) with multiple entries and the following fields:           
+%   (structure, optional) with multiple entries and the following fields:
 %   LABEL  (string) the covariate used to select entries *before normalization*
 %   VALUES (vector, default []) a list of values to select (if empty, all entries are retained).
 %   MIN (scalar, default []) only values higher (strictly) than MIN are retained.
-%   MAX (scalar, default []) only values lower (strictly) than MAX are retained. 
+%   MAX (scalar, default []) only values lower (strictly) than MAX are retained.
 %   OPERATION (string, default 'or') the operation that is applied to select the frames.
 %      Available options:
 %      'or' : merge the current selection SELECT(E) with the result of the previous one.
 %      'and' : intersect the current selection SELECT(E) with the result of the previous one.
-% OPT.FLAG_FILTER_NAN (boolean, default true) if the flag is true, any observation associated with a NaN in 
-%   MODEL.X is removed from the model. 
-% OPT.LABELS_X (cell of strings, default {}) The list of entries (rows) used 
-%   to build the model (the order will be used as well). If left empty, 
-%   all entries are used. 
-% OPT.LABELS_Y (cell of strings) the list of covariates (columns) to be included in the model. 
+% OPT.FLAG_FILTER_NAN (boolean, default true) if the flag is true, any observation associated with a NaN in
+%   MODEL.X is removed from the model.
+% OPT.LABELS_X (cell of strings, default {}) The list of entries (rows) used
+%   to build the model (the order will be used as well). If left empty,
+%   all entries are used.
+% OPT.LABELS_Y (cell of strings) the list of covariates (columns) to be included in the model.
 %   If left empty, all covariates are used.
 %
-% LABELS_X (cell of strings) same as MODEL.LABELS_X, but filtered and re-ordered based 
+% LABELS_X (cell of strings) same as MODEL.LABELS_X, but filtered and re-ordered based
 %   on OPT.
 % IND_X (vector) the indices of extracted rows, i.e. LABELS_X = MODEL.LABELS_X(IND_X);
 % MODEL_SELECT (array) same as MODEL.X, but filtered and re-ordered based
 %   on OPT.
 %
 % COMMENTS:
-%   In the selection process, if several covariates are associated with OPT.SELECT.LABEL, 
+%   In the selection process, if several covariates are associated with OPT.SELECT.LABEL,
 %   the final selection will be the intersection of all selections performed with individual
 %   covariates associated with the label.
 %
-%   For each entry in select, the VALUES, MIN and MAX filtering are applied sequentially, 
-%   in that order. The different entries of select are aso applied sequentially in the 
-%   specified order. 
+%   For each entry in select, the VALUES, MIN and MAX filtering are applied sequentially,
+%   in that order. The different entries of select are aso applied sequentially in the
+%   specified order.
 %
 % Copyright (c) Pierre Bellec, Jalloul Bouchkara
 %               Centre de recherche de l'institut de Gériatrie de Montréal
@@ -62,13 +62,13 @@ else
    opt = psom_struct_defaults(struct,list_fields,list_defaults);
 end
 
-%% Reorder (and reduce) the model using opt.labels_x 
+%% Reorder (and reduce) the model using opt.labels_x
 labels_x_raw = model.labels_x;
 if ~isempty(opt.labels_x)
     if length(unique(opt.labels_x))~=length(opt.labels_x)
         error('The labels provided in OPT.LABELS_X should be unique')
     end
-    [mask_x,ind_m] = ismember(opt.labels_x,model.labels_x) ; 
+    [mask_x,ind_m] = ismember(opt.labels_x,model.labels_x) ;
     if any(ind_m==0)
         ind_0 = find(ind_m == 0);
         fprintf('Warning: the following entries (rows) in the model were not associated with any data and will be omitted:\n')
@@ -96,7 +96,7 @@ if ~isempty(opt.labels_x)
             y_tmp = [y_tmp ; model.y(mask_tmp,:)];
         end
     end
-else 
+else
     labels_x = model.labels_x(:);
     ind_x = (1:length(labels_x))';
 end
@@ -114,7 +114,7 @@ if isfield(opt.select(1),'label')
         if ~isfield(opt.select(num_s),'label')
            continue
         end
-        opt_s = psom_struct_defaults(opt.select(num_s),{'label','values','min','max','operation'},{NaN,[],[],[],'or'}); 
+        opt_s = psom_struct_defaults(opt.select(num_s),{'label','values','min','max','operation'},{NaN,[],[],[],'or'});
         if isempty(opt_s.operation)
             opt_s.operation = 'or';
         end
@@ -129,7 +129,7 @@ if isfield(opt.select(1),'label')
         end
         switch opt_s.operation
             case 'or'
-                if ~isempty(opt_s.values)           
+                if ~isempty(opt_s.values)
                     mask = mask|min(ismember(model.x(:,ind),opt_s.values),[],2);
                 end
                 if ~isempty(opt_s.min)
@@ -139,7 +139,7 @@ if isfield(opt.select(1),'label')
                    mask = mask|min((model.x(:,ind)<opt_s.max),[],2);
                 end
             case 'and'
-                if ~isempty(opt_s.values)           
+                if ~isempty(opt_s.values)
                     mask = mask&min(ismember(model.x(:,ind),opt_s.values),[],2);
                 end
                 if ~isempty(opt_s.min)
@@ -158,7 +158,7 @@ if isfield(opt.select(1),'label')
     if ~isempty(model.y)
         model.y = model.y(mask,:);
     end
-    model.labels_x = model.labels_x(mask);  
+    model.labels_x = model.labels_x(mask);
     labels_x = labels_x(mask);
     ind_x = ind_x(mask);
 end
@@ -166,7 +166,7 @@ end
 %% Keep only variables of interest in the model
 if isempty(opt.labels_y)
     list_cont = model.labels_y;
-else 
+else
     list_cont = opt.labels_y;
 end
 mask_var = ismember(model.labels_y,list_cont);
@@ -179,7 +179,7 @@ if (opt.flag_filter_nan)&&~isempty(model.x)
     if any(mask_nan)
         warning('The following entries were suppressed because they were associated to NaNs')
         char(model.labels_x{mask_nan})
-    end    
+    end
     labels_x = labels_x(~mask_nan);
     ind_x = ind_x(~mask_nan);
     model.x = model.x(~mask_nan, :);

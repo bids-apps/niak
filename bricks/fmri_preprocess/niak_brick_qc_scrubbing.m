@@ -11,9 +11,9 @@ function [files_in,files_out,opt]=niak_brick_qc_scrubbing(files_in,files_out,opt
 %   (string) the name of a .mat file with the results of scrubbing for subject
 %   SUBJECT.
 %
-% FILES_OUT 
+% FILES_OUT
 %   (string) the name of a csv file with three metrics for each subject:
-%   number of scrubbed time frames, number of remaining time frames, average FD 
+%   number of scrubbed time frames, number of remaining time frames, average FD
 %   before and after scrubbing.
 %
 % OPT
@@ -28,9 +28,9 @@ function [files_in,files_out,opt]=niak_brick_qc_scrubbing(files_in,files_out,opt
 %      about progress.
 %
 %   FLAG_TEST
-%      (boolean, default false) if FLAG_TEST is true, the brick does not do 
-%      anything except update default values and perform sanity checks.  
-%  
+%      (boolean, default false) if FLAG_TEST is true, the brick does not do
+%      anything except update default values and perform sanity checks.
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
@@ -38,11 +38,11 @@ function [files_in,files_out,opt]=niak_brick_qc_scrubbing(files_in,files_out,opt
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
 %
 % _________________________________________________________________________
-% COMMENTS: 
+% COMMENTS:
 %
 % See NIAK_BRICK_REGRESS_CONFOUNDS for more details.
 %
-% Copyright (c) Pierre Bellec 
+% Copyright (c) Pierre Bellec
 % Research Centre of the Montreal Geriatric Institute
 % & Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2012

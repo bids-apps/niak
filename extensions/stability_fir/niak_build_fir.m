@@ -14,7 +14,7 @@ function [fir_mean,nb_fir,fir_all,time_samples] = niak_build_fir(tseries,opt)
 %       (structure) with the following fields :
 %
 %       TIME_FRAMES
-%           (vector) a list of times (in ms) corresponding to each row 
+%           (vector) a list of times (in ms) corresponding to each row
 %           of TSERIES.
 %
 %       TIME_EVENTS
@@ -22,20 +22,20 @@ function [fir_mean,nb_fir,fir_all,time_samples] = niak_build_fir(tseries,opt)
 %           estimation.
 %
 %       TIME_WINDOW
-%           (scalar, default 10) the length of the time window for the 
-%           hrf estimation (the units need to be consistent with those 
+%           (scalar, default 10) the length of the time window for the
+%           hrf estimation (the units need to be consistent with those
 %           used in TIME_EVENTS and TIME_FRAMES, generally seconds).
 %
 %       TIME_SAMPLING
-%           (scalar, default 0.5) the time between two time points in the 
+%           (scalar, default 0.5) the time between two time points in the
 %           hrf estimation (again the units need to be consistent with
 %           TIME_WINDOW).
 %
 %       MAX_INTERPOLATION
-%           (scalar, default Inf) the maximal time interval where temporal 
-%           interpolations can be performed. Any response that involve an 
+%           (scalar, default Inf) the maximal time interval where temporal
+%           interpolations can be performed. Any response that involve an
 %           interpolation between points that are too far apart will be excluded.
-% 
+%
 %       INTERPOLATION
 %           (string, default 'linear') the temporal interpolation scheme.
 %           See the METHOD argument of the matlab function INTERP1 for
@@ -111,7 +111,7 @@ time_frames = opt.time_frames(1:size(tseries,1));
 
 %% FIR estimation
 if opt.flag_verbose
-    sprintf('   FIR estimation : ');    
+    sprintf('   FIR estimation : ');
 end
 
 time_samples = 0:opt.time_sampling:opt.time_window;
@@ -140,7 +140,7 @@ for num_e = 1:nb_events
         mask_nan(num_e) = true;
         continue
     end
-    max_delta = max(all_delta(ind_start:(ind_end-1)));    
+    max_delta = max(all_delta(ind_start:(ind_end-1)));
     if max_delta > (opt.max_interpolation+0.001)
         mask_nan(num_e) = true;
         continue
@@ -157,7 +157,7 @@ for num_e = 1:nb_events
 end
 
 if nb_fir > 0
-    fir_mean = fir_mean/nb_fir;    
+    fir_mean = fir_mean/nb_fir;
 end
 
 if nargout > 2

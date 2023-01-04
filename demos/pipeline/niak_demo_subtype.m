@@ -8,20 +8,20 @@ function [pipeline,opt_pipe,files_in] = niak_demo_subtype(path_demo,opt)
 % INPUTS:
 %
 % PATH_DEMO
-%   (string) the full path to the output of the connectome pipeline, 
-%   generated from the NIAK demo dataset. 
+%   (string) the full path to the output of the connectome pipeline,
+%   generated from the NIAK demo dataset.
 %
 % OPT
 %   (structure, optional) Any argument passed to NIAK_PIPELINE_SUBTYPE
-%   will do here. The demo only changes one default and enforces a few 
+%   will do here. The demo only changes one default and enforces a few
 %   parameters (see COMMENTS below):
 %
-%   EXT 
-%      (string, default '.mnc.gz') file name extension, either: 
+%   EXT
+%      (string, default '.mnc.gz') file name extension, either:
 %      '.mnc' or '.mnc.gz' or '.nii' or '.nii.gz'
 %
 %   FOLDER_OUT
-%      (string, default PATH_DEMO/SUBTYPE) where to store the 
+%      (string, default PATH_DEMO/SUBTYPE) where to store the
 %      results of the pipeline.
 %
 % _________________________________________________________________________
@@ -35,25 +35,25 @@ function [pipeline,opt_pipe,files_in] = niak_demo_subtype(path_demo,opt)
 %   (structure) the option to call NIAK_PIPELINE_SUBTYPE
 %
 % FILES_IN
-%   (structure) the description of input files used to call 
+%   (structure) the description of input files used to call
 %   NIAK_PIPELINE_SUBTYPE
 %
 % _________________________________________________________________________
 % COMMENTS
 %
 % Note 1:
-% It is possible to configure the pipeline manager to 
-% use parallel computing using OPT.PSOM, see : 
+% It is possible to configure the pipeline manager to
+% use parallel computing using OPT.PSOM, see :
 % http://code.google.com/p/psom/wiki/PsomConfiguration
 %
 % NOTE 2:
-% The demo database exists in multiple file formats. NIAK looks into the demo 
-% path and is supposed to figure out which format you are intending to use 
-% by itself. 
+% The demo database exists in multiple file formats. NIAK looks into the demo
+% path and is supposed to figure out which format you are intending to use
+% by itself.
 %
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec, Sebastian Urchs, Angela Tam
-% Centre de recherche de l'institut de griatrie de Montral, 
+% Centre de recherche de l'institut de griatrie de Montral,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2013
 % Maintainer : sebastian.urchs@mail.mcgill.ca

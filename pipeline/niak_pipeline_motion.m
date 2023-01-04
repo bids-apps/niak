@@ -6,11 +6,11 @@ function [pipeline,opt,files_out] = niak_pipeline_motion(files_in,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN.<SESSION>.<RUN>  
+% FILES_IN.<SESSION>.<RUN>
 %   (string) the file name of one fMRI dataset. All datasets in <SESSIONS>
 %       are acquired in the same session (small displacements).
 %
-% OPT   
+% OPT
 %   (structure) with the following fields:
 %
 %   SUBJECT
@@ -18,56 +18,56 @@ function [pipeline,opt,files_out] = niak_pipeline_motion(files_in,opt)
 %       output names.
 %
 %   PSOM
-%       (structure, default from the PSOM configuration file) the options 
-%       of the pipeline system, see PSOM_RUN_PIPELINE. The folder for logs 
+%       (structure, default from the PSOM configuration file) the options
+%       of the pipeline system, see PSOM_RUN_PIPELINE. The folder for logs
 %       is not optional though, it is 'logs' located in OPT.FOLDER_OUT
 %
-%   FOLDER_OUT 
+%   FOLDER_OUT
 %       (string) The name of the folder to save all the outputs.
 %
-%   VOL_REF 
-%       (vector, default 'median') VOL_REF is the number of the volume that 
-%       will be used as target in each run. If VOL_REF is a string, the 
-%       median volume of the run of reference in each session will be used 
-%       rather than an arbitrary volume. This option superseeds the 
+%   VOL_REF
+%       (vector, default 'median') VOL_REF is the number of the volume that
+%       will be used as target in each run. If VOL_REF is a string, the
+%       median volume of the run of reference in each session will be used
+%       rather than an arbitrary volume. This option superseeds the
 %       contents of OPT.PARAMETERS
 %
-%   RUN_REF 
-%       (vector, default 1) RUN_REF(NUM) is the number of the run that will 
-%       be used as target for session NUM. If RUN_REF is a single integer, 
+%   RUN_REF
+%       (vector, default 1) RUN_REF(NUM) is the number of the run that will
+%       be used as target for session NUM. If RUN_REF is a single integer,
 %       the same number will be used for all sessions.
 %
-%   SESSION_REF 
-%       (string, default first session) name of the session of reference. 
+%   SESSION_REF
+%       (string, default first session) name of the session of reference.
 %       By default, it is the first field found in FILES_IN.
 %
 %   IGNORE_SLICE
-%       (integer, default 1) ignore the first and last IGNORE_SLICE slices 
+%       (integer, default 1) ignore the first and last IGNORE_SLICE slices
 %       of the volume in the coregistration process.
 %
 %   FWHM
-%       (real number, default 5 mm) the fwhm of the blurring kernel applied 
+%       (real number, default 5 mm) the fwhm of the blurring kernel applied
 %       to all volumes before coregistration.
 %
 %   STEP
 %       (real number, default 10) The step argument for MINCTRACC.
 %
 %   TOL_WITH_RUN
-%       (real number, default 0.0005) The tolerance level for convergence 
+%       (real number, default 0.0005) The tolerance level for convergence
 %       in MINCTRACC for within-run motion correction.
 %
 %   TOL_BETWEEN_RUN
-%       (real number, default 0.00001) The tolerance level for convergence 
-%       in MINCTRACC in between-run motion correction (either intra- or 
+%       (real number, default 0.00001) The tolerance level for convergence
+%       in MINCTRACC in between-run motion correction (either intra- or
 %       inter-session).
 %
-%   FLAG_TEST 
-%       (boolean, default: 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%   FLAG_TEST
+%       (boolean, default: 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default: 1) If FLAG_VERBOSE == 1, write messages 
+%   FLAG_VERBOSE
+%       (boolean, default: 1) If FLAG_VERBOSE == 1, write messages
 %       indicating progress.
 %
 % _________________________________________________________________________
@@ -83,7 +83,7 @@ function [pipeline,opt,files_out] = niak_pipeline_motion(files_in,opt)
 %       (structure) with the following fields :
 %
 %       FINAL
-%           (structure) a list of the final motion parameters (the target is 
+%           (structure) a list of the final motion parameters (the target is
 %           the run of reference in the session of reference).
 %
 %       WITHIN_RUN
@@ -98,18 +98,18 @@ function [pipeline,opt,files_out] = niak_pipeline_motion(files_in,opt)
 % COMMENTS:
 %
 % NOTE 1: The motion correction follows a hierachical strategy :
-% Rigid-body transforms are first estimated within each run 
+% Rigid-body transforms are first estimated within each run
 % independently by registering all volumes to one single reference volume
 % in a run of reference.
-% Then, the volumes of reference within each session are coregistered with 
+% Then, the volumes of reference within each session are coregistered with
 % one volume of reference (of the run of reference)
 % Finally, these volumes of references (session level) are coregistered to
 % the volume of reference of the session of references.
-% The within-run, within-session and between-sessions transformation are 
+% The within-run, within-session and between-sessions transformation are
 % combined.
 %
-% NOTE 2: if FLAG_SESSION == 1, the within-run transformations are not 
-% applied. 
+% NOTE 2: if FLAG_SESSION == 1, the within-run transformations are not
+% applied.
 %
 % NOTE 3: A session corresponds to a single scanning session with one
 % participant (typically 1 hour) while a run is a single set of brain
@@ -119,10 +119,10 @@ function [pipeline,opt,files_out] = niak_pipeline_motion(files_in,opt)
 % runs before and after repositioning should be regarded as being collected
 % on different sessions.
 %
-% NOTE 4: The TRANSF variables are standard 4*4 matrix array representation 
-% of an affine transformation [M T ; 0 0 0 1] for (y=M*x+T) 
+% NOTE 4: The TRANSF variables are standard 4*4 matrix array representation
+% of an affine transformation [M T ; 0 0 0 1] for (y=M*x+T)
 % _________________________________________________________________________
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
 % geriatrie de Montreal, Montreal, Canada, 2010-2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -185,7 +185,7 @@ tmp.(subject) = files_in;
 fmri_s = niak_fmri2struct(tmp);
 [path_f,name_f,ext_f] = niak_fileparts(fmri{1});
 
-%% Generate the targets (run) 
+%% Generate the targets (run)
 for num_e = 1:length(fmri)
     clear job_in job_out job_opt
     job_in = fmri(num_e);
@@ -194,7 +194,7 @@ for num_e = 1:length(fmri)
         job_opt.operation = 'vol = median(vol_in{1},4);';
     else
         job_opt.operation = sprintf('vol = vol_in{1}(:,:,:,%i);',vol_ref);
-    end   
+    end
     job_opt.flag_extra = false;
     pipeline = psom_add_job(pipeline,['motion_target_' label(num_e).name],'niak_brick_math_vol',job_in,job_out,job_opt);
 end
@@ -207,11 +207,11 @@ for num_e = 1:length(fmri)
     job_out         = [opt.folder_out 'motion_Wrun_' label(num_e).name '.mat'];
     files_out.within_run.(label(num_e).subject).(label(num_e).session).(label(num_e).run) = job_out;
     job_opt         = opt.parameters;
-    job_opt.tol     = opt.tol_within_run;        
+    job_opt.tol     = opt.tol_within_run;
     pipeline = psom_add_job(pipeline,['motion_Wrun_' label(num_e).name],'niak_brick_motion_parameters',job_in,job_out,job_opt);
 end
 
-%% Estimate the within-session motion parameters 
+%% Estimate the within-session motion parameters
 for num_s = 1:length(list_session)
     session = list_session{num_s};
     list_run = fieldnames(fmri_s.(subject).(session));
@@ -223,30 +223,30 @@ for num_s = 1:length(list_session)
             name_job        = ['motion_Wsession_' subject '_' session '_' list_run{num_r}   ];
             job_in.fmri   = pipeline.(name_job_source).files_out;
             job_in.target = pipeline.(name_job_target).files_out;
-            job_out       = [opt.folder_out name_job '.mat'];            
+            job_out       = [opt.folder_out name_job '.mat'];
             job_opt       = opt.parameters;
-            job_opt.tol   = opt.tol_between_run;                
+            job_opt.tol   = opt.tol_between_run;
             pipeline = psom_add_job(pipeline,name_job,'niak_brick_motion_parameters',job_in,job_out,job_opt);
         end
-    end            
+    end
 end
 
-%% Estimate the between-session motion parameters 
+%% Estimate the between-session motion parameters
 list_run_ref = fieldnames(fmri_s.(subject).(session_ref));
 for num_s = 1:length(list_session)
-    session = list_session{num_s};  
-    list_run = fieldnames(fmri_s.(subject).(session)); 
-    if ~strcmp(session,session_ref)        
+    session = list_session{num_s};
+    list_run = fieldnames(fmri_s.(subject).(session));
+    if ~strcmp(session,session_ref)
         clear job_in job_out job_opt
-        name_job_source     = ['motion_target_'   subject '_' session     '_' list_run{run_ref} ];           
-        name_job_target     = ['motion_target_'   subject '_' session_ref '_' list_run_ref{run_ref} ];   
+        name_job_source     = ['motion_target_'   subject '_' session     '_' list_run{run_ref} ];
+        name_job_target     = ['motion_target_'   subject '_' session_ref '_' list_run_ref{run_ref} ];
         name_job            = ['motion_Bsession_' subject '_' session ];
         job_in.fmri   = pipeline.(name_job_source).files_out;
         job_in.target = pipeline.(name_job_target).files_out;
         job_out       = [opt.folder_out name_job '.mat'];
         job_opt       = opt.parameters;
-        job_opt.tol   = opt.tol_between_run;                
-        pipeline = psom_add_job(pipeline,name_job,'niak_brick_motion_parameters',job_in,job_out,job_opt);        
+        job_opt.tol   = opt.tol_between_run;
+        pipeline = psom_add_job(pipeline,name_job,'niak_brick_motion_parameters',job_in,job_out,job_opt);
     end
 end
 
@@ -254,17 +254,17 @@ end
 for num_s = 1:length(list_session)
     session = list_session{num_s};
     list_run = fieldnames(fmri_s.(subject).(session));
-    for num_r = 1:length(list_run)      
+    for num_r = 1:length(list_run)
         clear job_in job_out job_opt
         name_job  = ['motion_parameters_' subject '_' session '_' list_run{num_r}];
         job_in{1} = pipeline.(['motion_Wrun_' subject '_' session '_' list_run{num_r}]).files_out;
         if num_r~=run_ref
             job_in{2} = pipeline.(['motion_Wsession_' subject '_' session '_' list_run{num_r}]).files_out;
         end
-        if ~strcmp(session,session_ref)            
+        if ~strcmp(session,session_ref)
             job_in{end+1} = pipeline.(['motion_Bsession_' subject '_' session]).files_out;
-        end                
-        job_out          = [opt.folder_out name_job '.mat'];  
+        end
+        job_out          = [opt.folder_out name_job '.mat'];
         files_out.final.(subject).(session).(list_run{num_r}) = job_out;
         job_opt.var_name = 'transf';
         pipeline = psom_add_job(pipeline,name_job,'niak_brick_combine_transf',job_in,job_out,job_opt);

@@ -9,9 +9,9 @@ function [files_in,files_out,opt] = niak_brick_stability_summary_ind(files_in,fi
 %
 % FILES_IN
 %   (cell array of strings) FILES_IN{N} is a .mat file with a variable
-%   SIL. SIL is a matrix S*K, with various summary measures of 
-%   cluster stability. The column K of SIL has been derived with 
-%   OPT.NB_CLASSES(K) clusters. The row S of SIL has been derived with S 
+%   SIL. SIL is a matrix S*K, with various summary measures of
+%   cluster stability. The column K of SIL has been derived with
+%   OPT.NB_CLASSES(K) clusters. The row S of SIL has been derived with S
 %   final clusters. The different entries of FILES_IN usually correspond to
 %   different subjects and will ultimately be averaged.
 %
@@ -19,7 +19,7 @@ function [files_in,files_out,opt] = niak_brick_stability_summary_ind(files_in,fi
 %   (structure) with the following fields :
 %
 %   SIL_ALL
-%       (string) a .mat file with the following variables : 
+%       (string) a .mat file with the following variables :
 %
 %       SCALES
 %           (array) identical to OPT.NB_CLASSES
@@ -28,7 +28,7 @@ function [files_in,files_out,opt] = niak_brick_stability_summary_ind(files_in,fi
 %           (array) SIL(S,K,N) is SIL(S,K) drawn from FILES_IN{N}
 %
 %       SIL_ALL_MAX
-%           (array) SIL_ALL_MAX(S,N) is the maximal contrast for K in 
+%           (array) SIL_ALL_MAX(S,N) is the maximal contrast for K in
 %           a neighbourhood of S and subject N.
 %
 %       SCALES_ALL_MAX
@@ -36,15 +36,15 @@ function [files_in,files_out,opt] = niak_brick_stability_summary_ind(files_in,fi
 %           achieved maximal contrast.
 %
 %       PEAKS_ALL
-%           (cell array) PEAKS_ALL{N} is the list of scales achieving local 
+%           (cell array) PEAKS_ALL{N} is the list of scales achieving local
 %           maxima of stability for subject N.
 %
 %       SIL_AVG_MAX
-%           (array) SIL_AVG_MAX(S,N) is the maximal contrast for K in 
+%           (array) SIL_AVG_MAX(S,N) is the maximal contrast for K in
 %           a neighbourhood of S, averaged across all subjects.
 %
 %       SIL_STD_MAX
-%           (array) SIL_STD_MAX(S,N) is the standard deviation (across all 
+%           (array) SIL_STD_MAX(S,N) is the standard deviation (across all
 %           subjects) associated with SIL_AVG_MAX(S,N).
 %
 %       SCALES_AVG_MAX
@@ -52,11 +52,11 @@ function [files_in,files_out,opt] = niak_brick_stability_summary_ind(files_in,fi
 %           achieved maximal average contrast.
 %
 %       PEAKS_AVG
-%           (vector) PEAKS_AVG is the list of scales achieving local 
+%           (vector) PEAKS_AVG is the list of scales achieving local
 %           maxima of stability averaged across all subjects.
 %
 %   FIGURE_SIL_MAX
-%       (string) the name of a pdf file with a plot of SIL_AVG_MAX and 
+%       (string) the name of a pdf file with a plot of SIL_AVG_MAX and
 %       SIL_STD_MAX with local maxima PEAKS_AVG highlighted
 %
 %   TABLE_SIL_MAX
@@ -69,7 +69,7 @@ function [files_in,files_out,opt] = niak_brick_stability_summary_ind(files_in,fi
 %   (structure) with the following fields.
 %
 %   NB_CLASSES
-%       (vector) SIL(:,K) was analyzed NB_CLASSES(K) clusters. 
+%       (vector) SIL(:,K) was analyzed NB_CLASSES(K) clusters.
 %
 %   NEIGH
 %       (vector, default [0.7 1.3]) defines the local neighbourhood of
@@ -82,7 +82,7 @@ function [files_in,files_out,opt] = niak_brick_stability_summary_ind(files_in,fi
 %
 %   FLAG_TEST
 %       (boolean, default 0) if FLAG_TEST equals 1, the brick does not
-%       do anything but update the default values in FILES_IN, FILES_OUT 
+%       do anything but update the default values in FILES_IN, FILES_OUT
 %       and OPT.
 %
 % _________________________________________________________________________
@@ -98,8 +98,8 @@ function [files_in,files_out,opt] = niak_brick_stability_summary_ind(files_in,fi
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2010-2011
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -192,13 +192,13 @@ end
 files_in = files_in(mask_ok);
 N = length(files_in);
 sil_all = sil_all(:,:,mask_ok);
-        
+
 %% Extract maximal measures over clustering parameters for each individual
 scales = nb_classes;
 sil_all_max = zeros([S N]);
 scales_all_max = zeros([S,N]);
 for num_n = 1:N
-    [sil_all_max(:,num_n),scales_all_max(:,num_n)] = niak_build_max_sil(sil_all(:,:,num_n),nb_classes(:),opt.neigh,1);    
+    [sil_all_max(:,num_n),scales_all_max(:,num_n)] = niak_build_max_sil(sil_all(:,:,num_n),nb_classes(:),opt.neigh,1);
     mask = ~isnan(sil_all_max(:,num_n));
     list_s = find(mask);
     [val_max,ind_max] = niak_find_local_max_1d(list_s,sil_all_max(mask,num_n),opt.neigh);
@@ -253,23 +253,23 @@ if ~strcmp(files_out.figure_sil_max,'gb_niak_omitted')
     if opt.flag_verbose
         fprintf('Building a figure of group summary measures ...\n');
     end
-    
+
     if strcmp(GB_NIAK.language,'octave')
         file_eps = psom_file_tmp('_stability_contrast.eps');
     end
     hfa = figure;
     errorbar(1:S,sil_avg_max,sil_std_max);
-    hold on        
+    hold on
     plot(peaks_avg,sil_avg_max(peaks_avg),'r*')
-    str_title = sprintf('Average individual stability contrast');        
+    str_title = sprintf('Average individual stability contrast');
     title(str_title);
     if strcmp(GB_NIAK.language,'octave')
         print(hfa,'-dpsc','-r300',file_eps);
     else
-        print(hfa,'-dpdf',files_out.figure_sil_max);            
+        print(hfa,'-dpdf',files_out.figure_sil_max);
     end
     close(hfa)
-    
+
     if strcmp(GB_NIAK.language,'octave')
         % Conversion in pdf
         instr_ps2pdf = ['ps2pdf -dEPSCrop ',file_eps,' ',files_out.figure_sil_max];
@@ -277,7 +277,7 @@ if ~strcmp(files_out.figure_sil_max,'gb_niak_omitted')
         if succ~=0
             warning(cat(2,'There was a problem in the conversion of the figure from ps to pdf with ps2pdf: ',msg));
         end
-        
+
         % Clean up
         instr_clean = ['rm -rf ' file_eps];
         [status,msg] = system(instr_clean);

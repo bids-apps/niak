@@ -3,19 +3,19 @@ function mask = niak_fd2mask(fd,time_frames,opt)
 % Syntax: MASK = NIAK_FD2MASK( FD, [TIME_FRAMES] ,OPT )
 %
 % INPUTS:
-%   FD (vector) a series of measures of frame displacement. Last time point in FD is 0 (estimation is not possible). 
-%   TIME_FRAMES (vector, default 1:length(fd)) the time points associated with each measure in FD. 
+%   FD (vector) a series of measures of frame displacement. Last time point in FD is 0 (estimation is not possible).
+%   TIME_FRAMES (vector, default 1:length(fd)) the time points associated with each measure in FD.
 %   OPT.THRE (scalar, default 0.5) the threshold on acceptable frame displacement.
 %   OPT.WW (vector, default [1 2]) defines the time window to be removed around each time frame
-%      identified with excessive motion. First value is for time prior to motion peak, and second value 
-%      is for time following motion peak. 
-%   OPT.NB_MIN_VOL (scalar, default 40) the minimum number of volumes to retain. The scrubbing 
-%      procedure is interrupted before this number is reached. 
+%      identified with excessive motion. First value is for time prior to motion peak, and second value
+%      is for time following motion peak.
+%   OPT.NB_MIN_VOL (scalar, default 40) the minimum number of volumes to retain. The scrubbing
+%      procedure is interrupted before this number is reached.
 %
 % See licensing information in the code
- 
+
 % (c) Pierre Bellec
-% Centre de recherche de l'institut de geriatrie de Montreal, 
+% Centre de recherche de l'institut de geriatrie de Montreal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2016
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -51,7 +51,7 @@ opt = psom_struct_defaults( opt, ...
          { 'ww'  , 'nb_min_vol' , 'thre' }, ...
          { [1 2] , 40           , 0.5    });
 
-%% Now build the mask         
+%% Now build the mask
 mask = false(length(fd),1);
 list_peak = find(fd>opt.thre);
 for pp = 1:length(list_peak)

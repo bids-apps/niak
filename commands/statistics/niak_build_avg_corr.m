@@ -11,7 +11,7 @@ function avg_corr = niak_build_avg_corr(mat,part,flag_vec)
 %   vectorized with NIAK_MAT2LVEC
 %
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de griatrie de Montral, 
+% Centre de recherche de l'institut de griatrie de Montral,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2015
 % Maintainer : pierre.bellec@criugm.qc.ca

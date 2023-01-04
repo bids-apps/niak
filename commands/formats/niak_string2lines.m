@@ -4,7 +4,7 @@ function cell_lines = niak_string2lines(vec_string)
 %
 % SYNTAX
 % cell_lines = niak_string2lines(vec_string)
-% 
+%
 % INPUT
 % vec_string    (vector of strings) containing words separated by blanks
 %
@@ -12,7 +12,7 @@ function cell_lines = niak_string2lines(vec_string)
 % cell_lines    (cell of string) cell_words{n} is the nth line in
 %                   vec_string
 % COMMENTS
-% 
+%
 % Copyright (c) Pierre Bellec 01/2008
 %
 % Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -47,4 +47,3 @@ cell_lines = cell(length(pos_ent)-1,1);
 for num_p = 1:length(pos_ent)-1
     cell_lines{num_p} = vec_string(pos_ent(num_p)+1:pos_ent(num_p+1)-1);
 end
-

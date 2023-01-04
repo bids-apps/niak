@@ -21,7 +21,7 @@ fprintf(1,'%%=================================================\n\n')
 clear i;
 data2json=1+2*i
 saveubjson('',data2json)
-json2data=loadubjson(ans) 
+json2data=loadubjson(ans)
 
 fprintf(1,'\n%%=================================================\n')
 fprintf(1,'%%  a complex matrix\n')
@@ -177,4 +177,3 @@ saveubjson('data2json',data2json)
 json2data=loadubjson(ans)
 
 rand ('state',rngstate);
-

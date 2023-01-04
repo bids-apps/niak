@@ -8,47 +8,47 @@ function [pipeline,opt] = niak_pipeline_stability_voxel(files_in,opt)
 % INPUTS
 %
 % FILES_IN
-%   (structure) with the following fields : 
+%   (structure) with the following fields :
 %
 %   DATA
 %      (structure) with the following fields :
 %
 %      <SUBJECT>.<SESSION>.<RUN>
-%         (string) a 3D+t fMRI dataset. The fields <SUBJECT>, <SESSION> 
-%         and <RUN> can be any arbitrary string. Note that time series can 
-%         be specified directly as variables in a .mat file. The file 
-%         FILES_IN.ATOMS needs to be specified in that instance. 
+%         (string) a 3D+t fMRI dataset. The fields <SUBJECT>, <SESSION>
+%         and <RUN> can be any arbitrary string. Note that time series can
+%         be specified directly as variables in a .mat file. The file
+%         FILES_IN.ATOMS needs to be specified in that instance.
 %         The <SESSION> level can be skipped.
 %
 %   PART
-%       (cell of strings, default empty) the target partitions for each 
+%       (cell of strings, default empty) the target partitions for each
 %
 %   INFOS
-%      (string, default 'gb_niak_omitted') the name of a CSV file. 
+%      (string, default 'gb_niak_omitted') the name of a CSV file.
 %      Example :
 %                , SEX , HANDEDNESS
-%      <SUBJECT> , 0   , 0 
+%      <SUBJECT> , 0   , 0
 %      This type of file can be generated with Excel (save under CSV).
 %      The infos will be used to "stratify" the data, i.e. resampling of
-%      the data will be restricted within groups of subjects that share 
+%      the data will be restricted within groups of subjects that share
 %      identical infos. All strata will be given equal weights to build
 %      the consensus across subjects. If omitted, all subjects will belong
 %      to the same strata.
 %
 %   AREAS
-%      (string, default AAL template from NIAK) the name of the brain 
-%      parcelation template that will be used to constrain the region 
+%      (string, default AAL template from NIAK) the name of the brain
+%      parcelation template that will be used to constrain the region
 %      growing.
 %
 %   MASK
-%      (string, default AREAS>0) a file name of a binary mask common to 
+%      (string, default AREAS>0) a file name of a binary mask common to
 %      all subjects and runs.
 %
 % OPT
 %   (structure) with the following fields :
 %
 %   FOLDER_OUT
-%      (string) where to write the results of the pipeline. 
+%      (string) where to write the results of the pipeline.
 %
 %   SCALE_GRID
 %       (vector, optional) The range of scales for which stability will be
@@ -60,7 +60,7 @@ function [pipeline,opt] = niak_pipeline_stability_voxel(files_in,opt)
 %       scale in FILES_IN.PART (NOT IMPLEMENTED YET).
 %
 %   SCALE_TAR
-%       (vector, optional) 
+%       (vector, optional)
 %
 %   SCALE_REP
 %       (vector, optional)
@@ -109,17 +109,17 @@ function [pipeline,opt] = niak_pipeline_stability_voxel(files_in,opt)
 %
 %       MAX_QUEUED
 %           (integer, default 2) Determines how many jobs are submitted at
-%           the same time. 
+%           the same time.
 %
 %   FLAG_CORES
 %       (boolean, default true) If this is set, we use the stable clusters
 %       of the consensus partition.
 %
 %   FLAG_RAND
-%       (boolean, default false) if the flag is true, the random number 
-%       generator is initialized based on the clock. Otherwise, the seeds of 
-%       the random number generator are set to fix values, and the pipeline is 
-%       fully reproducible. 
+%       (boolean, default false) if the flag is true, the random number
+%       generator is initialized based on the clock. Otherwise, the seeds of
+%       the random number generator are set to fix values, and the pipeline is
+%       fully reproducible.
 %
 %   FLAG_TEST
 %      (boolean, default false) If FLAG_TEST is true, the pipeline will
@@ -131,10 +131,10 @@ function [pipeline,opt] = niak_pipeline_stability_voxel(files_in,opt)
 %      (boolean, default true) Print some advancement infos.
 %
 % _________________________________________________________________________
-% OUTPUTS : 
+% OUTPUTS :
 %
-% PIPELINE 
-%   (structure) describe all jobs that need to be performed in the 
+% PIPELINE
+%   (structure) describe all jobs that need to be performed in the
 %   pipeline. This structure is meant to be use in the function
 %   PSOM_RUN_PIPELINE.
 %
@@ -146,7 +146,7 @@ function [pipeline,opt] = niak_pipeline_stability_voxel(files_in,opt)
 %
 % NOTE 1:
 % The steps of the pipeline are the following :
-%  
+%
 %   1. Masking the brain in functional data
 %   2. Performing region growing in each area independently based on fMRI
 %      time series concatenated for all subjects.
@@ -161,23 +161,23 @@ function [pipeline,opt] = niak_pipeline_stability_voxel(files_in,opt)
 % as inputs. See NIAK_PIPELINE_FMRI_PREPROCESS.
 %
 % NOTE 3:
-% Please refer to the following publications for further details on the 
+% Please refer to the following publications for further details on the
 % method.
 %
 % Regarding the multi-scale BASC analysis :
 % P. Bellec; P. Rosa-Neto; O.C. Lyttelton; H. Benali; A.C. Evans,
-% Multi-level bootstrap analysis of stable clusters in resting-State fMRI. 
+% Multi-level bootstrap analysis of stable clusters in resting-State fMRI.
 % Neuroimage 51 (2010), pp. 1126-1139
 %
-% Regarding the circular block boostrap for fMRI time series : 
+% Regarding the circular block boostrap for fMRI time series :
 % P. Bellec; G. Marrelec; H. Benali, A bootstrap test to investigate
-% changes in brain connectivity for functional MRI. Statistica Sinica, 
-% special issue on Statistical Challenges and Advances in Brain Science, 
-% 2008, 18: 1253-1268. 
+% changes in brain connectivity for functional MRI. Statistica Sinica,
+% special issue on Statistical Challenges and Advances in Brain Science,
+% 2008, 18: 1253-1268.
 %
 % Regarding the region-growing algorithm for data dimension reduction :
 % P. Bellec; V. Perlbarg; S. Jbabdi; M. Pélégrini-Issac; J.L. Anton; H.
-% Benali, Identification of large-scale networks in the brain using fMRI. 
+% Benali, Identification of large-scale networks in the brain using fMRI.
 % Neuroimage, 2006, 29: 1231-1243.
 %
 % _________________________________________________________________________
@@ -227,7 +227,7 @@ opt.folder_out = niak_full_path(opt.folder_out);
 opt.psom = psom_struct_defaults(opt.psom,...
            { 'max_queued' , 'logs'                  },...
            { 2            , [opt.folder_out 'logs'] });
-       
+
 % Set the values for the tseries extraction
 opt.tseries = psom_struct_defaults(struct(),...
            { 'flag_all' , 'flag_std' },...
@@ -247,7 +247,7 @@ is_part = 0;
 %% converts the list of fmri runs into a cell
 list_subject = fieldnames(files_in.data);
 nb_subject = length(list_subject);
-% Turn the input structure into a cell array 
+% Turn the input structure into a cell array
 [cell_fmri,labels] = niak_fmri2cell(files_in.data);
 labels_file = {labels.name};
 labels_subject = {labels.subject};
@@ -324,7 +324,7 @@ for num_s = 1:nb_subject
         warning(['There are more than one timeseries for subject %s.' ...
                  'I''ll use only the first one!\n'], list_subject{num_s});
     end
-    
+
     in = struct;
     in.neigh = pipeline.neighbour.files_out;
     in.data = sub_data{1}.tseries{1};
@@ -336,7 +336,7 @@ for num_s = 1:nb_subject
             in.part = pipeline.target_part.files_out;
         end
     end
-    
+
     % Set up pipeline parameters
     opt.pipeline.folder_out = sub_dir;
     % Generate the pipeline
@@ -346,7 +346,7 @@ for num_s = 1:nb_subject
 
 end
 
-%% Run the pipeline 
+%% Run the pipeline
 if ~opt.flag_test
     psom_run_pipeline(pipeline,opt.psom);
 end

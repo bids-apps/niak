@@ -13,7 +13,7 @@ function mask = niak_find_structs(data,tags)
 %
 % OUTPUTS:
 % MASK      (binary vector) MASK has the same size as DATA. MASK(i)==1 if
-%               the following conditions are verified : 
+%               the following conditions are verified :
 %               For each field of TAGS that is present in DATA, this field
 %               should be either a string or a cell of strings, and one of
 %               the(se) value(s) at least should be present if the
@@ -39,7 +39,7 @@ function mask = niak_find_structs(data,tags)
 % COMMENTS:
 % Selection of entries in DATA will not change the order of entries.
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -73,7 +73,7 @@ for num_f = 1:length(list_field)
         list_val{num_f} = {list_val{num_f}};
     end
 end
-   
+
 mask = zeros([nb_entries 1]);
 flag_first = ones([nb_entries 1]);
 
@@ -88,7 +88,7 @@ for num_f = 1:nb_field
             if ischar(act_val)
                 act_val = {act_val};
             end
-                
+
             test_f = max(ismember(act_val,list_val{num_f}));
 
             if (flag_first(num_a) == 1)

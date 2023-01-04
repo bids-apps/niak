@@ -108,7 +108,7 @@ function [files_in,files_out,opt] = niak_brick_qc_coregister(files_in,files_out,
 %    the individual volume with the average volume, restricted to the
 %    group brain mask.
 %
-% NOTE 3:   
+% NOTE 3:
 %    If the datasets are 3D+t, the brick will work on the average
 %    volumes. The STD volume will then be the average of std volumes
 %    generated within each 3D+t dataset.
@@ -231,7 +231,7 @@ for num_f = 1:length(files_in.mask)
         end
     end
     [hdr,vol_mask] = niak_read_vol(files_in.mask{num_f});
-    
+
     if num_f == 1
         mask_avg = double(vol_mask);
     else
@@ -260,7 +260,7 @@ for num_f = 1:length(files_in.vol)
     end
     clear vol
     [hdr,vol] = niak_read_vol(files_in.vol{num_f});
-        
+
     if num_f == 1
         flag_4d = size(vol,4)>1;
         if flag_4d
@@ -297,11 +297,11 @@ if flag_verbose
     fprintf('Deriving goodness of fit measures. Percentage done :');
 end
 if ~strcmp(files_out.tab_coregister,'gb_niak_omitted')
-    
+
     tab_coregister = zeros([length(files_in.vol) 2]);
     mask_v = mask_all(:);
     mean_v = mean_vol(mask_all);
-    
+
     for num_f = 1:length(files_in.vol)
         if flag_verbose
             new_perc = 5*floor(20*num_f/length(files_in.vol));
@@ -310,7 +310,7 @@ if ~strcmp(files_out.tab_coregister,'gb_niak_omitted')
                 curr_perc = new_perc;
             end
         end
-        
+
         % The mask
         if length(files_in.mask)==1
             tab_coregister(num_f,1) = 1;
@@ -319,7 +319,7 @@ if ~strcmp(files_out.tab_coregister,'gb_niak_omitted')
             tab_coregister(num_f,1) = sum(mask_v&mask_f(:))/sum(mask_f(:));
         end
         clear mask_f
-        
+
         % The volume
         [hdr,mean_f] = niak_read_vol(files_in.vol{num_f});
         flag_4d = size(mean_f,4)>1;
@@ -331,7 +331,7 @@ if ~strcmp(files_out.tab_coregister,'gb_niak_omitted')
         tab_coregister(num_f,2) = rmean(1,2);
         clear mean_f
     end
-    
+
     if flag_verbose
         fprintf('\n');
     end
@@ -373,8 +373,8 @@ end
 if ~strcmp(files_out.fig_coregister,'gb_niak_omitted')
     if flag_verbose
         fprintf('Saving the scores of fit in a figure %s ...\n',files_out.fig_coregister);
-    end    
-    file_fig = niak_file_tmp('.eps');        
+    end
+    file_fig = niak_file_tmp('.eps');
     hf = figure;
     ha = gca;
     barh(tab_coregister);
@@ -383,7 +383,7 @@ if ~strcmp(files_out.fig_coregister,'gb_niak_omitted')
     set(ha,'yticklabel',labels_subject);
     legend({'perc_overlap_mask','xcorr_vol'});
     print(file_fig,'-depsc2');
-    
+
     %% In octave, use ps2pdf to convert the result into PDF format
     instr_ps2pdf = cat(2,'ps2pdf -dEPSCrop ',file_fig,' ',files_out.fig_coregister);
     [succ,msg] = system(instr_ps2pdf);
@@ -392,13 +392,13 @@ if ~strcmp(files_out.fig_coregister,'gb_niak_omitted')
     end
     delete(file_fig)
     close(hf);
-    
+
 end
 
 if ~strcmp(files_out.tab_coregister,'gb_niak_omitted')
     if flag_verbose
         fprintf('Saving the scores of fit in the file %s ...\n',files_out.tab_coregister);
-    end    
+    end
     opt_tab.labels_x = labels_subject;
     opt_tab.labels_y = {'perc_overlap_mask','xcorr_vol'};
     niak_write_csv(files_out.tab_coregister,tab_coregister,opt_tab);

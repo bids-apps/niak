@@ -1,9 +1,9 @@
 function [sil_max,scales_max] = niak_build_max_sil(sil,scales,ww,method)
 % Estimate the maximal silhouette for a neighbourhood in the scale space.
-% 
-% Let SIL(S,K) be the silhouette with SCALES(K,:) scale parameters, and S 
+%
+% Let SIL(S,K) be the silhouette with SCALES(K,:) scale parameters, and S
 % final clusters. The neighbourhood of S is defined as :
-% 
+%
 %   N(S) = {K : (1-WW)*S <= SCALES(K,L) <= (1+WW)*S for all L}
 %
 % The maximal silhouette (as a function of S, method 1) is then defined as:
@@ -17,10 +17,10 @@ function [sil_max,scales_max] = niak_build_max_sil(sil,scales,ww,method)
 %
 %   SIL_MAX(I) = max_{S,K: I in N(S), SCALES(K,end) == I} ( SIL(S,K) )
 %
-%   SCALES_MAX(I) = (S*,K*), where 
+%   SCALES_MAX(I) = (S*,K*), where
 %
 %       (S*,K*) = argmax_{S,K: I in N(S), SCALES(K,end) == I} ( SIL(S,K) )
-% 
+%
 % SYNTAX:
 % [SIL_MAX,SCALES_MAX] = NIAK_BUILD_MAX_SIL(SIL,SCALES,WW,[METHOD])
 %
@@ -28,7 +28,7 @@ function [sil_max,scales_max] = niak_build_max_sil(sil,scales,ww,method)
 % INPUTS:
 %
 % SIL
-%       (array) SIL(S,K) is the silhouette with effective scale S and other 
+%       (array) SIL(S,K) is the silhouette with effective scale S and other
 %       scale parameters K
 %
 % SCALES
@@ -41,9 +41,9 @@ function [sil_max,scales_max] = niak_build_max_sil(sil,scales,ww,method)
 %
 % METHOD
 %       (integer, default 1) the method to derive the maximal silhouette
-%       (see a description above). Available choices : 
+%       (see a description above). Available choices :
 %           1: the maximal silhouette is defined as a function of S
-%           2: the maximal silhouette is defined as a function of the last 
+%           2: the maximal silhouette is defined as a function of the last
 %		parameter in K
 %
 % _________________________________________________________________________
@@ -63,13 +63,13 @@ function [sil_max,scales_max] = niak_build_max_sil(sil,scales,ww,method)
 % REFERENCES:
 %
 % P. Bellec; P. Rosa-Neto; O.C. Lyttelton; H. Benalib; A.C. Evans,
-% Multi-level bootstrap analysis of stable clusters in resting-State fMRI. 
+% Multi-level bootstrap analysis of stable clusters in resting-State fMRI.
 % Neuroimage 51 (2010), pp. 1126-1139
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Centre de recherche de l'institut de Gériatrie de Montréal
 % Département d'informatique et de recherche opérationnelle
 % Université de Montréal, 2011
@@ -119,9 +119,9 @@ switch method
     case 1
         sil_max = zeros([S 1]);
         scales_max = zeros([S,nb_dim]);
-        for num_s = 1:S            
+        for num_s = 1:S
             Lmin = floor(ww_min*num_s);
-            Lmax = ceil(ww_max*num_s);            
+            Lmax = ceil(ww_max*num_s);
             mask = min((scales<=Lmax) & (scales>=Lmin),[],2)>0;
             [val,ind] = max(sil(num_s,mask));
             ind_mask = find(mask);

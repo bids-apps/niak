@@ -7,25 +7,25 @@ function [files_in,files_out,opt] = niak_brick_mask_brain(files_in,files_out,opt
 % _________________________________________________________________________
 % INPUTS
 %
-% FILES_IN        
+% FILES_IN
 %   (string) file name of one 3D+t dataset.
 %
-% FILES_OUT   
+% FILES_OUT
 %   (string, default <NAME FILES_IN>_mask<EXT FILES_IN>) the name of a 4D
 %   file with a binary mask of the brain.
-%   
-% OPT           
+%
+% OPT
 %   (structure) with the following fields :
 %
-%   FWHM 
-%       (real value, default 8) the FWHM of the blurring kernel in the same 
-%       unit as the voxel size. A value of 0 for FWHM will skip the 
+%   FWHM
+%       (real value, default 8) the FWHM of the blurring kernel in the same
+%       unit as the voxel size. A value of 0 for FWHM will skip the
 %       smoothing step.
-%       
-%   FLAG_REMOVE_EYES 
-%       (boolean, default 1) if FLAG_REMOVE_EYES == 1, an attempt is made 
+%
+%   FLAG_REMOVE_EYES
+%       (boolean, default 1) if FLAG_REMOVE_EYES == 1, an attempt is made
 %       to remove the eyes from the mask.
-%           
+%
 %   FLAG_NU_CORRECT
 %       (boolean, default false) if FLAG_NU_CORRECT == 1, the NU_CORRECT
 %       method is used to correct for non-uniformity of the B0 field.
@@ -34,25 +34,25 @@ function [files_in,files_out,opt] = niak_brick_mask_brain(files_in,files_out,opt
 %       (string, default '-distance 200') the argument passed to NU_CORRECT.
 %       See "nu_correct -help" in a terminal for more infos.
 %
-%   FOLDER_OUT 
-%       (string, default: path of FILES_IN) If present, the output will be 
-%       created in the folder FOLDER_OUT. 
+%   FOLDER_OUT
+%       (string, default: path of FILES_IN) If present, the output will be
+%       created in the folder FOLDER_OUT.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
-%   FLAG_TEST 
-%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%   FLAG_TEST
+%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_MASK_BRAIN
@@ -66,7 +66,7 @@ function [files_in,files_out,opt] = niak_brick_mask_brain(files_in,files_out,opt
 %
 % Otsu, N.
 % A Threshold Selection Method from Gray-Level Histograms.
-% IEEE Transactions on Systems, Man, and Cybernetics, Vol. 9, No. 1, 1979, 
+% IEEE Transactions on Systems, Man, and Cybernetics, Vol. 9, No. 1, 1979,
 % pp. 62-66.
 %
 % Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
@@ -146,7 +146,7 @@ end
 
 if opt.flag_nu_correct
     % Optional: run a non-uniformity correction on the input volume
-    [path_f,name_f,ext_f,flag_zip,ext_short] = niak_fileparts(files_in);    
+    [path_f,name_f,ext_f,flag_zip,ext_short] = niak_fileparts(files_in);
     out_nu.vol_nu = psom_file_tmp(['_mask_brain' ext_short]);
     in_nu.vol = files_in;
     opt_nu.arg = opt.arg_nu_correct;

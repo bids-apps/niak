@@ -3,15 +3,15 @@ function ind = niak_sub2ind_3d(siz,subx,suby,subz)
 %
 % IND = NIAK_SUB2IND_3D(SIZ,SUBX,SUBY,SUBZ)
 %
-% SIZ  (vector 1*3) the size of the 3D array 
+% SIZ  (vector 1*3) the size of the 3D array
 % SUBX (vector N*1) SUBX(M) is the X coordinate of the Mth element
 % SUBY (vector N*1) SUBY(M) is the Y coordinate of the Mth element
 % SUBZ (vector N*1) SUBZ(M) is the Z coordinate of the Mth element
-% IND  (vector N*1) IND(M) is the linear index corresponding to 
+% IND  (vector N*1) IND(M) is the linear index corresponding to
 %       [SUBX(M) SUBY(M) SUBZ(M)]
 %
 % This implementation of the classic matlab SUB2IND is markedly faster
-% because it notably avoids to check that the coordinates are valid (i.e. 
+% because it notably avoids to check that the coordinates are valid (i.e.
 % within bounds). At least it used to be the case on Matlab 6.5.
 %
 % SUBX can also be a M*3 array. In that case, the first column corresponds
@@ -21,7 +21,7 @@ function ind = niak_sub2ind_3d(siz,subx,suby,subz)
 % Maintainer : pierre.bellec@criugm.qc.ca
 
 % Montreal Neurological Institute, 2008-2010.
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2010-2014
 %

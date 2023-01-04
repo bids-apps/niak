@@ -1,5 +1,5 @@
 function [val,ind] = niak_find_local_max_1d(x,sig,neigh)
-% Find local max in a 1D signal. 
+% Find local max in a 1D signal.
 % Temporal neighbourhood is defined through a symmetric time window.
 %
 % SYNTAX:
@@ -23,7 +23,7 @@ function [val,ind] = niak_find_local_max_1d(x,sig,neigh)
 % _________________________________________________________________________
 % OUTPUTS :
 %
-% VAL  
+% VAL
 %       (vector) The values of the local max.
 %
 % IND
@@ -33,9 +33,9 @@ function [val,ind] = niak_find_local_max_1d(x,sig,neigh)
 % SEE ALSO:
 %
 % _________________________________________________________________________
-% COMMENTS: 
+% COMMENTS:
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,Montreal
 %               Neurological Institute, McGill University, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -77,9 +77,9 @@ for num_t = 1:length(sig)
     mask = mask_low & mask_up;
     mask(num_t) = false;
     if any(mask)&&(~any(sig(num_t) < sig(mask)))
-        
+
         val = [val ; sig(num_t)];
         ind = [ind ; num_t];
-        
+
     end
 end

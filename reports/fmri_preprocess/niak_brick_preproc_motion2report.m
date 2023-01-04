@@ -3,13 +3,13 @@ function [in,out,opt] = niak_brick_preproc_motion2report(in,out,opt)
 %
 % SYNTAX: [IN,OUT,OPT] = NIAK_BRICK_PREPROC_PARAMS2REPORT(IN,OUT,OPT)
 %
-% IN (string) not used. 
-% OUT (string) the name of the .html report. 
+% IN (string) not used.
+% OUT (string) the name of the .html report.
 % OPT.NUM_RUN (integer) the number of the run, as indexed in the full report.
 % OPT.LABEL (string) subject_session_run label.
-% OPT.LABEL_REF (string) subject_session_run label for the volume of reference (to 
+% OPT.LABEL_REF (string) subject_session_run label for the volume of reference (to
 %   check coregistration).
-% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but 
+% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but
 %    update IN, OUT and OPT.
 %
 % Copyright (c) Pierre Bellec
@@ -37,18 +37,18 @@ function [in,out,opt] = niak_brick_preproc_motion2report(in,out,opt)
 % THE SOFTWARE.
 
 %% Defaults
-if ~ischar(out) 
+if ~ischar(out)
     error('OUT should be a string');
 end
 
 if nargin < 3
     opt = struct;
-end    
+end
 opt = psom_struct_defaults ( opt , ...
     { 'num_run' , 'label_ref' , 'label' , 'flag_test' }, ...
     { NaN       , NaN         , NaN     , false         });
 
-if opt.flag_test 
+if opt.flag_test
     return
 end
 

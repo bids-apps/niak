@@ -8,9 +8,9 @@ function [pipeline,opt] = niak_demo_corsica(path_demo,opt)
 % INPUTS:
 %
 % PATH_DEMO
-%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS) 
-%       the full path to the NIAK demo dataset. The dataset can be found in 
-%       multiple file formats at the following address : 
+%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS)
+%       the full path to the NIAK demo dataset. The dataset can be found in
+%       multiple file formats at the following address :
 %       http://www.bic.mni.mcgill.ca/users/pbellec/demo_niak/
 %
 % OPT
@@ -37,11 +37,11 @@ function [pipeline,opt] = niak_demo_corsica(path_demo,opt)
 % NOTE 2
 % Note that the path to access the demo data is stored in a variable
 % called GB_NIAK_PATH_DEMO defined in the script NIAK_GB_VARS.
-% 
+%
 % NOTE 3
-% The demo database exists in multiple file formats.NIAK looks into the demo 
-% path and is supposed to figure out which format you are intending to use 
-% by himself.You can the format by changing the variable GB_NIAK_FORMAT_DEMO 
+% The demo database exists in multiple file formats.NIAK looks into the demo
+% path and is supposed to figure out which format you are intending to use
+% by himself.You can the format by changing the variable GB_NIAK_FORMAT_DEMO
 % in the script NIAK_GB_VARS.
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
@@ -91,23 +91,23 @@ end
 %% FILES IN %%%
 %%%%%%%%%%%%%%%
 switch format_demo
-    
+
     case 'minc2' % If data are in minc2 format
-        
+
         %% Subject 1
         files_in.subject1.fmri = {cat(2,GB_NIAK.path_demo,filesep,'func_motor_subject1.mnc'),cat(2,GB_NIAK.path_demo,filesep,'func_rest_subject1.mnc')};
-        files_in.subject1.transformation = 'gb_niak_omitted';                                                               
-        
+        files_in.subject1.transformation = 'gb_niak_omitted';
+
         %% Subject 2
         files_in.subject2.fmri = {cat(2,GB_NIAK.path_demo,filesep,'func_motor_subject2.mnc'),cat(2,GB_NIAK.path_demo,filesep,'func_rest_subject2.mnc')};
         files_in.subject2.transformation = 'gb_niak_omitted';
-        
-        % Here, no transformation to the MNI152 space is specified. This is a disaster because the spatial apriori 
+
+        % Here, no transformation to the MNI152 space is specified. This is a disaster because the spatial apriori
         % used by corsica will not work at all.
         % This is just to demonstrate how to invoke the pipeline template.
         % Usually, you need to preprocess the fMRI data, and the correct
         % transformation is estimated as part of the preprocessing.
-        
+
     case 'minc1' % If data are in minc1 format
 
         %% Subject 1
@@ -127,11 +127,11 @@ switch format_demo
         % This is just to demonstrate how to invoke the pipeline template.
         % Usually, you need to preprocess the fMRI data, and the correct
         % transformation is estimated as part of the preprocessing.
- 
-    otherwise 
-        
+
+    otherwise
+
         error('niak:demo','%s is an unsupported file format for this demo. See help to change that.',GB_NIAK.format_demo)
-        
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -144,4 +144,3 @@ opt.labels_mask = {'ventricle','stem'};
 %% Building pipeline using the fmri_preprocess template  %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 [pipeline,opt] = niak_pipeline_corsica(files_in,opt);
-

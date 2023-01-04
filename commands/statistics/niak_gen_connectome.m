@@ -6,26 +6,26 @@ function [R_ind]=niak_gen_connectome(vol,brain_rois,order)
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL       
-%   (3D+t array) the fMRI data. 
+% VOL
+%   (3D+t array) the fMRI data.
 %
-% BRAIN_ROIS      
-%   (3D volume) mask or ROI coded with integers. ROI #I is defined by 
+% BRAIN_ROIS
+%   (3D volume) mask or ROI coded with integers. ROI #I is defined by
 %   MASK==I
 %
-% ORDER       
+% ORDER
 %   (optional) the order of eahc index of the connectome index
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% R_IND   
+% R_IND
 %   (array) The connectome of the 3D+t dataset
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Christian L. Dansereau, 
+% Copyright (c) Christian L. Dansereau,
 % Centre de recherche de l'Institut universitaire de gériatrie de Montréal,
 % 2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -69,4 +69,3 @@ R_ind = corrcoef(tseries_rois);
 if exist('order')
     R_ind = R_ind(order,order);
 end
-

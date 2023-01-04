@@ -28,15 +28,15 @@ function [y,Ybis] = niak_gaussian_fit(par)
 % LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 % THE SOFTWARE.
- 
+
 % INPUT
 % par               par(1) is the mean of the gaussian function
 %                   par(2) is the standard deviation of the gaussian function
 %
 % OUTPUTS
-% Ybis              value of the gaussian function with parameters par at X (global) 
+% Ybis              value of the gaussian function with parameters par at X (global)
 % y                 quadratic error between Ybis and Y (global)
-%                   
+%
 % COMMENTS
 % Vincent Perlbarg 11/04/06
 

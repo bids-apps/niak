@@ -11,7 +11,7 @@ function [pipe,opt] = niak_pipeline_subtype(files_in,opt)
 %
 %   DATA.(NETWORK).(SUBJECT)
 %       (string) Containing the individual 3D map (e.g. rmap_part,stability_maps,
-%       etc) for each SUBJECT and each NETWORK. 
+%       etc) for each SUBJECT and each NETWORK.
 %
 %   MASK
 %       (string) path to mask of the voxels that will be included in the
@@ -41,7 +41,7 @@ function [pipe,opt] = niak_pipeline_subtype(files_in,opt)
 %
 %       REGRESS_CONF
 %           (Cell of string, Default {}) A list of variable names to be
-%           regressed out. If unspecified or left empty, no regression 
+%           regressed out. If unspecified or left empty, no regression
 %           is applied.
 %
 %   SUBTYPE
@@ -53,7 +53,7 @@ function [pipe,opt] = niak_pipeline_subtype(files_in,opt)
 %       SUB_MAP_TYPE
 %           (string, default 'mean') the model for the subtype map. Options are:
 %               'mean'
-%               'median' 
+%               'median'
 %
 %   ASSOCIATION.(NAME_CONTRAST)
 %       (struct, optional) with the following fields:
@@ -144,7 +144,7 @@ function [pipe,opt] = niak_pipeline_subtype(files_in,opt)
 %       FLAG_INTERCEPT
 %           (boolean, default true) if FLAG_INTERCEPT is true, a constant
 %           covariate will be added to the model.
-%   
+%
 %       TYPE_VISU
 %           (string, either 'categorical' or 'continuous') the kind of data
 %           in OPT.ASSOCIATION.CONTRAST.<NAME>
@@ -154,17 +154,17 @@ function [pipe,opt] = niak_pipeline_subtype(files_in,opt)
 %           association test
 %
 %   CHI2
-%       (string, default '') the name of the column in 
+%       (string, default '') the name of the column in
 %       FILES_IN.MODEL that the contingency table will be based on.
-%       If left empty, no CHI2 will be applied. 
+%       If left empty, no CHI2 will be applied.
 %
 %
 %   RAND_SEED
 %       (scalar, default []) The specified value is used to seed the random
 %       number generator with PSOM_SET_RAND_SEED for each job. If left empty,
-%       the generator is not initialized by the bricks. As PSOM features an 
-%       initialization based on the clock, the results will be slightly 
-%       different due to random variations in bootstrap sampling if the 
+%       the generator is not initialized by the bricks. As PSOM features an
+%       initialization based on the clock, the results will be slightly
+%       different due to random variations in bootstrap sampling if the
 %       pipeline is executed twice.
 %
 %   FLAG_VERBOSE
@@ -249,7 +249,7 @@ opt.flag_assoc = length(list_contrast)>0;
 % Prepare the input structure for the subtype weight extraction step
 weight_in = struct('data', struct, 'subtype', struct);
 list_net = fieldnames(files_in.data);
-         
+
 % See if external subtypes have been specified
 ext_sbt = false;
 if ~strcmp(files_in.subtype, 'gb_niak_omitted')
@@ -261,7 +261,7 @@ if ~strcmp(files_in.subtype, 'gb_niak_omitted')
         % For some reason we don't have the correct number of external subtype
         % networks
         error('The external networks in FILES_IN.SUBTYPE are different from those in FILES_IN.DATA. These have to be the same. Exiting!');
-    end 
+    end
 else
     files_in = rmfield(files_in, 'subtype'); % remove files_in.subtype in everything if not supplied by user
 end
@@ -293,7 +293,7 @@ for net_id = 1:length(list_net);
     weight_in.data.(net_name) = pipe.(pre_name).files_out;
     weight_out.weights_csv{net_id} = [network_folder filesep sprintf('sbt_weights_net_%s.csv', net_name)];
     weight_out.weights_pdf{net_id} = [network_folder filesep sprintf('sbt_weights_net_%s.pdf', net_name)];
-    
+
     % Check if external subtypes have been supplied
     if ~ext_sbt
         % Compute subtypes on the current data
@@ -361,7 +361,7 @@ if opt.flag_assoc
             visu_out = struct;
             pipe = psom_add_job(pipe, ['visu_' cont], 'niak_brick_visu_subtype_glm',...
                         visu_in, visu_out, visu_opt);
-        end 
+        end
     end
 end
 

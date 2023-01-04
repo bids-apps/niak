@@ -22,11 +22,11 @@
 % NOTE 2
 % Note that the path to access the demo data is stored in a variable
 % called GB_NIAK_PATH_DEMO defined in the script NIAK_GB_VARS.
-% 
+%
 % NOTE 3
-% The demo database exists in multiple file formats.NIAK looks into the demo 
-% path and is supposed to figure out which format you are intending to use 
-% by himself.You can the format by changing the variable GB_NIAK_FORMAT_DEMO 
+% The demo database exists in multiple file formats.NIAK looks into the demo
+% path and is supposed to figure out which format you are intending to use
+% by himself.You can the format by changing the variable GB_NIAK_FORMAT_DEMO
 % in the script NIAK_GB_VARS.
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
@@ -57,21 +57,21 @@ niak_gb_vars
 
 %% Setting input/output files
 switch GB_NIAK.format_demo
-    
+
      case 'minc1' % If data are in minc1 format
-        
+
         files_in{1} = cat(2,GB_NIAK.path_demo,filesep,'func_motor_subject1.mnc.gz');
         files_in{2} = cat(2,GB_NIAK.path_demo,filesep,'func_rest_subject1.mnc.gz');
-        
+
     case 'minc2' % If data are in minc2 format
-        
+
         files_in{1} = cat(2,GB_NIAK.path_demo,filesep,'func_motor_subject1.mnc');
         files_in{2} = cat(2,GB_NIAK.path_demo,filesep,'func_rest_subject1.mnc');
-        
-    otherwise 
-        
+
+    otherwise
+
         error('niak:demo','%s is an unsupported file format for this demo. See help to change that.',GB_NIAK.format_demo)
-        
+
 end
 
 %% FILES_OUT
@@ -85,9 +85,8 @@ files_out.std_average = '';
 opt.thresh = 0.8;
 opt.fwhm = 5;
 opt.flag_remove_eyes = true;
-opt.flag_test = false; 
+opt.flag_test = false;
 
 [files_in,files_out,opt] = niak_brick_mask_brain(files_in,files_out,opt);
 
 %% Note that opt.interpolation_method has been updated, as well as files_out
-

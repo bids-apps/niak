@@ -4,21 +4,21 @@ function vol_fwhm = niak_full_fwhm(wresid_vol,mask,opt)
 % SUMMARY NIAK_QUICK_FWHM
 %
 % Estimate the FWHM from a 4D data
-% 
+%
 % SYNTAX:
 % FWHM = NIAK_QUICK_FWHM(WRESID_VOL,MASK,OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% WRESID_VOL         
+% WRESID_VOL
 %       (4D array) a 3D+t dataset
-% 
+%
 % MASK
-%       (3D volume, default all voxels) a binary mask of the voxels that 
+%       (3D volume, default all voxels) a binary mask of the voxels that
 %       will be included in the analysis.
 %
-% OPT         
+% OPT
 %       (structure, optional) with the following fields :
 %
 %       VOXEL_SIZE
@@ -30,21 +30,21 @@ function vol_fwhm = niak_full_fwhm(wresid_vol,mask,opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% VOL_FWHM       
-%       (4D array) a 3D+5 dataset with FWHM parameters 
+% VOL_FWHM
+%       (4D array) a 3D+5 dataset with FWHM parameters
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %##########################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -115,7 +115,7 @@ alphar=1/2;
 Step=abs(prod(Steps(1:D)))^(1/D);
 
  % bias corrections for estimating the FWHM:
-Df = dfs(slice); 
+Df = dfs(slice);
 df_resid=Df;
 dr=df_resid/Df;
 dv=df_resid-dr-(0:D-1);
@@ -135,7 +135,7 @@ end
 consf=(4*log(2))^(-D*alphaf)/biasf*Step;
 consr=(4*log(2))^(-D*alphar)/biasr;
 
- % Finds fwhm for the 8 cube corners surrounding a voxel, then averages. 
+ % Finds fwhm for the 8 cube corners surrounding a voxel, then averages.
  for slice=1:numslices
     wresid_slice = squeeze(wresid_vol(:,:,slice,:));
     mask_slice = mask(:,:,slice);
@@ -163,7 +163,7 @@ consr=(4*log(2))^(-D*alphar)/biasr;
                r(i,j)=r(i,j)+(detlam>0).*(detlam+(detlam<=0)).^alphar;
             end
          end
-    else 
+    else
          uz=wresid_slice-u;
          dzz=Azz;
          Azz=sum(uz.^2,3);

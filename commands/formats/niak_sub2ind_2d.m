@@ -24,14 +24,14 @@ function ind = niak_sub2ind_2d(siz,subx,suby)
 % OUTPUTS :
 %
 % IND
-%       (vector N*1) IND(M) is the linear index corresponding to 
+%       (vector N*1) IND(M) is the linear index corresponding to
 %       [SUBX(M) SUBY(M)].
 %
 % _________________________________________________________________________
-% COMMENTS : 
+% COMMENTS :
 %
 % This implementation of the classic matlab SUB2IND is markedly faster
-% because it notably avoids to check that the coordinates are valid (i.e. 
+% because it notably avoids to check that the coordinates are valid (i.e.
 % within bounds). At least it used to be the case on Matlab 6.5.
 %
 % SUBX can also be a M*2 array. In that case, the first column corresponds

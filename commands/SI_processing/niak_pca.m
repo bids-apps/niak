@@ -8,34 +8,34 @@ function [eig_val,eig_vec,weights] = niak_pca(data,nb_comp)
 % INPUTS
 %
 % DATA
-%   (2D array, size N*T) variables x samples data array. If data is a time 
-%   series array, the time would be the second dimension for a spatial PCA 
-%   (the variables here are the volumes), which corresponds to TSERIES' for 
+%   (2D array, size N*T) variables x samples data array. If data is a time
+%   series array, the time would be the second dimension for a spatial PCA
+%   (the variables here are the volumes), which corresponds to TSERIES' for
 %   the usual NIAK conventions for array of time series.
 %
-% NB_COMP 
-%   (real number, default rank of TSERIES) 
-%   If NB_COMP is comprised between 0 and 1, NB_COMP is assumed to be the 
-%   percentage of the total variance that needs to be kept. If NB_COMP is 
-%   an integer, greater than 1, NB_COMP is the number of components that 
-%   will be generated (the procedure always consider the principal 
-%   components ranked according to the energy they explain in the data). 
-%           
+% NB_COMP
+%   (real number, default rank of TSERIES)
+%   If NB_COMP is comprised between 0 and 1, NB_COMP is assumed to be the
+%   percentage of the total variance that needs to be kept. If NB_COMP is
+%   an integer, greater than 1, NB_COMP is the number of components that
+%   will be generated (the procedure always consider the principal
+%   components ranked according to the energy they explain in the data).
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
-% EIG_VAL 
+% EIG_VAL
 %   (vector, size NB_COMP*1) eigen values, which is also the energy
 %   explained by each of the corresponding principal components.
 %
-% EIG_VEC 
+% EIG_VEC
 %   (array, size T*NB_COMP) eigen vectors (in columns)
 %
-% WEIGHTS 
+% WEIGHTS
 %   (array, size N*NB_COMP) the weights, i.e. the matrix such that
 %   DATA = EIG_VEC*WEIGHTS' in the case where NB_COMP == T, and
-%   otherwise EIG_VEC(:,1:NB_COMP)*WEIGHT(:,1:NB_COMP)' is simply the 
-%   projection of TSERIES in the PCA space of dimension NB_COMP with 
+%   otherwise EIG_VEC(:,1:NB_COMP)*WEIGHT(:,1:NB_COMP)' is simply the
+%   projection of TSERIES in the PCA space of dimension NB_COMP with
 %   maximal energy.
 %
 % _________________________________________________________________________
@@ -74,13 +74,13 @@ function [eig_val,eig_vec,weights] = niak_pca(data,nb_comp)
 %% Setting default value for the number of components
 nb_comp_init = rank(data);
 
-if nargin < 2 
+if nargin < 2
     nb_comp = nb_comp_init;
 else
-    if nb_comp >= 1 
+    if nb_comp >= 1
         nb_comp = min(nb_comp_init,ceil(nb_comp));
     end
-    
+
     if nb_comp<0
         error('NB_COMP should be greater than zero');
     end
@@ -99,4 +99,3 @@ end
 eig_vec = eig_vec(:,1:nb_comp);
 eig_val = eig_val(1:nb_comp);
 weights = data*eig_vec;
-

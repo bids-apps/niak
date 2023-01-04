@@ -5,13 +5,13 @@ function files = niak_grab_report_preprocess(path_data , files_in)
 % FILES = NIAK_GRAB_REPORT_PREPROCESS( PATH_DATA , [FILES_IN] )
 %
 % PATH_DATA
-%   (string, default [pwd filesep], aka './') full path to the outputs of 
+%   (string, default [pwd filesep], aka './') full path to the outputs of
 %   NIAK_PIPELINE_FMRI_PREPROCESS
 %
 % FILES_IN
-%   (structure) the input files for the fMRI preprocessing pipeline. If this 
-%   argument is provided, the generation of FILES does not require to read any 
-%   information from the disk. 
+%   (structure) the input files for the fMRI preprocessing pipeline. If this
+%   argument is provided, the generation of FILES does not require to read any
+%   information from the disk.
 %
 % FILES
 %   (structure) the list of all expected inputs of NIAK_REPORT_FMRI_PREPROCESS

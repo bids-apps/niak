@@ -91,14 +91,14 @@
             <img class="sliderPrev" src="assets/jsImageSlider/navbuttons.png" >
           </div>
           <div class="chart-notes">
-            Click or press left/right arrows for prev/next subject. 
+            Click or press left/right arrows for prev/next subject.
           </div>
         </div>
       </div>
     <div class="col-sm-6">
     	<div class="chart-wrapper">
       	<div class="chart-title">
-            BOLD vs T1 scan for subject  
+            BOLD vs T1 scan for subject
             <select id="select-BOLD" class="select-subject" style="width: 50%"></select>
          </div>
          <div class="chart-stage">
@@ -130,36 +130,36 @@
   <script type="text/javascript" src="assets/keen/meta.js"></script>               <!--from keen.io-->
   <script src="assets/select2/select2.min.js"></script> <!--from select 2-->
   <script src="group/listSubject.js"></script> <!--List of subjects-->
-  
+
   <script>
   $(document).ready(function() {
-  
+
   <!--Add a subject selection-->
   $(".select-subject").select2({
   data: listSubject
-  });  
+  });
   var $eventSelect = $(".select-subject");
   $eventSelect.on("select2:select", function (e) { setImg(e); })
-  
+
   <!--Update images-->
   function setImg (evt) {
-  
+
     <!--Get subject index and ID-->
     var id = evt.params.data.id;
     subject = $("#select-BOLD option[value=" + id + "]").text();
-    
+
     <!--Update the selection of the subject button-->
     $es = $(".select-subject");
     $es.val(id);
     $es.trigger('change');
-    
+
     <!--Grab the T1 and BOLD div, and build new empty figures-->
     var figBOLD = $(".BOLD");
     var newFigBOLD = document.createElement("img");
     var figT1 = $(".T1");
     var newFigT1 = document.createElement("img");
-    
-    <!--Populate figures-->    
+
+    <!--Populate figures-->
     newFigBOLD.src = "registration/" + subject + "_func.png";
     newFigBOLD.setAttribute("width", "80%");
     newFigBOLD.style.position = "relative";
@@ -171,7 +171,7 @@
     newFigT1.style.left = "10%";
     newFigT1.className = "T1";
 
-    <!--Update figures-->        
+    <!--Update figures-->
     figBOLD.replaceWith(newFigBOLD);
     figT1.replaceWith(newFigT1);
     figBoldVsT1 = $("#boldVsT1");
@@ -184,8 +184,8 @@
     figT1vsTemplate.css("backgroundSize","80%");
     figT1vsTemplate.css("backgroundRepeat","no-repeat");
     figT1vsTemplate.css("backgroundPosition","50% 0%");
-    }  
-  
+    }
+
   <!--Move on to the next subject-->
   function nextSubject () {
     $es = $(".select-subject");
@@ -199,7 +199,7 @@
     var evt = {params:{data:{id:currId.toString()}}};
     setImg (evt);
   }
-    
+
   <!--Move back to the previous subject-->
   function prevSubject () {
     $es = $(".select-subject");
@@ -213,8 +213,8 @@
     var evt = {params:{data:{id:currId.toString()}}};
     setImg (evt);
   }
-  
-  <!--Attach events to clicks on the prev/next buttons-->  
+
+  <!--Attach events to clicks on the prev/next buttons-->
   window.onload = function() {
     document.getElementsByClassName("sliderNext")[0].onclick = function fun() {
         nextSubject();
@@ -229,21 +229,21 @@
         prevSubject();
       }
   }
-  
-  <!--Changing subjects with left and right arrows (prev and next, resp)-->  
+
+  <!--Changing subjects with left and right arrows (prev and next, resp)-->
   function reactKey(key){
     if (key==39) {
       nextSubject()
-    } 
+    }
     else if (key==37) {
-      prevSubject() 
+      prevSubject()
     };
   };
-  
-  window.onkeydown = function(e) { reactKey(e.keyCode) 
+
+  window.onkeydown = function(e) { reactKey(e.keyCode)
       };
-  
-  <!--Function to parse the page parameters-->  
+
+  <!--Function to parse the page parameters-->
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -259,24 +259,24 @@
     for (ii=0 ; ii<data.length; ii++) {
       if (data[ii].text===subject) {
         id = data[ii].id;
-        return id      
-      }      
-    } 
+        return id
+      }
+    }
   }
-  <!--Read page parameters and update accordingly-->    
+  <!--Read page parameters and update accordingly-->
   var subject = getParameterByName('id');
   if (!subject) {
     var subject = listSubject[0]['text'];
     };
   id = findID(listSubject,subject);
   if (!id) {
-    id = "1";  
-  } 
-  
+    id = "1";
+  }
+
   var evt = {params:{data:{id:id}}};
-  setImg (evt); 
+  setImg (evt);
   });
-  
+
   </script>
 
 </body>

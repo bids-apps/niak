@@ -2,19 +2,19 @@ function opt = niak_regularized_df(opt)
 % _________________________________________________________________________
 % SUMMARY NIAK_REGULARIZED_DF
 %
-% Updates the values of df according to the required for smoothing 
+% Updates the values of df according to the required for smoothing
 % autocorrelations
-% 
+%
 % SYNTAX:
 % OPT = NIAK_REGULARIZED_DF(OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% OPT         
+% OPT
 %       structure with the following fields :
 %
-%       FWHM       
+%       FWHM
 %           Structure with the fields VARATIO and DATA.
 %
 %       DF
@@ -29,7 +29,7 @@ function opt = niak_regularized_df(opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% OPT         
+% OPT
 %       Updated structure with the additional fields KER_X, KER_Y, KER_Z,
 %       the kernels required for spatially smoothing of the variance ratio
 %       volume.
@@ -37,14 +37,14 @@ function opt = niak_regularized_df(opt)
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the MULTISTAT function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this

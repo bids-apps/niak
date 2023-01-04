@@ -2,7 +2,7 @@ function mat = niak_quat2mat(quat)
 % Convert the quaternion info of a NIFTI header into an affine transformation
 %
 % SYNTAX:
-% 
+%
 % MAT = NIAK_QUAT2MAT(QUAT)
 % _________________________________________________________________________
 % INPUT:
@@ -12,22 +12,22 @@ function mat = niak_quat2mat(quat)
 %   with nifti (or analyze) file formats. The following fields are expected:
 %
 %   QUATERN_{B,C,D}
-%      (scalar) the b, c and d parameters of the quaternion. 
+%      (scalar) the b, c and d parameters of the quaternion.
 %
-%   QOFFSET_{X,Y,Z} 
-%      (scalar) the translation 
+%   QOFFSET_{X,Y,Z}
+%      (scalar) the translation
 %
 %   PIXDIM
 %      (vector) entries 2 to 4 define the size of the voxels.
-%  
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% ROT 
-%       (array 3*N) the rotation parameters (in x, y and z planes). 
+% ROT
+%       (array 3*N) the rotation parameters (in x, y and z planes).
 %       Unit is degrees.
 %
-% TSL 
+% TSL
 %       (array 3*N) the translation parameters.
 %
 % _________________________________________________________________________
@@ -37,7 +37,7 @@ function mat = niak_quat2mat(quat)
 % http://nifti.nimh.nih.gov/nifti-1/documentation/nifti1fields/nifti1fields_pages/quatern.html
 % http://nifti.nimh.nih.gov/nifti-1/documentation/nifti1fields/nifti1fields_pages/qsform.html
 %
-% Pierre Bellec, 
+% Pierre Bellec,
 % Research Centre of the Montreal Geriatric Institute
 % & Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2012

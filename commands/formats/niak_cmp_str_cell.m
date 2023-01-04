@@ -4,13 +4,13 @@ function mask_f = niak_cmp_str_cell(cell_str1,cell_str2)
 %
 % SYNTAX:
 % MASK_F = niak_cmp_str_cell(CELL_STR1,CELL_STR2)
-% 
+%
 % INPUTS:
 % CELL_STR1     (string or cell of strings)
 % CELL_STR2     (string or cell of strings)
-% 
+%
 % OUTPUTS:
-% MASK_F        (vector) MASK_F(i) equals 1 if CELL_STR{i} is identical to 
+% MASK_F        (vector) MASK_F(i) equals 1 if CELL_STR{i} is identical to
 %               CELL_STR2{j} for any j, 0 otherwise. If one argument is a
 %               simple string, it is converted into a cell of string with
 %               one element.

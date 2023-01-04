@@ -2,7 +2,7 @@ function [success,message,messageid] = niak_mkdir(path_name)
 % Create a new directory. The difference between the regular matlab MKDIR
 % command and NIAK_MKDIR is that NIAK_MKDIR will create all folders and
 % subfolders, while MKDIR will only let you create a subdirectory in an
-% existing directory. 
+% existing directory.
 %
 % SYNTAX:
 % [SUCCESS,MESSAGE,MESSAGEID] = MKDIR(PATH_NAME)
@@ -10,28 +10,28 @@ function [success,message,messageid] = niak_mkdir(path_name)
 % _________________________________________________________________________
 % INPUTS:
 %
-% PATH_NAME      
+% PATH_NAME
 %   (string) the name of the path to create
-%       
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% SUCCESS     
-%   (boolean) define the outcome of NIAK_MKDIR. 
+% SUCCESS
+%   (boolean) define the outcome of NIAK_MKDIR.
 %      1 : NIAK_MKDIR executed successfully.
 %      0 : an error occurred.
 %
-% MESSAGE     
-%   (string)  define the error or warning message. 
+% MESSAGE
+%   (string)  define the error or warning message.
 %      empty string : MKDIR executed successfully.
 %      message : an error or warning message, as applicable.
 %
-% MESSAGEID   
+% MESSAGEID
 %   (string) defining the error or warning identifier.
 %      empty string : MKDIR executed successfully.
 %      message id: the MATLAB error or warning message
 %      identifier
-%           
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % ERROR, LASTERR, WARNING, LASTWARN
@@ -91,9 +91,9 @@ if exist(path_name)
 end
 
 for num_p = 1:length(list_path)
-    
+
     if ~exist(cat(2,path_curr,list_path{num_p}),'dir')
-        
+
         if isempty(path_curr)
             [success,message] = mkdir(list_path{num_p});
         else
@@ -103,11 +103,9 @@ for num_p = 1:length(list_path)
                 [success,message] = mkdir(path_curr,list_path{num_p});
             end
         end
-        
+
     end
-    
+
     path_curr = cat(2,path_curr,list_path{num_p},filesep);
-    
+
 end
-        
-        

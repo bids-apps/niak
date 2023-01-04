@@ -7,15 +7,15 @@ function avg_sim = niak_build_avg_sim(mat,part,flag_vec)
 % MAT (array, size N*N) MAT(I,J) is the similarity between units I and J.
 % PART (vector, size N*1) PART(I) is the number of the cluster unit I
 %   belongs to, ie the elements of cluster K are defined by FIND(PART==K).
-% FLAG_VEC (boolean, default false) If FLAG_VEC is true, the average 
+% FLAG_VEC (boolean, default false) If FLAG_VEC is true, the average
 %   similarity matrix is vectorized using NIAK_MAT2VEC
 % AVG_SIM (matrix) AVG_SIM(K,L) is the average similarity between networks K
-%   and L. 
+%   and L.
 %
 % COMMENTS: The similarity matrix MAT needs to be symmetrical.
 %
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2014
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -60,22 +60,21 @@ avg_sim = zeros([nb_clust nb_clust]);
 
 for num_k = 1:nb_clust
     for num_l = 1:num_k
-        
+
         if num_l == num_k
-            
+
             mat_tmp = mat(part == num_k,part == num_k);
             avg_sim(num_k,num_k) = mean(niak_mat2vec(mat_tmp));
-            
+
         else
-            
+
             avg_sim(num_k,num_l) = mean(mean(mat(part == num_k,part == num_l)));
             avg_sim(num_l,num_k) = avg_sim(num_k,num_l);
         end
-        
-    end    
+
+    end
 end
 
 if flag_vec
     avg_sim = niak_mat2vec(avg_sim);
 end
-

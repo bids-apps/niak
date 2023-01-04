@@ -15,27 +15,27 @@ function pipeline = niak_pipeline_diagnostic(pipeline_in,opt)
 %       (structure) generated through NIAK_PIPELINE_GLM (not available at
 %       this point 09/2008).
 %
-%  * OPT   
-%       (structure) with the following fields : 
+%  * OPT
+%       (structure) with the following fields :
 %
-%       FOLDER_OUT 
+%       FOLDER_OUT
 %           (string) where to write the results of the pipeline.
 %
-%       ENVIRONMENT 
-%           (string, default current environment) Available options : 
-%           'matlab', 'octave'. The environment where the pipeline will run. 
+%       ENVIRONMENT
+%           (string, default current environment) Available options :
+%           'matlab', 'octave'. The environment where the pipeline will run.
 %
-%       BRICKS 
+%       BRICKS
 %           (structure) The fields of OPT.BRICKS set the options for each
 %           brick used in the pipeline
-%           Note that the options will be common to all runs of all 
-%           subjects. Subjects with different options need to be processed 
-%           in different pipelines. 
-%           Each field correspond to one brick, which is indicated. 
-%           Please refer to the help of the brick for details. Unless 
-%           specified, the fields can be simply omitted, in which case the 
+%           Note that the options will be common to all runs of all
+%           subjects. Subjects with different options need to be processed
+%           in different pipelines.
+%           Each field correspond to one brick, which is indicated.
+%           Please refer to the help of the brick for details. Unless
+%           specified, the fields can be simply omitted, in which case the
 %           default options are used.
-%   
+%
 %           DIFF_VARIANCE
 %               (structure) options of NIAK_BRICK_DIFF_VARIANCE
 %
@@ -45,27 +45,27 @@ function pipeline = niak_pipeline_diagnostic(pipeline_in,opt)
 %           PERCENTILE_VOL
 %               (structure) options of NIAK_BRICK_PERCENTILE_VOL
 %
-%           SPCA 
+%           SPCA
 %               (structure) options of NIAK_BRICK_SPCA
 %
-%               NB_COMP 
+%               NB_COMP
 %                   (integer) the number of components (default 60).
 %
 %           BOOT_MEAN_VOLS
 %               (structure) options of NIAK_BRICK_BOOT_MEAN_VOLS
-%               
-%               FLAG_MASK 
+%
+%               FLAG_MASK
 %                   (boolean, default 1) if FLAG_MASK equals one, the
-%                   standard deviation will only be evaluated in a mask of 
+%                   standard deviation will only be evaluated in a mask of
 %                   the brain (that's speeding up bootstrap calculations).
-% 
+%
 %               NB_SAMPS
-%                   (integer, default 1000) the number of bootstrap samples 
+%                   (integer, default 1000) the number of bootstrap samples
 %                   used to compute the standard-deviation-of-the-mean map.
 %
 %           BOOT_CURVES
 %               (structure) options of NIAK_BRICK_BOOT_CURVES.
-%               
+%
 %              PERCENTILES
 %                   (vector, default [0.0005 0.025 0.975 0.9995])
 %                   the (unilateral) confidence level of bootstrap
@@ -73,74 +73,74 @@ function pipeline = niak_pipeline_diagnostic(pipeline_in,opt)
 %
 %              NB_SAMPS
 %                   (integer, default 10000) the number of bootstrap samples
-%                   used to compute the standard-deviation-of-the-mean 
+%                   used to compute the standard-deviation-of-the-mean
 %                   and the bootstrap confidence interval on the mean.
 %
 % _________________________________________________________________________
 % OUTPUTS
 %
-%  * PIPELINE 
+%  * PIPELINE
 %       (structure) describe all jobs that need to be performed for
 %       evaluation.
 %
 % _________________________________________________________________________
 % COMMENTS
 %
-%  The steps of the diagnostic pipeline are the following : 
-%  
+%  The steps of the diagnostic pipeline are the following :
+%
 %  0. A mean and percentile distribution for the mean volume and std volume
 %  for all subjects & runs with bootstrap statistics.
 %
-%  1. A temporal and spatial autocorrelation map is derived for all runs 
+%  1. A temporal and spatial autocorrelation map is derived for all runs
 %  of all subjects, along with a table of percentiles.
-%  A mean map and percentile distribution is derived over all subjects & 
+%  A mean map and percentile distribution is derived over all subjects &
 %  runs along with bootstrap statistics.
 %
 %  2. A curve of relative variance in a PCA basis is derived for all
-%  motion-corrected data. A mean curve is derived over all subjects & runs 
-%  along with bootstrap statistics. 
+%  motion-corrected data. A mean curve is derived over all subjects & runs
+%  along with bootstrap statistics.
 %
-%  3. A standard deviation map of slow time drifts is derived for all runs 
+%  3. A standard deviation map of slow time drifts is derived for all runs
 %  of all subjects, along with a table of percentiles.
-%  A mean map and percentile distribution is derived over all subjects & 
+%  A mean map and percentile distribution is derived over all subjects &
 %  runs along with bootstrap statistics.
 %
-%  4. A standard deviation map of physiological noise is derived for all 
+%  4. A standard deviation map of physiological noise is derived for all
 %  runs of all subjects, along with a table of percentiles.
-%  A mean map and percentile distribution is derived over all subjects & 
+%  A mean map and percentile distribution is derived over all subjects &
 %  runs along with bootstrap statistics.
 %
-%  5. For each contrast, a map of the absolute value of the effect is 
+%  5. For each contrast, a map of the absolute value of the effect is
 %  derived, along with a table of percentiles.
-%  Maps and curves for all subjects that have this contrast are combined 
+%  Maps and curves for all subjects that have this contrast are combined
 %  into a group-level average along with bootstrap statistics.
 %
-%  6. For each contrast, a map of standard deviation of the residuals is 
+%  6. For each contrast, a map of standard deviation of the residuals is
 %  derived, along with a table of percentiles.
-%  Maps and curves for all subjects that have this contrast are combined 
+%  Maps and curves for all subjects that have this contrast are combined
 %  into a group-level average along with bootstrap statistics.
 %
-%  7. For each contrast, a temporal and spatial autocorrelation map of the 
+%  7. For each contrast, a temporal and spatial autocorrelation map of the
 %  residuals is derived, along with a table of percentiles.
-%  Maps and curves for all subjects that have this contrast are combined 
+%  Maps and curves for all subjects that have this contrast are combined
 %  into a group-level average along with bootstrap statistics.
-%  
-%  8. For each contrast, curve of relative variance in a PCA basis is 
-%  derived on the residuals. Maps for all subjects that have this contrast 
+%
+%  8. For each contrast, curve of relative variance in a PCA basis is
+%  derived on the residuals. Maps for all subjects that have this contrast
 %  are combined into a group-level average along with bootstrap statistics.
 %
 % _________________________________________________________________________
 % REFERENCES
-% 
+%
 % P. Bellec;V. Perlbarg;H. Benali;K. Worsley;A. Evans, Realistic fMRI
-% simulations using parametric model estimation over a large database (ICBM 
-% FRB). Proceedings of the 13th International Conference on Functional 
+% simulations using parametric model estimation over a large database (ICBM
+% FRB). Proceedings of the 13th International Conference on Functional
 % Mapping of the Human Brain, 2007.
 %
 % Hopefully a regular article will come soon.
-% 
+%
 % _________________________________________________________________________
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,
 % Montreal Neurological Institute, McGill University, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -205,10 +205,10 @@ num_s = 1;
 
 list_subject = cell([sum(mask_anat) 1]);
 for num_e = find(mask_anat)'
-    
+
     list_subject{num_s} = name_jobs{num_e}(6:end);
     num_s = num_s + 1;
-    
+
 end
 
 nb_subject = length(list_subject);
@@ -220,7 +220,7 @@ for num_s = 1:nb_subject
     pref_glm = cat(2,'glm_level1_',subject);
     glm_jobs = name_jobs(niak_find_str_cell(name_jobs,'glm_level1'));
     glm_jobs = glm_jobs(niak_find_str_cell(glm_jobs,subject));
-    
+
     list_contrast_tmp = cell([length(glm_jobs) 1]);
     for num_j = 1:length(glm_jobs)
         list_contrast_tmp{num_j} = glm_jobs{num_j}(length(pref_glm)+2:end);
@@ -252,15 +252,15 @@ pipeline = pipeline_in;
 clear files_in_tmp files_out_tmp opt_tmp
 
 for num_s = 1:nb_subject
-    
+
     subject = list_subject{num_s};
     motion_jobs = name_jobs(niak_find_str_cell(name_jobs,'motion_correction'));
-    subject_job = motion_jobs(niak_find_str_cell(motion_jobs,subject));    
+    subject_job = motion_jobs(niak_find_str_cell(motion_jobs,subject));
 
     files_in_tmp(1).vol{num_s} = pipeline_in.(subject_job{1}).files_out.mean_volume;
     files_in_tmp(1).transformation{num_s} = list_transformation{niak_find_str_cell(list_subject,subject)};
 end
-    
+
 %% Files out
 files_out_tmp.mean = cat(2,opt.folder_out,filesep,'mean_func_mean.mnc');
 files_out_tmp.std = cat(2,opt.folder_out,filesep,'mean_func_std.mnc');
@@ -290,13 +290,13 @@ pipeline.(name_stage) = stage;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 for num_s = 1:nb_subject
-    
+
     subject = list_subject{num_s};
     motion_jobs = name_jobs(niak_find_str_cell(name_jobs,'motion_correction'));
-    subject_job = motion_jobs(niak_find_str_cell(motion_jobs,subject));    
+    subject_job = motion_jobs(niak_find_str_cell(motion_jobs,subject));
 
     clear files_in_tmp files_out_tmp opt_tmp
-    
+
     %% Files in
     files_in_tmp(1).vol = pipeline_in.(subject_job{1}).files_out.mean_volume;
     files_in_tmp(1).mask = pipeline_in.(subject_job{1}).files_out.mask_volume;
@@ -332,15 +332,15 @@ end
 
 clear files_in_tmp files_out_tmp opt_tmp
 
-%% Files in 
+%% Files in
 files_in = cell([nb_subject 1]);
 
 for num_s = 1:nb_subject
-    
+
     subject = list_subject{num_s};
     name_stage_in = cat(2,'percentile_mean_func_ind_',subject);
     files_in_tmp{num_s} = pipeline.(name_stage_in).files_out;
-    
+
 end
 
 %% Files out
@@ -372,15 +372,15 @@ pipeline.(name_stage) = stage;
 clear files_in_tmp files_out_tmp opt_tmp
 
 for num_s = 1:nb_subject
-    
+
     subject = list_subject{num_s};
     motion_jobs = name_jobs(niak_find_str_cell(name_jobs,'motion_correction'));
-    subject_job = motion_jobs(niak_find_str_cell(motion_jobs,subject));    
+    subject_job = motion_jobs(niak_find_str_cell(motion_jobs,subject));
 
     files_in_tmp(1).vol{num_s} = pipeline_in.(subject_job{1}).files_out.std_volume;
     files_in_tmp(1).transformation{num_s} = list_transformation{niak_find_str_cell(list_subject,subject)};
 end
-    
+
 %% Files out
 files_out_tmp.mean = cat(2,opt.folder_out,filesep,'std_func_mean.mnc');
 files_out_tmp.std = cat(2,opt.folder_out,filesep,'std_func_std.mnc');
@@ -410,13 +410,13 @@ pipeline.(name_stage) = stage;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 for num_s = 1:nb_subject
-    
+
     subject = list_subject{num_s};
     motion_jobs = name_jobs(niak_find_str_cell(name_jobs,'motion_correction'));
-    subject_job = motion_jobs(niak_find_str_cell(motion_jobs,subject));    
+    subject_job = motion_jobs(niak_find_str_cell(motion_jobs,subject));
 
     clear files_in_tmp files_out_tmp opt_tmp
-    
+
     %% Files in
     files_in_tmp(1).vol = pipeline_in.(subject_job{1}).files_out.std_volume;
     files_in_tmp(1).mask = pipeline_in.(subject_job{1}).files_out.mask_volume;
@@ -452,15 +452,15 @@ end
 
 clear files_in_tmp files_out_tmp opt_tmp
 
-%% Files in 
+%% Files in
 files_in = cell([nb_subject 1]);
 
 for num_s = 1:nb_subject
-    
+
     subject = list_subject{num_s};
     name_stage_in = cat(2,'percentile_std_func_ind_',subject);
     files_in_tmp{num_s} = pipeline.(name_stage_in).files_out;
-    
+
 end
 
 %% Files out
@@ -502,10 +502,10 @@ for num_s = 1:nb_subject
     subject_job = motion_jobs(niak_find_str_cell(motion_jobs,subject));
 
     data_subj = niak_files2cell(pipeline_in.(subject_job{1}).files_out.motion_corrected_data);
-    nb_run = length(data_subj);  
-    
+    nb_run = length(data_subj);
+
     for num_r = 1:nb_run
-        
+
         %%%%%%%%%%%%%%%%%%%
         %% Building maps %%
         %%%%%%%%%%%%%%%%%%%
@@ -535,16 +535,16 @@ for num_s = 1:nb_subject
         stage.files_out = files_out_tmp;
         stage.opt = opt_tmp;
         stage.environment = opt.environment;
-        pipeline.(name_stage) = stage;      
-        
+        pipeline.(name_stage) = stage;
+
         stage_autocorr = stage;
-        
+
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %% Extracting percentages %%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        
+
         %% Spatial
-        
+
         clear files_in_tmp files_out_tmp opt_tmp
         name_stage = cat(2,name_process2,'_',subject,'_',run);
         files_in_tmp.vol = stage_autocorr.files_out.spatial;
@@ -570,10 +570,10 @@ for num_s = 1:nb_subject
         stage.files_out = files_out_tmp;
         stage.opt = opt_tmp;
         stage.environment = opt.environment;
-        pipeline.(name_stage) = stage;    
-        
+        pipeline.(name_stage) = stage;
+
          %% Temporal
-        
+
         clear files_in_tmp files_out_tmp opt_tmp
         name_stage = cat(2,name_process3,'_',subject,'_',run);
         files_in_tmp.vol = stage_autocorr.files_out.temporal;
@@ -599,7 +599,7 @@ for num_s = 1:nb_subject
         stage.files_out = files_out_tmp;
         stage.opt = opt_tmp;
         stage.environment = opt.environment;
-        pipeline.(name_stage) = stage;   
+        pipeline.(name_stage) = stage;
 
     end % run
 
@@ -787,12 +787,12 @@ for num_s = 1:nb_subject
     subject = list_subject{num_s};
     motion_jobs = name_jobs(niak_find_str_cell(name_jobs,'motion_correction'));
     subject_job = motion_jobs(niak_find_str_cell(motion_jobs,subject));
-    
+
     data_subj = niak_files2cell(pipeline_in.(subject_job{1}).files_out.motion_corrected_data);
-    nb_run = length(data_subj);  
-    
+    nb_run = length(data_subj);
+
     for num_r = 1:nb_run
-        
+
         clear files_in_tmp files_out_tmp opt_tmp
         run = cat(2,'run',num2str(num_r));
         name_stage = cat(2,name_process,'_',subject,'_',run);
@@ -819,7 +819,7 @@ for num_s = 1:nb_subject
         stage.opt = opt_tmp;
         stage.environment = opt.environment;
 
-        pipeline.(name_stage) = stage;        
+        pipeline.(name_stage) = stage;
 
     end % run
 
@@ -881,17 +881,17 @@ for num_s = 1:nb_subject
     motion_jobs = name_jobs(niak_find_str_cell(name_jobs,'motion_correction'));
     motion_jobs = motion_jobs(niak_find_str_cell(motion_jobs,subject));
     clear jobs_in jobs_in2
-    
+
     jobs_in = SliceTiming_jobs(niak_find_str_cell(SliceTiming_jobs,subject));
     nb_run = length(jobs_in);
-    
+
     jobs_in2 = cell([length(jobs_in) 1]);
     for num_j = 1:length(jobs_in)
         jobs_in2{num_j} = cat(2,'time_filter',jobs_in{num_j}(length('slice_timing')+1:end));
-    end                    
-    
+    end
+
     for num_r = 1:nb_run
-        
+
         clear files_in_tmp files_out_tmp opt_tmp
         run = cat(2,'run',num2str(num_r));
         name_stage = cat(2,name_process,'_',subject,'_',run);
@@ -919,12 +919,12 @@ for num_s = 1:nb_subject
         stage.opt = opt_tmp;
         stage.environment = opt.environment;
 
-        pipeline.(name_stage) = stage;        
-        
+        pipeline.(name_stage) = stage;
+
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %% Extracting percentages %%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%       
-        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
         clear files_in_tmp files_out_tmp opt_tmp
         name_stage = cat(2,name_process2,'_',subject,'_',run);
         files_in_tmp.vol = stage.files_out;
@@ -950,8 +950,8 @@ for num_s = 1:nb_subject
         stage.files_out = files_out_tmp;
         stage.opt = opt_tmp;
         stage.environment = opt.environment;
-        pipeline.(name_stage) = stage;    
-        
+        pipeline.(name_stage) = stage;
+
     end % run
 
 end % subject
@@ -1058,16 +1058,16 @@ for num_s = 1:nb_subject
     motion_jobs = motion_jobs(niak_find_str_cell(motion_jobs,subject));
 
     clear jobs_in jobs_in2
-    
+
     jobs_in = TimeFilter_jobs(niak_find_str_cell(TimeFilter_jobs,subject));
     nb_run = length(jobs_in);
-    
+
     for num_j = 1:length(jobs_in)
         jobs_in2{num_j} = cat(2,'component_supp',jobs_in{num_j}(length('time_filter')+1:end));
-    end                
-    
+    end
+
     for num_r = 1:nb_run
-        
+
         clear files_in_tmp files_out_tmp opt_tmp
         run = cat(2,'run',num2str(num_r));
         name_stage = cat(2,name_process,'_',subject,'_',run);
@@ -1095,12 +1095,12 @@ for num_s = 1:nb_subject
         stage.opt = opt_tmp;
         stage.environment = opt.environment;
 
-        pipeline.(name_stage) = stage;        
-        
+        pipeline.(name_stage) = stage;
+
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %% Extracting percentages %%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%       
-        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
         clear files_in_tmp files_out_tmp opt_tmp
         name_stage = cat(2,name_process2,'_',subject,'_',run);
         files_in_tmp.vol = stage.files_out;
@@ -1126,8 +1126,8 @@ for num_s = 1:nb_subject
         stage.files_out = files_out_tmp;
         stage.opt = opt_tmp;
         stage.environment = opt.environment;
-        pipeline.(name_stage) = stage;    
-        
+        pipeline.(name_stage) = stage;
+
     end % run
 
 end % subject
@@ -1244,7 +1244,7 @@ for num_c = 1:nb_contrast
         clear files_in_tmp files_out_tmp opt_tmp
 
         if ~isempty(jobs_in)
-            
+
             files_in_tmp{1} = pipeline.(jobs_in{1}).files_in.fmri;
             files_in_tmp{2} = pipeline.(jobs_in{1}).files_out.resid{1};
 
@@ -1317,11 +1317,11 @@ name_jobs = fieldnames(pipeline);
 for num_c = 1:nb_contrast
     contrast = list_contrast{num_c};
     jobs_var_activation = name_jobs(niak_find_str_cell(name_jobs,cat(2,'var_activation_ind_',contrast)));
-    
+
     nb_jobs = length(jobs_var_activation);
 
     nb_files = 1;
-    
+
     clear files_in_tmp files_out_tmp opt_tmp
     for num_j = 1:nb_jobs
         name_job_in = jobs_var_activation{num_j};
@@ -1362,7 +1362,7 @@ end
 name_jobs = fieldnames(pipeline);
 for num_c = 1:nb_contrast
     clear files_in_tmp files_out_tmp opt_tmp
-    
+
     %% Files in
     contrast = list_contrast{num_c};
     jobs_perc_activation = name_jobs(niak_find_str_cell(name_jobs,cat(2,'perc_activation_ind_',contrast)));
@@ -1424,10 +1424,10 @@ for num_c = 1:nb_contrast
         clear files_in_tmp files_out_tmp opt_tmp
 
         if ~isempty(jobs_in)
-            
+
             files_in_tmp{1} = pipeline.(jobs_in{1}).files_out.resid{1};
-            files_in_tmp{2} = '';            
-            
+            files_in_tmp{2} = '';
+
             %% Options
             opt_tmp = opt.bricks.diff_variance;
             opt_tmp.folder_out = cat(2,opt.folder_out,filesep,subject,filesep);
@@ -1451,7 +1451,7 @@ for num_c = 1:nb_contrast
             stage.environment = opt.environment;
 
             pipeline.(name_stage) = stage;
-            
+
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%
             %% Extracting percentages %%
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1620,7 +1620,7 @@ for num_c = 1:nb_contrast
         stage.files_out = files_out_tmp;
         stage.opt = opt_tmp;
         stage.environment = opt.environment;
-        
+
         pipeline.(name_stage) = stage;
 
         stage_autocorr = stage;
@@ -1656,10 +1656,10 @@ for num_c = 1:nb_contrast
         stage.files_out = files_out_tmp;
         stage.opt = opt_tmp;
         stage.environment = opt.environment;
-        pipeline.(name_stage) = stage;    
-        
+        pipeline.(name_stage) = stage;
+
          %% Temporal
-        
+
         clear files_in_tmp files_out_tmp opt_tmp
         name_stage = cat(2,name_process3,'_',contrast,'_',subject);
         files_in_tmp.vol = stage_autocorr.files_out.temporal;
@@ -1685,7 +1685,7 @@ for num_c = 1:nb_contrast
         stage.files_out = files_out_tmp;
         stage.opt = opt_tmp;
         stage.environment = opt.environment;
-        pipeline.(name_stage) = stage;   
+        pipeline.(name_stage) = stage;
 
 
     end % subject
@@ -1873,18 +1873,18 @@ glm_jobs = name_jobs(niak_find_str_cell(name_jobs,'glm_level1'));
 for num_c = 1:nb_contrast
 
     contrast = list_contrast{num_c};
-    
+
     for num_s = 1:nb_subject
 
        subject = list_subject{num_s};
         subject_jobs = glm_jobs(niak_find_str_cell(glm_jobs,subject));
         subject_jobs = subject_jobs(niak_find_str_cell(subject_jobs,contrast));
-        
+
         clear files_in_tmp files_out_tmp opt_tmp
-        
+
         %% Files in
         files_in_tmp = pipeline.(subject_jobs{1}).files_out.resid{1};
-       
+
         %% Options
         opt_tmp = opt.bricks.spca;
         opt_tmp.folder_out = cat(2,opt.folder_out,filesep,subject,filesep);

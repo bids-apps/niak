@@ -62,13 +62,13 @@ def main(args=None):
     # if pipeline_name == "Niak_fmri_preprocess":
 
     parser.add_argument("--func_hint", default=None, help=(
-        'A hint to pick one out of many fmri input. For example' 
+        'A hint to pick one out of many fmri input. For example'
         'if the fmri study includes "sub-XX_task-rest-in_pace_bold.nii.gz"'
         'and "sub-XX_task-rest-a_thing_bold.nii.gz" and you need the "pace" flavor'
         '--func_hint pace would do the trick'))
 
     parser.add_argument("--anat_hint", default=None, help=(
-        'A hint to pick one out of many anatomical input. For example' 
+        'A hint to pick one out of many anatomical input. For example'
         'if the fmri study includes "sub-XX_T2.nii.gz"'
         'and "sub-XX_T1.nii.gz" and you need the "T1" image'
         '--anat T2 would do the trick'))

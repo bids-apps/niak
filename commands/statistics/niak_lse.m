@@ -1,5 +1,5 @@
 function [beta,e,std_e,ttest,pce,eff,std_eff] = niak_lse(y,x,c)
-% Least-square estimates in a linear model Y = X.BETA + E 
+% Least-square estimates in a linear model Y = X.BETA + E
 %
 % [BETA,E,STD_E,TTEST,PCE,EFF,STD_EFF] = NIAK_LSE( Y , X , [C] )
 %
@@ -10,7 +10,7 @@ function [beta,e,std_e,ttest,pce,eff,std_eff] = niak_lse(y,x,c)
 %   (2D array size T*N) each column of Y are samples of one variable.
 %
 % X
-%   (2D array size T*K) each column of X is a explaining factor with the 
+%   (2D array size T*K) each column of X is a explaining factor with the
 %   same number of rows as Y.
 %
 % C
@@ -21,7 +21,7 @@ function [beta,e,std_e,ttest,pce,eff,std_eff] = niak_lse(y,x,c)
 % OUTPUTS:
 %
 % BETA
-%   (vector size K*N) BETA(k,n) is the estimated coefficient regression 
+%   (vector size K*N) BETA(k,n) is the estimated coefficient regression
 %   estimate of X(:,k) on Y(:,n), using the least-square criterion.
 %
 % E
@@ -37,11 +37,11 @@ function [beta,e,std_e,ttest,pce,eff,std_eff] = niak_lse(y,x,c)
 %   weights and the specified contrast (see C above).
 %
 % PCE
-%   (vector,size [1 N]) PCE(n) is the per-comparison error associated with 
+%   (vector,size [1 N]) PCE(n) is the per-comparison error associated with
 %   TTEST(n) (bilateral test).
 %
 % EFF
-%   (vector, size [1 N]) the effect associated with the contrast and the 
+%   (vector, size [1 N]) the effect associated with the contrast and the
 %   regression coefficients.
 %
 % STD_EFF
@@ -99,7 +99,7 @@ if nargout > 1
     e = y-x*beta; % Residuals
 end
 
-if (nargout > 2) 
+if (nargout > 2)
     std_e = sqrt(sum(e.^2,1)/(N-K)); % Standard deviation of the noise
 end
 

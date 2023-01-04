@@ -17,7 +17,7 @@ function [scales1,scales2] = niak_scales2cell(scales_mat);
 %   (vector) An ordered list of unique values found in SCALES_MAT(:,1)
 %
 % SCALES2
-%   (cell) SCALES2{I} is an ordered list of unique integers found in 
+%   (cell) SCALES2{I} is an ordered list of unique integers found in
 %   SCALES_MAT(:,2) such that SCALES_MAT(:,1) is equal to SCALES1(I).
 %
 % _________________________________________________________________________
@@ -33,7 +33,7 @@ function [scales1,scales2] = niak_scales2cell(scales_mat);
 %               Université de Montréal, 2010
 % Maintainer : pbellec@criugm.qc.ca
 % See licensing information in the code.
-% Keywords : 
+% Keywords :
 
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal

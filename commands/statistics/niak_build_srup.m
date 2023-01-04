@@ -1,5 +1,5 @@
 function [S,R,U,P] = niak_build_srup(tseries,flag_vec);
-% Compute the covariance, correlation, concentration and partial 
+% Compute the covariance, correlation, concentration and partial
 % correlation matrices from regional time series.
 %
 % SYNTAX:
@@ -8,7 +8,7 @@ function [S,R,U,P] = niak_build_srup(tseries,flag_vec);
 % _________________________________________________________________________
 % INPUTS:
 %
-% TSERIES       
+% TSERIES
 %       (array) time series. First dimension is time.
 %
 % FLAG_VEC
@@ -20,20 +20,20 @@ function [S,R,U,P] = niak_build_srup(tseries,flag_vec);
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% S             
+% S
 %       (square matrix or vector) Empirical covariance matrix. S is
 %       symmetrical.
 %
-% R             
+% R
 %       (square matrix or vector) Empirical correlation matrix. R is
 %       symmetrical with ones on the diagonal.
 %
-% U             
+% U
 %       (square matrix or vector) Empirical concentration matrix. U is
 %       symmetrical.
 %
-% P             
-%       (square matrix or vector) Empirical partial correlation matrix. P 
+% P
+%       (square matrix or vector) Empirical partial correlation matrix. P
 %       is symmetrical with ones on the diagonal.
 %
 %
@@ -46,7 +46,7 @@ function [S,R,U,P] = niak_build_srup(tseries,flag_vec);
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -87,7 +87,7 @@ if nargout > 1
 end
 
 if nargout >2
-    U = S^(-1);   
+    U = S^(-1);
 end
 
 if nargout >3

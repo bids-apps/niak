@@ -138,7 +138,7 @@ weights = tmp.weight_mat;
 
 %% Visualize the weights and covariate of interest
 if ~strcmp(files_out.figures, 'gb_niak_omitted')
-    % First, get the covariate of interest. 
+    % First, get the covariate of interest.
     contrasts = fieldnames(opt.contrast);
     n_contrasts = length(contrasts);
     coi_name = '';
@@ -168,17 +168,17 @@ if ~strcmp(files_out.figures, 'gb_niak_omitted')
     else
         coi_cat = true;
     end
-    
+
     % Filter out NaN values
-    nan_coi = find(isnan(coi)); 
-    coi(nan_coi) = []; 
+    nan_coi = find(isnan(coi));
+    coi(nan_coi) = [];
     weights(nan_coi,:) = [];
 
     % Determine the number of rows and columns for the subyptes
     n_cols = floor(sqrt(n_sbt));
     n_rows = ceil(n_sbt/n_cols);
-    
-    %% Work around the incompatibilities between Matlab and Octave 
+
+    %% Work around the incompatibilities between Matlab and Octave
     is_octave = logical(exist('OCTAVE_VERSION', 'builtin') ~= 0);
 
     % Make a figure for each network
@@ -200,7 +200,7 @@ if ~strcmp(files_out.figures, 'gb_niak_omitted')
                 if is_octave
                     % The groups are supposed to go in a cell
                     for cc = 1:n_unique
-                        sbt_cell{cc} = sbt_weights(coi == coi_unique(cc)); 
+                        sbt_cell{cc} = sbt_weights(coi == coi_unique(cc));
                     end
                     boxplot(sbt_cell);
                 else

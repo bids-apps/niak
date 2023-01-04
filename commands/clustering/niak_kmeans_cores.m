@@ -15,7 +15,7 @@ function [part] = niak_kmeans_cores(data,target, target_scale)
 %       of the partition
 %
 % TARGET_SCALE
-%       (integer, optional) contains the scale of the 
+%       (integer, optional) contains the scale of the
 %       target partition
 %
 % _________________________________________________________________________
@@ -94,7 +94,7 @@ for tar_clust = 1:target_scale
         store(tar_clust,:) = corr_map_ind;
     end
 end
-    
-% Find the target cluster that has the maximal correlation map with each 
+
+% Find the target cluster that has the maximal correlation map with each
 % location and assign the location to it
 [~, part] = max(store);

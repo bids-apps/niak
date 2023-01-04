@@ -1,5 +1,6 @@
 FROM simexp/octave:4.2.1_cross_u16
-MAINTAINER Pierre-Olivier Quirion <poq@criugm.qc.ca>
+
+# MAINTAINER Pierre-Olivier Quirion <poq@criugm.qc.ca>
 
 ENV PSOM_VERSION 2.3.1
 ENV NIAK_ROOT /usr/local/niak
@@ -8,21 +9,21 @@ ENV NIAK_SANDBOX_ROOT /sandbox
 ENV NIAK_SANDBOX ${NIAK_SANDBOX_ROOT}/home
 ENV TERM xterm-256color
 
-# Install NIAK  
+# Install NIAK
 
 RUN mkdir ${NIAK_ROOT}
-ADD bricks/ ${NIAK_ROOT}/bricks/
-ADD commands/ ${NIAK_ROOT}/commands/
-ADD demos/ ${NIAK_ROOT}/demos/
-ADD reports/ ${NIAK_ROOT}/reports/
-ADD pipeline/ ${NIAK_ROOT}/pipeline/
-ADD template/ ${NIAK_ROOT}/template/
-ADD extensions/ ${NIAK_ROOT}/extensions/
+COPY bricks/ ${NIAK_ROOT}/bricks/
+COPY commands/ ${NIAK_ROOT}/commands/
+COPY demos/ ${NIAK_ROOT}/demos/
+COPY reports/ ${NIAK_ROOT}/reports/
+COPY pipeline/ ${NIAK_ROOT}/pipeline/
+COPY template/ ${NIAK_ROOT}/template/
+COPY extensions/ ${NIAK_ROOT}/extensions/
 WORKDIR  ${NIAK_ROOT}/extensions
-RUN wget https://sites.google.com/site/bctnet/Home/functions/BCT.zip \
+RUN wget --progress=dot:giga https://sites.google.com/site/bctnet/Home/functions/BCT.zip \
     && unzip BCT.zip \
     && rm BCT.zip \
-    && wget https://github.com/SIMEXP/psom/archive/v${PSOM_VERSION}.zip \ 
+    && wget --progress=dot:giga https://github.com/SIMEXP/psom/archive/v${PSOM_VERSION}.zip \
     && unzip v${PSOM_VERSION}.zip \
     && rm v${PSOM_VERSION}.zip \
     && cd /usr/local/bin \
@@ -32,25 +33,27 @@ RUN wget https://sites.google.com/site/bctnet/Home/functions/BCT.zip \
     && mkdir /scratch
 # Build octave configure file
 RUN mkdir ${NIAK_CONFIG_PATH} && chmod 777 ${NIAK_CONFIG_PATH} \
-    && echo addpath\(genpath\(\'${NIAK_ROOT}\'\)\)\; >> /etc/octave.conf \
-    && echo addpath\(genpath\(\'${NIAK_CONFIG_PATH}\'\)\)\; >> /etc/octave.conf
+    && echo COPYpath\(genpath\(\'${NIAK_ROOT}\'\)\)\; >> /etc/octave.conf \
+    && echo COPYpath\(genpath\(\'${NIAK_CONFIG_PATH}\'\)\)\; >> /etc/octave.conf
 
 # niak will run here
 RUN mkdir -p ${NIAK_SANDBOX} && chmod -R 777 ${NIAK_SANDBOX_ROOT}
 WORKDIR ${NIAK_SANDBOX}
 
 # 3D visualisation tools
-RUN apt-get update && apt-get install --force-yes -y python-dev
+RUN apt-get update && apt-get install --no-install-recommends --force-yes -y python-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # jupyter install
-RUN wget https://bootstrap.pypa.io/get-pip.py
-RUN python get-pip.py
-RUN pip install notebook octave_kernel && rm get-pip.py
-RUN python -m octave_kernel.install
-RUN pip install ipywidgets widgetsnbextension
-ADD util/bin/niak_jupyter /usr/local/bin/niak_jupyter
-ADD util/lib/psom_gb_vars_local.jupyter /usr/local/lib/psom_gb_vars_local.jupyter
-ADD util/lib/jupyter_notebook_config.py /usr/local/lib/jupyter_notebook_config.py
+RUN wget --progress=dot:giga https://bootstrap.pypa.io/get-pip.py && \
+    python get-pip.py && \
+    pip install notebook octave_kernel && rm get-pip.py && \
+    python -m octave_kernel.install && \
+    pip install ipywidgets widgetsnbextension
+COPY util/bin/niak_jupyter /usr/local/bin/niak_jupyter
+COPY util/lib/psom_gb_vars_local.jupyter /usr/local/lib/psom_gb_vars_local.jupyter
+COPY util/lib/jupyter_notebook_config.py /usr/local/lib/jupyter_notebook_config.py
 EXPOSE 8080
 
 
@@ -73,4 +76,4 @@ RUN mkdir /oasis /projects  /local-scratch
 WORKDIR /tmp
 ENTRYPOINT ["/code/util/bin/bids_app.py"]
 CMD ["--help"]
-ADD util/  ${NIAK_ROOT}/util/
+COPY util/  ${NIAK_ROOT}/util/

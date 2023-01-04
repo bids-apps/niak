@@ -1,34 +1,34 @@
 function map = niak_build_coord_map(coord,hdr,fwhm)
 % Build a 3D volume summary of the distribution of multiple 3D coordinates
-% 
+%
 % SYNTAX:
 % MAP = NIAK_BUILD_COORD_MAP(COORD,HDR,fwhm)
 %
 % _________________________________________________________________________
 % INPUTS:
-% 
+%
 % COORD
 %   (array Vx3) a list of 3D coordinates (in world space)
-% 
-% HDR 
+%
+% HDR
 %   (structure) the header of a 3D (or 4D) volume defining the space.
 %   See NIAK_READ_VOL
 %
 % FWHM
-%   (scalar, default 3) the FWHM of the kernel. 
+%   (scalar, default 3) the FWHM of the kernel.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % MAP
-%   (3D volume) for each coordinate, a Gaussian kernel centered at this coordinate 
+%   (3D volume) for each coordinate, a Gaussian kernel centered at this coordinate
 %   is added to the volume (and normalized to have a max of 1).
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2013
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -81,7 +81,7 @@ map = zeros(hdr.info.dimensions(1:3));
 for num_c = 1:size(coord_v,1)
     x = coord_v(num_c,1);
     y = coord_v(num_c,2);
-    z = coord_v(num_c,3);        
+    z = coord_v(num_c,3);
     map(max(x-wx,1):min(x+wx,nx),max(y-wy,1):min(y+wy,ny),max(z-wz,1):min(z+wz,nz)) = map(max(x-wx,1):min(x+wx,nx),max(y-wy,1):min(y+wy,ny),max(z-wz,1):min(z+wz,nz)) + ker((((x-wx):(x+wx))>0)&(((x-wx):(x+wx))<=nx),(((y-wy):(y+wy))>0)&(((y-wy):(y+wy))<=ny),(((z-wz):(z+wz))>0)&(((z-wz):(z+wz))<=nz));
 end
 
@@ -105,7 +105,6 @@ c_coord=[X(:)-mu(1) Y(:)-mu(2) Z(:)-mu(3)];
 
 % Apply the equation of the Gaussian distribution
 T_hand=AmplitudePSF*exp(-0.5*((c_coord(:,1).^2/sig(1))+(c_coord(:,2).^2/sig(2))+(c_coord(:,3).^2/sig(3))));
-    
+
 % Reshape to volume
 ker=reshape(T_hand,outsize);
-

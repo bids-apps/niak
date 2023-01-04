@@ -1,29 +1,29 @@
 function [in,out,opt] = niak_test_glm_connectome_data(in,out,opt)
 % Generate the data for the tests of NIAK_TEST_GLM_CONNECTOME
 %
-% SYNTAX: 
+% SYNTAX:
 %   [] = NIAK_TEST_GLM_CONNECTOME(IN,OUT,OPT)
 %
 % INPUTS:
 %   IN (structure) not used
 %   OUT (structure), with the following fields (all have defaults if empty or unspecified):
-%      FMRI_RUN     (cell of strings) simulated fMRI runs 
+%      FMRI_RUN     (cell of strings) simulated fMRI runs
 %      GROUP        (string) a .csv file with group-level covariates
 %      NETWORKS     (cell of strings) simulated networks
 %      PARAM        (string) a .mat file with all the parameters of the simulation.
-%      GROUND_TRUTH (structure) a .mat file with the expected results 
+%      GROUND_TRUTH (structure) a .mat file with the expected results
 %   OPT (structure) with the following fields:
 %      FOLDER_OUT   (string) where to generate the defaults
-%      RAND_SEED    (integer, default 0) the seed of the random number 
+%      RAND_SEED    (integer, default 0) the seed of the random number
 %                   generator. If left empty, nothing is done.
 %      FLAG_TEST    (boolean, default false) if true, the brick only updates
 %                   the structures IN, OUT, OPT.
 %
 % OUTPUTS:
-%   IN, OUT, OPT are updated. 
+%   IN, OUT, OPT are updated.
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -73,7 +73,7 @@ if isempty(out.fmri_run)
     out.fmri_run{2} = [folder_out 'fmri_subject2.mnc.gz'];
     out.fmri_run{3} = [folder_out 'fmri_subject3.mnc.gz'];
     out.fmri_run{4} = [folder_out 'fmri_subject4.mnc.gz'];
-end    
+end
 
 if isempty(out.networks)
     out.networks{1} = [folder_out 'network_4.mnc.gz'];
@@ -234,7 +234,7 @@ y = sub_all_corr(tseries,part16,1:2);
 res.eff = mean(y,1);
 save(out.ground_truth.avg_corr_young.network16,'-struct','res')
 
-%% Covariance with age for all 
+%% Covariance with age for all
 fprintf('Generate results for the "corr_vs_age" contrast ...\n')
 y = sub_all_corr(tseries,part4,1:4);
 res.eff = niak_lse(y,[ones(size(tab,1),1) (tab(:,1)-mean(tab(:,1)))]);
@@ -245,7 +245,7 @@ res.eff = niak_lse(y,[ones(size(tab,1),1) (tab(:,1)-mean(tab(:,1)))]);
 res.eff = res.eff(2,:);
 save(out.ground_truth.corr_vs_age.network16,'-struct','res')
 
-%% Save the true correlation matrices in a .mat file 
+%% Save the true correlation matrices in a .mat file
 
 %% Save simulation parameters
 save(out.param)
@@ -274,15 +274,15 @@ for xx = 1:nb_roi
             tseries_y = mean(niak_normalize_tseries(tseries(:,part==yy)),2);
             rmat(xx,yy) = corr(tseries_x,tseries_y);
             rmat(yy,xx) = rmat(xx,yy);
-        end        
+        end
     end
 end
 rmat = niak_mat2lvec(niak_fisher(rmat))';
 
 function event_c = sub_convolve(event,time_frames)
-[list_event,tmp,all_event]  = unique(event.labels_x); 
+[list_event,tmp,all_event]  = unique(event.labels_x);
 opt_m.events = [all_event(:) event.x];
 opt_m.frame_times = time_frames;
-x_cache =  niak_fmridesign(opt_m); 
+x_cache =  niak_fmridesign(opt_m);
 event_c.x = x_cache.x(:,:,1,1);
 event_c.labels_y = list_event(:);

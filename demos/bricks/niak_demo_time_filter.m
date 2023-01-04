@@ -9,9 +9,9 @@ function [files_in,files_out,opt] = niak_demo_time_filter(path_demo,opt)
 % INPUTS:
 %
 % PATH_DEMO
-%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS) 
-%       the full path to the NIAK demo dataset. The dataset can be found in 
-%       multiple file formats at the following address : 
+%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS)
+%       the full path to the NIAK demo dataset. The dataset can be found in
+%       multiple file formats at the following address :
 %       http://www.bic.mni.mcgill.ca/users/pbellec/demo_niak/
 %
 % OPT
@@ -21,7 +21,7 @@ function [files_in,files_out,opt] = niak_demo_time_filter(path_demo,opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% FILES_IN,FILES_OUT,OPT : outputs of NIAK_BRICK_TIME_FILTER (a description 
+% FILES_IN,FILES_OUT,OPT : outputs of NIAK_BRICK_TIME_FILTER (a description
 % of input and output files with all options).
 %
 % _________________________________________________________________________
@@ -63,19 +63,19 @@ niak_gb_vars
 
 %% Setting input files
 switch GB_NIAK.format_demo
-    
+
     case 'minc1' % If data are in minc1 format
 
         files_in = cat(2,GB_NIAK.path_demo,filesep,'func_motor_subject1.mnc.gz');
 
     case 'minc2' % If data are in minc2 format
-        
+
         files_in = cat(2,GB_NIAK.path_demo,filesep,'func_motor_subject1.mnc');
-    
-    otherwise 
-        
+
+    otherwise
+
         error('niak:demo','%s is an unsupported file format for this demo. See help to change that.',GB_NIAK.format_demo)
-        
+
 end
 
 %% Setting output files

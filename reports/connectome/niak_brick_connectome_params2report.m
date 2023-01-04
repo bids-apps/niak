@@ -3,20 +3,20 @@ function [in,out,opt] = niak_brick_connectome_params2report(in,out,opt)
 %
 % SYNTAX: [IN,OUT,OPT] = NIAK_BRICK_CONNECTOME_PARAMS2REPORT(IN,OUT,OPT)
 %
-% IN (string) The name of a .mat file with two variables FILES_IN (the input files) and 
-%   OPT (the options), describing the parameters of the pipeline. 
-% OUT.LIST_SUBJECT (string) the name of a .js file with a description of the list 
+% IN (string) The name of a .mat file with two variables FILES_IN (the input files) and
+%   OPT (the options), describing the parameters of the pipeline.
+% OUT.LIST_SUBJECT (string) the name of a .js file with a description of the list
 %   of subjects, in a variable listSubject.
-% OUT.LIST_RUN (string) the name of a .js file with a description of the list of 
+% OUT.LIST_RUN (string) the name of a .js file with a description of the list of
 %   runs, in a variable listRun.
-% OUT.FILES_IN (string) the name of a .js file with a json description of the 
-%   pipeline options, in a variable opt, as well as a function buildFilesIn that 
-%   generates a .json description of the input file for a particular subject. 
-% OUT.SUMMARY (string) the name of a .js file with a string summarizing the 
-%   pipeline options. 
-% OPT.LIST_SUBJECT (cell of strings, default use data found in IN) a list of 
-%    subject IDs. 
-% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but 
+% OUT.FILES_IN (string) the name of a .js file with a json description of the
+%   pipeline options, in a variable opt, as well as a function buildFilesIn that
+%   generates a .json description of the input file for a particular subject.
+% OUT.SUMMARY (string) the name of a .js file with a string summarizing the
+%   pipeline options.
+% OPT.LIST_SUBJECT (cell of strings, default use data found in IN) a list of
+%    subject IDs.
+% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but
 %    update IN, OUT and OPT.
 %
 % Copyright (c) Pierre Bellec
@@ -44,7 +44,7 @@ function [in,out,opt] = niak_brick_connectome_params2report(in,out,opt)
 % THE SOFTWARE.
 
 %% Defaults
-if ~ischar(in) 
+if ~ischar(in)
     error('IN should be a string');
 end
 
@@ -54,12 +54,12 @@ out = psom_struct_defaults ( out , ...
 
 if nargin < 3
     opt = struct;
-end    
+end
 opt = psom_struct_defaults ( opt , ...
     { 'list_subject' , 'flag_test' }, ...
     { {}             , false         });
 
-if opt.flag_test 
+if opt.flag_test
     return
 end
 
@@ -93,11 +93,11 @@ fprintf(hf,'%s',text_subject);
 fclose(hf);
 
 %% List of runs
-text_run = sprintf(['  // Data structure describing all available runs\n' ...   
+text_run = sprintf(['  // Data structure describing all available runs\n' ...
                     '  var dataRun = [\n']);
 for ll = 1:(length(labels)-1)
     text_run = [ text_run sprintf('    { id: %i, text: ''%s'' },\n',ll,labels(ll).name)];
-end 
+end
 text_run = [ text_run sprintf('    { id: %i, text: ''%s'' }\n  ];\n',length(labels),labels(end).name)];
 
 [hf,msg] = fopen(out.list_run,'w');
@@ -139,7 +139,7 @@ ver_minc = ver_minc(1:(end-1));
 text_js = sprintf(['var pipeSummary = ''<p>This report on connectome analysis for %i subjects' ...
           ' was prepared by user "%s" using the system "%s", ' ...
           'on %s. The version of the software was as follows:</p>' ...
-          '<p>%s version "%s" </p>' ... 
+          '<p>%s version "%s" </p>' ...
           '<p>Minc-toolkit version "%s" </p>' ...
           '<p>PSOM version "%s", located in %s </p>' ...
           '<p>NIAK version "%s", located in %s</p>'';'],length(list_subject),GB_NIAK.user, ...
@@ -151,4 +151,3 @@ if hf == -1
 end
 fprintf(hf,'%s',text_js);
 fclose(hf);
-

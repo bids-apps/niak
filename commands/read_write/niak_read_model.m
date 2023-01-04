@@ -10,18 +10,18 @@ function [model,labels_x,labels_y,contrast_vec] = niak_read_model(file_name,opt)
 % INPUTS:
 %
 % FILE_NAME
-%    (string) the name of one or multiple CSV file. 
+%    (string) the name of one or multiple CSV file.
 %    Example :
 %              , SEX , HANDENESS
-%    <SUBJECT> , 0   , 0 
+%    <SUBJECT> , 0   , 0
 %    This type of file can be generated with Excel (save under CSV).
 %    Each column defines a covariate that can be used in a linear model.
-% 
+%
 % OPT
 %   (structure, optional) with the following fields:
 %
 %   LABELS_X
-%	(cell of strings, default {}) The list of entries (rows) used 
+%	(cell of strings, default {}) The list of entries (rows) used
 %	to build the model. If left empty, all entries are used.
 %
 %   LABELS_Y
@@ -37,12 +37,12 @@ function [model,labels_x,labels_y,contrast_vec] = niak_read_model(file_name,opt)
 %       will be normalized to a zero mean and unit variance.
 %
 %   PROJECTION
-%       (structure, optional) with multiple entries and the following 
+%       (structure, optional) with multiple entries and the following
 %	    fields :
 %
 %       SPACE
 %           (cell of strings) a list of the covariates that define the
-%           space to project out from (i.e. the covariates in ORTHO, see 
+%           space to project out from (i.e. the covariates in ORTHO, see
 %           below, will be projected in the space orthogonal to SPACE).
 %
 %       ORTHO
@@ -71,12 +71,12 @@ function [model,labels_x,labels_y,contrast_vec] = niak_read_model(file_name,opt)
 %         entries are retained).
 %
 %      MIN
-%         (scalar, default []) only values higher (or equal) than MIN are 
+%         (scalar, default []) only values higher (or equal) than MIN are
 %         retained.
 %
 %      MAX
-%         (scalar, default []) only values lower (or equal) than MAX are 
-%         retained. 
+%         (scalar, default []) only values lower (or equal) than MAX are
+%         retained.
 %
 % _________________________________________________________________________
 % OUTPUTS:
@@ -85,11 +85,11 @@ function [model,labels_x,labels_y,contrast_vec] = niak_read_model(file_name,opt)
 %   (matrix M*N) TAB(:,Y) is the Yth covariate of the model.
 %
 % LABELS_X
-%   (cell of strings 1*M) LABELS_X{X} is the label of entry (line) X in the 
+%   (cell of strings 1*M) LABELS_X{X} is the label of entry (line) X in the
 %   model.
 %
 % LABELS_Y
-%	(cell of strings 1*N) LABELS_Y{Y} is the label of covariate Y in 
+%	(cell of strings 1*N) LABELS_Y{Y} is the label of covariate Y in
 % 	the model
 %
 % CONTRAST_VEC
@@ -107,7 +107,7 @@ function [model,labels_x,labels_y,contrast_vec] = niak_read_model(file_name,opt)
 % OPT.SELECT(1), then OPT.SELECT(2), etc. Selection is performed on the raw
 % values of the CSV file, not on normalized values.
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Département d'informatique et de recherche opérationnelle
 % Centre de recherche de l'institut de Gériatrie de Montréal
 % Université de Montréal, 2011

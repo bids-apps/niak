@@ -11,17 +11,17 @@ function struct12 = niak_merge_structs(struct1,struct2)
 % _________________________________________________________________________
 % INPUTS:
 %
-% STRUCT1   
+% STRUCT1
 %       (structure)
 %
-% STRUCT2   
+% STRUCT2
 %       (structure)
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% STRUCT12  
-%       (structure) combines the fields of STRUCT1 and STRUCT2. 
+% STRUCT12
+%       (structure) combines the fields of STRUCT1 and STRUCT2.
 %
 % _________________________________________________________________________
 % COMMENTS:
@@ -59,7 +59,7 @@ list_fields = fieldnames(struct2);
 struct12 = struct1;
 
 for num_f = 1:length(list_fields)
-    
+
     struct12 = setfield(struct12,list_fields{num_f},getfield(struct2,list_fields{num_f}));
-    
+
 end

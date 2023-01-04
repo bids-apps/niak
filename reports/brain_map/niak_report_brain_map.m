@@ -3,32 +3,32 @@ function [pipeline,opt] = niak_report_brain_map(in,opt)
 %
 % SYNTAX: [PIPE,OPT] = NIAK_REPORT_BRAIN_MAPx(IN,OPT)
 %
-% IN.BACKGROUND (string or cell of strings) a brain volume to 
+% IN.BACKGROUND (string or cell of strings) a brain volume to
 %   use as a background for each brain map.
 % IN.OVERLAY (string or cell of string) a series of 3D or 4D brain volume
 %
 % OPT (structure) with the following fields:
 %   FOLDER_OUT (string) the path where to store the results.
-%   LABELS (cell of strings, default 'map1', 'map2', etc). 
-%     Label number I will be used for IN.MAP{I} in the dashboard. 
+%   LABELS (cell of strings, default 'map1', 'map2', etc).
+%     Label number I will be used for IN.MAP{I} in the dashboard.
 %   IND (scalar or vector, default 1) if IN.MAP is a 4D volume, the IND-th
 %     volume is extracted. If IND is a vector, IND(I) is used for IN.MAP{I}.
-%   CLASS_VIEWER (string, default 'col-sm-6') the bootstrap class for the viewer. 
-%   COLOR_BACKGROUND (string, default #000000) the color of the background. 
-%   COLOR_FONT (string, default #FFFFFF) the color of the fonts in the viewer. 
-%   BACKGROUND.COLORMAP (string, default 'gray') The type of 
+%   CLASS_VIEWER (string, default 'col-sm-6') the bootstrap class for the viewer.
+%   COLOR_BACKGROUND (string, default #000000) the color of the background.
+%   COLOR_FONT (string, default #FFFFFF) the color of the fonts in the viewer.
+%   BACKGROUND.COLORMAP (string, default 'gray') The type of
 %     colormap. Anything supported by the instruction `colormap` will work.
-%   BACKGROUND.NB_COLOR (default 256) the number of colors to use in 
-%     quantization. 
-%   BACKGROUND.QUALITY (default 90) for jpg images, set the quality of 
+%   BACKGROUND.NB_COLOR (default 256) the number of colors to use in
+%     quantization.
+%   BACKGROUND.QUALITY (default 90) for jpg images, set the quality of
 %     the background (from 0, bad, to 100, perfect).
 %   BACKGROUND.LIMITS (vector 1x2) the limits for the colormap. By defaut it is using [min,max].
 %     If a string is specified, the function will implement an adaptative strategy.
-%   OVERLAY.COLORMAP (string, default 'hot') The type of colormap. 
-%     Anything supported by the instruction `colormap` will work, as well as 
+%   OVERLAY.COLORMAP (string, default 'hot') The type of colormap.
+%     Anything supported by the instruction `colormap` will work, as well as
 %     'hot_cold' (see niak_hot_cold). This last color map always centers on zero.
-%   OVERLAY.NB_COLOR (default 256) the number of colors to use in 
-%     quantization. If Inf is specified, all values are included in the 
+%   OVERLAY.NB_COLOR (default 256) the number of colors to use in
+%     quantization. If Inf is specified, all values are included in the
 %     colormap. This is handy for integer values images (e.g. parcellation).
 %   OVERLAY.THRESH (scalar, default []) if empty, does nothing. If a scalar, any value
 %     below threshold becomes transparent.
@@ -96,7 +96,7 @@ opt.background = psom_struct_defaults( opt.background , ...
 opt.overlay = psom_struct_defaults( opt.overlay , ...
     { 'colormap' , 'nb_color' , 'thresh' , 'limits'     }, ...
     { 'hot'      , 256        , []       , 'adaptative' });
-  
+
 if isempty(opt.labels)
     for oo = 1:length(in.overlay)
         opt.labels{oo} = sprintf('map%i',oo);
@@ -155,7 +155,7 @@ for oo = 1:length(in.overlay)
     list_quantization{oo} = jout.quantization;
     jout.colormap = [opt.folder_out 'img' filesep jname '_cm.png'];
     list_colormap{oo} = jout.colormap;
-    
+
     jopt.ind = opt.ind(oo);
     jopt.colormap = opt.overlay.colormap;
     jopt.limits = opt.overlay.limits;
@@ -176,7 +176,7 @@ jopt.colormap = list_colormap;
 jopt.overlay = list_overlay;
 jopt.color_background = opt.color_background;
 jopt.color_font = opt.color_font;
-    
+
 pipeline = psom_add_job(pipeline,'brain_map_report','niak_brick_report_brain_map',jin,jout,jopt);
 
 if ~opt.flag_test

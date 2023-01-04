@@ -83,4 +83,3 @@ opt.flag_test = 0; % This is not a test, the slice timing is actually performed
 [files_in,files_out,opt] = niak_brick_diff_variance(files_in,files_out,opt);
 
 %% Note that opt.interpolation_method has been updated, as well as files_out
-

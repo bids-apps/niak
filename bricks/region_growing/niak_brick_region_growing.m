@@ -53,7 +53,7 @@ function  [files_in,files_out,opt] = niak_brick_region_growing(files_in,files_ou
 %           the neighbourhood structure).
 %
 %       THRE_SIZE
-%           (integer,default 1000 mm3) threshold on the region size 
+%           (integer,default 1000 mm3) threshold on the region size
 %           (maximum)
 %
 %       THRE_SIM
@@ -77,7 +77,7 @@ function  [files_in,files_out,opt] = niak_brick_region_growing(files_in,files_ou
 %           smaller than THRE_SIZE are removed from the final parcelation.
 %
 %       SIZE_CHUNKS
-%           (integer, default 100) Size of vector chunks. See the 
+%           (integer, default 100) Size of vector chunks. See the
 %           "comments" section below.
 %
 %       FLAG_VERBOSE
@@ -105,12 +105,12 @@ function  [files_in,files_out,opt] = niak_brick_region_growing(files_in,files_ou
 % If the variables cannot be found, the partition will be created, but
 % empty.
 %
-% This implementation of region growing was written in native matlab 
-% language rather than a mex to avoid the compilation. To keep it 
-% relatively fast, the operations were vectorized as much as possible, 
-% which necessitated to sometimes duplicate data in memory. To avoid using 
-% too much memory in large problems, the vectorized portion of the code 
-% works on chunks of vectors, whose maximal size (in terms of number of 
+% This implementation of region growing was written in native matlab
+% language rather than a mex to avoid the compilation. To keep it
+% relatively fast, the operations were vectorized as much as possible,
+% which necessitated to sometimes duplicate data in memory. To avoid using
+% too much memory in large problems, the vectorized portion of the code
+% works on chunks of vectors, whose maximal size (in terms of number of
 % double elements) is SIZE_CHUNKS. If the function is too slow but the
 % memory usage is OK, you may want to increase this number. On the
 % contrary, if you're getting an "out of memory" problem, lower it down.
@@ -118,7 +118,7 @@ function  [files_in,files_out,opt] = niak_brick_region_growing(files_in,files_ou
 % To be able to vectorize the code, some tricks could not be employed. For
 % example, no use is made of the symmetry of the measure (which is thus
 % calculated twice), and all measures are re-calculated at each iteration.
-% At the end of the day, matlab works in such a weird way that it is still 
+% At the end of the day, matlab works in such a weird way that it is still
 % much faster this way than with a clever loop-based implementation ...
 %
 % Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
@@ -175,7 +175,7 @@ else
 end
 
 if isempty(opt.thre_sim)
-    opt.thre_sim = NaN;    
+    opt.thre_sim = NaN;
 end
 
 %% If the test flag is true, stop here !
@@ -209,11 +209,11 @@ if flag_empty
 end
 
 for num_f = 1:nb_files
-    
+
     if opt.flag_verbose
         fprintf('Read the time series %s from the file %s\n',opt.var_tseries,files_in.tseries{num_f});
     end
-    
+
     if ~flag_empty
         data(num_f) = load(files_in.tseries{num_f},opt.var_tseries);
         nt(num_f) = size(data(num_f).(opt.var_tseries),1);
@@ -227,7 +227,7 @@ for num_f = 1:nb_files
     else
         data(num_f).(opt.var_tseries) = []; % deal with absent data
     end
-    
+
 end
 
 if flag_empty
@@ -245,7 +245,7 @@ else
 
         tseries(num_t:num_t+nt(num_f)-1,:) = niak_normalize_tseries(data(num_f).(opt.var_tseries),opt.correction_ind);
         num_t = num_t+nt(num_f);
-        
+
     end
 
     tseries = niak_normalize_tseries(tseries,opt.correction_group);
@@ -269,7 +269,7 @@ else
     opt_grow.sim_measure      = opt.sim_measure;
     opt_grow.flag_size        = opt.flag_size;
     opt_grow.flag_verbose     = opt.flag_verbose;
-    
+
     %% Perform region growing
     if opt.flag_verbose
         fprintf('Performing region growing...\n');

@@ -11,26 +11,26 @@ function [files_in,files_out,opt] = niak_brick_rmap(files_in,files_out,opt)
 %   (structure) with two fields:
 %
 %   FMRI
-%      (string or cell of strings) one or multiple fMRI datasets. 
+%      (string or cell of strings) one or multiple fMRI datasets.
 %
 %   SEEDS
-%      (structure, or string) with arbitrary fields (SEED). FILES_IN.SEEDS.(SEED) is 
-%      the name of either a .csv file with world coordinates for one 
-%      or multiple seeds, or a 3D volume with one or multiple seed regions. 
+%      (structure, or string) with arbitrary fields (SEED). FILES_IN.SEEDS.(SEED) is
+%      the name of either a .csv file with world coordinates for one
+%      or multiple seeds, or a 3D volume with one or multiple seed regions.
 %      If more than one seed is present in the CSV/volume, use OPT.IND_SEEDS.(SEED)
-%      to select one seed. SEEDS can also be a string, in which case it is the 
+%      to select one seed. SEEDS can also be a string, in which case it is the
 %      name of a .csv file. All seeds listed in that CSV will be used.
 %
 % FILES_OUT
 %    (structure) with two fields
 %
 %    MAPS
-%       (structure, default 'gb_niak_omitted') FILES_OUT.MAPS.(SEED) is the functional 
-%       connectivity map associated with FILES_IN.SEEDS.(SEED). Note that the connectivity 
-%       maps are averaged across all fMRI datasets. 
+%       (structure, default 'gb_niak_omitted') FILES_OUT.MAPS.(SEED) is the functional
+%       connectivity map associated with FILES_IN.SEEDS.(SEED). Note that the connectivity
+%       maps are averaged across all fMRI datasets.
 %
 %    SEEDS
-%       (structure, default 'gb_niak_omitted') FILES_OUT.SEEDS.(SEED) is the seed associated 
+%       (structure, default 'gb_niak_omitted') FILES_OUT.SEEDS.(SEED) is the seed associated
 %       with FILES_IN.SEEDS.(SEED). This is particularly useful when using .csv description of the seeds.
 %
 % OPT
@@ -38,23 +38,23 @@ function [files_in,files_out,opt] = niak_brick_rmap(files_in,files_out,opt)
 %
 %   FLAG_FISHER
 %       (boolean, default false) apply a Fisher transform on the correlation coefficients
-% 
+%
 %   IND_SEEDS
-%       (structure) with arbitrary field names IND_SEEDS.(SEED) which can be a string indicating a 
-%       a row (if FILES_IN.SEEDS.(SEED) is a .csv file) or a numerical index (if FILES_IN.SEEDS.(SEED) 
+%       (structure) with arbitrary field names IND_SEEDS.(SEED) which can be a string indicating a
+%       a row (if FILES_IN.SEEDS.(SEED) is a .csv file) or a numerical index (if FILES_IN.SEEDS.(SEED)
 %       is a 3D volume, in which case the seed is assumed to be filled with OPT.IND_SEEDS.(SEED)
 %
 %   RADIUS_SEED
 %       (scalar, default 0) the radius of the sphere centered at the coordinates, if a csv file is used
-%       to specify the seed. For a value of 0, only the seed is used. 
+%       to specify the seed. For a value of 0, only the seed is used.
 %
 %   FLAG_TEST
-%       (boolean, default: 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%       (boolean, default: 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
 %
 %   FLAG_VERBOSE
-%       (boolean, default: 1) If FLAG_VERBOSE == 1, write messages 
+%       (boolean, default: 1) If FLAG_VERBOSE == 1, write messages
 %       indicating progress.
 %
 % _________________________________________________________________________
@@ -76,10 +76,10 @@ function [files_in,files_out,opt] = niak_brick_rmap(files_in,files_out,opt)
 % seed1  ,  4 ,  -3 ,  0
 % seed2  , 23 , -24 , 13
 %
-% where seed1, seed2 etc can be arbitray names, yet acceptable as field names for matlab 
-% no special characters (+ - / * space) and relatively short. 
+% where seed1, seed2 etc can be arbitray names, yet acceptable as field names for matlab
+% no special characters (+ - / * space) and relatively short.
 %
-% Copyright (c) Pierre Bellec,  
+% Copyright (c) Pierre Bellec,
 % Centre de recherche de l'Institut universitaire de griatrie de Montral, 2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -117,7 +117,7 @@ if ischar(files_in.seeds)
         opt.ind_seeds.(list_seed{num_s}) = list_seed{num_s};
     end
 end
-    
+
 list_seed = fieldnames(files_in.seeds);
 if isempty(list_seed)
     error('Please specify seeds in FILES_IN.SEEDS')
@@ -143,7 +143,7 @@ if nargin<3
 end
 opt = psom_struct_defaults(opt,list_fields,list_defaults,false);
 
-%% Test stops here 
+%% Test stops here
 if opt.flag_test
     return
 end
@@ -159,7 +159,7 @@ for num_s = 1:length(list_seed)
     [path_f,name_f,ext_full,flag_zip,ext_f] = niak_fileparts(files_in.seeds.(seed));
     if opt.flag_verbose
         fprintf('Generating seed %s from file %s ...\n',seed,files_in.seeds.(seed));
-    end       
+    end
     switch ext_f
         case '.csv'
             [coord,lseeds,laxis] = niak_read_csv(files_in.seeds.(seed));
@@ -201,7 +201,7 @@ for num_s = 1:length(list_seed)
     end
 end
 
-%% Generate the functional connectivity maps 
+%% Generate the functional connectivity maps
 if ~ischar(files_out.maps)
     maps = zeros(size(all_seed));
     for num_f = 1:length(files_in.fmri)
@@ -224,7 +224,7 @@ if ~ischar(files_out.maps)
             end
         end
         if opt.flag_verbose
-            fprintf('\n')    
+            fprintf('\n')
         end
     end
     maps = maps / length(files_in.fmri);
@@ -234,7 +234,7 @@ end
 if ~ischar(files_out.seeds)
     for num_s = 1:length(list_seed)
         seed = list_seed{num_s};
-    
+
         %% The seeds
         if opt.flag_verbose
             fprintf('Saving seeds %s ...\n')
@@ -243,7 +243,7 @@ if ~ischar(files_out.seeds)
             fprintf('    %s\n',files_out.seeds.(seed))
         end
         hdr.file_name = files_out.seeds.(seed);
-        niak_write_vol(hdr,all_seed(:,:,:,num_s));    
+        niak_write_vol(hdr,all_seed(:,:,:,num_s));
     end
 end
 
@@ -251,7 +251,7 @@ end
 if ~ischar(files_out.maps)
     for num_s = 1:length(list_seed)
         seed = list_seed{num_s};
-    
+
         %% The seeds
         if opt.flag_verbose
             fprintf('Saving maps %s ...\n')
@@ -260,6 +260,6 @@ if ~ischar(files_out.maps)
             fprintf('    %s\n',files_out.maps.(seed))
         end
         hdr.file_name = files_out.maps.(seed);
-        niak_write_vol(hdr,maps(:,:,:,num_s));    
+        niak_write_vol(hdr,maps(:,:,:,num_s));
     end
 end

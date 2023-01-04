@@ -8,7 +8,7 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_tseries(files_in,f
 % INPUTS:
 %
 % FILES_IN
-%   (string) the name of the .mat file which contains one variable TSERIES. 
+%   (string) the name of the .mat file which contains one variable TSERIES.
 %   TSERIES(:,I) is the time series of region I.
 %
 % FILES_OUT
@@ -21,7 +21,7 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_tseries(files_in,f
 %       NB_CLASSES
 %           (vector) Identical to OPT.NB_CLASSES (see below).
 %
-% OPT           
+% OPT
 %   (structure) with the following fields:
 %
 %   NB_CLASSES
@@ -52,7 +52,7 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_tseries(files_in,f
 %
 %       TYPE
 %           (string, default 'hierarchical') the clustering algorithm
-%           Available options : 
+%           Available options :
 %               'kmeans': k-means (euclidian distance)
 %               'hierarchical_e2': a HAC based on the eta-square distance
 %                   (see NIAK_BUILD_ETA2)
@@ -64,12 +64,12 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_tseries(files_in,f
 %           clustering command. The exact list of options depends on
 %           CLUSTERING.TYPE:
 %               'kmeans' : see OPT in NIAK_KMEANS_CLUSTERING
-%               'hierarchical' or 'hierarchical_e2': see OPT in 
+%               'hierarchical' or 'hierarchical_e2': see OPT in
 %               NIAK_HIERARCHICAL_CLUSTERING
 %
 %   SAMPLING
 %       (structure, optional) with the following fields:
-%           
+%
 %       TYPE
 %           (string, default 'bootstrap') how to resample the time series see
 %           niak_stability_tseries for details on defaults
@@ -82,7 +82,7 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_tseries(files_in,f
 %                   default uses 60% timepoints. Can be controlled by
 %                   opt.sampling.opt.perc.
 %               'bootstrap' : see the description of the OPT
-%                   argument in NIAK_BOOTSTRAP_TSERIES. Default is 
+%                   argument in NIAK_BOOTSTRAP_TSERIES. Default is
 %                   OPT.TYPE = 'CBB' (a circular block bootstrap is
 %                   applied).
 %               'mplm' : see the description of the OPT argument in
@@ -103,7 +103,7 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_tseries(files_in,f
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_PIPELINE_STABILITY, NIAK_PIPELINE_STABILITY_REST
@@ -115,8 +115,8 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_tseries(files_in,f
 % individual fMRI time series in the following reference :
 %
 % P. Bellec; P. Rosa-Neto; O.C. Lyttelton; H. Benalib; A.C. Evans,
-% Multi-level bootstrap analysis of stable clusters in resting-State fMRI. 
-% Neuroimage 51 (2010), pp. 1126-1139 
+% Multi-level bootstrap analysis of stable clusters in resting-State fMRI.
+% Neuroimage 51 (2010), pp. 1126-1139
 %
 % Copyright (c) Pierre Bellec, Sebastian Urchs
 %   Centre de recherche de l'institut de Gériatrie de Montréal
@@ -184,7 +184,7 @@ if ~isempty(opt.rand_seed)
     psom_set_rand_seed(opt.rand_seed);
 end
 
-%% Read the time series 
+%% Read the time series
 if opt.flag_verbose
     fprintf('Read the time series ...\n');
 end
@@ -192,7 +192,7 @@ end
 data = load(files_in);
 tseries = niak_normalize_tseries(data.(opt.name_data),opt.normalize);
 
-%% Stability matrix 
+%% Stability matrix
 opt_s = rmfield(opt,{'flag_test','rand_seed' 'name_data'});
 stab = niak_stability_tseries(tseries,opt_s);
 

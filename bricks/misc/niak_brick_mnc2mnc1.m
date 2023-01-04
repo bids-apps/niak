@@ -1,5 +1,5 @@
 function [files_in,files_out,opt] = niak_brick_mnc2mnc1(files_in,files_out,opt)
-% Copy the content of a directory and convert all the minc files into the 
+% Copy the content of a directory and convert all the minc files into the
 % mnc1 format.
 %
 % [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_MNC2MNC1(FILES_IN,FILES_OUT,OPT)
@@ -7,13 +7,13 @@ function [files_in,files_out,opt] = niak_brick_mnc2mnc1(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS
 %
-% FILES_IN  
+% FILES_IN
 %   (string) a full path.
 %
-% FILES_OUT 
+% FILES_OUT
 %   (string, default FILES_IN) a full path
 %
-% OPT   
+% OPT
 %   (structure) with the following fields :
 %
 %   FLAG_RECURSIVE
@@ -21,13 +21,13 @@ function [files_in,files_out,opt] = niak_brick_mnc2mnc1(files_in,files_out,opt)
 %
 %
 %   FLAG_ZIP
-%       (boolean, default true) if FLAG_ZIP is true, the nii files are 
-%       zipped. The tools used to zip files is 'gzip -f'. This setting 
-%       can be changed by editing the variable GB_NIAK_ZIP in the file 
+%       (boolean, default true) if FLAG_ZIP is true, the nii files are
+%       zipped. The tools used to zip files is 'gzip -f'. This setting
+%       can be changed by editing the variable GB_NIAK_ZIP in the file
 %       NIAK_GB_VARS.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
 % _________________________________________________________________________
@@ -106,26 +106,26 @@ list_dir = list_all(mask_dir);
 niak_mkdir(files_out);
 
 for num_f = 1:length(list_files)
-    
+
     file_name = list_files{num_f};
     source_file = [files_in filesep file_name];
-    
+
     [path_tmp,name_tmp,ext] = fileparts(file_name);
-    
+
     if strcmp(ext,GB_NIAK.zip_ext)
         [path_tmp,name_tmp,ext] = fileparts(name_tmp);
     end
-    
+
     if strcmp(ext,'.mnc')
         target_file = [files_out filesep name_tmp '.mnc'];
-        instr_cp = ['mincconvert ',source_file,' ',target_file];       
-        msg = sprintf('Convert %s to %s\n',source_file,target_file);            
+        instr_cp = ['mincconvert ',source_file,' ',target_file];
+        msg = sprintf('Convert %s to %s\n',source_file,target_file);
     else
         target_file = [files_out filesep file_name];
-        instr_cp = ['cp -f ' source_file ' ' target_file];        
+        instr_cp = ['cp -f ' source_file ' ' target_file];
         msg = sprintf('Copy %s to %s\n',source_file,target_file);
-    end    
-        
+    end
+
     if ~strcmp(source_file,target_file)
         if flag_verbose
             fprintf('%s',msg)
@@ -145,10 +145,10 @@ for num_f = 1:length(list_files)
 end
 
 if flag_recursive
-    
+
     for num_d = 1:length(list_dir)
-        
+
         niak_brick_mnc2mnc1([files_in filesep list_dir{num_d}],[files_out filesep list_dir{num_d}],opt);
-        
+
     end
 end

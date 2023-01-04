@@ -1,7 +1,7 @@
 function std_mad = niak_mad(tseries);
 % Median absolute deviation to the median.
-% This function was designed for time series, and applies a correction 
-% factor to derive an estimate of the standard deviation for a Gaussian 
+% This function was designed for time series, and applies a correction
+% factor to derive an estimate of the standard deviation for a Gaussian
 % process
 %
 % SYNTAX:
@@ -29,7 +29,7 @@ function std_mad = niak_mad(tseries);
 % The MAD estimator of the standard deviation of time series X is :
 % 1.4785*median(abs(X-median(X)))
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.

@@ -12,7 +12,7 @@ function val=jsonopt(key,default,varargin)
 % input:
 %      key: a string with which one look up a value from a struct
 %      default: if the key does not exist, return default
-%      optstruct: a struct where each sub-field is a key 
+%      optstruct: a struct where each sub-field is a key
 %
 % output:
 %      val: if key exists, val=optstruct.key; otherwise val=default
@@ -21,7 +21,7 @@ function val=jsonopt(key,default,varargin)
 %     BSD License, see LICENSE_BSD.txt files for details
 %
 % -- this function is part of jsonlab toolbox (http://iso2mesh.sf.net/cgi-bin/index.cgi?jsonlab)
-% 
+%
 
 val=default;
 if(nargin<=2) return; end

@@ -8,8 +8,8 @@
 % INPUTS:
 %
 % PATH_DATA
-%   (string, default [pwd filesep], aka './') full path to the outputs of 
-%   NIAK_PIPELINE_FMRI_PREPROCESS. 
+%   (string, default [pwd filesep], aka './') full path to the outputs of
+%   NIAK_PIPELINE_FMRI_PREPROCESS.
 %
 % OPT
 %   (structure, optional) with the following fields :
@@ -20,26 +20,26 @@
 %
 %   MAX_TRANSLATION
 %       (scalar, default Inf) the maximal transition (difference between two
-%       adjacent volumes) in translation motion parameters within-run (in 
-%       mm). The Inf parameter result in selecting all subjects. Motion is 
-%       usually addressed by scrubbing (see MIN_NB_VOL below). 
+%       adjacent volumes) in translation motion parameters within-run (in
+%       mm). The Inf parameter result in selecting all subjects. Motion is
+%       usually addressed by scrubbing (see MIN_NB_VOL below).
 %
 %   MAX_ROTATION
 %       (scalar, default Inf) the maximal transition (difference between two
-%       adjacent volumes) in rotation motion parameters within-run (in 
-%       degrees). The Inf parameter result in selecting all subjects. Motion is 
-%       usually addressed by scrubbing (see MIN_NB_VOL below). 
+%       adjacent volumes) in rotation motion parameters within-run (in
+%       degrees). The Inf parameter result in selecting all subjects. Motion is
+%       usually addressed by scrubbing (see MIN_NB_VOL below).
 %
 %   MIN_NB_VOL
 %       (scalar, default 100) the minimum number of volumes to enter a dataset
-%       in the analysis. The scrubbing (see NIAK_BRICK_REGRESS_CONFOUNDS) 
-%       excludes all time frames that show signs of exccessive motion for all 
-%       subjects, yet some subjects may not have enough time points left to 
-%       carry on further analysis. 
+%       in the analysis. The scrubbing (see NIAK_BRICK_REGRESS_CONFOUNDS)
+%       excludes all time frames that show signs of exccessive motion for all
+%       subjects, yet some subjects may not have enough time points left to
+%       carry on further analysis.
 %
 %   MIN_XCORR_FUNC
 %       (scalar, default 0.5) the minimal accceptable XCORR measure of
-%       spatial correlation between the individual mean functional volume 
+%       spatial correlation between the individual mean functional volume
 %       in non-linear stereotaxic space and the population average.
 %
 %   MIN_XCORR_ANAT
@@ -71,14 +71,14 @@
 %
 %           'rest' : FILES is ready to feed into
 %              NIAK_PIPELINE_STABILITY_REST.
-%      
-%           'roi' : FILES is ready to feed into 
+%
+%           'roi' : FILES is ready to feed into
 %              NIAK_PIPELINE_REGION_GROWING.
 %
-%           'fir' : FILES is ready to feed into 
+%           'fir' : FILES is ready to feed into
 %              NIAK_PIPELINE_STABILITY_FIR
 %
-%           'glm_connectome' : FILES is ready to feed into 
+%           'glm_connectome' : FILES is ready to feed into
 %              NIAK_PIPELINE_GLM_CONNECTOME.
 %
 %           'scores' : FILES is ready to feed into NIAK_PIPELINE_SCORES
@@ -89,24 +89,24 @@
 % OUTPUTS:
 %
 % FILES
-%   (structure) the exact fields depend on OPT.TYPE_FILES. 
+%   (structure) the exact fields depend on OPT.TYPE_FILES.
 %
 %   case {'rest','scores'} :
 %
 %       DATA.(SUBJECT).(SESSION).(RUN)
-%           (string) preprocessed fMRI datasets. 
+%           (string) preprocessed fMRI datasets.
 %
 %       MASK
-%           (string) a file name of a binary mask common 
-%           to all subjects and runs. The mask is the file located in 
+%           (string) a file name of a binary mask common
+%           to all subjects and runs. The mask is the file located in
 %           quality_control/group_coregistration/anat_mask_group_stereonl.<
 %           ext>
 %
 %       AREAS
 %           (string) a file name of an AAL parcelation into anatomical regions
-%           resampled at the same resolution as the fMRI datasets. 
+%           resampled at the same resolution as the fMRI datasets.
 %
-%   case {'roi','fir'}: 
+%   case {'roi','fir'}:
 %
 %       FMRI.(SUBJECT).(SESSION).(RUN)
 %           (string) the preprocessed fMRI dataset for subject SUBJECT, session SESSION
@@ -115,7 +115,7 @@
 %       MASK, AREAS: same as for 'rest'
 %
 %   case 'glm_connectome'
-%   
+%
 %       same as for 'roi', but without MASK and AREAS
 %
 % _________________________________________________________________________
@@ -127,7 +127,7 @@
 % COMMENTS:
 %
 % This "data grabber" is designed to work with the pipelines mentioned in
-% the "SEE ALSO" section, based on the output folder of 
+% the "SEE ALSO" section, based on the output folder of
 % NIAK_PIPELINE_FMRI_PREPROCESS
 %
 % Copyright (c) Pierre Bellec
@@ -208,7 +208,7 @@ if (opt.max_translation<Inf)||(opt.max_rotation<Inf)
     	      mask_keep(num_s) = flag_keep;
         else
 	          fprintf('I could not find subject %s for quality control of max motion (rotation)\n',list_subject{num_s});
-        end    
+        end
     end
 end
 
@@ -230,7 +230,7 @@ for num_s = 1:nb_subject
         end
     else
 	fprintf('I could not find subject %s for quality control of number of time frames\n',list_subject{num_s});
-    end    
+    end
 end
 
 %% Check functional coregistration
@@ -238,7 +238,7 @@ file_regf = [path_qc 'group_coregistration' filesep 'func_tab_qc_coregister_ster
 [tab_regf,labx,laby] = niak_read_csv(file_regf);
 for num_s = 1:nb_subject
     ind_s = find(ismember(labx,list_subject{num_s}));
-    corrf = tab_regf(ind_s,2);   
+    corrf = tab_regf(ind_s,2);
     flag_keep = (corrf>opt.min_xcorr_func);
     if ~flag_keep&&isempty(opt.include_subject)
         fprintf('Subject %s was excluded because of poor functional coregistration\n',list_subject{num_s});
@@ -255,7 +255,7 @@ file_rega = [path_qc 'group_coregistration' filesep 'anat_tab_qc_coregister_ster
 [tab_rega,labx,laby] = niak_read_csv(file_rega);
 for num_s = 1:nb_subject
     ind_s = find(ismember(labx,list_subject{num_s}));
-    corrf = tab_rega(ind_s,2);    
+    corrf = tab_rega(ind_s,2);
     flag_keep = (corrf>opt.min_xcorr_anat);
     if ~flag_keep&&isempty(opt.include_subject)
         fprintf('Subject %s was excluded because of poor anatomical coregistration\n',list_subject{num_s});
@@ -277,7 +277,7 @@ end
 if ~isempty(opt.include_subject)
     list_subject = opt.include_subject;
 else
-    list_subject = list_subject(mask_keep);    
+    list_subject = list_subject(mask_keep);
 end
 nb_subject = length(list_subject);
 if nb_subject == 0
@@ -295,7 +295,7 @@ for num_s = 1:nb_subject
     end
     nb_f = 0;
     for num_f = 1:length(list_files_s)
-        mask_s = ~cellfun('isempty',regexp(files_fmri,['^fmri_' list_files_s{num_f} '.']));    
+        mask_s = ~cellfun('isempty',regexp(files_fmri,['^fmri_' list_files_s{num_f} '.']));
         if any(mask_s)
             files_tmp = files_fmri(mask_s);
             [path_f,name_f,ext_f] = niak_fileparts(files_tmp{1});
@@ -318,10 +318,10 @@ for num_s = 1:nb_subject
                 case_name = [list_subject{num_s} '_' session '_' run];
                 files.data.(case_name) = [path_fmri files_tmp{1}];
             else
-                error('%s is an unsupported type of output format for the files structure', opt.type_files)            
+                error('%s is an unsupported type of output format for the files structure', opt.type_files)
             end
         else
-            error('I could not find any fMRI preprocessed datasets for subject %s',list_subject{num_s});        
+            error('I could not find any fMRI preprocessed datasets for subject %s',list_subject{num_s});
         end
     end
 end

@@ -11,9 +11,9 @@ function [files_in,files_out,opt] = niak_brick_spca(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS
 %
-%  * FILES_IN        
+%  * FILES_IN
 %       (structure) with the following fields :
-%       
+%
 %       FMRI
 %           (string) file name of a 3D+t dataset. See NIAK_READ_VOL for
 %           supported formats
@@ -22,12 +22,12 @@ function [files_in,files_out,opt] = niak_brick_spca(files_in,files_out,opt)
 %           (string) file name of a binary mask of the voxels of interest.
 %           If not specified, NIAK_MASK_BRAIN will be used to extract one.
 %
-%  * FILES_OUT 
+%  * FILES_OUT
 %       (structure) with the following fields. Note that if a field
-%       is left empty, the default name will be used. If a field is absent, 
+%       is left empty, the default name will be used. If a field is absent,
 %       the specified output will not be generated.
 %
-%       SPACE 
+%       SPACE
 %           (string, default <BASE NAME>_pca_spat.<EXT>)
 %           Output name for the spatial components (eigenvector)
 %
@@ -36,48 +36,48 @@ function [files_in,files_out,opt] = niak_brick_spca(files_in,files_out,opt)
 %           Output name for the temporal components (temporal weights of the
 %           eigenvectors);
 %
-%       VARIANCE 
+%       VARIANCE
 %           (string, default <BASE NAME>_pca_var.dat)
 %           The relative distribution of the energy in the PCA basis
 %
-%       FIGURE 
+%       FIGURE
 %           (string, default <BASE_NAME>_pca_fig.pdf )
 %           a pdf figure showing the spatial distribution of the
 %           components on axial slices after robust correction to normal
 %           distribution, as well as the time, spectral and time frequency
 %           representation of the time component.
 %
-%  * OPT           
-%       (structure) with the following fields.  
-%       NB_COMP 
-%           (real number, default rank of TSERIES) 
-%           If NB_COMP is comprised between 0 and 1, NB_COMP is assumed to 
+%  * OPT
+%       (structure) with the following fields.
+%       NB_COMP
+%           (real number, default rank of TSERIES)
+%           If NB_COMP is comprised between 0 and 1, NB_COMP is assumed to
 %           be the percentage of the total variance that needs to be kept.
-%           If NB_COMP is an integer, greater than 1, NB_COMP is the number 
-%           of components that will be generated (the procedure always 
-%           consider the principal components ranked according to the energy 
-%           they explain in the data. 
+%           If NB_COMP is an integer, greater than 1, NB_COMP is the number
+%           of components that will be generated (the procedure always
+%           consider the principal components ranked according to the energy
+%           they explain in the data.
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, all default 
-%           outputs will be created in the folder FOLDER_OUT. The folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, all default
+%           outputs will be created in the folder FOLDER_OUT. The folder
 %           needs to be created beforehand.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function
 %           prints some infos during the processing.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_BUILD_AUTOCORRELATION, NIAK_PCA
@@ -86,7 +86,7 @@ function [files_in,files_out,opt] = niak_brick_spca(files_in,files_out,opt)
 % COMMENTS:
 %
 % The PCA is applied on the spatial euclidian product matrix in a mask of the
-% brain after correction of the fMRI time series to a zero temporal mean 
+% brain after correction of the fMRI time series to a zero temporal mean
 % and unit variance.
 %
 % _________________________________________________________________________
@@ -267,18 +267,18 @@ if ~strcmp(files_out.figure,'gb_niak_omitted')
 
     %% Generating a temporary eps output
     file_fig_eps = niak_file_tmp('.eps');
-    
+
     %% Options for the montage
     opt_visu.voxel_size = hdr.info.voxel_size;
     opt_visu.fwhm = max(hdr.info.voxel_size)*1.5;
     opt_visu.vol_limits = [0 3];
     opt_visu.type_slice = 'axial';
-    opt_visu.type_color = 'jet';    
+    opt_visu.type_color = 'jet';
 
     for num_c = 1:size(vol_space,4)
-        
+
         hf = figure;
-        
+
         vol_c = niak_correct_vol(vol_space(:,:,:,num_c),mask);
         niak_montage(abs(vol_c),opt_visu);
         title(sprintf('Spatial component %i, file %s',num_c,name_f));
@@ -289,14 +289,14 @@ if ~strcmp(files_out.figure,'gb_niak_omitted')
         end
 
         close(hf);
-        
+
         hf = figure;
-        
+
         nt = size(eig_vec,1);
 
         %% temporal distribution
         subplot(3,1,1)
-        
+
         if isfield(hdr.info,'tr')
             if hdr.info.tr~=0
                 plot(hdr.info.tr*(1:nt),eig_vec(:,num_c));
@@ -306,14 +306,14 @@ if ~strcmp(files_out.figure,'gb_niak_omitted')
         else
             plot(eig_vec(:,num_c));
         end
-                
+
         xlabel('time')
         ylabel('a.u.')
         title(sprintf('Time component %i, file %s',num_c,name_f));
 
         %% Frequency distribution
         subplot(3,1,2)
-        
+
         if isfield(hdr.info,'tr')
             if hdr.info.tr~=0
                 niak_visu_spectrum(eig_vec(:,num_c),hdr.info.tr);
@@ -326,7 +326,7 @@ if ~strcmp(files_out.figure,'gb_niak_omitted')
 
         %% Time-frequency distribution
         subplot(3,1,3)
-        
+
         if isfield(hdr.info,'tr')
             if hdr.info.tr~=0
                 niak_visu_wft(eig_vec(:,num_c),hdr.info.tr);
@@ -342,7 +342,7 @@ if ~strcmp(files_out.figure,'gb_niak_omitted')
         close(hf)
 
     end
-    
+
     instr_ps2pdf = cat(2,GB_NIAK.ps2pdf,' ',file_fig_eps,' ',files_out.figure);
     [succ,msg] = system(instr_ps2pdf);
     if succ~=0

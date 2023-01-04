@@ -16,7 +16,7 @@ function [model, stats, opt] = niak_cramer(model_mat, opt)
 %       GROUP_COL_ID
 %           (integer) the ID of thecolumn in MODEL_MAT that designates the group
 %           membership of subjects
-% 
+%
 %_______________________________________________________________________________
 % OUTPUTS:
 %
@@ -53,14 +53,14 @@ col = model_mat(:,opt.group_col_id);
 sub_id = unique(x);
 [a, b] = find(isnan(col));  % the subjects that were dropped due to having NaNs
 sub_drop = unique(a);
-partition = opt.part(sub_id,:); 
+partition = opt.part(sub_id,:);
 % Save the model
 model.subject_id = sub_id;
 model.partition = partition;
 model.group = col;
 model.subject_drop = sub_drop;
 
-%% Build the contingency table 
+%% Build the contingency table
 list_gg = unique(col)'; % find unique values from input column to differentiate the groups
 name_clus = cell(length(list_gg), 1);
 name_grp = cell(length(list_gg),1);
@@ -68,7 +68,7 @@ contab = cell(length(list_gg), opt.nb_subtype);
 
 for cc = 1:opt.nb_subtype % for each cluster
     for gg = 1:length(list_gg) % for each group
-        mask_sub = partition(:)==cc; % build a mask to select subjects within one cluster 
+        mask_sub = partition(:)==cc; % build a mask to select subjects within one cluster
         sub_col = col(mask_sub); % subjects within one cluster
         nn = numel(find(sub_col(:)==list_gg(gg))); % number of subjects for a single group that is in the cluster
         contab(gg,cc) = nn;
@@ -84,7 +84,7 @@ stats.contab.labels_y = name_clus;
 %% Chi-square test of the contigency table
 stats.chi2.expected = sum(contab,2)*sum(contab)/sum(contab(:)); % compute expected frequencies
 stats.chi2.X2 = (contab-stats.chi2.expected).^2./stats.chi2.expected; % compute chi-square statistic
-stats.chi2.X2 = sum(stats.chi2.X2(:)); 
+stats.chi2.X2 = sum(stats.chi2.X2(:));
 stats.chi2.df = prod(size(contab)-[1 1]);
 stats.chi2.p = 1-chi2cdf(stats.chi2.X2,stats.chi2.df); % determine p value
 stats.chi2.h = double(stats.chi2.p<=0.05);
@@ -95,5 +95,5 @@ stats.chi2.h = double(stats.chi2.p<=0.05);
 col_sum = sum(contab); % sum of columns
 row_sum = sum(contab,2); % sum of rows
 n_sum = sum(sum(contab)); % sum of everything
-kk = min(n_row,n_col); 
+kk = min(n_row,n_col);
 stats.cramerv = sqrt(stats.chi2.X2/(n_sum*(kk-1))); % calculate cramer's v

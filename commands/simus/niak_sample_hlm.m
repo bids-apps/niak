@@ -11,7 +11,7 @@ function [tseries,opt,X,B,E] = niak_sample_hlm(opt)
 % to each cluster, and Bk are time series sampled from a Gaussian model
 % with an AR1 structure.
 %
-% SYNTAX : 
+% SYNTAX :
 % [TSERIES,OPT] = NIAK_SAMPLE_HLM(OPT)
 %
 % _________________________________________________________________________
@@ -21,16 +21,16 @@ function [tseries,opt,X,B,E] = niak_sample_hlm(opt)
 %       (structure) with the following fields :
 %
 %       TIME
-%           (structure) with the following fields : 
+%           (structure) with the following fields :
 %
-%           T  
+%           T
 %               (integer), number of time samples
 %
 %           TR
 %               (scalar, default 3s), the time between two volumes
 %
-%           RHO 
-%               (scalar) : The coefficient of an exponential model, see 
+%           RHO
+%               (scalar) : The coefficient of an exponential model, see
 %                   the help of NIAK_CORR_MODEL_EXPONENTIAL.
 %
 %       SPACE
@@ -38,7 +38,7 @@ function [tseries,opt,X,B,E] = niak_sample_hlm(opt)
 %
 %           PART
 %               (cell of vector) PART{K} is a partition of regions into a
-%               number of clusters. 
+%               number of clusters.
 %
 %           VARIANCE
 %               (cell of vector) VARIANCE{K}(L) is the variance of the
@@ -47,7 +47,7 @@ function [tseries,opt,X,B,E] = niak_sample_hlm(opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% TSERIES 
+% TSERIES
 %       (array, size T*N) the simulated time series (in columns) (Y).
 %
 % OPT

@@ -39,7 +39,7 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_msteps_part(files_
 %
 %   FLAG_TEST
 %       (boolean, default 0) if FLAG_TEST equals 1, the brick does not
-%       do anything but update the default values in FILES_IN, FILES_OUT 
+%       do anything but update the default values in FILES_IN, FILES_OUT
 %       and OPT.
 %
 % _________________________________________________________________________
@@ -161,10 +161,10 @@ else
     % Loading inputs
     cons = load(files_in.cons, 'hier');
     hier = cons.hier;
-    
+
     roi = load(files_in.roi, opt.name_part_roi);
     part_roi = roi.(opt.name_part_roi);
-    
+
     msteps = load(files_in.msteps, 'scales_final', 'scales_max', 'stab');
     scale_final = msteps.scales_final;
     scale_max = msteps.scales_max;
@@ -209,4 +209,4 @@ if opt.flag_verbose
     fprintf('Saving outputs in a mat file at %s\n',files_out);
 end
 save(files_out, 'part', 'scale_rep', 'scale_tar', 'part_roi', 'hier',...
-     'stab', 'scale_grid');    
+     'stab', 'scale_grid');

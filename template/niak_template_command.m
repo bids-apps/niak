@@ -23,7 +23,7 @@ function opt_out = niak_template_command(in_arg,opt)
 %           (numeric) That argument is necessary to the command. If absent,
 %           it will produce an error message.
 %
-%       ARG2 
+%       ARG2
 %           (string, default 'toto') That argument is optional. If the
 %           field is absent, or left empty, the default value 'toto' will
 %           be used.
@@ -81,8 +81,8 @@ function opt_out = niak_template_command(in_arg,opt)
 
 
 niak_gb_vars % Load the niak global variables, just in case
-  
-%% Syntax 
+
+%% Syntax
 if ~exist('in_arg','var')||~exist('opt','var')
     error('Syntax : OPT_OUT = NIAK_TEMPLATE_COMMAND(IN_ARG,OPT) ; for more infos, type ''help niak_template_command''.')
 end

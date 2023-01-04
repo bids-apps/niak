@@ -7,10 +7,10 @@ function [files_in,files_out,opt] = niak_brick_stability_fir(files_in,files_out,
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN 
+% FILES_IN
 %   (string) The name of a .mat file, which contains the following variables:
-%      (NETWORK).FIR_ALL(:,I,J) is the time series of region I at trial J. 
-%      (NETWORK).NORMALIZE.TYPE and (NETWORK).NORMALIZE.TIME_SAMPLING are the 
+%      (NETWORK).FIR_ALL(:,I,J) is the time series of region I at trial J.
+%      (NETWORK).NORMALIZE.TYPE and (NETWORK).NORMALIZE.TIME_SAMPLING are the
 %         OPT parameters of NIAK_NORMALIZE_FIR.
 %      The name NETWORK can be changed with OPT.NETWORK below.
 %
@@ -25,7 +25,7 @@ function [files_in,files_out,opt] = niak_brick_stability_fir(files_in,files_out,
 %       (vector) Identical to OPT.NB_CLASSES (see below).
 %
 %   PART
-%       (matrix N*S) PART(:,s) is the consensus partition associated with 
+%       (matrix N*S) PART(:,s) is the consensus partition associated with
 %       STAB(:,s), with the number of clusters optimized using the summary
 %       statistics.
 %
@@ -35,23 +35,23 @@ function [files_in,files_out,opt] = niak_brick_stability_fir(files_in,files_out,
 %
 %   SIL
 %       (matrix S*N) SIL(s,n) is the mean stability contrast associated with
-%       STAB(:,s) and n clusters (the partition being defined using HIER{s}, 
+%       STAB(:,s) and n clusters (the partition being defined using HIER{s},
 %       see below).
 %
 %   INTRA
 %       (matrix, S*N) INTRA(s,n) is the mean within-cluster stability
-%       associated with STAB(:,s) and n clusters (the partition being defined 
+%       associated with STAB(:,s) and n clusters (the partition being defined
 %       using HIER{s}, see below).
 %
 %   INTER
-%       (matrix, S*N) INTER(s,n) is the mean maximal between-cluster stability 
-%       associated with STAB(:,s) and n clusters (the partition being defined 
+%       (matrix, S*N) INTER(s,n) is the mean maximal between-cluster stability
+%       associated with STAB(:,s) and n clusters (the partition being defined
 %       using HIER{s}, see below).
 %
 %   HIER
 %       (cell of array) HIER{S} is the hierarchy associated with STAB(:,s)
 %
-% OPT           
+% OPT
 %   (structure) with the following fields:
 %
 %   NB_CLASSES
@@ -60,7 +60,7 @@ function [files_in,files_out,opt] = niak_brick_stability_fir(files_in,files_out,
 %       specified in CLUSTERING.OPT_CLUST
 %
 %   NB_SAMPS
-%       (integer, default 100) the number of samples to use in the 
+%       (integer, default 100) the number of samples to use in the
 %       bootstrap Monte-Carlo approximation of stability.
 %
 %   STD_NOISE
@@ -77,13 +77,13 @@ function [files_in,files_out,opt] = niak_brick_stability_fir(files_in,files_out,
 %   SAMPLING
 %
 %       TYPE
-%           (string, default 'bootstrap') how to resample the average FIR 
+%           (string, default 'bootstrap') how to resample the average FIR
 %           response.
 %           Available options : 'bootstrap', 'subsample'
 %
 %       OPT
 %           (structure) the options of the sampling. Depends on
-%           OPT.SAMPLING.TYPE : 
+%           OPT.SAMPLING.TYPE :
 %               'bootstrap' : none. It is an i.i.d. bootstrap.
 %               'subsample' : a scalar representing the percentage of
 %                   trials that are used to produce a sample of average
@@ -104,7 +104,7 @@ function [files_in,files_out,opt] = niak_brick_stability_fir(files_in,files_out,
 %
 %   CONSENSUS
 %       (structure, optional) This structure describes
-%       the clustering algorithm used to estimate a consensus clustering on 
+%       the clustering algorithm used to estimate a consensus clustering on
 %       each stability matrix, with the following fields :
 %
 %       TYPE
@@ -112,8 +112,8 @@ function [files_in,files_out,opt] = niak_brick_stability_fir(files_in,files_out,
 %           Available options : 'hierarchical'
 %
 %       OPT
-%           (structure, default see NIAK_HIERARCHICAL_CLUSTERING) options 
-%           that will be  sent to the  clustering command. The exact list 
+%           (structure, default see NIAK_HIERARCHICAL_CLUSTERING) options
+%           that will be  sent to the  clustering command. The exact list
 %           of options depends on CLUSTERING.TYPE:
 %              'hierarchical' : see NIAK_HIERARCHICAL_CLUSTERING
 %
@@ -126,16 +126,16 @@ function [files_in,files_out,opt] = niak_brick_stability_fir(files_in,files_out,
 %       (boolean, default 0) if the flag is 1, then the function does not
 %       do anything but update the defaults of FILES_IN, FILES_OUT and OPT.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function
 %       prints some infos during the processing.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_BUILD_FIR, NIAK_PIPELINE_STABILITY_FIR
@@ -145,14 +145,14 @@ function [files_in,files_out,opt] = niak_brick_stability_fir(files_in,files_out,
 %
 % The input file also has to contain a variable TIME_SAMPLES that is used
 % to determine the parameters of the temporal normalization of the FIR
-% response. TIME_SAMPLES(T) is the time associated with the Tth row of 
+% response. TIME_SAMPLES(T) is the time associated with the Tth row of
 % FIR_ALL. Note that time 0 would correspond to the event time.
 %
 % Subjects that did not have any usable FIR estimate (because of excessive
-% scrubbing) are associated with a zero stability matrix. 
+% scrubbing) are associated with a zero stability matrix.
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2010-2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -180,7 +180,7 @@ function [files_in,files_out,opt] = niak_brick_stability_fir(files_in,files_out,
 if ~exist('files_in','var')||~exist('files_out','var')||~exist('opt','var')
     error('niak:brick','syntax: [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_STABILITY_FIR(FILES_IN,FILES_OUT,OPT).\n Type ''help niak_brick_stability_fir'' for more info.')
 end
-   
+
 %% Files in
 if ~ischar(files_in)
     error('FILES_IN should be a string!')
@@ -235,7 +235,7 @@ if nb_fir_tot < opt.nb_min_fir
 else
     mask_zeros = reshape(fir_all,[size(fir_all,1)*size(fir_all,2),size(fir_all,3)]);
     mask_zeros = max(abs(mask_zeros),[],1)==0;
-    fir_all = fir_all(:,:,~mask_zeros);    
+    fir_all = fir_all(:,:,~mask_zeros);
     [stab,plugin] = niak_stability_fir(fir_all,time_samples,opt_s);
 end
 

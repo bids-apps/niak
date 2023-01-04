@@ -9,17 +9,17 @@ function [files_in,files_out,opt] = niak_brick_stability_summary_group(files_in,
 %
 % FILES_IN
 %   (cell array of strings) FILES_IN{N} is a .mat file with some variables
-%   SIL, NB_CLASSES_IND and NB_CLASSES. SIL is a matrix S*K, with various 
-%   summary measures of the group-level cluster stability. All measures in 
-%   column K of SIL have been derived with NB_CLASSES_IND individual 
-%   clusters and NB_CLASSES(K) group clusters. The row S of SIL is the 
-%   stability contrast with S final clusters. 
+%   SIL, NB_CLASSES_IND and NB_CLASSES. SIL is a matrix S*K, with various
+%   summary measures of the group-level cluster stability. All measures in
+%   column K of SIL have been derived with NB_CLASSES_IND individual
+%   clusters and NB_CLASSES(K) group clusters. The row S of SIL is the
+%   stability contrast with S final clusters.
 %
 % FILES_OUT
 %   (structure) with the following fields :
 %
 %   SIL_ALL
-%       (string) a .mat file with the following variables : 
+%       (string) a .mat file with the following variables :
 %
 %       SCALES
 %           (array) SCALES(K,1) is the number of individual clusters
@@ -31,27 +31,27 @@ function [files_in,files_out,opt] = niak_brick_stability_summary_group(files_in,
 %           concatenated in columns.
 %
 %       SIL_MAX
-%           (vector) SIL_MAX(K) is the maximal contrast SIL_ALL(S,K) for 
+%           (vector) SIL_MAX(K) is the maximal contrast SIL_ALL(S,K) for
 %           K in a neighbourhood of S.
 %
 %       SCALES_MAX
-%           (array) SCALES_MAX(S,1) and SCALES_MAX(S,2) are 
+%           (array) SCALES_MAX(S,1) and SCALES_MAX(S,2) are
 %           respectively the number of individual and group scales that
 %           achieved maximal contrast for S final clusters.
 %
 %       PEAKS
-%           (array) the list of final scales S that are local maxima of 
+%           (array) the list of final scales S that are local maxima of
 %           stability (for SIL_MAX)
 %
 %   FIGURE_SIL_MAX
-%       (string) the name of a pdf file with a plot of SIL_MAX with local 
+%       (string) the name of a pdf file with a plot of SIL_MAX with local
 %       maxima PEAKS highlighted
 %
 %   TABLE_SIL_MAX
 %       (string) a text file with the local maxima of the stability
-%       contrast, with corresponding values. There are 
-%       multiple columns per entry, first the number of clusters 
-%       (individual level, group level , final), and then the last 
+%       contrast, with corresponding values. There are
+%       multiple columns per entry, first the number of clusters
+%       (individual level, group level , final), and then the last
 %       one with the value of the local maximum.
 %
 % OPT
@@ -68,7 +68,7 @@ function [files_in,files_out,opt] = niak_brick_stability_summary_group(files_in,
 %
 %   FLAG_TEST
 %       (boolean, default 0) if FLAG_TEST equals 1, the brick does not
-%       do anything but update the default values in FILES_IN, FILES_OUT 
+%       do anything but update the default values in FILES_IN, FILES_OUT
 %       and OPT.
 %
 % _________________________________________________________________________
@@ -84,8 +84,8 @@ function [files_in,files_out,opt] = niak_brick_stability_summary_group(files_in,
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2010
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -156,13 +156,13 @@ N       = length(files_in); % The number of input files
 for num_n = 1:N
     if opt.flag_verbose
         fprintf('    %s\n',files_in{num_n});
-    end    
+    end
     data = load(files_in{num_n},'sil','nb_classes','nb_classes_ind');
     sil_all = [sil_all data.sil];
     scales = [scales ; [repmat(data.nb_classes_ind,[length(data.nb_classes) 1]) data.nb_classes(:)]];
 end
 S = size(sil_all,2);
-        
+
 %% Extract maximal measures over clustering parameters for each individual
 [sil_max,scales_max] = niak_build_max_sil(sil_all,scales,opt.neigh,1);
 mask = ~isnan(sil_max);
@@ -181,7 +181,7 @@ lab_y = {'K','L','S','max'};
 
 if isempty(peaks)
     tab = [NaN NaN NaN NaN]
-else    
+else
     tab = [scales_max(peaks,:) peaks val_max];
 end
 
@@ -194,23 +194,23 @@ if ~strcmp(files_out.figure_sil_max,'gb_niak_omitted')
     if opt.flag_verbose
         fprintf('Building a figure of group summary measures ...\n');
     end
-    
+
     if strcmp(GB_NIAK.language,'octave')
         file_eps = niak_file_tmp('_summary_group.eps');
     end
     hfa = figure;
     plot(find(mask),sil_max(mask));
-    hold on        
+    hold on
     plot(peaks,sil_max(peaks),'r*')
-    str_title = sprintf('Group stability contrast');        
+    str_title = sprintf('Group stability contrast');
     title(str_title);
     if strcmp(GB_NIAK.language,'octave')
         print(hfa,'-dpsc','-r300',file_eps);
     else
-        print(hfa,'-dpdf',files_out.figure_sil_max);            
+        print(hfa,'-dpdf',files_out.figure_sil_max);
     end
     close(hfa)
-        
+
     if strcmp(GB_NIAK.language,'octave')
         % Conversion in pdf
         instr_ps2pdf = ['ps2pdf -dEPSCrop ',file_eps,' ',files_out.figure_sil_max];
@@ -218,7 +218,7 @@ if ~strcmp(files_out.figure_sil_max,'gb_niak_omitted')
         if succ~=0
             warning(cat(2,'There was a problem in the conversion of the figure from ps to pdf with ps2pdf: ',msg));
         end
-        
+
         % Clean up
         instr_clean = ['rm -rf ' file_eps];
         [status,msg] = system(instr_clean);

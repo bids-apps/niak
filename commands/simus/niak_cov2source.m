@@ -6,7 +6,7 @@ function source = niak_cov2source(S,opt)
 % Find a basis of function whose variance-covariance spatial correlation
 % matrix exactly match a given covariance matrix.
 %
-% SYNTAX 
+% SYNTAX
 % SOURCE = NIAK_COV2SOURCE(S,OPT);
 %
 % _________________________________________________________________________
@@ -18,27 +18,27 @@ function source = niak_cov2source(S,opt)
 %
 % OPT
 %       (structure) with the following fields :
-%       
+%
 %       NT
-%           (integer, default 100) the number of time samples. 
+%           (integer, default 100) the number of time samples.
 %           Important warning : for this function to work, you need N<T.
 %
 %       BASIS
 %           (string, default 'cos') the type of basis used to build the
-%           source. Available options : 
-%           'cos' 
+%           source. Available options :
+%           'cos'
 %               the basis is cos(2*pi*n*t/T), with n = 1:N
 %
 % _________________________________________________________________________
 % OUTPUTS :
-% 
+%
 % SOURCE
 %       (matrix,NT*N) the matrix of sources (each source is a column). By
 %       construction, the spatial covariance matrix of SOURCE is S.
 %
 % _________________________________________________________________________
-% COMMENTS : 
-% 
+% COMMENTS :
+%
 % Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,Montreal
 %               Neurological Institute, McGill University, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
@@ -84,17 +84,17 @@ sqrtS = chol(S);
 %% Generating basis
 switch opt.basis
     case 'cos'
-        
+
         basis_vec = zeros([T,N]);
         time_vec = 0:(T-1);
-        
+
         for num_v = 1:N
             basis_vec(:,num_v) = cos(2*pi*num_v*time_vec(:)/T);
         end
-        
+
         basis_vec = niak_correct_mean_var(basis_vec,'mean_var');
         basis_vec = sqrt(T/(T-1))*basis_vec; % we control for exact and not empirical covariance
-        
+
     otherwise
         error('Unknown basis type');
 end

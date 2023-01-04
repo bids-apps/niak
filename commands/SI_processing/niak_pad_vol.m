@@ -14,12 +14,12 @@ function vol_m = niak_pad_vol(vol,opt)
 %       (structure) optional, with the following fields :
 %
 %       PAD_SIZE
-%           (integer) add PAD_SIZE elements at the begining/end of each 
+%           (integer) add PAD_SIZE elements at the begining/end of each
 %           dimension of the volume.
 %
 %       PAD_ORDER
 %           (vector, default [3 2 1]) the order in which dimensions are
-%           padded. 
+%           padded.
 %
 %       PAD_VAL
 %           (scalar, default []) the value used for padding. If left empty,
@@ -40,7 +40,7 @@ function vol_m = niak_pad_vol(vol,opt)
 %
 % PAD_ORDER has an impact only if PAD_VAL is left empty, i.e. when
 % duplicating the extreme values, the order in which they are replicated
-% matters. 
+% matters.
 %
 % Copyright (c) Pierre Bellec, Centre de Recherche de l'institut de
 % geriatrie de Montreal, Universite de Montreal, Montreal, Canada, 2010.

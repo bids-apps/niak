@@ -33,8 +33,8 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_contrast(files_in,
 %      to the cluster assignment of vertex i.
 %
 % FILES_OUT
-%   (string) a mat file with two variables SCALES (identical to OPT.SCALES) 
-%   and SIL (the stability contrast). 
+%   (string) a mat file with two variables SCALES (identical to OPT.SCALES)
+%   and SIL (the stability contrast).
 %
 % OPT
 %   (structure) with the following fields:
@@ -48,7 +48,7 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_contrast(files_in,
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % COMMENTS:
 %
@@ -59,7 +59,7 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_contrast(files_in,
 %   Montreal Neurological Institute, 2014
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
-% Keywords : 
+% Keywords :
 
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal
@@ -149,37 +149,37 @@ for num_sc = 1:nb_scales
     part = part_file.part(:, num_sc);
     stab = stab_file.stab.(scale_name);
     [scale, N] = size(stab);
-    
+
     if opt.flag_verbose
         fprintf('Computing stability contrast for scale %d (%s)\n',...
                 scale,scale_name);
         start_loc = tic;
     end
-    
+
     % Prepare temporary storage
     intra_surf = zeros(length(part),1);
     inter_surf = zeros(length(part),1);
     sil_surf = zeros(length(part),1);
     mask = part > 0;
-    
+
     %% Loop over clusters
     for num_c = 1:scale
         % get the stability of each vertex with the cluster
-        intra = stab(num_c,:);       
+        intra = stab(num_c,:);
         % get the maximum stability for each vertex with all the other
         % clusters
         inter = max(stab((1:scale)~=num_c,:),[],1);
         intra_surf(part==num_c) = intra(part==num_c);
         fprintf('    surf: %d, inter: %d, part_numc: %d, num_c: %d\n',...
                 size(inter_surf),size(inter),size(part==num_c),num_c);
-        inter_surf(part==num_c) = inter(part==num_c);        
+        inter_surf(part==num_c) = inter(part==num_c);
     end
     % Get silhouette
     sil_surf = intra_surf - inter_surf;
     sil(num_sc) = mean(sil_surf(mask));
     % Store the results
     out.stab_surf.(scale_name).inter = inter_surf;
-    out.stab_surf.(scale_name).intra = intra_surf;    
+    out.stab_surf.(scale_name).intra = intra_surf;
     out.sil_surf.(scale_name) = sil_surf;
     if opt.flag_verbose
         elapsed_loc = toc(start_loc);

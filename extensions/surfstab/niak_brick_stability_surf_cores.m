@@ -9,22 +9,22 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_cores(files_in,fil
 %
 % FILES_IN
 %   STAB
-%   (string) path to the .mat file containing the estimated stability based on 
+%   (string) path to the .mat file containing the estimated stability based on
 %   the current dataset. The required fieldnames in the file can be specified by
 %   OPT. It contains the following fields:
 %
-%       STAB 
+%       STAB
 %           (array) Array of dimension [S K] where STAB(:,K) is
 %           the vectorized estimated stability matrix at scale SCALE(K).
 %
 %       SCALE_GRID
-%           (vector) Vector of length K that specifies the scales used in 
+%           (vector) Vector of length K that specifies the scales used in
 %           FILES_IN.STAB.STAB.
 %
 %   PART
 %
 %       PART
-%           (array) Array of dimension [V K] where PART(:,K) is 
+%           (array) Array of dimension [V K] where PART(:,K) is
 %           the partition of the V surface verteces into clusters based on
 %           STAB(:, K).
 %
@@ -64,20 +64,20 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_cores(files_in,fil
 %
 %       TYPE
 %           (string, default 'highpass') defines the method used to generate
-%           stable clusters. 
+%           stable clusters.
 %           Avalable options: 'highpass', 'kmeans'
 %
 %       OPT
 %           (structure, optional) the options of the stable cluster method.
 %           Depends on OPT.CORES.TYPE.
-%           
-%           highpass : THRE (scalar, default 0.5) THRE constitutes the 
+%
+%           highpass : THRE (scalar, default 0.5) THRE constitutes the
 %                           high-pass percentage cutoff for stability
 %                           values (range 0 - 1)
-%                      CONF (scalar, default 0.05) defines the confidence 
+%                      CONF (scalar, default 0.05) defines the confidence
 %                           interval with respect to the stability
 %                           threshold in percent (range 0 - 1)
-%                           
+%
 %           kmeans   : None
 %
 %   FLAG_VERBOSE
@@ -86,7 +86,7 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_cores(files_in,fil
 %
 %   FLAG_TEST
 %       (boolean, default 0) if FLAG_TEST equals 1, the brick does not
-%       do anything but update the default values in FILES_IN, FILES_OUT 
+%       do anything but update the default values in FILES_IN, FILES_OUT
 %       and OPT.
 %
 % _________________________________________________________________________
@@ -105,7 +105,7 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_cores(files_in,fil
 %   Montreal Neurological Institute, 2014
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
-% Keywords : BASC, clustering, stability contrast, 
+% Keywords : BASC, clustering, stability contrast,
 %            multi-scale stepwise selection
 %
 % Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -141,7 +141,7 @@ files_in = psom_struct_defaults(files_in,list_fields,list_defaults);
 
 %% Files out
 if ~ischar(files_out)&&~iscellstr(files_out)
-    error('FILES_OUT should be a cell of strings');    
+    error('FILES_OUT should be a cell of strings');
 end
 
 %% Options
@@ -221,7 +221,7 @@ for sc_id = 1:nb_scales
     % Build an identical empty matrix for the mask of the stable cores so
     % we can identify overlapping stable cores
     core_mask = zeros(nb_clusters, nb_vertex);
-    
+
     % Loop through the clusters
     for cl_id = 1:nb_clusters
         % Get the current clusters number
@@ -229,13 +229,13 @@ for sc_id = 1:nb_scales
         % Find regions that are in the current cluster
         cl_ind = tmp_part_roi == cl_num;
         cl_part = tmp_part_roi(cl_ind);
-        
+
         % Pull the cluster columns out of the stability matrix
         cl_stab = tmp_stab_mat(:, cl_ind);
         % Build the within cluster stability
         cl_stab_wi = cl_stab(cl_ind, :);
- 
-        % Switch based on the stable core technique we are using 
+
+        % Switch based on the stable core technique we are using
         switch opt.cores.type
             case 'highpass'
                 % We will threshold the stable cores at the given
@@ -261,9 +261,9 @@ for sc_id = 1:nb_scales
             case 'kmeans'
                 % We will divide the cluster into three parts and keep the
                 % one with the highest average stability
-                
+
                 % Average across the rows to get an average of the
-                % stability with the cluster of every region on the surface 
+                % stability with the cluster of every region on the surface
                 avg_cl_stab = mean(cl_stab, 2);
                 k_ind = niak_kmeans_clustering(avg_cl_stab', struct('nb_classes', 3));
                 % Find the cluster with the highest average stability
@@ -275,20 +275,20 @@ for sc_id = 1:nb_scales
                 % Mask the elements of the surface by the stability
                 % threshold of the target cluster
                 cl_mask = k_ind==k_tar;
-                
+
                 % Mask the stability vector and store it in the partition
                 % array to later find the maximium of overlapping clusters
                 mask_stab = avg_cl_stab .* cl_mask;
                 core_stab(cl_id, :) = mask_stab;
                 core_mask(cl_id, :) = cl_mask;
-                
+
             otherwise
                 error('Unknown thresholding method in opt.core.type\n');
-     
+
         end
-   
+
     end
-    
+
     % Identify the vertices that belong to several clusters
     overlap = sum(core_mask, 1);
     overlap_vert = overlap > 1;
@@ -296,7 +296,7 @@ for sc_id = 1:nb_scales
     single_vert = overlap == 1;
     % Make a mask of the vertices that belong to no cluster
     no_vert = overlap == 0;
-    
+
     % Generate a temporary partition container
     tmp_part_roi = zeros(size(overlap));
     % Get the clusters for the non-overlapping vertices
@@ -304,13 +304,13 @@ for sc_id = 1:nb_scales
     % Get the clusters for the overlapping vertices based on a winner takes
     % all stability ranking
     [overlap_val, tmp_part_roi(overlap_vert)] = max(core_stab(:, overlap_vert), [], 1);
-    
+
     % As a sanity check, see if all values of vertices that belong to no
     % cluster are zero
     if ~all(tmp_part_roi(no_vert)==0)
         error('Something is wrong with the stable core partition.');
     end
-    
+
     % Write the updated partition back
     core_part(:, sc_id) = niak_part2vol(tmp_part_roi, part_roi);
     % Update the stability matrix
@@ -318,7 +318,7 @@ for sc_id = 1:nb_scales
     tmp_stab_mat(dropped_ind, dropped_ind) = 0;
     % Write the updated partition back
     core_stab_mat(:, sc_id) = niak_mat2vec(tmp_stab_mat);
-    
+
 end
 
 % See if the core run has changed the target scale somehow
@@ -332,7 +332,7 @@ elseif length(core_scale) ~= length(scale_tar)
     % Different values would mean something miraculous has happened
     error(['After running the stable cores, the number of scales is the '...
           'same but the values have changed. This is not supposed to happen!']);
-end    
+end
 
 % Store the new outputs in the structure
 data.scale_tar  = scale_tar;

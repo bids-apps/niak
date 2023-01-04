@@ -6,7 +6,7 @@ function [files_in,files_out,opt] = niak_brick_fig_fir(files_in,files_out,opt)
 %
 % _________________________________________________________________________
 % INPUTS:
-% 
+%
 % FILES_IN
 %   (string) the name of a mat file with the FDR tests on FIR
 %
@@ -15,22 +15,22 @@ function [files_in,files_out,opt] = niak_brick_fig_fir(files_in,files_out,opt)
 %
 % OPT
 %   (structure, with the following fields):
-% 
+%
 %   IND_FIR
 %      (vector 1*n, default []) the numbers of the network to include in the figure
 %      e.g. [1 3 4]. If left empty all networks are used
 %
 %   COLOR
-%      (array n*3, default generated with a jet colormap) COLOR(n,:) is the color of 
+%      (array n*3, default generated with a jet colormap) COLOR(n,:) is the color of
 %      the plot associated with the nth response.
 %
 %   BACKGROUND
-%      (vector 1*3, default [0.75 0.75 0.75]) the color of the background for 
+%      (vector 1*3, default [0.75 0.75 0.75]) the color of the background for
 %      significant responses (or differences in responses).
 %
 %   FLAG_DIFF
 %      (boolean, default false) if the flag is true, the significance level
-%      will be on differences rather than on the difference with 0. 
+%      will be on differences rather than on the difference with 0.
 %      WARNING: in this case only the two first elements of OPT.IND_FIR are used
 %      i.e. only the two first FIR are represented (alongside with the significance
 %      of the difference between these responses.
@@ -43,19 +43,19 @@ function [files_in,files_out,opt] = niak_brick_fig_fir(files_in,files_out,opt)
 %      If left empty, values based on min/max are used.
 %
 %   THRE_FDR
-%      (scalar, default 0.05) the FDR threshold. If empty, no significance is 
+%      (scalar, default 0.05) the FDR threshold. If empty, no significance is
 %      indicated.
 %
 %   FLAG_STD
 %      (boolean, default true) turn on/off the error bars
 %
 %   FLAG_LEGEND
-%      (boolean, default false) indicate which color corresponds to which 
+%      (boolean, default false) indicate which color corresponds to which
 %      network on the figure
 %
-%   FLAG_TEST 
-%      (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%      do anything but update the default values in FILES_IN, 
+%   FLAG_TEST
+%      (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%      do anything but update the default values in FILES_IN,
 %      FILES_OUT and OPT.
 %
 % _________________________________________________________________________
@@ -73,7 +73,7 @@ function [files_in,files_out,opt] = niak_brick_fig_fir(files_in,files_out,opt)
 %
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Département d'informatique et de recherche opérationnelle,
 % Université de Montréal, CA, 2011.
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -113,7 +113,7 @@ else
     opt = psom_struct_defaults(struct(),list_fields,list_defaults);
 end
 
-if opt.flag_test 
+if opt.flag_test
     return
 end
 
@@ -164,17 +164,17 @@ if ~isempty(opt.thre_fdr)
         tmp(opt.ind_fir(1),opt.ind_fir(2)) = true;
         tmp(opt.ind_fir(2),opt.ind_fir(1)) = true;
         ind_tmp = find(niak_mat2vec(tmp));
-        mask = test_diff.fdr(:,ind_tmp)>=opt.thre_fdr;              
+        mask = test_diff.fdr(:,ind_tmp)>=opt.thre_fdr;
     else
         plot_fdr = repmat(NaN,size(test_fir.mean));
         mask = test_fir.fdr>=opt.thre_fdr;
-    end    
-    
+    end
+
     changes = abs(mask(2:end)-mask(1:(end-1)))~=0;
     changes = [false changes(:)'];
     list_d = find(changes);
     list_d = list_d(:)';
-    
+
     if mask(1)==0
        list_d = [1 list_d];
     end
@@ -195,11 +195,11 @@ if ~isempty(opt.thre_fdr)
        hfill = fill(X,Y,opt.background);
        set(hfill,'edgecolor',opt.background)
     end
-end    
+end
 
 %% Plot curve(s) and std
 for num_p = 1:length(opt.ind_fir)
-    
+
     if opt.flag_std
         jbfill(1:size(test_fir.mean,1),(test_fir.mean(:,num_p)+test_fir.std(:,num_p))',(test_fir.mean(:,num_p)-test_fir.std(:,num_p))',color_plot(num_p,:),color_plot(num_p,:),0,0.25);
         %jbfill(1:size(test_fir.mean,1),(test_fir.mean(:,num_p)+test_fir.std(:,num_p))',(test_fir.mean(:,num_p)-test_fir.std(:,num_p))',[0 0 0],[0 0 0],0,0.25);
@@ -215,7 +215,7 @@ if opt.flag_legend
     labels = cell(size(opt.ind_fir));
     for num_e = 1:length(labels)
         labels{num_e} = num2str(opt.ind_fir(num_e));
-    end    
+    end
     legend(labels)
 end
 

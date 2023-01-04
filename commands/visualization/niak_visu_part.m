@@ -14,13 +14,13 @@ function [] = niak_visu_part(part,opt)
 %       (structure) with the following fields:
 %
 %       NB_CLUSTERS
-%           (integer, default max(PART(:))) The number of clusters to use 
+%           (integer, default max(PART(:))) The number of clusters to use
 %
 %       LABELS
 %           (cell of strings) LABELS{J} is the label of cluster J.
 %
 %       TYPE_MAP
-%           (string, default 'jet') the colormap used to display the clusters 
+%           (string, default 'jet') the colormap used to display the clusters
 %           (options: 'jet', 'hotcold' or 'none').
 %           If map is 'none', the current colormap is used.
 %           'jet': matlab's jet
@@ -45,7 +45,7 @@ function [] = niak_visu_part(part,opt)
 % NIAK_THRESHOLD_HIERARCHY, NIAK_THRESHOLD_STABILITY
 %
 % _________________________________________________________________________
-% COMMENTS 
+% COMMENTS
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -102,21 +102,21 @@ switch type_map
             if num_u==1
                 coul_masks(1:5,:) = repmat([1 1 1],[5 1]);
             elseif num_u == (nb_clusters+1)
-                coul_masks((nb_clusters*10)-4:(nb_clusters*10),:) = repmat(coul_masks((num_u-1)*10,:),[5 1]); 
+                coul_masks((nb_clusters*10)-4:(nb_clusters*10),:) = repmat(coul_masks((num_u-1)*10,:),[5 1]);
             else
-                coul_masks((6+(num_u-2)*10):(5+(num_u-1)*10),:) = repmat(coul_masks((num_u-1)*10,:),[10 1]);               
+                coul_masks((6+(num_u-2)*10):(5+(num_u-1)*10),:) = repmat(coul_masks((num_u-1)*10,:),[10 1]);
             end
         end
         colormap(coul_masks);
     case 'hotcold'
         c1 = hot(128);
         c2 = c1(:,[3 2 1]);
-        coul_masks = [c2(length(c1):-1:1,:) ; c1];    
+        coul_masks = [c2(length(c1):-1:1,:) ; c1];
         colormap(coul_masks);
     case 'none'
     otherwise
         warning('%s is an unknown color map, I am not setting the color map',type_map)
-    
+
 end
 
 nb_rois = length(part);
@@ -131,7 +131,7 @@ switch type_map
         imagesc(part_m,[-nb_clusters,nb_clusters]);
     otherwise
         imagesc(part_m,[0,nb_clusters]);
-    
+
 end
 
 if flag_labels

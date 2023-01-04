@@ -1,20 +1,20 @@
 function [x,mask] = niak_compcor(vol,opt,mask_a);
-% Compute components with the COMPCOR method 
+% Compute components with the COMPCOR method
 %
 % SYNTAX:
 % [X,MASK] = NIAK_COMPCOR( VOL , [OPT] , [MASK_A])
 %
 % INPUTS:
 %   VOL (3D+t array) an fMRI dataset
-%   OPT.PERC (scalar, default 0.02) the proportion of voxels considered to have a 
+%   OPT.PERC (scalar, default 0.02) the proportion of voxels considered to have a
 %      "high" standard deviation (in time).
 %   OPT.TYPE (string, default 'a') the type of mask used for compcor:
 %         'a' : anatomical mask of white matter + ventricles
-%         't' : mask of voxels with high standard deviation 
+%         't' : mask of voxels with high standard deviation
 %         'at' : merging of the 'a' and 't' masks
-%   OPT.NB_COMP (integer, default 5) the number of components to generate. If left 
-%      empty a test is performed using Gaussian i.i.d. samples to determine 
-%      "significant" components. 
+%   OPT.NB_COMP (integer, default 5) the number of components to generate. If left
+%      empty a test is performed using Gaussian i.i.d. samples to determine
+%      "significant" components.
 %   OPT.NB_SAMPS (integer, default 100) the number of samples for the MC simulation
 %   OPT.P (scalar, default 0.05) the significance level to accept a principal component
 %   OPT.FLAG_VERBOSE (boolean, default 1) print progress
@@ -26,18 +26,18 @@ function [x,mask] = niak_compcor(vol,opt,mask_a);
 %
 % REFERENCES:
 % The original paper:
-%   Behzadi, Y., Restom, K., Liau, J., Liu, T. T., Aug. 2007. A component based 
-%   noise correction method (CompCor) for BOLD and perfusion based fMRI. 
+%   Behzadi, Y., Restom, K., Liau, J., Liu, T. T., Aug. 2007. A component based
+%   noise correction method (CompCor) for BOLD and perfusion based fMRI.
 %   NeuroImage 37 (1), 90-101. http://dx.doi.org/10.1016/j.neuroimage.2007.04.042
 %
 % The default settings correspond to:
-%   Chai, X. J., Castañón, A. N. N., Ongür, D., Whitfield-Gabrieli, S., Jan. 2012. 
-%   Anticorrelations in resting state networks without global signal regression. 
+%   Chai, X. J., Castañón, A. N. N., Ongür, D., Whitfield-Gabrieli, S., Jan. 2012.
+%   Anticorrelations in resting state networks without global signal regression.
 %   NeuroImage 59 (2), 1420-1428. http://dx.doi.org/10.1016/j.neuroimage.2011.08.048
-%   
-% Copyright (c) Pierre Bellec, 
-%   Centre de recherche de l'institut de 
-%   Gériatrie de Montréal, Département d'informatique et de recherche 
+%
+% Copyright (c) Pierre Bellec,
+%   Centre de recherche de l'institut de
+%   Gériatrie de Montréal, Département d'informatique et de recherche
 %   opérationnelle, Université de Montréal, 2013
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.

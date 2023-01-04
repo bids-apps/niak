@@ -12,7 +12,7 @@ function [stab,plugin] = niak_stability_fir(fir_all,time_samples,opt)
 % INPUTS:
 %
 % FIR_ALL
-%   (array T*N*S) FIR_ALL(:,I,J) is the time series of region I at trial J.  
+%   (array T*N*S) FIR_ALL(:,I,J) is the time series of region I at trial J.
 %
 % TIME_SAMPLES
 %   (vector, T*1) TIME_SAMPLES(t) is the time associated with
@@ -31,9 +31,9 @@ function [stab,plugin] = niak_stability_fir(fir_all,time_samples,opt)
 %       bootstrap Monte-Carlo approximation of stability.
 %
 %   NB_SAMPS_BIAS
-%       (integer, default 100) the number of samples to derive the 
-%       estimation of the bias on the distance between average 
-%       responses under the null hypothesis of no significant 
+%       (integer, default 100) the number of samples to derive the
+%       estimation of the bias on the distance between average
+%       responses under the null hypothesis of no significant
 %       average responses.
 %
 %   STD_NOISE
@@ -44,20 +44,20 @@ function [stab,plugin] = niak_stability_fir(fir_all,time_samples,opt)
 %   SAMPLING
 %
 %       TYPE
-%           (string, default 'bootstrap') how to resample the average FIR 
+%           (string, default 'bootstrap') how to resample the average FIR
 %           response.
 %           Available options : 'bootstrap', 'subsample'
 %
 %       OPT
 %           (structure) the options of the sampling. Depends on
-%           OPT.SAMPLING.TYPE : 
+%           OPT.SAMPLING.TYPE :
 %               'bootstrap' : none. It is an i.i.d. bootstrap.
 %               'subsample' : a scalar representing the percentage of
 %                   trials that are used to produce a sample of average
 %                   response (default 0.5).
 %
 %   NORMALIZE
-%       (structure) the type of normalization to apply on the 
+%       (structure) the type of normalization to apply on the
 %       FIR estimates. See NIAK_NORMALIZE_FIR.
 %
 %   CLUSTERING
@@ -85,7 +85,7 @@ function [stab,plugin] = niak_stability_fir(fir_all,time_samples,opt)
 %    associated with OPT.NB_CLASSES(s) clusters.
 %
 % PLUGIN
-%    (vector) a vectorized version of the "plug-in" estimate of the 
+%    (vector) a vectorized version of the "plug-in" estimate of the
 %    distance between normalized FIR.
 %
 % _________________________________________________________________________
@@ -99,8 +99,8 @@ function [stab,plugin] = niak_stability_fir(fir_all,time_samples,opt)
 % FIR estimate in the following reference :
 %
 % Pierre Orban, Julien Doyon, Rick Hoge, Pierre Bellec, Stable clusters of
-% brain regions associated with distinct motor task-evoked hemodynamic 
-% responses. To be presented at the 17th International Conference on 
+% brain regions associated with distinct motor task-evoked hemodynamic
+% responses. To be presented at the 17th International Conference on
 % Functional Mapping of the Human Brain, 2011.
 %
 % Copyright (c) Pierre Bellec
@@ -178,13 +178,13 @@ for num_s = 1:opt.nb_samps
 
     switch opt.sampling.type
 
-        case 'subsample'           
+        case 'subsample'
 
-            fir_boot = randperm(ne);                
+            fir_boot = randperm(ne);
             fir_all_boot = fir_all(:,:,fir_boot(1:nb_fir));
-            
+
         case 'bootstrap'
-            
+
             fir_all_boot = zeros(size(fir_all));
             for num_n = 1:N
                 fir_all_boot(:,num_n,:) = fir_all(:,num_n,ceil(ne*rand([ne 1])));
@@ -212,7 +212,7 @@ for num_s = 1:opt.nb_samps
             opt_t.thresh = opt.nb_classes;
             part = niak_threshold_hierarchy(hier,opt_t);
     end
-    
+
     for num_sc = 1:nb_s
         stab(:,num_sc) = stab(:,num_sc) + niak_mat2vec(niak_part2mat(part(:,num_sc),true));
     end

@@ -7,38 +7,38 @@ function [pipeline,opt] = niak_pipeline_stability_rest(files_in,opt)
 % _________________________________________________________________________
 % INPUTS
 %
-% FILES_IN  
-%   (structure) with the following fields : 
+% FILES_IN
+%   (structure) with the following fields :
 %
 %   DATA
 %      (structure) with the following fields :
 %
 %      <SUBJECT>.<SESSION>.<RUN>
-%         (string) a 3D+t fMRI dataset. The fields <SUBJECT>, <SESSION> 
-%         and <RUN> can be any arbitrary string. Note that time series can 
-%         be specified directly as variables in a .mat file. The file 
-%         FILES_IN.ATOMS needs to be specified in that instance. 
+%         (string) a 3D+t fMRI dataset. The fields <SUBJECT>, <SESSION>
+%         and <RUN> can be any arbitrary string. Note that time series can
+%         be specified directly as variables in a .mat file. The file
+%         FILES_IN.ATOMS needs to be specified in that instance.
 %         The <SESSION> level can be skipped.
 %
 %   INFOS
-%      (string, default 'gb_niak_omitted') the name of a CSV file. 
+%      (string, default 'gb_niak_omitted') the name of a CSV file.
 %      Example :
 %                , SEX , HANDEDNESS
-%      <SUBJECT> , 0   , 0 
+%      <SUBJECT> , 0   , 0
 %      This type of file can be generated with Excel (save under CSV).
 %      The infos will be used to "stratify" the data, i.e. resampling of
-%      the data will be restricted within groups of subjects that share 
+%      the data will be restricted within groups of subjects that share
 %      identical infos. All strata will be given equal weights to build
 %      the consensus across subjects. If omitted, all subjects will belong
 %      to the same strata.
 %
 %   AREAS
-%      (string, default AAL template from NIAK) the name of the brain 
-%      parcelation template that will be used to constrain the region 
+%      (string, default AAL template from NIAK) the name of the brain
+%      parcelation template that will be used to constrain the region
 %      growing.
 %
 %   MASK
-%      (string, default AREAS>0) a file name of a binary mask common to 
+%      (string, default AREAS>0) a file name of a binary mask common to
 %      all subjects and runs.
 %
 %   ATOMS
@@ -56,7 +56,7 @@ function [pipeline,opt] = niak_pipeline_stability_rest(files_in,opt)
 %   (structure) with the following fields :
 %
 %   FOLDER_OUT
-%      (string) where to write the results of the pipeline. 
+%      (string) where to write the results of the pipeline.
 %
 %   GRID_SCALES
 %      (vector) GRID_SCALES describes the grid of scale parameters that
@@ -97,17 +97,17 @@ function [pipeline,opt] = niak_pipeline_stability_rest(files_in,opt)
 %      used directly to set the number of scales in MSTEPS.
 %
 %   TARGET_TSERIES
-%      (string, default 'consensus') which partition to use to extract time series. 
+%      (string, default 'consensus') which partition to use to extract time series.
 %      Available options:
 %          'consensus' : the consensus partition
 %          'core' : the stability core of each consensus cluster
-%          'adjusted' : the adjusted version of the consensus partition, based 
+%          'adjusted' : the adjusted version of the consensus partition, based
 %              on the average stability with the core
-%          'threshold' : same as adjusted, except that a threshold on the minimal 
+%          'threshold' : same as adjusted, except that a threshold on the minimal
 %              acceptable average stability with the core is set.
 %
 %   FLAG_ROI
-%      (boolean, default false) if the flag is true, the pipeline is only 
+%      (boolean, default false) if the flag is true, the pipeline is only
 %      going to perform the region growing.
 %
 %   FLAG_IND
@@ -127,16 +127,16 @@ function [pipeline,opt] = niak_pipeline_stability_rest(files_in,opt)
 %      the individual stability matrices. The adjusted clusters are generated as well.
 %
 %   FLAG_TSERIES_NETWORK
-%      (boolean, default false) If the flag is true, generate some average time series 
-%      for all networks and subjects (this will be done at each level, individual, group 
+%      (boolean, default false) If the flag is true, generate some average time series
+%      for all networks and subjects (this will be done at each level, individual, group
 %      or mixed, depending on FLAG_IND, FLAG_MIXED and FLAG_GROUP).
 %
 %   REGION_GROWING
-%      (structure) see the OPT argument of NIAK_PIPELINE_REGION_GROWING. 
+%      (structure) see the OPT argument of NIAK_PIPELINE_REGION_GROWING.
 %      The default parameters may work.
 %
 %   STABILITY_TSERIES
-%      (structure, with 2 entries) see NIAK_BRICK_STABILITY_TSERIES. The 
+%      (structure, with 2 entries) see NIAK_BRICK_STABILITY_TSERIES. The
 %      default parameters may work.
 %
 %   STABILITY_GROUP
@@ -146,7 +146,7 @@ function [pipeline,opt] = niak_pipeline_stability_rest(files_in,opt)
 %   STABILITY_MAPS
 %      (structure) the options that will be passed to
 %      NIAK_BRICK_STABILITY_MAPS
-% 
+%
 %   STABILITY_FIGURE
 %      (structure) the options that will be passed to
 %      NIAK_BRICK_STABILITY_FIGURE
@@ -173,10 +173,10 @@ function [pipeline,opt] = niak_pipeline_stability_rest(files_in,opt)
 %      (boolean, default true) Print some advancement infos.
 %
 % _________________________________________________________________________
-% OUTPUTS : 
+% OUTPUTS :
 %
-% PIPELINE 
-%   (structure) describe all jobs that need to be performed in the 
+% PIPELINE
+%   (structure) describe all jobs that need to be performed in the
 %   pipeline. This structure is meant to be use in the function
 %   PSOM_RUN_PIPELINE.
 %
@@ -188,7 +188,7 @@ function [pipeline,opt] = niak_pipeline_stability_rest(files_in,opt)
 %
 % NOTE 1:
 % The steps of the pipeline are the following :
-%  
+%
 %   1. Masking the brain in functional data
 %   2. Performing region growing in each area independently based on fMRI
 %      time series concatenated for all subjects.
@@ -203,23 +203,23 @@ function [pipeline,opt] = niak_pipeline_stability_rest(files_in,opt)
 % as inputs. See NIAK_PIPELINE_FMRI_PREPROCESS.
 %
 % NOTE 3:
-% Please refer to the following publications for further details on the 
+% Please refer to the following publications for further details on the
 % method.
 %
 % Regarding the multi-scale BASC analysis :
 % P. Bellec; P. Rosa-Neto; O.C. Lyttelton; H. Benali; A.C. Evans,
-% Multi-level bootstrap analysis of stable clusters in resting-State fMRI. 
+% Multi-level bootstrap analysis of stable clusters in resting-State fMRI.
 % Neuroimage 51 (2010), pp. 1126-1139
 %
-% Regarding the circular block boostrap for fMRI time series : 
+% Regarding the circular block boostrap for fMRI time series :
 % P. Bellec; G. Marrelec; H. Benali, A bootstrap test to investigate
-% changes in brain connectivity for functional MRI. Statistica Sinica, 
-% special issue on Statistical Challenges and Advances in Brain Science, 
-% 2008, 18: 1253-1268. 
+% changes in brain connectivity for functional MRI. Statistica Sinica,
+% special issue on Statistical Challenges and Advances in Brain Science,
+% 2008, 18: 1253-1268.
 %
 % Regarding the region-growing algorithm for data dimension reduction :
 % P. Bellec; V. Perlbarg; S. Jbabdi; M. Pélégrini-Issac; J.L. Anton; H.
-% Benali, Identification of large-scale networks in the brain using fMRI. 
+% Benali, Identification of large-scale networks in the brain using fMRI.
 % Neuroimage, 2006, 29: 1231-1243.
 %
 % _________________________________________________________________________
@@ -288,7 +288,7 @@ if isempty(opt.grid_scales)&&~opt.flag_roi
     error('Please specify OPT.GRID_SCALES')
 end
 
-%% Region growing 
+%% Region growing
 if strcmp(file_atoms,'gb_niak_omitted')
     clear files_in_tmp files_out_tmp opt_tmp
     files_in_tmp.fmri           = fmri;
@@ -297,17 +297,17 @@ if strcmp(file_atoms,'gb_niak_omitted')
     opt_tmp                     = opt.region_growing;
     opt_tmp.folder_out          = opt.folder_out;
     opt_tmp.flag_test           = 1;
-    opt_tmp.flag_tseries        = false;    
+    opt_tmp.flag_tseries        = false;
     pipeline = niak_pipeline_region_growing(files_in_tmp,opt_tmp);
     file_atoms = pipeline.merge_part.files_out.space;
-else % Copy the atoms    
+else % Copy the atoms
     [path_f,name_f,ext_f] = niak_fileparts(file_atoms);
     pipeline.brain_atoms.command   = 'system([''cp '' files_in '' '' files_out]);';
-    pipeline.brain_atoms.files_in  = file_atoms;    
+    pipeline.brain_atoms.files_in  = file_atoms;
     pipeline.brain_atoms.files_out = [opt.folder_out 'rois' filesep 'brain_atoms' ext_f];
 end
 
-%% Extract time series 
+%% Extract time series
 files_tseries = cell([nb_subject 1]);
 if ~opt.flag_tseries
     for num_e = 1:length(cell_fmri)
@@ -320,7 +320,7 @@ if ~opt.flag_tseries
         files_in_tmp.mask = file_atoms;
         files_out_tmp.tseries{1} = [opt.folder_out 'rois' filesep 'tseries_rois_' labels_file{num_e} '.mat'];
         pipeline = psom_add_job(pipeline,name_job,'niak_brick_tseries',files_in_tmp,files_out_tmp,opt_tmp,false);
-        files_tseries{num_e} = files_out_tmp.tseries{1};        
+        files_tseries{num_e} = files_out_tmp.tseries{1};
     end
 else
     for num_s = 1:nb_subject
@@ -328,7 +328,7 @@ else
     end
 end
 
-%% Run the stability analysis 
+%% Run the stability analysis
 if ~opt.flag_roi
     clear files_in_tmp files_out_tmp opt_tmp
     for num_s = 1:nb_subject
@@ -360,18 +360,18 @@ nb_scales = size(opt.scales_maps,1);
 partition_name = ['partition_' opt.target_tseries];
 if opt.flag_ind&&~opt.flag_roi&&~isempty(opt.scales_maps)&&opt.flag_tseries_network
     for num_s = 1:nb_subject
-        clear files_in_tmp files_out_tmp opt_tmp      
+        clear files_in_tmp files_out_tmp opt_tmp
         tseries_subject = files_tseries(ismember(labels_subject,list_subject{num_s}));
         file_subject = labels_file(ismember(labels_subject,list_subject{num_s}));
         for num_sc = 1:nb_scales
             files_in_tmp.mask{num_sc} = pipeline.(['stability_maps_ind_' list_subject{num_s}]).files_out.(partition_name){num_sc};
-            label_scale = ['sci' num2str(opt.scales_maps(num_sc,1)) '_scf' num2str(opt.scales_maps(num_sc,end))];           
-            for num_r = 1:length(tseries_subject)                
+            label_scale = ['sci' num2str(opt.scales_maps(num_sc,1)) '_scf' num2str(opt.scales_maps(num_sc,end))];
+            for num_r = 1:length(tseries_subject)
                 files_out_tmp.tseries{num_r,num_sc} = [opt.folder_out 'stability_ind' filesep list_subject{num_s} filesep label_scale filesep 'tseries_ind_' opt.target_tseries '_' label_scale '_' file_subject{num_r} '.mat'];
             end
         end
         files_in_tmp.fmri = tseries_subject;
-        files_in_tmp.atoms = file_atoms;        
+        files_in_tmp.atoms = file_atoms;
         opt_tmp.flag_all             = false;
         opt_tmp.flag_std             = true;
         opt_tmp.flag_test            = false;
@@ -385,21 +385,21 @@ end
 %% Build individual time series based on group clusters
 if opt.flag_group&&~opt.flag_roi&&~isempty(opt.scales_maps)&&opt.flag_tseries_network
      for num_s = 1:nb_subject
-        clear files_in_tmp files_out_tmp opt_tmp                
+        clear files_in_tmp files_out_tmp opt_tmp
         tseries_subject = files_tseries(ismember(labels_subject,list_subject{num_s}));
-        file_subject = labels_file(ismember(labels_subject,list_subject{num_s}));        
+        file_subject = labels_file(ismember(labels_subject,list_subject{num_s}));
         for num_sc = 1:nb_scales
             sci = opt.scales_maps(num_sc,1);
             scg = opt.scales_maps(num_sc,2);
             scf = opt.scales_maps(num_sc,3);
             label_scale = ['sci' num2str(sci) '_scg' num2str(scg) '_scf' num2str(scf)];
             files_in_tmp.mask{num_sc} = pipeline.(['stability_maps_group_' label_scale]).files_out.(partition_name){1};
-            for num_r = 1:length(tseries_subject)                
+            for num_r = 1:length(tseries_subject)
                 files_out_tmp.tseries{num_r,num_sc}     = [opt.folder_out 'stability_group' filesep label_scale filesep list_subject{num_s} filesep 'tseries_group_' opt.target_tseries '_' label_scale '_' file_subject{num_r} '.mat'];
             end
         end
         files_in_tmp.fmri = tseries_subject;
-        files_in_tmp.atoms = file_atoms;        
+        files_in_tmp.atoms = file_atoms;
         opt_tmp.flag_all             = false;
         opt_tmp.flag_std             = true;
         opt_tmp.flag_test            = false;
@@ -413,21 +413,21 @@ end
 %% Build individual time series based on mixed clusters
 if opt.flag_mixed&&~opt.flag_roi&&~isempty(opt.scales_maps)&&opt.flag_tseries_network
      for num_s = 1:nb_subject
-        clear files_in_tmp files_out_tmp opt_tmp                
+        clear files_in_tmp files_out_tmp opt_tmp
         files_in_tmp.mask = pipeline.(['stability_maps_mixed_' list_subject{num_s}]).files_out.(partition_name);
         tseries_subject = files_tseries(ismember(labels_subject,list_subject{num_s}));
-        file_subject = labels_file(ismember(labels_subject,list_subject{num_s}));        
+        file_subject = labels_file(ismember(labels_subject,list_subject{num_s}));
         for num_sc = 1:nb_scales
             sci = opt.scales_maps(num_sc,1);
             scg = opt.scales_maps(num_sc,2);
             scf = opt.scales_maps(num_sc,3);
-            label_scale = ['sci' num2str(sci) '_scg' num2str(scg) '_scf' num2str(scf)];            
-            for num_r = 1:length(tseries_subject)                     
+            label_scale = ['sci' num2str(sci) '_scg' num2str(scg) '_scf' num2str(scf)];
+            for num_r = 1:length(tseries_subject)
                 files_out_tmp.tseries{num_r,num_sc}     = [opt.folder_out 'stability_mixed' filesep list_subject{num_s} filesep label_scale filesep 'tseries_mixed_' opt.target_tseries '_' label_scale '_' file_subject{num_r} '.mat'];
             end
         end
         files_in_tmp.fmri = tseries_subject;
-        files_in_tmp.atoms = file_atoms;        
+        files_in_tmp.atoms = file_atoms;
         opt_tmp.flag_all             = false;
         opt_tmp.flag_std             = true;
         opt_tmp.flag_test            = false;
@@ -438,7 +438,7 @@ if opt.flag_mixed&&~opt.flag_roi&&~isempty(opt.scales_maps)&&opt.flag_tseries_ne
     end
 end
 
-%% Run the pipeline 
+%% Run the pipeline
 if ~opt.flag_test
     psom_run_pipeline(pipeline,opt.psom);
 end

@@ -1,9 +1,9 @@
 function [order,part_order,order_c] = niak_part2order(part,S);
 % Order objects based on a partition
-% 
+%
 % SYNTAX :
 % [ORDER,PART_ORDER,ORDER_C] = NIAK_PART2ORDER(PART,S)
-% 
+%
 % _________________________________________________________________________
 % INPUTS :
 %
@@ -17,7 +17,7 @@ function [order,part_order,order_c] = niak_part2order(part,S);
 % _________________________________________________________________________
 % OUTPUTS :
 %
-% ORDER     
+% ORDER
 %       (vector) defines a permutation on the objects to maximize
 %       similarity between neighbours.
 %
@@ -30,19 +30,19 @@ function [order,part_order,order_c] = niak_part2order(part,S);
 % _________________________________________________________________________
 % COMMENTS :
 %
-% The algorithm is as follows. First the average similarity between 
+% The algorithm is as follows. First the average similarity between
 % clusters is derived. The cluster with largest difference between his most
 % similar alter-cluster and his second most similar alter-cluster is
 % selected to initialize a chain. Iteratively, for each element of the
 % chain, the most similar alter-cluster is selected as the next element of
 % the chain, after eliminating all preceding member of the chain from the
 % competition.
-% 
-% Then, for each cluster D and for each point x in D, let s(x,C1) and 
-% s(x,C2) be the average similarity between x and the points in C1 and 
-% C2 respecitvely, where C1, C2 are the "neighbours" of cluster D. The 
-% values s(x,C1)-s(x,C2) are sorted (ascending order) and define the 
-% order of points within D. Note that if C1 or C2 are undefined (D is 
+%
+% Then, for each cluster D and for each point x in D, let s(x,C1) and
+% s(x,C2) be the average similarity between x and the points in C1 and
+% C2 respecitvely, where C1, C2 are the "neighbours" of cluster D. The
+% values s(x,C1)-s(x,C2) are sorted (ascending order) and define the
+% order of points within D. Note that if C1 or C2 are undefined (D is
 % the first or the last cluster), y1 or y2 is defined as 0.
 %
 % If some elements of PART equal 0, these points will be absent of ORDER
@@ -76,7 +76,7 @@ function [order,part_order,order_c] = niak_part2order(part,S);
 
 if max(part)==1
     order = 1:length(part);
-    order_c = 1;    
+    order_c = 1;
     part_order = part;
     return
 end
@@ -91,12 +91,12 @@ if length(unique(part(part>0)))~=max(part(part>0))
     else
         tmp(unique(part)) = ind;
         part = tmp(part);
-    end                
+    end
 end
 nb_classes = max(part);
 N = sum(part>0);
 
-%% First, sort clusters 
+%% First, sort clusters
 part_order = zeros([1 length(part)]);
 S_c = zeros([nb_classes nb_classes]);
 for num_c1 = 1:nb_classes
@@ -107,7 +107,7 @@ for num_c1 = 1:nb_classes
     end
 end
 order_c = zeros([1 nb_classes]);
-for num_c = 1:(nb_classes-1)    
+for num_c = 1:(nb_classes-1)
     if num_c == 1
         val = sort(S_c,1,'descend');
         val = val(1,:)-val(2,:);
@@ -119,14 +119,14 @@ for num_c = 1:(nb_classes-1)
         part_order(part==ind2) = num_c+1;
     else
         ind1 = order_c(num_c);
-        [val,ind2] = max(S_c(ind1,:));        
+        [val,ind2] = max(S_c(ind1,:));
         order_c(num_c+1) = ind2;
         part_order(part==ind2) = num_c+1;
-    end    
+    end
     S_c(ind1,:) = -Inf;
     S_c(:,ind1) = -Inf;
 end
-        
+
 %% Now sort points in clusters
 order = zeros([1 N]);
 nb_point = 0;

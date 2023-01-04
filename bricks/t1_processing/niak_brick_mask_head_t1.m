@@ -7,15 +7,15 @@ function [files_in,files_out,opt] = niak_brick_mask_head_t1(files_in,files_out,o
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN        
+% FILES_IN
 %   (string) the name of a file with a t1 volume.
 %
-% FILES_OUT   
-%   (string, default <BASE FILES_IN>_mask.<EXT FILES_IN>) 
+% FILES_OUT
+%   (string, default <BASE FILES_IN>_mask.<EXT FILES_IN>)
 %   the name of a file with a binary mask of the brain.
-%   
-% OPT           
-%   (structure) with the following fields.  
+%
+% OPT
+%   (structure) with the following fields.
 %
 %   NB_CLUSTERS_MAX
 %      (integer, default 10) the number of largest connected
@@ -25,26 +25,26 @@ function [files_in,files_out,opt] = niak_brick_mask_head_t1(files_in,files_out,o
 %      (real value, default 15) the distance applied to expand /
 %      shrink the head mask.
 %
-%   FOLDER_OUT 
-%      (string, default: path of FILES_IN) If present, all default 
-%      outputs will be created in the folder FOLDER_OUT. The folder 
+%   FOLDER_OUT
+%      (string, default: path of FILES_IN) If present, all default
+%      outputs will be created in the folder FOLDER_OUT. The folder
 %      needs to be created beforehand.
 %
-%   FLAG_VERBOSE 
-%      (boolean, default 1) if the flag is 1, then the function 
+%   FLAG_VERBOSE
+%      (boolean, default 1) if the flag is 1, then the function
 %      prints some infos during the processing.
 %
-%   FLAG_TEST 
-%      (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%      do anything but update the default values in FILES_IN, 
+%   FLAG_TEST
+%      (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%      do anything but update the default values in FILES_IN,
 %      FILES_OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_MASK_HEAD_T1, NIAK_BRICK_T1_PREPROCESS
@@ -52,7 +52,7 @@ function [files_in,files_out,opt] = niak_brick_mask_head_t1(files_in,files_out,o
 % _________________________________________________________________________
 % COMMENTS:
 %
-% The steps of the segmentation are the following : 
+% The steps of the segmentation are the following :
 %
 %   1. Extraction of a rough mask using intensity thresholding with the
 %   Ostu algorithm as implemented in NIAK_MASK_BRAIN
@@ -69,7 +69,7 @@ function [files_in,files_out,opt] = niak_brick_mask_head_t1(files_in,files_out,o
 %
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2010.
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2010-2013
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -165,7 +165,7 @@ opt_mask = rmfield(opt,{'folder_out','flag_test'});
 opt_mask.voxel_size = hdr.info.voxel_size;
 mask = niak_mask_head_t1(anat,opt_mask);
 
-%% Writting output 
+%% Writting output
 if flag_verbose
     fprintf('Writting the mask in %s ...\n',files_out);
 end

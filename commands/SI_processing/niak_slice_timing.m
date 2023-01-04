@@ -71,9 +71,9 @@ function [vol_a,opt] = niak_slice_timing(vol,opt)
 % Adapted to NIAK format and patched to avoid loops by P Bellec, MNI 2008.
 %
 % Copyright (C) Wellcome Department of Imaging Neuroscience 2005
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Montreal Neurological Institute, 2008-2010.
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2010-2015
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -200,5 +200,5 @@ switch interpolation
     otherwise
 
         fprintf('Unkown interpolation method : %s',interpolation)
-        
+
 end

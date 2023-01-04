@@ -4,50 +4,50 @@ function rho_vol = niak_smooth_weighted_vol(rho_vol,vol,mask,opt)
 %
 % Estimates an autoregressive model for each voxel time course and gives an
 % approximate value for the fwhm based on the model residuals (optional).
-% 
+%
 % SYNTAX:
 % [RHO_VOL] = NIAK_AUTOREGRESSIVE(RHO_VOL,VOL,MASK,OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% RHO_VOL      
+% RHO_VOL
 %       (4D array) 3D + numlags dataset
 %       Estimated parameters of the autoregressive lineal model.
-% VOL         
+% VOL
 %       (4D array) a 3D+t dataset
 %
 % MASK
-%       (3D volume, default all voxels) a binary mask of the voxels that 
-%       will be included in the analysis. 
+%       (3D volume, default all voxels) a binary mask of the voxels that
+%       will be included in the analysis.
 %
-% OPT         
+% OPT
 %       structure with the following fields :
 %
-%       EXCLUDE: 
-%         is a list of frames that should be excluded from the analysis. 
+%       EXCLUDE:
+%         is a list of frames that should be excluded from the analysis.
 %         Default is [].
 %
-%       FWHM     
-%         3-dimensional vector of FWHM values  
+%       FWHM
+%         3-dimensional vector of FWHM values
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% RHO_VOL      
+% RHO_VOL
 %       (4D array) 3D + numlags dataset
 %       Smoothed autoregressive parameters
 % _________________________________________________________________________
 % COMMENTS
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -109,14 +109,14 @@ vol = vol(:,:,:,keep(1));
 vol = vol.*mask;
 
 rho_vol = reshape(rho_vol,[numpix nz numlags]);
-      
+
 mask_vol=zeros(numpix,nz);
 for slice=1:nz
     data = vol(:,:,slice);
-    mask_vol(:,slice)=reshape(conv2(ker_x,ker_y,data,'same'),numpix,1);  
+    mask_vol(:,slice)=reshape(conv2(ker_x,ker_y,data,'same'),numpix,1);
     for lag=1:numlags
         rho_slice = reshape(rho_vol(:,slice,lag),nx,ny).*data;
-        rho_vol(:,slice,lag) = reshape(conv2(ker_x,ker_y,rho_slice,'same'),numpix,1);   
+        rho_vol(:,slice,lag) = reshape(conv2(ker_x,ker_y,rho_slice,'same'),numpix,1);
     end
 end
 % Smoothing rho betwen slices is done by straight matrix multiplication

@@ -11,20 +11,20 @@ function [files_in,files_out,opt] = niak_brick_connectome(files_in,files_out,opt
 %   (structure) with the following fields :
 %
 %   FMRI
-%      (string or cell of strings) one or multiple fMRI datasets. 
+%      (string or cell of strings) one or multiple fMRI datasets.
 %
 %   MASK
 %      (string or cell of strings) one or multiple brain parcellations.
 %
 % FILES_OUT
-%   (string or cell of strings) one entry per mask. Each entry is a .mat file 
+%   (string or cell of strings) one entry per mask. Each entry is a .mat file
 %   with the following variables:
 %
-%   CONN 
+%   CONN
 %      (vector) a vectorized version of the connectome
 %
 %   G
-%      (vector) a binarized version of the connectome (see OPT.THRESH below for 
+%      (vector) a binarized version of the connectome (see OPT.THRESH below for
 %      options of binarization)
 %
 %   THRESH
@@ -38,12 +38,12 @@ function [files_in,files_out,opt] = niak_brick_connectome(files_in,files_out,opt
 %      (string) how the connectome has been vectorized (see comments below)
 %
 %   IND_ROI
-%      (vector) the Nth row/column of CONN corresponds to the region IND_ROI(n) 
+%      (vector) the Nth row/column of CONN corresponds to the region IND_ROI(n)
 %      in the mask.
 %
 % OPT
 %   (structure) with the following fields:
-%       
+%
 %   TYPE
 %      (string, default 'Z') the type of connectome. Available options:
 %         'S'  : covariance
@@ -56,26 +56,26 @@ function [files_in,files_out,opt] = niak_brick_connectome(files_in,files_out,opt
 %
 %   THRESH
 %      (structure, optional) with the following fields:
-%      THRESH.TYPE (string, default 'sparsity_pos') type of binarization applied to the 
+%      THRESH.TYPE (string, default 'sparsity_pos') type of binarization applied to the
 %         connectome to generate an undirected graph. Available options:
 %         'sparsity' keep a proportion of the largest connection (in absolute value)
 %         'sparsity_pos' keep a proportion of the largest connection (positive only)
 %         'cut_off' a cut-off on connectivity (in absolute value)
-%         'cut_off_pos' a cut-off on connectivity (only positive) 
-%      THRESH.PARAM (depends on OPT.THRESH.TYPE) the parameter of the 
+%         'cut_off_pos' a cut-off on connectivity (only positive)
+%      THRESH.PARAM (depends on OPT.THRESH.TYPE) the parameter of the
 %         thresholding. The actual definition depends of THRESH.TYPE:
 %         'sparsity' (scalar, default 0.2) percentage of connections
 %         'sparsity_pos' (scalar, default 0.2) percentage of connections
 %         'cut_off' (scalar, default 0.25) the cut-off
-%         'cut_off_pos' (scalar, default 0.25) the cut-off       
-%       
+%         'cut_off_pos' (scalar, default 0.25) the cut-off
+%
 %   FLAG_TEST
-%      (boolean, default: 0) if FLAG_TEST equals 1, the brick does not do 
-%      anything but update the default values in FILES_IN, FILES_OUT and 
+%      (boolean, default: 0) if FLAG_TEST equals 1, the brick does not do
+%      anything but update the default values in FILES_IN, FILES_OUT and
 %      OPT.
 %
 %   FLAG_VERBOSE
-%      (boolean, default: 1) If FLAG_VERBOSE == 1, write messages 
+%      (boolean, default: 1) If FLAG_VERBOSE == 1, write messages
 %      indicating progress.
 %
 % _________________________________________________________________________
@@ -91,14 +91,14 @@ function [files_in,files_out,opt] = niak_brick_connectome(files_in,files_out,opt
 % _________________________________________________________________________
 % COMMENTS:
 %
-% If multiple datasets are specified, the connectomes are generated independently 
-% for each dataset and then averaged. 
+% If multiple datasets are specified, the connectomes are generated independently
+% for each dataset and then averaged.
 %
-% If CODE is 'vec', use NIAK_VEC2MAT to get back the square form. 
+% If CODE is 'vec', use NIAK_VEC2MAT to get back the square form.
 % If CODE is 'lvec', use NIAK_VEC2LMAT to get back the square form.
 %
 % _________________________________________________________________________
-% Copyright (c) Pierre Bellec, Christian L. Dansereau, 
+% Copyright (c) Pierre Bellec, Christian L. Dansereau,
 % Centre de recherche de l'Institut universitaire de griatrie de Montral, 2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -198,7 +198,7 @@ all_hdr     = cell(nb_mask,1);
 if opt.flag_verbose
     fprintf('Generating ''%s'' connectomes ...\n',type)
 end
-for num_f = 1:nb_fmri    
+for num_f = 1:nb_fmri
     if opt.flag_verbose
         fprintf('Reading fMRI dataset %s ...\n',files_in.fmri{num_f});
     end
@@ -213,8 +213,8 @@ for num_f = 1:nb_fmri
                 fprintf('Reading mask %s ...\n',files_in.mask{num_m});
             end
             [all_hdr{num_m},all_mask{num_m}] = niak_read_vol(files_in.mask{num_m});
-        end             
-        hdr2 = all_hdr{num_m};        
+        end
+        hdr2 = all_hdr{num_m};
         [nx2,ny2,nz2] = size(all_mask{num_m});
         if ~psom_cmp_var(hdr.info.mat,hdr2.info.mat)||(nx~=nx2)||(ny~=ny2)||(nz~=nz2)
             error('%s and %s should be in the same space and spatial grid',files_in.fmri{num_f},files_in.mask{num_m});
@@ -232,24 +232,24 @@ for num_f = 1:nb_fmri
             case 'S'
                 conn = niak_build_srup(tseries,true);
                 code = 'lvec';
-            case 'R' 
+            case 'R'
                 [tmp,conn] = niak_build_srup(tseries,true);
                 code = 'vec';
-            case 'Z' 
+            case 'Z'
                 [tmp,conn] = niak_build_srup(tseries,true);
                 conn = niak_fisher(conn);
                 code = 'vec';
             case 'U'
                 [tmp,tmp2,conn] = niak_build_srup(tseries,true);
                 code = 'lvec';
-            case 'P' 
+            case 'P'
                 [tmp,tmp2,tmp3,conn] = niak_build_srup(tseries,true);
                 code = 'vec';
             case {'A','AZ'}
                 [tmp,conn] = niak_build_srup(tseries,false);
                 tseries_n = niak_build_tseries(vol,all_mask{num_m},struct('correction','mean_var'));
                 ir = var(tseries_n,[],1)';
-                N = niak_build_size_roi (all_mask{num_m});       
+                N = niak_build_size_roi (all_mask{num_m});
                 mask_0 = (N==0)|(N==1);
                 N(mask_0) = 10;
                 ir = ((N.^2).*ir-N)./(N.*(N-1));
@@ -283,7 +283,7 @@ for num_o = 1:length(files_out)
         % Skip diagonal elements in binary graphs when average intra-network connectivity was calculated
         G = niak_mat2lvec(niak_vec2mat(niak_build_graph(niak_mat2vec(niak_lvec2mat(conn)),thresh),false));
     else
-        G = niak_build_graph(conn,thresh);    
+        G = niak_build_graph(conn,thresh);
     end
     ind_roi = all_ind_roi{num_o};
     save(files_out{num_o},'conn','G','ind_roi','type','thresh','code');

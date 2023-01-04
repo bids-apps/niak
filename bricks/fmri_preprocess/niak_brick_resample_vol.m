@@ -1,29 +1,29 @@
 function [files_in,files_out,opt] = niak_brick_resample_vol(files_in,files_out,opt)
-% Resample a 3D/4D volume with a transformation to a target space. 
+% Resample a 3D/4D volume with a transformation to a target space.
 %
 % [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_RESAMPLE_VOL(FILES_IN,FILES_OUT,OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-%   FILES_IN      
+%   FILES_IN
 %       (structure) with the following fields :
 %
-%       SOURCE 
+%       SOURCE
 %           (string) name of the file to resample (can be 3D+t).
 %
-%       TARGET 
+%       TARGET
 %           (string, default SOURCE) name of the file defining space.
 %
-%       TRANSFORMATION 
-%           (string or cell of strings, default identity) the name of a XFM 
-%           transformation file to apply on SOURCE. If it is a cell of 
-%           string, each entry is assumed to correspond to one volume of 
-%           SOURCE (for 4D file). 
-%           TRANSFORMATION can also be a .mat file with one variable TRANSF 
-%           containing a 4*4 matrix coding for an affine transformation. In 
-%           case TRANSF has three dimensions and the source is 4D, the Ith 
-%           volume will be resampled using TRANSF(:,:,I). The name of the 
+%       TRANSFORMATION
+%           (string or cell of strings, default identity) the name of a XFM
+%           transformation file to apply on SOURCE. If it is a cell of
+%           string, each entry is assumed to correspond to one volume of
+%           SOURCE (for 4D file).
+%           TRANSFORMATION can also be a .mat file with one variable TRANSF
+%           containing a 4*4 matrix coding for an affine transformation. In
+%           case TRANSF has three dimensions and the source is 4D, the Ith
+%           volume will be resampled using TRANSF(:,:,I). The name of the
 %           variable can be modified (see OPT.TRANSF_NAME below).
 %
 %       TRANSFORMATION_STEREO
@@ -31,21 +31,21 @@ function [files_in,files_out,opt] = niak_brick_resample_vol(files_in,files_out,o
 %           4D dataset. For each volume, TRANSFORMATION_STEREO is applied after
 %           TRANSFORMATION.
 %
-%   FILES_OUT 
-%       (string,default <BASE_SOURCE>_res) the name of the output resampled 
+%   FILES_OUT
+%       (string,default <BASE_SOURCE>_res) the name of the output resampled
 %       volume.
 %
-%   OPT           
+%   OPT
 %       (structure, optional) has the following fields:
 %
-%       INTERPOLATION 
-%          (string, default 'trilinear') the spatial interpolation method. 
+%       INTERPOLATION
+%          (string, default 'trilinear') the spatial interpolation method.
 %          Available options : 'trilinear', 'tricubic', 'nearest_neighbour'
 %          ,'sinc'.
 %
 %       FLAG_SKIP
 %           (boolean, default false) if FLAG_SKIP==1, the brick does not do
-%           anything, just copy the input on the output. 
+%           anything, just copy the input on the output.
 %
 %       FLAG_KEEP_RANGE
 %           (boolean, default 0) if the flag is on, the range of values of
@@ -53,50 +53,50 @@ function [files_in,files_out,opt] = niak_brick_resample_vol(files_in,files_out,o
 %           range will be adapted to the new range of the interpolated
 %           data.
 %
-%       FLAG_TFM_SPACE 
-%           (boolean, default 0) if FLAG_TFM_SPACE is 0, the transformation 
-%           is applied and the volume is resampled in the target space. 
-%           If FLAG_TFM_SPACE is 1, the volume is resampled in such a way 
-%           that there is no rotations anymore between voxel and world 
+%       FLAG_TFM_SPACE
+%           (boolean, default 0) if FLAG_TFM_SPACE is 0, the transformation
+%           is applied and the volume is resampled in the target space.
+%           If FLAG_TFM_SPACE is 1, the volume is resampled in such a way
+%           that there is no rotations anymore between voxel and world
 %           space.  In this case, the target space is only
 %           used to set the resolution, unless this parameter was
 %           additionally specified using OPT.VOXEL_SIZE, in which case the
 %           target space is not used at all (e.g. use the source file).
 %
-%       FLAG_INVERT_TRANSF 
+%       FLAG_INVERT_TRANSF
 %           (boolean, default 0) if FLAG_INVERT_TRANSF is 1,
 %           the specified transformation is inverted before being applied.
 %
 %       FLAG_ADJUST_FOV
-%           (boolean, default 0) if FLAG_ADJUST_FOV is true and 
-%           FLAG_TFM_SPACE is true, The field of view is adapted to fit the 
+%           (boolean, default 0) if FLAG_ADJUST_FOV is true and
+%           FLAG_TFM_SPACE is true, The field of view is adapted to fit the
 %           brain in the source space. Otherwise the new FOV will include
 %           every voxel of the initial FOV
 %
-%       VOXEL_SIZE 
-%           (vector 1*3, default same as target space) If VOXEL_SIZE is set 
-%           to 0, the resolution for resampling will be the same as the 
-%           target space. If VOXEL_SIZE is set to -1, the resolution will 
-%           be the same as source space. Otherwise, the specified 
-%           resolution will be used. If VOXEL_SIZE is a scalar, an isotropic 
+%       VOXEL_SIZE
+%           (vector 1*3, default same as target space) If VOXEL_SIZE is set
+%           to 0, the resolution for resampling will be the same as the
+%           target space. If VOXEL_SIZE is set to -1, the resolution will
+%           be the same as source space. Otherwise, the specified
+%           resolution will be used. If VOXEL_SIZE is a scalar, an isotropic
 %           voxel size will be used.
 %
 %       TRANSF_NAME
-%           (string, default TRANSF) the name of the variable for affine 
+%           (string, default TRANSF) the name of the variable for affine
 %           transfomations in mat files (see comments below).
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, all default 
-%           outputs will be created in the folder FOLDER_OUT. The folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, all default
+%           outputs will be created in the folder FOLDER_OUT. The folder
 %           needs to be created beforehand.
 %
-%       FLAG_TEST 
-%           (boolean, default: 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN and 
+%       FLAG_TEST
+%           (boolean, default: 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN and
 %           FILES_OUT.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function prints 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function prints
 %           some infos during the processing.
 %
 %
@@ -116,12 +116,12 @@ function [files_in,files_out,opt] = niak_brick_resample_vol(files_in,files_out,o
 % images, i.e. fMRI datasets, while MINCRESAMPLE works only on 3D volumes.
 %
 % NOTE 2:
-% The TRANSF variables are standard 4*4 matrix array representation of 
-% an affine transformation [M T ; 0 0 0 1] for (y=M*x+T) 
+% The TRANSF variables are standard 4*4 matrix array representation of
+% an affine transformation [M T ; 0 0 0 1] for (y=M*x+T)
 %
 % Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,
 % Montreal Neurological Institute, 2008-2010
-% Centre de recherche de l'institut de griatrie de Montral, 
+% Centre de recherche de l'institut de griatrie de Montral,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2010-2014
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -205,7 +205,7 @@ end
 
 if opt.flag_skip
     instr_copy = cat(2,'cp ',files_in.source,' ',files_out);
-    
+
     [status,msg] = system(instr_copy);
     if status~=0
         error(msg)
@@ -225,7 +225,7 @@ if ~ismember(ext_s,{'.mnc','.mnc.gz'})
     flag_conv = true;
     in_source = [path_tmp 'source.mnc'];
     niak_brick_copy(files_in.source,in_source,struct('flag_fmri',true));
-else  
+else
     in_source = files_in.source;
 end
 if ~ismember(ext_t,{'.mnc','.mnc.gz'})
@@ -264,12 +264,12 @@ folder_tmp = niak_path_tmp('_res');
 
 if ~isempty(files_in.transformation)
     [path_t,name_t,ext_t] = niak_fileparts(files_in.transformation);
-    
+
     if strcmp(ext_t,'.mat')
         if opt.flag_verbose
             fprintf('\n Converting transformation %s into XFM format ...\n',files_in.transformation);
         end
-        
+
         data = load(files_in.transformation);
         transf = data.(opt.transf_name);
         nb_transf = size(transf,3);
@@ -336,18 +336,18 @@ nz2 = hdr_target.info.dimensions(3);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if min(voxel_size(:)==abs(step2(:)))==0
-    
+
     if ~opt.flag_tfm_space % If a change of resolution occurs, but there is no resample-to-self
-         
+
         %% Setting up the new number of voxels
         nx3 = ceil((abs(step2(1))/voxel_size(1))*nx2);
         ny3 = ceil((abs(step2(2))/voxel_size(2))*ny2);
         nz3 = ceil((abs(step2(3))/voxel_size(3))*nz2);
-        
+
         %% Creating new header
         hdr_target2 = hdr_target;
         hdr_target2.info.mat = niak_hdr_minc2mat(dircos2,(sign(step2(:)).*voxel_size(:))',start2);
-        hdr_target2.info.dimensions = [nx3,ny3,nz3];        
+        hdr_target2.info.dimensions = [nx3,ny3,nz3];
 
         %% Creating a new target
         file_target_tmp = [folder_tmp 'target.mnc'];
@@ -363,23 +363,23 @@ if min(voxel_size(:)==abs(step2(:)))==0
     end
 end
 
-if opt.flag_tfm_space 
-    
+if opt.flag_tfm_space
+
     if opt.flag_verbose
         fprintf('\n Resampling target space to get rid of "voxel-to-world" transformation (except voxel size)...\n');
     end
-    
-    %% Extract the brain in native space 
-    
+
+    %% Extract the brain in native space
+
     [hdr_source,vol_source] = niak_read_vol(files_in.source);
     if opt.flag_adjust_fov
         mask_source = niak_mask_brain(mean(abs(vol_source),4));
     else
         mask_source = true(size(vol_source));
     end
-        
+
     clear vol_source
-    
+
     %% Convert the brain voxel coordinates in source space into world
     %% coordinates
 
@@ -389,36 +389,36 @@ if opt.flag_tfm_space
     clear ind_source xsource ysource zsource
     if ~isempty(files_in.transformation)
         if ischar(files_in.transformation)
-            transf = niak_read_transf(files_in.transformation);        
+            transf = niak_read_transf(files_in.transformation);
         else
-            transf = niak_read_transf(files_in.transformation{1});        
+            transf = niak_read_transf(files_in.transformation{1});
         end
         if opt.flag_invert_transf
             transf = transf^(-1);
         end
-        coord_world = ceil(transf*hdr_source.info.mat*vox_source);            
+        coord_world = ceil(transf*hdr_source.info.mat*vox_source);
     else
         coord_world = ceil(hdr_source.info.mat*vox_source);
     end
     min_coord = min(coord_world(1:3,:),[],2)-3*voxel_size(:);
     max_coord = max(coord_world(1:3,:),[],2)+3*voxel_size(:);
-    
+
     %% Setting up the new number of voxels
     nx3 = ceil((max_coord(1)-min_coord(1))/voxel_size(1));
     ny3 = ceil((max_coord(2)-min_coord(2))/voxel_size(2));
     nz3 = ceil((max_coord(3)-min_coord(3))/voxel_size(3));
-    
+
     %% Setting up new voxel to world coordinates
     start3 = min_coord;
     voxel_size = abs(voxel_size);
     dircos = [1 0 0 0 1 0 0 0 1];
-    
-    file_target_tmp = [folder_tmp 'target.mnc'];   
+
+    file_target_tmp = [folder_tmp 'target.mnc'];
     instr_target = cat(2,'mincresample ',files_in.target,' ',file_target_tmp,' -clobber -dircos ',num2str(dircos(:)'),' -step ',num2str(voxel_size),' -start ',num2str(start3'),' -trilinear -nelements ',num2str(nx3),' ',num2str(ny3),' ',num2str(nz3));
     [tmp,str_tmp] = system(instr_target);
 
     %% Update the target space information
-    hdr_target = niak_read_vol(file_target_tmp);        
+    hdr_target = niak_read_vol(file_target_tmp);
     nx2 = hdr_target.info.dimensions(1);
     ny2 = hdr_target.info.dimensions(2);
     nz2 = hdr_target.info.dimensions(3);
@@ -435,15 +435,15 @@ end
 
 if nt1 == 1
 
-    %% Case of a single 3D volume    
+    %% Case of a single 3D volume
     if opt.flag_verbose
         fprintf('\n Resampling source on target ...\n');
     end
 
-    [path_f,name_f,ext_f,flag_zip,ext_short] = niak_fileparts(files_out);        
+    [path_f,name_f,ext_f,flag_zip,ext_short] = niak_fileparts(files_out);
     files_out = [path_f,filesep,name_f,ext_short];
-        
-    instr_resample = ['mincresample ',instr_range,files_in.source,' ',files_out];    
+
+    instr_resample = ['mincresample ',instr_range,files_in.source,' ',files_out];
     if ~isempty(files_in.transformation)
         if ischar(files_in.transformation)
             instr_resample = [instr_resample ' -transform ',files_in.transformation];
@@ -454,23 +454,23 @@ if nt1 == 1
     if opt.flag_invert_transf
         instr_resample = [instr_resample ' -invert_transformation'];
     end
-    instr_resample = [instr_resample ' -',opt.interpolation,' -like ',file_target_tmp,' -clobber'];            
-    [status,msg] = system(instr_resample);    
+    instr_resample = [instr_resample ' -',opt.interpolation,' -like ',file_target_tmp,' -clobber'];
+    [status,msg] = system(instr_resample);
     if status~=0
         error(msg);
     end
-    
+
     if flag_zip
         system([GB_NIAK.zip ' ' files_out]);
     end
 
 else
-    
+
     %% Case of 3D + t data
     if opt.flag_verbose
         fprintf('\n Resampling source on target, volume : ');
-    end        
-        
+    end
+
     file_func_tmp = [folder_tmp 'func.mnc']; % temporary file for input
     file_func_tmp2 = [folder_tmp 'func2.mnc']; % temporary file for output
     file_transf_tmp = [folder_tmp 'transf.xfm']; % temporary file for transform
@@ -483,15 +483,15 @@ else
     end
     vol_resampled = zeros([nx2,ny2,nz2,nt1]); % initialize a resampled space
     hdr_source.file_name = file_func_tmp;
-    
+
     for num_t = 1:nt1
-        
+
         if opt.flag_verbose
             fprintf('%i ',num_t)
         end
 
         niak_write_vol(hdr_source,vol_source(:,:,:,num_t)); % write one temporary volume
-        
+
         %% Resample
         instr_resample = ['mincresample ',instr_range,file_func_tmp,' ',file_func_tmp2];
         if ~isempty(files_in.transformation)
@@ -522,32 +522,32 @@ else
         if status~=0
             error(msg);
         end
-        
+
         [hdr_target,vol_tmp] = niak_read_vol(file_func_tmp2);
         vol_resampled(:,:,:,num_t) = vol_tmp;
-        
+
     end
     clear vol_source
-    
-        
+
+
     %% write the resampled volumes in a 3D+t dataset
     if opt.flag_verbose
         fprintf('Writing the 3D+t output\n')
     end
-    
+
     hdr_target.file_name = files_out;
     hdr_target.info.tr = hdr_source.info.tr;
     hdr_target.details.time = hdr_source.details.time;
     if length(fieldnames(extra))>1
         hdr_target.extra = extra;
     end
-    niak_write_vol(hdr_target,vol_resampled);    
-    
+    niak_write_vol(hdr_target,vol_resampled);
+
     %% clean the temporary files
     if opt.flag_verbose
         fprintf('Cleaning temporary files\n')
     end
-    
+
 end
 
 %% Clean temporary stuff

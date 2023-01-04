@@ -17,13 +17,13 @@ function vol = niak_tseries2vol(tseries,mask)
 %       MASK (in the same order as in find(MASK)).
 %
 % MASK
-%       (3D volume, default all voxels) a binary mask of the voxels that 
+%       (3D volume, default all voxels) a binary mask of the voxels that
 %       are included in the time*space array.
 %
 % _________________________________________________________________________
 % OUTPUTS :
 %
-% VOL         
+% VOL
 %       (4D array) A 3D+t dataset.
 %
 % _________________________________________________________________________
@@ -32,7 +32,7 @@ function vol = niak_tseries2vol(tseries,mask)
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
-% Keywords : 
+% Keywords :
 
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal

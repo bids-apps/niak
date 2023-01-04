@@ -1,8 +1,8 @@
 function [tseries_f,extras] = niak_filter_tseries(tseries,opt)
-% Filter time series using Discrete-Cosine (DC) least-square linear 
+% Filter time series using Discrete-Cosine (DC) least-square linear
 % regression.
 %
-% SYNTAX: TSERIES_F = NIAK_FILTER_TSERIES(TSERIES,OPT) 
+% SYNTAX: TSERIES_F = NIAK_FILTER_TSERIES(TSERIES,OPT)
 %
 % INPUTS:
 %   TSERIES (2D array, size T*N) a time*space array of time series.
@@ -11,7 +11,7 @@ function [tseries_f,extras] = niak_filter_tseries(tseries,opt)
 %      filtering. opt.hp = -Inf means no high-pass filtering.
 %   OPT.LP (real, default Inf) the cut-off frequency for low pass
 %      filtering. opt.lp = Inf means no low-pass filtering.
-%   OPT.FLAG_MEAN (boolean, default: 0) if FLAG_MEAN is 1, the funtion does 
+%   OPT.FLAG_MEAN (boolean, default: 0) if FLAG_MEAN is 1, the funtion does
 %      leave the mean of the time series after filtering (it is otherwise
 %      suppressed as soon as a high-pass filter is applied with a
 %      threshold greater than 0).
@@ -20,20 +20,20 @@ function [tseries_f,extras] = niak_filter_tseries(tseries,opt)
 %   TSERIES_F (2D array, size T*N) a time*space array of filtered tseries.
 %   EXTRAS (structure) with the following fields :
 %      TSERIES_DC_LOW (2D array, size T*Kl) a (time*nb cosines)
-%         array of discrete cosines covering the frequency window that is 
+%         array of discrete cosines covering the frequency window that is
 %         to be suppressed in high-pass filtering.
 %      BETA_DC_LOW (2D ARRAY, size Kl*N) a (nb cosines * space)
 %         array such that BETA_DC_LOW(k,n) is the weight of the
 %         low-frequency discrete cosine number k at location n.
-%      FREQ_DC_LOW (vector, size Kl*1) FREQ_DC_LOW(k) is the frequency 
+%      FREQ_DC_LOW (vector, size Kl*1) FREQ_DC_LOW(k) is the frequency
 %         associated to cosine TSERIES_DC_LOW(:,k)
 %      TSERIES_DC_HIGH (2D array, size T*Kh) a (time*nb cosines)
-%         array of discrete cosines covering the frequency window that is 
-%         to be suppressed in low-pass filtering.  
+%         array of discrete cosines covering the frequency window that is
+%         to be suppressed in low-pass filtering.
 %      BETA_DC_HIGH (2D ARRAY, size Kl*N) a (nb cosines * space)
 %         array such that BETA_DC_HIGH(k,n) is the weight of the
 %         high-frequency discrete cosine number k at location n.
-%      FREQ_DC_HIGH (vector, size Kl*1) FREQ_DC_HIGH(k) is the frequency 
+%      FREQ_DC_HIGH (vector, size Kl*1) FREQ_DC_HIGH(k) is the frequency
 %         associated to cosine TSERIES_DC_HIGH(:,k)
 %
 % EXAMPLES:
@@ -59,7 +59,7 @@ function [tseries_f,extras] = niak_filter_tseries(tseries,opt)
 %
 % Copyright (c) Pierre Bellec
 % Montreal Neurological Institute, 2008-2010
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2010-2014
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -98,9 +98,9 @@ if ~(isinf(opt.lp)==1)&&((opt.lp<0)||(opt.lp>(1/(2*tr))))
     error('niak:SI_processing : Please specify a cut-off frequency for low-pass filtering that is larger than 0 and smaller than the Nyquist frequency %1.2f Hz\n',1/(2*tr))
     return
 end
-    
+
 if ~(isinf(opt.hp)==1)&&((opt.hp<0)||(opt.hp>(1/(2*tr))))
-    error('niak:SI_processing : Please specify a cut-off frequency for high-pass filtering that is larger than 0 and smaller than the Nyquist frequency %1.2f Hz\n',1/(2*tr))   
+    error('niak:SI_processing : Please specify a cut-off frequency for high-pass filtering that is larger than 0 and smaller than the Nyquist frequency %1.2f Hz\n',1/(2*tr))
 end
 
 nt = size(tseries,1);

@@ -11,7 +11,7 @@ This pipeline first aims at reducing various noise sources that compromise the i
 
 ## How to report errors and ask questions
 
-If the problems seems to be related to the app itself, you can always create a [new issue on our github page.](https://github.com/BIDS-Apps/niak/issues)  
+If the problems seems to be related to the app itself, you can always create a [new issue on our github page.](https://github.com/BIDS-Apps/niak/issues)
 If is seems to come from NIAK itself, please [report you issues on the NIAK github page](https://github.com/SIMEXP/niak/issues)
 
 ## Usage

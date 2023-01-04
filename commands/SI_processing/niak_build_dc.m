@@ -5,39 +5,39 @@ function [tseries_dc,list_freq] = niak_build_dc(opt)
 %
 % Create a Discrete-Cosine (DC) basis of signals which cover a given
 % frequency window for a given sampling frequency and signal length.
-% 
+%
 % SYNTAX:
 % TSERIES_DC = NIAK_BUILD_DC(OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% OPT           
+% OPT
 %       (structure) with the following fields :
 %
-%       TR   
-%           (real) the repetition time of the time series (s) which is the 
+%       TR
+%           (real) the repetition time of the time series (s) which is the
 %           inverse of the sampling frequency (Hz).
 %
-%       NT   
-%           (integer) the length of the time series. 
+%       NT
+%           (integer) the length of the time series.
 %
-%       TYPE_FW 
+%       TYPE_FW
 %           (string) the type of frequency window (either 'low' or 'high')
 %
-%       CUTOFF 
-%           (real value) the cut-off frequency. For low window, the window 
-%           is [0,CUTOFF], and for a high window is is [CUTOFF,NF], where 
+%       CUTOFF
+%           (real value) the cut-off frequency. For low window, the window
+%           is [0,CUTOFF], and for a high window is is [CUTOFF,NF], where
 %           NF is the Nyquist frequency.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% TSERIES_DC   
+% TSERIES_DC
 %       (2D array) each column is a discrete cosine.
 %
-% LIST_FREQ    
-%       (VECTOR) LIST_FREQ(i) is the frequency associated to 
+% LIST_FREQ
+%       (VECTOR) LIST_FREQ(i) is the frequency associated to
 %       TSERIES_DC(:,i).
 %
 % _________________________________________________________________________
@@ -49,7 +49,7 @@ function [tseries_dc,list_freq] = niak_build_dc(opt)
 % COMMENTS:
 %
 % The discrete cosine are normalized in such a way that their empirical
-% mean is 0 and empirical variance is 1, except for the constant cosine which 
+% mean is 0 and empirical variance is 1, except for the constant cosine which
 % is always equal to sqrt(1-1/nt)^(-1).
 %
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
@@ -99,7 +99,7 @@ switch type_fw
         end
 
     case 'high'
-        
+
         num_dc = max(ceil((2*nt*tr)*cutoff),1);
         if num_dc > nt
             tseries_dc = [];
@@ -114,7 +114,7 @@ switch type_fw
                 tseries_dc(:,1) = sqrt((nt-1)/nt);
             end
         end
-        
+
     otherwise
 
         error('niak:SI_processing','%s : unknown type of frequency window',type_fw)

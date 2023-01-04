@@ -7,22 +7,22 @@ function [size_roi,labels_roi] = niak_build_size_roi(mask,flag_iterative)
 % _________________________________________________________________________
 % INPUTS:
 %
-% MASK      
-%   (array) voxels belonging to no region are coded with 0, those 
+% MASK
+%   (array) voxels belonging to no region are coded with 0, those
 %   belonging to region I are coded with I (I being a positive integer).
 %
 % FLAG_ITERATIVE
 %   (boolean, default false) if the flag is true, the size of regions
-%   is generated with a for loop, rather than the vectorized code 
+%   is generated with a for loop, rather than the vectorized code
 %   used by default.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% SIZE_ROI  
+% SIZE_ROI
 %   (vector) SIZE_ROI(I) is the number of voxels in region number I.
 %
-% LABELS_ROI 
+% LABELS_ROI
 %   (vector) LABELS_ROI(I) is the label of region I.
 %
 % _________________________________________________________________________
@@ -31,8 +31,8 @@ function [size_roi,labels_roi] = niak_build_size_roi(mask,flag_iterative)
 % The function was initially designed for 3D volumes, but should work on
 % any dimensional array, including vectors.
 %
-% Copyright (c) Pierre Bellec, 
-%               McConnell Brain Imaging Center,Montreal Neurological 
+% Copyright (c) Pierre Bellec,
+%               McConnell Brain Imaging Center,Montreal Neurological
 %               Institute, McGill University, 2008
 %               &
 %               Centre de recherche de l'institut de geriatrie de Montreal,
@@ -72,7 +72,7 @@ if ~any(mask(:))
 end
 
 if ~flag_iterative
-    
+
     %% Implementation based on sorting
     vec = sort(mask(mask>0));
     vec = [vec(:) ; vec(end)+1];
@@ -86,20 +86,20 @@ if ~flag_iterative
             size_roi = size_roi - [0 ; size_roi(1:(end-1))];
         end
     end
-    
+
 else
 
     %% Implementation based on a loop
     labels_roi = unique(mask(:));
     labels_roi = labels_roi(labels_roi~=0);
-    
+
     nb_roi = length(labels_roi);
     size_roi = zeros([nb_roi 1]);
-    
+
     mask_v = mask(mask>0);
-    
+
     for num_r = 1:nb_roi
         size_roi(num_r) = sum(mask_v == labels_roi(num_r));
     end
-    
+
 end

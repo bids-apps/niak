@@ -7,7 +7,7 @@ function [files_in,files_out,opt] = niak_brick_network_stack(files_in, files_out
 %
 % INPUTS:
 %
-% FILES_IN 
+% FILES_IN
 %   (structure) with the following fields:
 %
 %   DATA.<SUBJECT>
@@ -15,38 +15,38 @@ function [files_in,files_out,opt] = niak_brick_network_stack(files_in, files_out
 %       NB: assumes there is only 1 .nii.gz or mnc.gz map per individual.
 %
 %   MASK
-%       (3D volume) a binary mask of the voxels that will be included in the 
+%       (3D volume) a binary mask of the voxels that will be included in the
 %       time*space array.
 %
 %   MODEL
-%       (strings, default 'gb_niak_omitted') a .csv files coding for the 
-%       pheno data. Is expected to have a header and a first column 
-%       specifying the case IDs/names corresponding to the data in 
+%       (strings, default 'gb_niak_omitted') a .csv files coding for the
+%       pheno data. Is expected to have a header and a first column
+%       specifying the case IDs/names corresponding to the data in
 %       FILES_IN.DATA
 %
-% FILES_OUT 
-%   (string, default 'network_stack.mat') absolute path to the output .mat 
+% FILES_OUT
+%   (string, default 'network_stack.mat') absolute path to the output .mat
 %   file containing the subject by voxel by network stack array.
 %
-% OPT 
+% OPT
 %   (structure, optional) with the following fields:
 %
 %   FOLDER_OUT
 %       (string, default '') if not empty, this specifies the path where
 %       outputs are generated
 %
-%   NETWORK 
-%       (int array, default all networks) A list of networks number in 
+%   NETWORK
+%       (int array, default all networks) A list of networks number in
 %       individual maps
 %
-%   REGRESS_CONF 
+%   REGRESS_CONF
 %       (Cell of string, Default {}) A list of variables name to be regressed out.
 %
 %   FLAG_VERBOSE
 %       (boolean, default true) turn on/off the verbose.
 %
 %   FLAG_TEST
-%       (boolean, default false) if the flag is true, the brick does not do 
+%       (boolean, default false) if the flag is true, the brick does not do
 %       anything but updating the values of FILES_IN, FILES_OUT and OPT.
 % _________________________________________________________________________
 % OUTPUTS:
@@ -70,8 +70,8 @@ function [files_in,files_out,opt] = niak_brick_network_stack(files_in, files_out
 %           second column contains the (optional) names that are taken from
 %           the model file in FILES_IN.MODEL
 %
-%       MODEL 
-%           (structure, optional) Only available if OPT.FLAG_CONF is set 
+%       MODEL
+%           (structure, optional) Only available if OPT.FLAG_CONF is set
 %           to true and a correct model was supplied. Contains the
 %           following fields:
 %
@@ -115,7 +115,7 @@ end
 files_in = psom_struct_defaults(files_in,...
            { 'data' , 'mask' , 'model'           },...
            { NaN    , NaN    , 'gb_niak_omitted' });
-       
+
 % FILES_OUT
 if ~ischar(files_out)
     error('FILES_OUT should be a string');
@@ -151,18 +151,18 @@ if ~strcmp(files_in.model, 'gb_niak_omitted')
 
     % Load the model
     [conf_model, list_subject , cat_names] = niak_read_csv(files_in.model);
-    
+
     % Check that all confounds can be found in the model
     mask_sanity = ~ismember(opt.regress_conf,cat_names);
     if any(mask_sanity)
         opt.regress_conf(mask_sanity);
         error('Some confounds (listed above) could not be found in the model')
     end
-    
+
     % Find the confounds in the variable of the model
     mask_conf = ismember(cat_names,opt.regress_conf);
     conf_model = conf_model(:,mask_conf);
-    
+
     % Remove subjects with NaN
     mask_nan = max(isnan(conf_model),[],2);
     if any(mask_nan)
@@ -171,7 +171,7 @@ if ~strcmp(files_in.model, 'gb_niak_omitted')
     end
     conf_model = conf_model(~mask_nan,:);
     list_subject = list_subject(~mask_nan,:);
-    
+
     % Remove subjects with no imaging data
     mask_data = ismember(list_subject,list_data);
     if any(~mask_data)
@@ -183,7 +183,7 @@ if ~strcmp(files_in.model, 'gb_niak_omitted')
 else
     list_subject = fieldnames(files_in.data);
 end
- 
+
 % Check the first subject file and see how many networks we have
 n_input = length(list_subject);
 [~, vol] = niak_read_vol(files_in.data.(list_subject{1}));
@@ -221,7 +221,7 @@ for in_id = 1:n_input
         fprintf('Reading %s now ...\n', read_file);
     end
     [~, vol] = niak_read_vol(read_file);
-    
+
     % Loop through the networks and mask the thing
     for net_id = 1:length(opt.network)
         % Get the correct network number
@@ -241,7 +241,7 @@ if ~strcmp(files_in.model, 'gb_niak_omitted')&&opt.flag_conf
     opt_mod.flag_residuals = true;
     m = struct;
     m.x = [ones(length(list_subject),1) conf_model];
-    
+
     % Loop through the networks again for the regression
     for net_id = 1:length(opt.network)
         % Get the correct network

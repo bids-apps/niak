@@ -10,15 +10,15 @@ function [files_in,files_out,opt] = niak_brick_stability_tseries(files_in,files_
 % FILES_IN
 % (struct)
 %   DATA
-%       (string or cell of strings) the name(s) of one or multiple .mat file, 
-%       which contains one variable TS (OPT.NAME_DATA). TS(:,I) is the time 
+%       (string or cell of strings) the name(s) of one or multiple .mat file,
+%       which contains one variable TS (OPT.NAME_DATA). TS(:,I) is the time
 %       series of region I.
 %
 %   PART_REF
-%       (string, optional) path to a .mat fie containing an array of dimensions 
-%       V by K where V is the number of atoms in FILES_IN.TSERIES and K is 
-%       the number of scales to be investigated. If kcores is used to generate 
-%       the atom level stability maps, part_ref has to be set as the 
+%       (string, optional) path to a .mat fie containing an array of dimensions
+%       V by K where V is the number of atoms in FILES_IN.TSERIES and K is
+%       the number of scales to be investigated. If kcores is used to generate
+%       the atom level stability maps, part_ref has to be set as the
 %       reference partition.
 %
 % FILES_OUT
@@ -32,7 +32,7 @@ function [files_in,files_out,opt] = niak_brick_stability_tseries(files_in,files_
 %       (vector) The vector of scales for which stability was estimated.
 %
 %   PART
-%       (matrix N*S) PART(:,s) is the consensus partition associated with 
+%       (matrix N*S) PART(:,s) is the consensus partition associated with
 %       STAB(:,s), with the number of clusters optimized using the summary
 %       statistics.
 %
@@ -47,12 +47,12 @@ function [files_in,files_out,opt] = niak_brick_stability_tseries(files_in,files_
 %
 %   INTRA
 %       (matrix, S*N) INTRA(s,n) is the mean within-cluster stability
-%       associated with STAB(:,s) and n clusters (the partition being defined 
+%       associated with STAB(:,s) and n clusters (the partition being defined
 %       using HIER{s}, see below).
 %
 %   INTER
-%       (matrix, S*N) INTER(s,n) is the mean maximal between-cluster stability 
-%       associated with STAB(:,s) and n clusters (the partition being defined 
+%       (matrix, S*N) INTER(s,n) is the mean maximal between-cluster stability
+%       associated with STAB(:,s) and n clusters (the partition being defined
 %       using HIER{s}, see below).
 %
 %   HIER
@@ -70,7 +70,7 @@ function [files_in,files_out,opt] = niak_brick_stability_tseries(files_in,files_
 %       (vector of integer) the number of clusters (or classes) that will
 %       be investigated. This will be exposed to NIAK_STABILITY_TSERIES as
 %       OPT.NB_CLASSES in order to keep naming conventions
-%       This parameter will overide the parameters specified in 
+%       This parameter will overide the parameters specified in
 %       CLUSTERING.OPT_CLUST
 %
 %   RAND_SEED
@@ -100,7 +100,7 @@ function [files_in,files_out,opt] = niak_brick_stability_tseries(files_in,files_
 %                   default uses 60% timepoints. Can be controlled by
 %                   opt.sampling.opt.perc.
 %               'bootstrap' : see the description of the OPT
-%                   argument in NIAK_BOOTSTRAP_TSERIES. Default is 
+%                   argument in NIAK_BOOTSTRAP_TSERIES. Default is
 %                   OPT.TYPE = 'CBB' (a circular block bootstrap is
 %                   applied).
 %               'mplm' : see the description of the OPT argument in
@@ -113,7 +113,7 @@ function [files_in,files_out,opt] = niak_brick_stability_tseries(files_in,files_
 %
 %       TYPE
 %           (string, default 'hierarchical') the clustering algorithm
-%           Available options : 
+%           Available options :
 %               'kmeans': k-means (euclidian distance)
 %               'kcores' : k-means cores
 %               'hierarchical_e2': a HAC based on the eta-square distance
@@ -126,12 +126,12 @@ function [files_in,files_out,opt] = niak_brick_stability_tseries(files_in,files_
 %           clustering command. The exact list of options depends on
 %           CLUSTERING.TYPE:
 %               'kmeans' : see OPT in NIAK_KMEANS_CLUSTERING
-%               'hierarchical' or 'hierarchical_e2': see OPT in 
+%               'hierarchical' or 'hierarchical_e2': see OPT in
 %               NIAK_HIERARCHICAL_CLUSTERING
 %
 %   CONSENSUS
 %       (structure, optional) This structure describes
-%       the clustering algorithm used to estimate a consensus clustering on 
+%       the clustering algorithm used to estimate a consensus clustering on
 %       each stability matrix, with the following fields :
 %
 %       TYPE
@@ -139,8 +139,8 @@ function [files_in,files_out,opt] = niak_brick_stability_tseries(files_in,files_
 %           Available options : 'hierarchical'
 %
 %       OPT
-%           (structure, default see NIAK_HIERARCHICAL_CLUSTERING) options 
-%           that will be  sent to the  clustering command. The exact list 
+%           (structure, default see NIAK_HIERARCHICAL_CLUSTERING) options
+%           that will be  sent to the  clustering command. The exact list
 %           of options depends on CLUSTERING.TYPE:
 %              'hierarchical' : see NIAK_HIERARCHICAL_CLUSTERING
 %
@@ -168,8 +168,8 @@ function [files_in,files_out,opt] = niak_brick_stability_tseries(files_in,files_
 % individual fMRI time series in the following reference :
 %
 % P. Bellec; P. Rosa-Neto; O.C. Lyttelton; H. Benalib; A.C. Evans,
-% Multi-level bootstrap analysis of stable clusters in resting-State fMRI. 
-% Neuroimage 51 (2010), pp. 1126-1139 
+% Multi-level bootstrap analysis of stable clusters in resting-State fMRI.
+% Neuroimage 51 (2010), pp. 1126-1139
 %
 % Copyright (c) Pierre Bellec
 %   Centre de recherche de l'institut de Gériatrie de Montréal
@@ -236,7 +236,7 @@ else
     flag_nb_classes = false;
 end
 opt = rmfield(opt,'nb_classes');
-    
+
 % Save scale_grid for saving
 scale_grid = opt.scale_grid;
 
@@ -284,7 +284,7 @@ if strcmp(opt.clustering.type, 'kcores')
         error(['FILES_IN.PART_REF has to be set when OPT.CLUSTERING.TYPE '...
                'is kcores']);
     end
-    
+
     % Check if the number of scales in the reference partition is
     % sufficient for the number of scales defined in opt.scale_grid
     if length(opt.clustering.opt.target_scale) < length(opt.nb_classes)
@@ -295,14 +295,14 @@ if strcmp(opt.clustering.type, 'kcores')
                'the same number of scales as OPT.SCALE_GRID'],...
               length(opt.clustering.opt.target_scale), length(opt.nb_classes));
     end
-end 
+end
 
 %% Seed the random generator
 if ~isempty(opt.rand_seed)
     psom_set_rand_seed(opt.rand_seed);
 end
 
-%% Read the time series 
+%% Read the time series
 if opt.flag_verbose
     fprintf('Read the time series ...\n');
 end
@@ -321,7 +321,7 @@ for num_f = 1:length(files_in.data)
 end
 tseries = niak_normalize_tseries(tseries, opt.normalize);
 
-%% Stability matrix 
+%% Stability matrix
 opt_s = rmfield(opt,{'name_data','scale_grid','flag_test','consensus','rand_seed'});
 stab = niak_stability_tseries(tseries,opt_s);
 

@@ -1,15 +1,15 @@
 function mask_thresh = niak_mask_threshold(vol)
 % Find a threshold on an fMRI volume to define a brain mask.
-% 
+%
 % SYNTAX:
 % MASK_THRESH = NIAK_MASK_THRESHOLD(VOL)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL         
+% VOL
 %       (3D array) A single brain volume.
-% 
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
@@ -22,14 +22,14 @@ function mask_thresh = niak_mask_threshold(vol)
 % This function is largely redundant with NIAK_MASK_BRAIN.
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -41,7 +41,7 @@ function mask_thresh = niak_mask_threshold(vol)
 %              express or implied warranty.
 %##########################################################################
 %
-% Copyright (c) Felix Carbonell, Montreal Neurological Institute, McGill 
+% Copyright (c) Felix Carbonell, Montreal Neurological Institute, McGill
 % University, 2009-2010.
 % Maintainers : felix.carbonell@mail.mcgill.ca, pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -79,4 +79,3 @@ if any(h)
 else
     mask_thresh=max(mask)/4;
 end
-

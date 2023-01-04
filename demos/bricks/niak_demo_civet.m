@@ -8,9 +8,9 @@ function [files_in,files_out,opt] = niak_demo_civet(path_demo)
 % INPUTS:
 %
 % PATH_DEMO
-%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS) 
-%       the full path to the NIAK demo dataset. The dataset can be found in 
-%       multiple file formats at the following address : 
+%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS)
+%       the full path to the NIAK demo dataset. The dataset can be found in
+%       multiple file formats at the following address :
 %       http://www.bic.mni.mcgill.ca/users/pbellec/demo_niak/
 %
 % _________________________________________________________________________
@@ -58,29 +58,29 @@ niak_gb_vars
 
 %% Setting input/output files
 switch GB_NIAK.format_demo
-    
+
     case 'minc2' % If data are in minc2 format
 
         files_in.anat = cat(2,GB_NIAK.path_demo,filesep,'anat_subject1.mnc');
         opt.folder_out = cat(2,GB_NIAK.path_demo,filesep,'anat_subject1',filesep);
-        
+
         if ~exist(opt.folder_out)
             str = mkdir(opt.folder_out);
         end
-    
+
     case 'minc1' % If data are in minc1 format
-        
+
         files_in.anat = cat(2,GB_NIAK.path_demo,filesep,'anat_subject1.mnc.gz');
         opt.folder_out = cat(2,GB_NIAK.path_demo,filesep,'anat_subject1',filesep);
-        
+
         if ~exist(opt.folder_out)
             str = mkdir(opt.folder_out);
         end
-        
-    otherwise 
-        
+
+    otherwise
+
         error('niak:demo','%s is an unsupported file format for this demo. See help to change that.',GB_NIAK.format_demo)
-        
+
 end
 
 %% Outputs
@@ -104,4 +104,3 @@ opt.flag_test = 0;
 [files_in,files_out,opt] = niak_brick_civet (files_in,files_out,opt);
 
 %% Note that opt.interpolation_method has been updated, as well as files_out
-

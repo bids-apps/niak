@@ -6,60 +6,60 @@ function [in,out,opt] = niak_brick_subtypes(in,out,opt)
 %
 % FILES_IN.(SUBJECT).(SESSION).(RUN)
 %   (string) a .mat file with the following variables:
-%   NETWORK_NN (vector) with NN=1,...,N. The (vectorized) map 
-%      for network NN. All subject need to have an identical number of networks. 
-%   MASK (3D array) the binary mask of the brain used for vectorization. 
-%   HDR (structure) the header of the mask (see NIAK_READ_VOL). 
-% 
+%   NETWORK_NN (vector) with NN=1,...,N. The (vectorized) map
+%      for network NN. All subject need to have an identical number of networks.
+%   MASK (3D array) the binary mask of the brain used for vectorization.
+%   HDR (structure) the header of the mask (see NIAK_READ_VOL).
+%
 % FILES_OUT.SUBTYPES_AVERAGE
-%    (cell of strings) the NN entry corresponds to the NETWORK_NN input. 
-%    The name of a nii/mnc file which contains the average map for 
-%    each subtype, coded along the fourth dimension. 
+%    (cell of strings) the NN entry corresponds to the NETWORK_NN input.
+%    The name of a nii/mnc file which contains the average map for
+%    each subtype, coded along the fourth dimension.
 %    Warning: the extension of the file need to correspond to the HDR variable above.
 % FILES_OUT.SUBTYPES_STD
-%    (cell of strings) the NN entry corresponds to the NETWORK_NN input. 
-%    The name of a nii/mnc file which contains the std map for 
-%    each subtype, coded along the fourth dimension. 
+%    (cell of strings) the NN entry corresponds to the NETWORK_NN input.
+%    The name of a nii/mnc file which contains the std map for
+%    each subtype, coded along the fourth dimension.
 %    Warning: the extension of the file need to correspond to the HDR variable above.
 % FILES_OUT.SUBTYPES_DEMEANED
-%    (cell of strings) same as FILES_OUT.SUBTYPES, except that each map 
+%    (cell of strings) same as FILES_OUT.SUBTYPES, except that each map
 %    is the difference between the subtype average, and the grand average.
 % FILES_OUT.GRAND_AVERAGE
-%    (string) same as SUBTYPES_AVERAGE, but the average over the full population, rather 
-%    than just a subtype. 
+%    (string) same as SUBTYPES_AVERAGE, but the average over the full population, rather
+%    than just a subtype.
 % FILES_OUT.GRAND_STD
 %    (string) same as SUBTYPES_STD, but the average over the full population, rather than
-%    just a subtype. 
+%    just a subtype.
 % FILES_OUT.WEIGHTS
 %    (string) a .mat file with the following variables:
-%    WEIGHTS (array) WEIGHTS(NN,SS,II) is the similarity of network NN for subject SS 
+%    WEIGHTS (array) WEIGHTS(NN,SS,II) is the similarity of network NN for subject SS
 %       with subtype II.
 %    SIM (array) SIM(:,:,NN) is the inter-subject similarity matrix, for network NN.
 %    HIER (array) HIER(:,:,NN) is the hierarchy between subjects, for network NN.
-%    PART (array) PART(:,NN) is the partition of the subjects into subtypes, 
-%       for network NN. 
+%    PART (array) PART(:,NN) is the partition of the subjects into subtypes,
+%       for network NN.
 %
 % OPT
-%   (structure) with the following fields : 
+%   (structure) with the following fields :
 %   NB_CLUSTER
-%      (integer, default 5) the number of subtypes. 
+%      (integer, default 5) the number of subtypes.
 %   LABELS_NETWORK
-%      (cell of strings, default {'NETWORK1',...}) LABELS_NETWORK{NN} is the label 
+%      (cell of strings, default {'NETWORK1',...}) LABELS_NETWORK{NN} is the label
 %      of network NN (these labels will be used to name the outputs).
 %   FOLDER_OUT
 %      (string, default pwd) where to save the results by default.
-%   FLAG_TEST 
-%      (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%      do anything but update the default values in FILES_IN, 
+%   FLAG_TEST
+%      (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%      do anything but update the default values in FILES_IN,
 %      FILES_OUT and OPT.s
 %   FLAG_VERBOSE
 %      (boolean, default true) Print some progress info.
 %
 % COMMENT:
-% 
+%
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de geriatrie de Montral, 
+% Centre de recherche de l'institut de geriatrie de Montral,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2015
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -113,7 +113,7 @@ opt = psom_struct_defaults(opt, ...
 opt.sampling = psom_struct_defaults(opt.sampling, ...
       { 'type' , 'opt'    }, ...
       { 'CBB'  , struct() });
-  
+
 % FILES_OUT
 out = psom_struct_defaults(out, ...
            { 'list_net' , 'maps' , 'maps_demeaned' , 'weights' }, ...
@@ -130,7 +130,7 @@ list_subject = unique({labels.subject});
 
 %% If list_net is empty check the number of networks and iterate on all of them
 hdr = niak_read_vol({1});
-if isempty(opt.list_net)    
+if isempty(opt.list_net)
     opt.list_net = 1:hdr.info.dimensions(4);
 end
 vol = zeros([hdr.dimensions(1:3) length(list_subject)]);
@@ -149,13 +149,13 @@ for ind_net = 1:length(opt.list_net)
         end
         vol(:,:,:,ss) = vol(:,:,:,ss)/length(list_ind);
     end
-    
+
     [hdr,mask] = niak_read_vol([path_data 'mask.nii.gz']);
     tseries = niak_vol2tseries(vol,mask);
 
     %% correct for the mean
     tseries_ga = niak_normalize_tseries(tseries,'mean');
-    
+
     %% Run an ica on the demeaned maps
     opt_sica.type_nb_comp = 0;
     opt_sica.param_nb_comp = opt.nb_clust;

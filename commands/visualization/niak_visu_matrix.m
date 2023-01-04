@@ -1,56 +1,56 @@
 function hf = niak_visu_matrix(matx,opt)
 % Visualization of one or multiple matrices
 %
-% SYNTAX : 
+% SYNTAX :
 % HF = NIAK_VISU_MATRIX(MATX,OPT)
 %
 % _________________________________________________________________________
 % INPUTS :
 %
-% MATX      
+% MATX
 %       (3D array or structure) matx is either a matrix, or a
 %       structure with multiples entries such that matx.mat is a matrix.
-%       Note that a vector can also be passed, in which case 
+%       Note that a vector can also be passed, in which case
 %       NIAK_VEC2MAT will be used to get back the matrix form.
 %
-% OPT       
+% OPT
 %       (structure, optional) with the following fields:
 %
-%       COLOR_MAP   
-%           (string, default 'jet' for positive matrices, 'hot_cold' 
-%           otherwise) 'hot_cold' is a colormap designed for positive 
-%           & negative matrices. Any regular type of matlab colormap 
+%       COLOR_MAP
+%           (string, default 'jet' for positive matrices, 'hot_cold'
+%           otherwise) 'hot_cold' is a colormap designed for positive
+%           & negative matrices. Any regular type of matlab colormap
 %           can be used ('jet' is recommended for positive matrices). An
 %           additional 'jet_rev' option is available, which is a revert
 %           jet color map (red for low values, blue for high values).
 %
-%       LIMITS 
-%           (vector, default [0 max(1,max(MATX))] for positive matrices, 
-%           [min(-1,min(MATX)) max(1,max(MATX))] otherwise) 
+%       LIMITS
+%           (vector, default [0 max(1,max(MATX))] for positive matrices,
+%           [min(-1,min(MATX)) max(1,max(MATX))] otherwise)
 %           the min and max value for displaying the matrix.
 %
-%       TYPE_VISU 
-%           (string, default 'sub') if multiple matrices are specified 
-%           (i.e. size(matx,3)>1), then if type_visu is 'fig', a new figure 
-%           is created for each matrix. If type_visu is 'sub', subplots 
+%       TYPE_VISU
+%           (string, default 'sub') if multiple matrices are specified
+%           (i.e. size(matx,3)>1), then if type_visu is 'fig', a new figure
+%           is created for each matrix. If type_visu is 'sub', subplots
 %           are used in the current figure.
 %
-%       LIST_FIELDS 
-%           (cell of strings) if multiple matrices are specified in a 
-%           structure, a attempt will be made to add the values of the 
+%       LIST_FIELDS
+%           (cell of strings) if multiple matrices are specified in a
+%           structure, a attempt will be made to add the values of the
 %           field in LIST_FIELDS in the title of the figure.
-%           
-%       FLAG_SQUARE 
-%           (boolean, default 1) if the flag is 1, apply an 'axis square' 
+%
+%       FLAG_SQUARE
+%           (boolean, default 1) if the flag is 1, apply an 'axis square'
 %           command.
 %
-%       FLAG_BAR 
+%       FLAG_BAR
 %           (boolean, default 1) if the flag is 1, show a color bar.
 %
 % _________________________________________________________________________
 % OUTPUTS :
 %
-% HF        
+% HF
 %       (vector) HF(I) is the handle of the Ith figure used.
 %
 % One or multiple figures (or subplots) are displayed which are
@@ -59,7 +59,7 @@ function hf = niak_visu_matrix(matx,opt)
 % _________________________________________________________________________
 % COMMENTS :
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -121,7 +121,7 @@ if (isstruct(matx))||(size(matx,3)>1)
                 title(cat(2,'Entry :',num2str(num_m)));
             end
         end
-        
+
     else
 
         N = ceil(sqrt(nb_m));
@@ -134,7 +134,7 @@ if (isstruct(matx))||(size(matx,3)>1)
             else
                 niak_visu_matrix(matx(:,:,num_m),opt);
             end
-            
+
             if ~isempty(list_fields)
                 str_title = [];
                 for num_f = 1:length(list_fields)
@@ -153,7 +153,7 @@ if (isstruct(matx))||(size(matx,3)>1)
                 title(cat(2,'Entry ',num2str(num_m)));
             end
         end
-        
+
     end
     return
 end
@@ -168,7 +168,7 @@ end
 
 if isempty(color_map)
     if min(matx(:))>=0
-        opt.color_map = 'jet';    
+        opt.color_map = 'jet';
     else
         opt.color_map = 'hot_cold';
     end
@@ -176,10 +176,10 @@ end
 
 if isempty(limits)
     if min(matx(:))>=0
-        opt.limits = [0 max(1,max(matx(:)))];    
+        opt.limits = [0 max(1,max(matx(:)))];
     else
         opt.limits = [min(-1,min(matx(:))) max(1,max(matx(:)))];
-    end    
+    end
 end
 
 imagesc(matx,opt.limits);
@@ -192,28 +192,28 @@ if strcmp(opt.color_map,'hot_cold')
         per_hot = opt.limits(2)/(opt.limits(2)-opt.limits(1));
     elseif opt.limits(2)<=0
         per_hot = 0;
-    else 
+    else
         per_hot = 1;
     end
-    c = niak_hot_cold(256,per_hot);    
+    c = niak_hot_cold(256,per_hot);
     try
-        colormap(gca, c)   
+        colormap(gca, c)
     catch
-        colormap(c)   
+        colormap(c)
     end
 elseif strcmp(opt.color_map,'jet_rev')
     c = jet(256);
     c = c(end:-1:1,:);
     try
-        colormap(gca, c)   
+        colormap(gca, c)
     catch
-        colormap(c)   
+        colormap(c)
     end
 else
     try
-        colormap(gca, opt.color_map)   
+        colormap(gca, opt.color_map)
     catch
-        colormap(opt.color_map)   
+        colormap(opt.color_map)
     end
 end
 

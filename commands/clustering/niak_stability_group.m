@@ -52,7 +52,7 @@ function [stab,stab_avg] = niak_stability_group(mat_stab,mask,opt)
 %   associated with OPT.NB_CLASSES(s) clusters.
 %
 % STAB_AVG
-%   (array) STAB_AVG is the vectorized version of the individual stability 
+%   (array) STAB_AVG is the vectorized version of the individual stability
 %   matrix averaged across all subjects.
 %
 %
@@ -129,7 +129,7 @@ for num_s = 1:opt.nb_samps
     samp_stab = sub_mean_stab(sub_SB(mat_stab,mask),mask);
 
     if ismember(opt.clustering.type,'hierarchical') % for methods that produce a hierarchy
-        
+
         switch opt.clustering.type
             case 'hierarchical'
                 hier = niak_hierarchical_clustering(samp_stab,opt.clustering.opt);
@@ -139,11 +139,11 @@ for num_s = 1:opt.nb_samps
         for num_sc = 1:nb_s
             stab(:,num_sc) = stab(:,num_sc) + niak_mat2vec(niak_part2mat(part(:,num_sc),true));
         end
-        
+
     else % for clustering methods
 
         error(cat(2,opt.clustering.type,': unknown type of clustering'));
-        
+
     end
 end
 stab = stab / opt.nb_samps;

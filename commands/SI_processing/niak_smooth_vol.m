@@ -7,28 +7,28 @@ function vol_s = niak_smooth_vol(vol,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL         
+% VOL
 %   (4D array) a 3D+t dataset
 %
-% OPT         
+% OPT
 %   (structure, optional) with the following fields :
 %
 %   MASK
-%      (binary volume, default true(size(VOL))) this volume should 
-%      have the same size as VOL and will be used to correct for 
-%      edges effects in the smoothing, assuming zero values outside 
+%      (binary volume, default true(size(VOL))) this volume should
+%      have the same size as VOL and will be used to correct for
+%      edges effects in the smoothing, assuming zero values outside
 %      the mask if OPT.FLAG_EDGE is true (see below).
 %
-%   VOXEL_SIZE  
+%   VOXEL_SIZE
 %      (vector of size [3 1] or [4 1], default [1 1 1]) the resolution
-%      in the respective dimensions, i.e. the space in mmm between 
-%      two voxels in x, y, and z (yet the unit is irrelevant and just 
-%      needs to be consistent with the filter width (fwhm)). The 
+%      in the respective dimensions, i.e. the space in mmm between
+%      two voxels in x, y, and z (yet the unit is irrelevant and just
+%      needs to be consistent with the filter width (fwhm)). The
 %      fourth element is ignored.
 %
-%   FWHM  
-%      (vector of size [3 1], default [2 2 2]) the full width at half 
-%      maximum of the Gaussian kernel, in each dimension. If fwhm has 
+%   FWHM
+%      (vector of size [3 1], default [2 2 2]) the full width at half
+%      maximum of the Gaussian kernel, in each dimension. If fwhm has
 %      length 1, an isotropic kernel is implemented.
 %
 %   FLAG_EDGE
@@ -37,13 +37,13 @@ function vol_s = niak_smooth_vol(vol,opt)
 %      full of ones is left untouched by the smoothing).
 %
 %   FLAG_VERBOSE
-%      (boolean, default true) if the flag is 1, then the function prints 
+%      (boolean, default true) if the flag is 1, then the function prints
 %      some infos during the processing.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% VOL_S       
+% VOL_S
 %   (4D array) same as VOL after each volume has been spatially
 %   convolved with a 3D separable Gaussian kernel.
 %
@@ -124,19 +124,19 @@ if flag_edge
     mask = mask>0;
     opt_smooth = opt;
     opt_smooth.flag_edge = false;
-    opt_smooth.flag_verbose = false;    
-    vol_corr = niak_smooth_vol(mask,opt_smooth);    
+    opt_smooth.flag_verbose = false;
+    vol_corr = niak_smooth_vol(mask,opt_smooth);
 end
 
-for num_t = 1:nt    
+for num_t = 1:nt
 
     if flag_verbose
         fprintf('%i ',num_t);
     end
 
-    %% Write a temporary volume    
+    %% Write a temporary volume
     if flag_edge
-      vol_tmp = vol(:,:,:,num_t);      
+      vol_tmp = vol(:,:,:,num_t);
       vol_tmp(~mask) = 0;
       niak_write_vol(hdr,vol_tmp);
     else
@@ -149,16 +149,16 @@ for num_t = 1:nt
     if succ~=0
         error(msg)
     end
-    
+
     %% Read the smoothed volume
     [hdr_tmp,vol_tmp] = niak_read_vol(file_out_sm);
-    
+
     %% Correct for edges effects
     if flag_edge
         vol_tmp(mask>0) = vol_tmp(mask>0)./vol_corr(mask>0);
         vol_tmp(~mask)  = 0;
     end
-    vol_s(:,:,:,num_t) = vol_tmp;        
+    vol_s(:,:,:,num_t) = vol_tmp;
 end
 
 if flag_verbose

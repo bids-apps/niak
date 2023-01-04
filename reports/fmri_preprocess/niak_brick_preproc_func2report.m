@@ -4,13 +4,13 @@ function [in,out,opt] = niak_brick_preproc_func2report(in,out,opt)
 % SYNTAX: [IN,OUT,OPT] = NIAK_BRICK_PREPROC_FUNC2REPORT(IN,OUT,OPT)
 %
 % IN (string) The name of a .csv file with measures of brain mask overlap with
-%   group brain mask, as well as spatial correlation between individual and 
+%   group brain mask, as well as spatial correlation between individual and
 %   average group BOLD images, after registration.
 % OUT (string) the name of a .js file with two variables:
 %   dataBOLD spatial correlation of individual and group BOLD images.
-%   dataBrain is a measure of overlap between the individual brain functional 
+%   dataBrain is a measure of overlap between the individual brain functional
 %   mask and the group functional mask.
-% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but 
+% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but
 %    update IN, OUT and OPT.
 %
 % Copyright (c) Pierre Bellec
@@ -38,22 +38,22 @@ function [in,out,opt] = niak_brick_preproc_func2report(in,out,opt)
 % THE SOFTWARE.
 
 %% Defaults
-if ~ischar(in) 
+if ~ischar(in)
     error('IN should be a string');
 end
 
-if ~ischar(out) 
+if ~ischar(out)
     error('OUT should be a string');
 end
 
 if nargin < 3
     opt = struct;
-end    
+end
 opt = psom_struct_defaults ( opt , ...
     { 'flag_test' }, ...
     { false         });
 
-if opt.flag_test 
+if opt.flag_test
     return
 end
 

@@ -1,21 +1,21 @@
 function [status,msg] = niak_register(file1,file2,varargin)
 % Visualize one or two registered volume using the "register" MINC tool
-% 
+%
 % SYNTAX: [STATUS,MSG] = NIAK_REGISTER(FILE1,FILE2,OPT)
 %
 % FILE1 (string) the name of a minc or nifti file.
 % FILE2 (string) the name of a minc or nifti file.
 % OPT (string) any argument to send to register.
 % STATUS (integer) 0 if call to register was successful, non-zero otherwise.
-% MSG (string) the feedback from the call to register. 
+% MSG (string) the feedback from the call to register.
 %
-% File names can be either relative or absolute, and .gz compression is supported. 
+% File names can be either relative or absolute, and .gz compression is supported.
 %
 % It is possible to use niak_register like the command line tool, e.g.
-%   niak_register file1.mnc file2.mnc 
-% This also works for options, that need to be specified at the end. 
-% 
-% Copyright (c) Pierre Bellec, 
+%   niak_register file1.mnc file2.mnc
+% This also works for options, that need to be specified at the end.
+%
+% Copyright (c) Pierre Bellec,
 % Montreal Neurological Institute, 2008-2010
 % Departement d'informatique et de recherche operationnelle
 % Centre de recherche de l'institut de Geriatrie de Montreal
@@ -89,7 +89,7 @@ elseif strcmp(type2,'.mnc')
 else
     error('FILE2 needs to be either a minc or nifti file (extensions .nii(.gz), .img, .mnc(.gz))')
 end
-    
+
 %% Finally call register
 instr_register = ['register ' opt ' ' file1_mnc ' ' file2_mnc];
 [status,msg] = system(instr_register);

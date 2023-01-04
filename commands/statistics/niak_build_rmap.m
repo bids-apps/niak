@@ -12,9 +12,9 @@ function rmap = niak_build_rmap(vol,seed,mask);
 % OUTPUTS
 %   RMAP (3D array) the functional connectivity map, starting from the seed
 %
-% Copyright (c) Pierre Bellec, 
-%   Centre de recherche de l'institut de 
-%   Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec,
+%   Centre de recherche de l'institut de
+%   Gériatrie de Montréal, Département d'informatique et de recherche
 %   opérationnelle, Université de Montréal, 2013
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.

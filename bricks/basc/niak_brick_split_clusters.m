@@ -8,12 +8,12 @@ function [in, out, opt] = niak_brick_split_clusters(in, out, opt)
 % OPT.TYPE_NEIG (integer, default 6) the spatial neighbourhood of a
 %    voxel, possible values: 4,6,8,10,18,26
 % OPT.FLAG_VERBOSE (boolean, default true) turn verbose on/off
-% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does 
+% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does
 %   not do anything but update FILES_IN, FILES_OUT and OPT.
 % _________________________________________________________________________
 % COMMENTS:
 % The clusters are assumed to be in symmetric stereotaxic space, i.e. the left/right hemispheres
-% are separated by the plane x==0. The values in that plane will be set to zero, as they have ambiguous 
+% are separated by the plane x==0. The values in that plane will be set to zero, as they have ambiguous
 % assignement to brain hemispheres.
 %
 % Copyright (c) Pierre Bellec, Sebastian Urchs
@@ -63,7 +63,7 @@ end
 opt = psom_struct_defaults(opt, ...
       { 'type_neig' , 'flag_verbose' , 'flag_test' } , ...
       { 6           , true           , false       });
-      
+
 % If the test flag is true, stop here !
 if opt.flag_test == 1
     return

@@ -7,15 +7,15 @@ function tests = niak_conf_interv_test(data,null,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% DATA   
+% DATA
 %    (any) DATA is a dataset. Its type depends on OPT.MEASURE and OPT.BOOTSTRAP
 %
 % NULL
-%    (vector) The (multivariate) value of the measure which defines the null 
+%    (vector) The (multivariate) value of the measure which defines the null
 %    hypothesis (see COMMENTS below).
 %
-% OPT    
-%   (structure) describe the statistical tests to perform on data. The 
+% OPT
+%   (structure) describe the statistical tests to perform on data. The
 %   following fieds will be used :
 %
 %   NB_SAMPS
@@ -23,7 +23,7 @@ function tests = niak_conf_interv_test(data,null,opt)
 %
 %   BOOTSRAP
 %   (structure) describes the bootstrap scheme that will be applied
-%   to the database. The structure has the following fields : 
+%   to the database. The structure has the following fields :
 %
 %       NAME_BOOT
 %           (string) the name of a function. The data will be resampled
@@ -36,33 +36,33 @@ function tests = niak_conf_interv_test(data,null,opt)
 %           See the description of OPT.BOOTSTRAP.NAME_BOOT above.
 %
 %   MEASURE
-%       (structure) describe which measure will be estimated on the 
-%       data. The structure has the following fields : 
-%   
+%       (structure) describe which measure will be estimated on the
+%       data. The structure has the following fields :
+%
 %       NAME_MES
-%           (string) the name of a function, the measure will be 
-%           estimated by invoking the command : 
+%           (string) the name of a function, the measure will be
+%           estimated by invoking the command :
 %               >> mes = feval(NAME_MES,DATA,OPT.MEASURE.OPT_MES)
 %           The output (MES) has to be a vector.
 %
 %       OPT_MES
-%           (any type, default []) the option of the measure estimation. 
+%           (any type, default []) the option of the measure estimation.
 %           See the description of OPT.MEASURE.NAME_MES above.
 %
 %   TYPE_FDR
 %       (string, default 'BY') how to estimate the false-discovery rate
 %       associated with each test. Available options:
 %       'BY' : The Benjamini-Yekutieli procedure, appropriate for dependent tests
-%       'BH' : The Benjamini-Hochberg procedure, appropriate for independent tests 
+%       'BH' : The Benjamini-Hochberg procedure, appropriate for independent tests
 %              (or positively correlated tests).
 %
 %   SIDE
 %       (string, default 'two-sided') the type of per-comparison error.
 %       Available options : 'two-sided', 'left-sided', 'right-sided'
 %       See the COMMENTS section below for a description.
-% 
-%   FLAG_VERBOSE 
-%       (boolean, default true) print messages to indicate which 
+%
+%   FLAG_VERBOSE
+%       (boolean, default true) print messages to indicate which
 %       computation are being done.
 %
 % _________________________________________________________________________
@@ -71,13 +71,13 @@ function tests = niak_conf_interv_test(data,null,opt)
 % TESTS
 %   (structure) with the following fields :
 %
-%   PCE  
+%   PCE
 %       (vector) PCE(M) is the per-comparison error for the Mth
 %       component of the measure. The exact definition of the PCE
 %       depends on OPT.SIDE (either left-, right- or two-sided
 %       hypothesis).
 %
-%   FDR  
+%   FDR
 %       (vector) FDR(M) is the false discovery rate associated with PCE(M)
 %
 %   MEAN
@@ -92,38 +92,38 @@ function tests = niak_conf_interv_test(data,null,opt)
 % REFERENCES:
 %
 % On bootstrap estimates of confidence intervals:
-%   Efron, B., Tibshirani, R. J., May 1994. An Introduction to the Bootstrap 
-%   (Chapman & Hall/CRC Monographs on Statistics & Applied Probability), 
+%   Efron, B., Tibshirani, R. J., May 1994. An Introduction to the Bootstrap
+%   (Chapman & Hall/CRC Monographs on Statistics & Applied Probability),
 %   1st Edition. Chapman and Hall/CRC.
 %
 % On the estimation of the false-discovery rate for independent tests:
-%   Benjamini, Y., Hochberg, Y., 1995. Controlling the false-discovery rate: 
-%   a practical and powerful approach to multiple testing. 
+%   Benjamini, Y., Hochberg, Y., 1995. Controlling the false-discovery rate:
+%   a practical and powerful approach to multiple testing.
 %   J. Roy. Statist. Soc. Ser. B 57, 289-300.
 %
 % On the estimation of the false-discovery rate for dependent tests:
-%   Benjamini, Y., Yekutieli, D., 2001. The control of the false discovery 
-%   rate in multiple testing under dependency. 
+%   Benjamini, Y., Yekutieli, D., 2001. The control of the false discovery
+%   rate in multiple testing under dependency.
 %   The Annals of Statistics 29 (4), 1165-1188.
 %
 % About bootstrap hypothesis test for time series:
-%   P. Bellec; G. Marrelec; H. Benali, A bootstrap test to investigate 
-%   changes in brain connectivity for functional MRI.Statistica Sinica, 
+%   P. Bellec; G. Marrelec; H. Benali, A bootstrap test to investigate
+%   changes in brain connectivity for functional MRI.Statistica Sinica,
 %   special issue on Statistical Challenges and Advances in Brain Science.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Let y be a dataset, m(y) is a multivariate measure estimated on the 
+% Let y be a dataset, m(y) is a multivariate measure estimated on the
 % dataset :
 %    y -> m(y) = (m_i(y))_{i=1...I}
 % The null hypothesis takes the form:
 %    (H0) m(y) = n
-% A bootstrap sampling scheme is designed to approximate the distribution of 
+% A bootstrap sampling scheme is designed to approximate the distribution of
 % m(y):
 %    y -> y* -> m(y*)
-% The Bootstrap hypothesis test consists in estimating one of the following 
-% quantities : 
+% The Bootstrap hypothesis test consists in estimating one of the following
+% quantities :
 %   * Left-sided per-comparison error  p_i- = Pr(m_i(y*) <= n_i | y -> y* )
 %   * Right-sided per-comparison error p_i+ = Pr(m_i(y*) >= n_i | y -> y* )
 %   * Two-sided per-comparison error   p_i  = min(2 min(p_i-,p_i+) , 1)
@@ -182,7 +182,7 @@ for num_s = 1:opt.nb_samps
             curr_perc = new_perc;
         end
     end
-            
+
     data_boot = feval(opt.bootstrap.name_boot,data,opt.bootstrap.opt_boot);
     mes = feval(opt.measure.name_mes,data_boot,opt.measure.opt_mes);
     mes = mes(:);
@@ -199,7 +199,7 @@ for num_s = 1:opt.nb_samps
 end
 mean_v = mean_v / opt.nb_samps;
 std_v = std_v / opt.nb_samps - mean_v.^2;
-std_v = sqrt(std_v);      
+std_v = sqrt(std_v);
 p_left = p_left/opt.nb_samps;
 p_right = p_right/opt.nb_samps;
 if opt.flag_verbose

@@ -17,8 +17,8 @@ function [part,gi,i_intra,i_inter] = niak_kmeans_clustering(data,opt,flag_opt);
 %       FLAG_BISECTING
 %           (boolean, default false) if FLAG_BISECTING is true, the k-means
 %           will follow a bisecting approach. The data is first partitioned
-%           in two clusters with k-means, then the cluster with largest 
-%           sum-of-square error is further partitioned in two subclusters, 
+%           in two clusters with k-means, then the cluster with largest
+%           sum-of-square error is further partitioned in two subclusters,
 %           etc until NB_CLASSES clusters have been created.
 %
 %       NB_CLASSES
@@ -29,10 +29,10 @@ function [part,gi,i_intra,i_inter] = niak_kmeans_clustering(data,opt,flag_opt);
 %           individual.
 %
 %       TYPE_INIT
-%           (string, default 'random_partition') the strategy to 
+%           (string, default 'random_partition') the strategy to
 %           initialize the kmeans. Available options are :
 %
-%           'random_partition' : self-explanatory. 
+%           'random_partition' : self-explanatory.
 %
 %           'random_point' : randomly select some data points as
 %               centroids.
@@ -45,20 +45,20 @@ function [part,gi,i_intra,i_inter] = niak_kmeans_clustering(data,opt,flag_opt);
 %               well as OPT.TYPE_SIMILARITY.
 %
 %           'kmeans++' : use the k-means++ method. See  Arthur, D. and
-%               Vassilvitskii, S. (2007). "k-means++: the advantages of 
-%               careful seeding". Proceedings of the eighteenth annual 
+%               Vassilvitskii, S. (2007). "k-means++: the advantages of
+%               careful seeding". Proceedings of the eighteenth annual
 %               ACM-SIAM symposium on Discrete algorithms. pp. 1027–1035.
 %
 %           'user-specified' : use OPT.INIT as inial centroids of the
 %               partition.
 %
 %       HIERARCHICAL
-%           (structure, default struct()) option of 
-%           NIAK_HIERARCHICAL_CLUSTERING, if that procedure is used for 
+%           (structure, default struct()) option of
+%           NIAK_HIERARCHICAL_CLUSTERING, if that procedure is used for
 %           initialization (see OPT.TYPE_INIT above).
 %
 %       TYPE_SIMILARITY
-%           (string, default 'euclidian') the similarity measure used to 
+%           (string, default 'euclidian') the similarity measure used to
 %           perform the hierarchical clustering. Available option :
 %
 %           'euclidian' : use the opposite of the euclidian distance (see
@@ -77,7 +77,7 @@ function [part,gi,i_intra,i_inter] = niak_kmeans_clustering(data,opt,flag_opt);
 %           (2D array T*K) each column is used as initial centroid of a
 %           cluster. Note that this value will be used only if
 %           OPT.TYPE_INIT equals 'user-specified'.
-%           
+%
 %       TYPE_DEATH
 %           (string, default 'none') the strategy to deal with dead
 %           (empty) cluster :
@@ -85,12 +85,12 @@ function [part,gi,i_intra,i_inter] = niak_kmeans_clustering(data,opt,flag_opt);
 %           'singleton' iteratively replace every empty cluster by the one
 %           singleton which is further away from its centroid.
 %           'split' iteratively splits the cluster with largest inertia
-%			in two random subclusters until the number of clusters is 
+%			in two random subclusters until the number of clusters is
 %			back to the one specified.
 %           'bisect' iteratively splits the cluster with largest inertia
-%			in two subclusters using k-means until the number of 
+%			in two subclusters using k-means until the number of
 %			clusters is back to the one specified.
-%       
+%
 %       CONVERGENCE_RATE
 %           (scalar, 0) the rate of changes to decide on convergence of
 %           the algorithm. The rate of change is defined as the proportion of
@@ -98,7 +98,7 @@ function [part,gi,i_intra,i_inter] = niak_kmeans_clustering(data,opt,flag_opt);
 %           iterations.
 %
 %       NB_ITER
-%           (integer, default 1) number of iterations of the kmeans (the 
+%           (integer, default 1) number of iterations of the kmeans (the
 %           best clustering, i.e. with lowest I_INTRA, will be selected).
 %
 %       NB_ITER_MAX
@@ -115,7 +115,7 @@ function [part,gi,i_intra,i_inter] = niak_kmeans_clustering(data,opt,flag_opt);
 %           check for cycles.
 %
 %       FLAG_MEX
-%           (boolean, default false) Use a mex implementation of k-means. 
+%           (boolean, default false) Use a mex implementation of k-means.
 %           See the NOTES section below.
 %
 %       FLAG_VERBOSE
@@ -142,10 +142,10 @@ function [part,gi,i_intra,i_inter] = niak_kmeans_clustering(data,opt,flag_opt);
 % COMMENTS:
 %
 % The mex implementation requires to install and compile the mex in the "sparse
-% coding neural gas" toolbox : 
+% coding neural gas" toolbox :
 % http://www.inb.uni-luebeck.de/tools-demos/scng
-% In this mode, OPT.P, OPT.TYPE_DEATH, OPT.TYPE_INIT and OPT.INIT are 
-% ignored. The iteration and bisecting version of the algorithm will still 
+% In this mode, OPT.P, OPT.TYPE_DEATH, OPT.TYPE_INIT and OPT.INIT are
+% ignored. The iteration and bisecting version of the algorithm will still
 % work.
 %
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008-2010.
@@ -199,15 +199,15 @@ if opt.nb_iter > 1
     end
 
 else
-    
+
     if isempty(opt.p)
         opt.p = ones([size(data,2) 1]);
     end
-    
+
     if (opt.flag_bisecting)
-        part = ones([1 size(data,2)]);        
+        part = ones([1 size(data,2)]);
         se_data = sum(repmat(opt.p',[size(data,1) 1]).*data.^2,1);
-        se = zeros([size(data,2) 1]);        
+        se = zeros([size(data,2) 1]);
         se(1) = Inf;
         opt_b                = opt;
         opt_b.nb_classes     = 2;
@@ -223,20 +223,20 @@ else
                 if floor(perc_verb^(-1)*num_i/(K-1))>floor(perc_verb^(-1)*(num_i-1)/(K-1))
                     fprintf(' %1.0f',100*(num_i/(K-1)));
                 end
-            end            
+            end
             [val,order] = sort(se);
             num_t = length(order);
             part_tmp = ones(size(part));
             nb_attempts = 1;
             flag_bisect = false;
             while (~flag_bisect)&&(num_t>0)
-                opt_b.p = opt.p(part==order(num_t));                
+                opt_b.p = opt.p(part==order(num_t));
                 [part_tmp,gi_tmp] = niak_kmeans_clustering(data(:,part==order(num_t)),opt_b,false);
                 flag_bisect = (any(part_tmp==1)&&any(part_tmp==2));
                 if (~flag_bisect)
                     if nb_attempts <= opt.nb_attempts_max
                         nb_attempts = nb_attempts + 1;
-                    else                    
+                    else
                         num_t = num_t-1;
                     end
                 end
@@ -248,15 +248,15 @@ else
             se_tmp = sub_se(se_data,gi_tmp,part_tmp,opt.p);
             part_tmp2 = part_tmp;
             part_tmp2(part_tmp==1) = order(num_t);
-            part_tmp2(part_tmp==2) = 1+num_i;            
-            se(order(num_t)) = se_tmp(1);            
+            part_tmp2(part_tmp==2) = 1+num_i;
+            se(order(num_t)) = se_tmp(1);
             se(1+num_i) = se_tmp(2);
             part(part==order(num_t)) = part_tmp2;
         end
         if opt.flag_verbose
             fprintf(' Done ! \n');
         end
-        
+
         if nargout>1
             gi = zeros([K size(data,1)]);
             for num_i = 1:K
@@ -266,23 +266,23 @@ else
             end
         end
     end
-    
+
     if (opt.flag_mex)&&(~opt.flag_bisecting)
         [gi,part,mse] = Kmeans(data,K,0);
         part = part(:);
         gi = gi';
     end
-        
+
     if ~opt.flag_mex&&(~opt.flag_bisecting)
         [part,gi] = niak_kmeans_mat(data,opt,false);
         part = part(:);
         gi = gi';
     end
-    
+
     if nargout>2
         [T,N] = size(data);
         data = data';
-        
+
         % Final inter-class inertia
         p_classe = zeros([K 1]);
         for i = 1:K
@@ -293,7 +293,7 @@ else
         p_classe_OK = p_classe(mask_OK);
         g = (1/sum(p_classe_OK))*sum(gi_OK.*(p_classe_OK*ones([1,T])),1);
         i_inter = sum(sum(p_classe_OK.*sum((gi_OK-(ones([sum(mask_OK) 1])*g)).^2,2)))/sum(p_classe_OK);
-        
+
         % Final intra-class inertia
         i_intra = zeros([K 1]);
         for num_c = 1:K
@@ -343,5 +343,5 @@ function se = sub_se(se_data,gi,part,p)
 
 se = zeros([2 1]);
 for num_p = 1:2
-    se(num_p) = sum((se_data(part==num_p)))-sum(p(part==num_p))*sum(gi(:,num_p).^2);    
+    se(num_p) = sum((se_data(part==num_p)))-sum(p(part==num_p))*sum(gi(:,num_p).^2);
 end

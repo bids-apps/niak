@@ -9,18 +9,18 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 %
 % FILES_IN
 %   (structure) with the following fields:
-% 
+%
 %   FIR.(SUBJECT)
-%      (string) the name of a .mat file, which contains one variable FIR_ALL. 
+%      (string) the name of a .mat file, which contains one variable FIR_ALL.
 %      FIR_ALL{N}(:,I,J) is the FIR of network I at trial J for subject <SUBJECT>
 %      and the networks MASK{N}.
 %
 %   MASK.(NETWORK)
-%      (string) the file name of a mask of brain networks -- 
-%      network I is filled with Is, 0 is for the background. 
+%      (string) the file name of a mask of brain networks --
+%      network I is filled with Is, 0 is for the background.
 %
 %   MODEL
-%      (string) the name of a CSV file describing the covariates at the level of group. 
+%      (string) the name of a CSV file describing the covariates at the level of group.
 %      Example :
 %                , SEX , HANDENESS
 %      <SUBJECT> , 0   , 0
@@ -34,7 +34,7 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 %   the following fields:
 %
 %   RESULTS
-%      (string, default 'gb_niak_omitted') 
+%      (string, default 'gb_niak_omitted')
 %      The name of a .mat file with the following matlab variables:
 %
 %      X
@@ -42,7 +42,7 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 %
 %      Y
 %         (matrix NxW) each row is a vectorized version of the FIR estimates
-%         in all brain networks for one subject 
+%         in all brain networks for one subject
 %
 %      C
 %         (vector Kx1) C(K) is the weight of MODEL(:,K)
@@ -57,11 +57,11 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 %         the covariate associated with X(:,K)
 %
 %      BETA
-%         (matrix KxW) BETA(K,:) is the vector of effects at each 
+%         (matrix KxW) BETA(K,:) is the vector of effects at each
 %         time sample/region for all covariates.
 %
 %      EFF
-%         (matrix 1xW) estimate of the effect associated with the 
+%         (matrix 1xW) estimate of the effect associated with the
 %         specified contrast at each time sample/region
 %
 %      STD_NOISE
@@ -72,17 +72,17 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 %         (matrix 1xW) A t-test for the significance of the contrast
 %         at each time sample/region.
 %
-%      PCE 
+%      PCE
 %         (matrix 1*W) the per-comparison error associated with each t-test
 %         against a bilateral hypothesis of BETA(w)=0.
 %
 %      FDR
-%         (matrix T*R) FDR(t,r) is the false-discovery rate associated with 
-%         PCE(t,r), where t is the time sample and r is a region. 
+%         (matrix T*R) FDR(t,r) is the false-discovery rate associated with
+%         PCE(t,r), where t is the time sample and r is a region.
 %         See OPT.TYPE_FDR for more info.
 %
 %      TEST_Q
-%         (matrix T*R) TEST_Q(r,r) equals to 1 if the associated t-test is deemed 
+%         (matrix T*R) TEST_Q(r,r) equals to 1 if the associated t-test is deemed
 %         significant as part of the family (map) r. TEST_Q(t,r) equals 0 otherwise.
 %
 %      PERC_DISCOVERY
@@ -90,46 +90,46 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 %          associated with region r.
 %
 %   TTEST
-%      (string, default 'gb_niak_omitted') the file name of a 4D dataset. 
+%      (string, default 'gb_niak_omitted') the file name of a 4D dataset.
 %      TTEST(:,:,:,n) is the t-stat map associated with the n-th network.
 %
 %   EFFECT
-%      (string, default 'gb_niak_omitted') the file name of a 4D dataset. 
+%      (string, default 'gb_niak_omitted') the file name of a 4D dataset.
 %      EFFECT(:,:,:,n) is the effect map corresponding the TTEST(:,:,:,n).
 %
 %   STD_EFFECT
-%      (string, default 'gb_niak_omitted') the file name of a 4D dataset. 
-%      STD_EFFECT(:,:,:,n) is the map of standard deviation of the effect 
+%      (string, default 'gb_niak_omitted') the file name of a 4D dataset.
+%      STD_EFFECT(:,:,:,n) is the map of standard deviation of the effect
 %      corresponding to TTEST(:,:,:,n).
 %
 %   FDR
-%      (string, default 'gb_niak_omitted') the file name of a 4D dataset. 
-%      FDR(:,:,:,n) is the t-stat map corresponding to TTEST. All the 
-%      t-values associated with a global false-discovery rate below 
+%      (string, default 'gb_niak_omitted') the file name of a 4D dataset.
+%      FDR(:,:,:,n) is the t-stat map corresponding to TTEST. All the
+%      t-values associated with a global false-discovery rate below
 %      OPT.FDR are put to zero.
 %
 %   PERC_DISCOVERY
-%      (string, default 'gb_niak_omitted') the file name of a 3D volume. 
-%      PERC_DISCOVERY(:,:,:) is the map of the number of discovery 
-%      associated with each network, expressed as a percentage of the 
-%      number of networks - 1 (i.e. the max possible number of discoveries 
+%      (string, default 'gb_niak_omitted') the file name of a 3D volume.
+%      PERC_DISCOVERY(:,:,:) is the map of the number of discovery
+%      associated with each network, expressed as a percentage of the
+%      number of networks - 1 (i.e. the max possible number of discoveries
 %      associated with a network).
 %
-% OPT           
+% OPT
 %   (structure) with the following fields:
 %
 %   FDR
-%      (scalar, default 0.05) the level of acceptable false-discovery rate 
+%      (scalar, default 0.05) the level of acceptable false-discovery rate
 %      for the t-maps.
 %
 %   TYPE_FDR
-%      (string, default 'BH') how the FDR is controled. 
+%      (string, default 'BH') how the FDR is controled.
 %      Available options:
 %         'BH': a BH procedure on the full set of FIR.
 %         'LSL': a GBH procedure controlling the FDR on the full set of FIR
-%             but using the grouping of tests per FIR, with a least-slope 
+%             but using the grouping of tests per FIR, with a least-slope
 %             estimation of the number of discoveries. See NIAK_FDR.
-%         'local': only control of the FDR across time points for each network. 
+%         'local': only control of the FDR across time points for each network.
 %             Do not correct for the number of networks.
 %         'uncorrected': do not correct p-values, OPT.FDR is used as significance
 %             threshold on the p-values.
@@ -138,48 +138,48 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 %      (stucture) with one entry and and one field and the following subfields:
 %
 %      CONTRAST
-%         (structure, with arbitray fields <NAME>, which needs to correspond to the 
-%         label of one column in the file FILES_IN.MODEL.GROUP) The fields found in 
+%         (structure, with arbitray fields <NAME>, which needs to correspond to the
+%         label of one column in the file FILES_IN.MODEL.GROUP) The fields found in
 %         CONTRAST will determine which covariates enter the model:
 %
 %         <NAME>
 %            (scalar) the weight of the covariate NAME in the contrast.
-% 
+%
 %      INTERACTION
 %         (structure, optional) with multiple entries and the following fields :
-%       
+%
 %         LABEL
 %            (string) a label for the interaction covariate.
 %
 %         FACTOR
 %            (cell of string) covariates that are being multiplied together to build the
-%            interaction covariate. 
+%            interaction covariate.
 %
 %         FLAG_NORMALIZE_INTER
-%            (boolean,default true) if FLAG_NORMALIZE_INTER is true, the factor of interaction 
-%            will be normalized to a zero mean and unit variance before the interaction is 
+%            (boolean,default true) if FLAG_NORMALIZE_INTER is true, the factor of interaction
+%            will be normalized to a zero mean and unit variance before the interaction is
 %            derived (independently of OPT.<LABEL>.GROUP.NORMALIZE below.
 %
 %      PROJECTION
 %         (structure, optional) with multiple entries and the following fields :
 %
 %         SPACE
-%            (cell of strings) a list of the covariates that define the space to project 
-%            out from (i.e. the covariates in ORTHO, see below, will be projected 
+%            (cell of strings) a list of the covariates that define the space to project
+%            out from (i.e. the covariates in ORTHO, see below, will be projected
 %            in the space orthogonal to SPACE).
 %
 %         ORTHO
-%            (cell of strings, default all the covariates except those in space) a list of 
+%            (cell of strings, default all the covariates except those in space) a list of
 %            the covariates to project in the space orthogonal to SPACE (see above).
 %
 %         FLAG_INTERCEPT
-%            (boolean, default true) if the flag is true, add an intercept in SPACE (even 
+%            (boolean, default true) if the flag is true, add an intercept in SPACE (even
 %            when the model does not have an intercept).
 %
 %      NORMALIZE_X
-%         (structure or boolean, default true) If a boolean and true, all covariates of the 
+%         (structure or boolean, default true) If a boolean and true, all covariates of the
 %         model are normalized (see NORMALIZE_TYPE below).
-%         If a structure, the fields <NAME> need to correspond to the label of a column in the 
+%         If a structure, the fields <NAME> need to correspond to the label of a column in the
 %         file FILES_IN.MODEL.GROUP):
 %
 %         <NAME>
@@ -188,7 +188,7 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 %
 %      NORMALIZE_Y
 %         (boolean, default false) If true, the data is normalized (see NORMALIZE_TYPE below).
-% 
+%
 %      NORMALIZE_TYPE
 %         (string, default 'mean') Available options:
 %            'mean': correction to a zero mean (for each column)
@@ -199,7 +199,7 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 %         added to the model.
 %
 %      SELECT
-%         (structure, optional) with multiple entries and the following fields:           
+%         (structure, optional) with multiple entries and the following fields:
 %
 %         LABEL
 %            (string) the covariate used to select entries *before normalization*
@@ -212,7 +212,7 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 %            are retained.
 %
 %         MAX
-%            (scalar, default []) only values lower (strictly) than MAX are retained. 
+%            (scalar, default []) only values lower (strictly) than MAX are retained.
 %
 %         OPERATION
 %            (string, default 'or') the operation that is applied to select the frames.
@@ -224,16 +224,16 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 %       (boolean, default 0) if the flag is 1, then the function does not
 %       do anything but update the defaults of FILES_IN, FILES_OUT and OPT.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function
 %       prints some infos during the processing.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_BUILD_FIR, NIAK_BRICK_FIR_TSERIES, NIAK_PIPELINE_GLM_FIR,
@@ -242,8 +242,8 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2010-2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -271,7 +271,7 @@ function [files_in,files_out,opt] = niak_brick_glm_fir(files_in,files_out,opt)
 if ~exist('files_in','var')||~exist('files_out','var')||~exist('opt','var')
     error('niak:brick','syntax: [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_FDR_FIR(FILES_IN,FILES_OUT,OPT).\n Type ''help niak_brick_fdr_fir'' for more info.')
 end
-   
+
 %% Files in
 list_fields   = {'fir' , 'mask' , 'model' };
 list_defaults = {NaN   , NaN    , NaN     };
@@ -312,7 +312,7 @@ list_fields   = { 'type_fdr'   , 'fdr' , 'test' , 'flag_verbose' , 'flag_test' }
 list_defaults = { 'BH'         , 0.05  , NaN    , true           ,   false     };
 opt = psom_struct_defaults(opt,list_fields,list_defaults);
 
-%% Test 
+%% Test
 label = fieldnames(opt.test);
 label = label{1};
 def_contrast.intercept = 1;
@@ -345,12 +345,12 @@ for nn = 1:length(list_network)
         fprintf('Read the FIR estimates ...\n');
     end
     mask_ok = false(length(list_subject),1);
-    for num_e = 1:length(list_subject)    
+    for num_e = 1:length(list_subject)
         subject = list_subject{num_e};
         if ~isfield(files_in.fir,subject)
             warning('I could not find a FIR file associated with subject %s. I am skipping it.',subject)
             continue
-        end    
+        end
         if opt.flag_verbose
             fprintf('    %s\n',files_in.fir.(subject))
         end
@@ -359,12 +359,12 @@ for nn = 1:length(list_network)
         if ~mask_ok(num_e)
             warning('The FIR did not have the minimum number of trials required in OPT.NB_MIN_FIR. I am not going to use the data from this subject.')
             continue
-        end        
-        if num_e == 1        
+        end
+        if num_e == 1
             fir_net = zeros([size(data.(network).fir_mean) length(list_subject)]);
         end
         fir_net(:,:,num_e) = data.(network).fir_mean;
-    end    
+    end
     if any(mask_ok)
         fir_net = fir_net(:,:,mask_ok);
     else
@@ -387,21 +387,21 @@ for nn = 1:length(list_network)
     fprintf('Estimate model...\n')
     end
     opt_glm_gr.test  = 'ttest' ;
-    opt_glm_gr.flag_beta = true ; 
+    opt_glm_gr.flag_beta = true ;
     opt_glm_gr.flag_residuals = true ;
     y_x_c.x = model_group.x;
     y_x_c.y = model_group.y;
-    y_x_c.c = model_group.c; 
+    y_x_c.c = model_group.c;
     [results, opt_glm_gr] = niak_glm(y_x_c , opt_glm_gr);
 
     %% Reformat the results of the group-level model
-    beta    =  results.beta; 
+    beta    =  results.beta;
     e       = results.e ;
     std_e   = results.std_e ;
     ttest   = results.ttest ;
-    pce     = results.pce ; 
+    pce     = results.pce ;
     eff     =  results.eff ;
-    std_eff =  results.std_eff ; 
+    std_eff =  results.std_eff ;
     ttest(isnan(pce)) = 0;
     pce(isnan(pce)) = 1;
     ttest = reshape (ttest,[nt nn]);
@@ -423,13 +423,13 @@ for nn = 1:length(list_network)
     if ~strcmp(files_out.(network).perc_discovery,'gb_niak_omitted')||~strcmp(files_out.(network).fdr,'gb_niak_omitted')||~strcmp(files_out.(network).effect,'gb_niak_omitted')||~strcmp(files_out.(network).std_effect,'gb_niak_omitted')
         if opt.flag_verbose
         fprintf('Generating volumes ...\n')
-        end    
+        end
         t_maps   = zeros([size(vol_part) nt]);
         fdr_maps = zeros([size(vol_part) nt]);
         eff_maps = zeros([size(vol_part) nt]);
         std_maps = zeros([size(vol_part) nt]);
         for num_t = 1:nt
-            t_maps(:,:,:,num_t)   = niak_part2vol(ttest(num_t,:)',vol_part);    
+            t_maps(:,:,:,num_t)   = niak_part2vol(ttest(num_t,:)',vol_part);
             eff_maps(:,:,:,num_t) = niak_part2vol(eff(num_t,:)',vol_part);
             std_maps(:,:,:,num_t) = niak_part2vol(std_eff(num_t,:)',vol_part);
             ttest_thre = ttest(num_t,:)';
@@ -487,18 +487,18 @@ switch type_fdr
     case {'global','BH'}
         [fdr,test_q] = niak_fdr(pce(:),'BH',q);
         fdr = reshape(fdr,[nt nn]);
-        test_q = reshape(test_q,[nt nn])>0; 
-        
+        test_q = reshape(test_q,[nt nn])>0;
+
     case 'LSL'
         [fdr,test_q] = niak_fdr(pce_m,'LSL',q);
-        
+
     case {'local','BH-local'}
         [fdr,test_q] = niak_fdr(pce_m,'BH',q);
-        
+
     case 'uncorrected'
         fdr = pce_m;
         test_q = fdr <= q;
-        
+
     otherwise
         error('%s is an unknown procedure to control the FDR',type_fdr)
 end

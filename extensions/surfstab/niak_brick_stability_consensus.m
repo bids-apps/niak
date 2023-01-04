@@ -229,9 +229,9 @@ if ~isempty(opt.scale_tar)
     % target clusters we just generated
     % Set the fixed neighbourhood
     neigh = [0.7,1.3];
-    
+
     [sil_max, scales_max] = niak_build_max_sil(sil, opt.scale_grid(:), neigh, 1);
-    
+
     % Find the optimal stochastic scales for the target scales
     scale_rep = scales_max(opt.scale_tar)';
     % Find the indices of the optimal stochastic scales in opt.scale_grid
@@ -249,7 +249,7 @@ if ~isempty(opt.scale_tar)
     hier = hier(k_ind);
     save(files_out, 'part', 'scale_tar', 'scale_rep', 'scale_grid', 'order',...
          'sil', 'intra', 'inter', 'hier', 'stab');
-    
+
 else
     %% Save the results
     scale_grid = opt.scale_grid;

@@ -1,5 +1,5 @@
 function [files_in,files_out,opt] = niak_brick_mask_anat2func(files_in,files_out,opt)
-% Adapt a T1 brain mask to fit a typical BOLD brain mask. 
+% Adapt a T1 brain mask to fit a typical BOLD brain mask.
 %
 % SYNTAX:
 % [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_MASK_ANAT2FUNC(FILES_IN,FILES_OUT,OPT)
@@ -7,28 +7,28 @@ function [files_in,files_out,opt] = niak_brick_mask_anat2func(files_in,files_out
 % _________________________________________________________________________
 % INPUTS
 %
-% FILES_IN.ANAT 
-%   (string) a T1 volume (in linear stereotaxic space). 
+% FILES_IN.ANAT
+%   (string) a T1 volume (in linear stereotaxic space).
 %
-% FILES_IN.MASK_ANAT 
-%   (string) a brain mask defined on a T1 image (in linear stereotaxic space). 
+% FILES_IN.MASK_ANAT
+%   (string) a brain mask defined on a T1 image (in linear stereotaxic space).
 %
-% FILES_IN.MASK_AVG 
-%   (string) an average of many individual BOLD masks (in non-linear 
-%   stereotaxic space). This will be thresholded to generate the BOLD mask. 
+% FILES_IN.MASK_AVG
+%   (string) an average of many individual BOLD masks (in non-linear
+%   stereotaxic space). This will be thresholded to generate the BOLD mask.
 %
-% FILES_IN.MASK_BOLD 
-%    (string) a dilated mask that comprises all intra-cranial CSF as 
-%    well as meninges (in non-linear stereotaxic space). 
+% FILES_IN.MASK_BOLD
+%    (string) a dilated mask that comprises all intra-cranial CSF as
+%    well as meninges (in non-linear stereotaxic space).
 %
-% FILES_IN.TRANSF_STEREOLIN2NL 
-%    (string) a .xfm non-linear transformation from 
-%    linear stereotaxic space to non-linear stereotaxic space. 
+% FILES_IN.TRANSF_STEREOLIN2NL
+%    (string) a .xfm non-linear transformation from
+%    linear stereotaxic space to non-linear stereotaxic space.
 %
-% FILES_OUT   
+% FILES_OUT
 %   (string) A T1 brain mask that has been tweaked to better fit a BOLD brain mask.
-%   
-% OPT           
+%
+% OPT
 %   (structure) with the following fields :
 %
 %   RAND_SEED
@@ -38,41 +38,41 @@ function [files_in,files_out,opt] = niak_brick_mask_anat2func(files_in,files_out
 %
 %   FLAG_CSF
 %      (boolean, default true) turns on (true) / off (false) the inclusion of CSF in the space
-%      between the brain and the skull. 
+%      between the brain and the skull.
 %
 %   FLAG_AVG
-%      (boolean, default true) turns on (true) / off (false) the exclusion of brain voxels that 
-%      typically exhibit signal dropout in BOLD images. 
-% 
+%      (boolean, default true) turns on (true) / off (false) the exclusion of brain voxels that
+%      typically exhibit signal dropout in BOLD images.
+%
 %   THRESH_AVG (scalar, default 0.65) the threshold used to binarize the average
-%      BOLD masks to combine with the T1 mask. 
+%      BOLD masks to combine with the T1 mask.
 %
 %   Z_CUT (scalar, default 15) only apply the restrictions from MASK_AVG on voxels
-%       with z coordinates (in MNI space) below 15 mm. This includes ventromedial 
+%       with z coordinates (in MNI space) below 15 mm. This includes ventromedial
 %       and temporal cortices.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
-%   FLAG_TEST 
-%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%   FLAG_TEST
+%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % COMMENTS:
 %
 % The T1 mask is combined with the thresholded BOLD masks. The space that
 % is not in the brain mask but is in the dilated mask is segmented into three
-% classes using a k-means algorithm. The call with lowest signal is deemed to 
-% be CSF and is added to the BOLD brain mask. 
+% classes using a k-means algorithm. The call with lowest signal is deemed to
+% be CSF and is added to the BOLD brain mask.
 %
 % Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
 % geriatrie de Montreal, Montreal, Canada, 2015.
@@ -173,7 +173,7 @@ if opt.flag_csf
     mask_csf(mask_bold & ~mask_brain) = mask_outside == ind;
 end
 
-%% Extract a group mask of functional data 
+%% Extract a group mask of functional data
 if opt.flag_avg
     file_mask_avg_r = niak_file_tmp('_mask_avg_r.mnc');
     in.source = files_in.mask_avg;
@@ -194,10 +194,10 @@ else
     mask_brain2 = mask_brain;
 end
 
-if opt.flag_avg 
+if opt.flag_avg
     mask_brain2(:,:,1:ceil(coord_v(3))) = mask_brain2(:,:,1:ceil(coord_v(3)))&mask_func(:,:,1:ceil(coord_v(3)));
 end
-    
+
 %% Write out the result
 hdr.file_name = files_out;
 niak_write_vol(hdr,mask_brain2);
@@ -205,6 +205,6 @@ niak_write_vol(hdr,mask_brain2);
 %% Clean up
 if opt.flag_avg
     psom_clean(file_mask_avg_r);
-end 
+end
 
 psom_clean(file_mask_bold_r);

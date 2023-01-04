@@ -7,40 +7,40 @@ function [files_in,files_out,opt] = niak_brick_stability_group(files_in,files_ou
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN 
-%   (structure) with the following fields : 
+% FILES_IN
+%   (structure) with the following fields :
 %
 %   STABILITY
 %       (structure) with arbitrary field names :
 %
 %       <SUBJECT>
-%           (string) the name of a .mat file, which contains one variable 
-%           STAB. STAB is a vectorized matrix of stability coefficients. 
-%           All the matrices should be in the same space. In particular, 
-%           the length of the spatial dimension should be identical for all 
+%           (string) the name of a .mat file, which contains one variable
+%           STAB. STAB is a vectorized matrix of stability coefficients.
+%           All the matrices should be in the same space. In particular,
+%           the length of the spatial dimension should be identical for all
 %           time series.
 %
 %   INFOS
-%       (string, default 'gb_niak_omitted') the name of a CSV file. 
+%       (string, default 'gb_niak_omitted') the name of a CSV file.
 %       Example :
 %                 , SEX , HANDEDNESS
 %       <SUBJECT> , 0   , 0
 %       This type of file can be generated with Excel (save under CSV).
 %       The infos will be used to "stratify" the data, i.e. resampling of
-%       the data will be restricted within groups of subjects that share 
+%       the data will be restricted within groups of subjects that share
 %       identical infos. All strata will be given equal weights to build
 %       the consensus across subjects. If omitted, all subjects will belong
 %       to the same strata.
 %
 % FILES_OUT
-%   (string) A .mat file which contains the following variables : 
+%   (string) A .mat file which contains the following variables :
 %
 %   STAB
 %       (array) STAB(:,s) is the vectorized version of the stability matrix
 %       associated with OPT.NB_CLASSES(s) clusters.
 %
 %   STAB_AVG
-%       (array) STAB_AVG is the vectorized version of the individual 
+%       (array) STAB_AVG is the vectorized version of the individual
 %       stability matrix averaged across all subjects.
 %
 %   NB_CLASSES
@@ -54,7 +54,7 @@ function [files_in,files_out,opt] = niak_brick_stability_group(files_in,files_ou
 %       stability matrices (see OPT.NB_CLASSES_IND below).
 %
 %   PART
-%       (matrix N*S) PART(:,s) is the consensus partition associated with 
+%       (matrix N*S) PART(:,s) is the consensus partition associated with
 %       STAB(:,s), with the number of clusters optimized using the summary
 %       statistics.
 %
@@ -64,29 +64,29 @@ function [files_in,files_out,opt] = niak_brick_stability_group(files_in,files_ou
 %
 %   SIL
 %       (matrix S*N) SIL(s,n) is the mean stability contrast associated with
-%       STAB(:,s) and n clusters (the partition being defined using HIER{s}, 
+%       STAB(:,s) and n clusters (the partition being defined using HIER{s},
 %       see below).
 %
 %   INTRA
 %       (matrix, S*N) INTRA(s,n) is the mean within-cluster stability
-%       associated with STAB(:,s) and n clusters (the partition being defined 
+%       associated with STAB(:,s) and n clusters (the partition being defined
 %       using HIER{s}, see below).
 %
 %   INTER
-%       (matrix, S*N) INTER(s,n) is the mean maximal between-cluster stability 
-%       associated with STAB(:,s) and n clusters (the partition being defined 
+%       (matrix, S*N) INTER(s,n) is the mean maximal between-cluster stability
+%       associated with STAB(:,s) and n clusters (the partition being defined
 %       using HIER{s}, see below).
 %
 %   HIER
 %       (cell of array) HIER{S} is the hierarchy associated with STAB(:,s)
 %
-% OPT           
-%   (structure) with the following fields.  
+% OPT
+%   (structure) with the following fields.
 %
 %   MIN_SUBJECT
 %       (integer, default 3) the minimal number of subjects to start the group-level
-%       stability analysis. An error message will be issued if this number is 
-%       not reached. 
+%       stability analysis. An error message will be issued if this number is
+%       not reached.
 %
 %   NB_CLASSES
 %       (vector of integer) the number of clusters (or classes) that will
@@ -94,9 +94,9 @@ function [files_in,files_out,opt] = niak_brick_stability_group(files_in,files_ou
 %       specified in CLUSTERING.OPT_CLUST
 %
 %   NB_CLASSES_FINAL
-%       (vector of integer, default []) the number of final (consensus) clusters. 
-%       By default (empty), the number is selected to optimize the stability contrast 
-%       in a neighbourhood of OPT.NB_CLASSES. 
+%       (vector of integer, default []) the number of final (consensus) clusters.
+%       By default (empty), the number is selected to optimize the stability contrast
+%       in a neighbourhood of OPT.NB_CLASSES.
 %
 %   NB_CLASSES_IND
 %       (integer) The number of classes used to derive the individual
@@ -109,7 +109,7 @@ function [files_in,files_out,opt] = niak_brick_stability_group(files_in,files_ou
 %       is taken.
 %
 %   NB_SAMPS
-%       (integer, default 100) the number of samples to use in the 
+%       (integer, default 100) the number of samples to use in the
 %       bootstrap Monte-Carlo approximation of stability.
 %
 %   CLUSTERING
@@ -127,7 +127,7 @@ function [files_in,files_out,opt] = niak_brick_stability_group(files_in,files_ou
 %
 %   CONSENSUS
 %       (structure, optional) This structure describes
-%       the clustering algorithm used to estimate a consensus clustering on 
+%       the clustering algorithm used to estimate a consensus clustering on
 %       each stability matrix, with the following fields :
 %
 %       TYPE
@@ -135,8 +135,8 @@ function [files_in,files_out,opt] = niak_brick_stability_group(files_in,files_ou
 %           Available options : 'hierarchical'
 %
 %       OPT
-%           (structure, default see NIAK_HIERARCHICAL_CLUSTERING) options 
-%           that will be  sent to the  clustering command. The exact list 
+%           (structure, default see NIAK_HIERARCHICAL_CLUSTERING) options
+%           that will be  sent to the  clustering command. The exact list
 %           of options depends on CLUSTERING.TYPE:
 %              'hierarchical' : see NIAK_HIERARCHICAL_CLUSTERING
 %
@@ -144,8 +144,8 @@ function [files_in,files_out,opt] = niak_brick_stability_group(files_in,files_ou
 %       (boolean, default 0) if the flag is 1, then the function does not
 %       do anything but update the defaults of FILES_IN, FILES_OUT and OPT.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
 % _________________________________________________________________________
@@ -161,18 +161,18 @@ function [files_in,files_out,opt] = niak_brick_stability_group(files_in,files_ou
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Unless there are more clusters than atoms (trivial case), subjects with 
-% a zero stability matrix are ignored. This feature makes it possible to 
+% Unless there are more clusters than atoms (trivial case), subjects with
+% a zero stability matrix are ignored. This feature makes it possible to
 % dynamically filter out subjects based on certain desirable features of the
-% individual datasets during pipeline execution (if the subject is not usable, 
-% just generate a zero stability matrix). 
+% individual datasets during pipeline execution (if the subject is not usable,
+% just generate a zero stability matrix).
 %
 % For more details, see the description of the stability analysis on a
 % group clustering in the following reference :
 %
 % P. Bellec; P. Rosa-Neto; O.C. Lyttelton; H. Benalib; A.C. Evans,
-% Multi-level bootstrap analysis of stable clusters in resting-State fMRI. 
-% Neuroimage 51 (2010), pp. 1126-1139 
+% Multi-level bootstrap analysis of stable clusters in resting-State fMRI.
+% Neuroimage 51 (2010), pp. 1126-1139
 %
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008-2010.
 %               Centre de recherche de l'institut de Gériatrie de Montréal
@@ -208,7 +208,7 @@ function [files_in,files_out,opt] = niak_brick_stability_group(files_in,files_ou
 if ~exist('files_in','var')||~exist('files_out','var')||~exist('opt','var')
     error('niak:brick','syntax: [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_STABILITY_GROUP(FILES_IN,FILES_OUT,OPT).\n Type ''help niak_brick_stability_group'' for more info.')
 end
-    
+
 %% Files in
 list_fields   = {'stability' , 'infos'           };
 list_defaults = {NaN         , 'gb_niak_omitted' };

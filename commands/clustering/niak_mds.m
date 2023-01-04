@@ -19,11 +19,11 @@ function coord = niak_mds(dist_mat,opt)
 %           representation.
 %
 %       RATE
-%           (scalar, default 1) 
+%           (scalar, default 1)
 %
 %       NB_CYCLES
-%           (scalar, default 10) This value should lie between 10 and 5000, 
-%           depending on number of data vectors. The more data vectors, the 
+%           (scalar, default 10) This value should lie between 10 and 5000,
+%           depending on number of data vectors. The more data vectors, the
 %           less cycles are necessary.
 %
 %       INIT
@@ -31,11 +31,11 @@ function coord = niak_mds(dist_mat,opt)
 %           for COORD.
 %
 %       FLAG_DISP
-%           (boolean, default 1) if FLAG_DISP is true, a representation of 
+%           (boolean, default 1) if FLAG_DISP is true, a representation of
 %           the MDS results will be produced along the optimization
 %
 %       FLAG_NORM
-%           (boolean, default 1) if the flag is true, normalize 
+%           (boolean, default 1) if the flag is true, normalize
 %           shift/scale/rotation invariant scatter plots by PCA
 %
 % _________________________________________________________________________
@@ -56,13 +56,13 @@ function coord = niak_mds(dist_mat,opt)
 % _________________________________________________________________________
 % REFERENCES:
 %
-% Marc Strickert, Nese Sreenivasulu, Björn Usadel and Udo Seiffert. 
+% Marc Strickert, Nese Sreenivasulu, Björn Usadel and Udo Seiffert.
 % Correlation-maximizing surrogate gene space for visual mining of gene
 % expression patterns in developing barley endosperm tissue.
 % BMC Bioinformatics 2007, 8:165
 % doi:10.1186/1471-2105-8-165
 %
-% M. Strickert and F.-M. Schleif and U. Seiffert and T. Villmann. 
+% M. Strickert and F.-M. Schleif and U. Seiffert and T. Villmann.
 % Derivatives of Pearson Correlation for Gradient-based Analysis of
 % Biomedical Data. Inteligencia Artificial, Revista Iberoamericana de IA
 % 2088, 12: 37-44.
@@ -82,7 +82,7 @@ function coord = niak_mds(dist_mat,opt)
 % SEE ALSO:
 % NIAK_BUILD_DISTANCE, NIAK_VISU_MDS
 %
-% Copyright (c) Marc Strickert, 
+% Copyright (c) Marc Strickert,
 % Leibniz-Institute of Crop Plant Research, IPK-Gatersleben, 2009.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -114,15 +114,15 @@ niak_set_defaults
 
 % Running MDS
 if ~exist('OCTAVE_VERSION','builtin')
-    
+
     % this is matlab
     coord = sub_hitmds_cpu2_sparse(dist_mat,init,nb_dim,nb_cycles,rate,flag_disp);
-        
+
 else
-    
+
     % this is octave
     coord = sub_hitmds_cpu2_sparse_octave(dist_mat,init,nb_dim,nb_cycles,rate,flag_disp);
-    
+
 end
 
 if flag_norm
@@ -131,7 +131,7 @@ end
 
 coord = coord';
 
-%% SUBFUNCTIONS 
+%% SUBFUNCTIONS
 %__________________________________________________________________________
 function Y = sub_hitmds_cpu2_sparse(D, Y, n_dim, n_cycles, rate, plt)
 %
@@ -181,7 +181,7 @@ end
 zers = find(D == 0);
 n_datainvs = 1. / (n_data * n_data - length(zers));
 
-if(sum(size(Y)) == 0) 
+if(sum(size(Y)) == 0)
   Y = randn(n_data, n_dim);
 end
 
@@ -198,29 +198,29 @@ if(plt>0)
 end
 
 
-for i = n_cycles:-1:1 
+for i = n_cycles:-1:1
 
   % distance matrix
   for j = 1:n_dim
     tmp2 = repmat(Y(:,j).', n_data, 1);  % all pairs of differences between first attrib in points
-    tmp = repmat(Y(:,j), 1, n_data); 
+    tmp = repmat(Y(:,j), 1, n_data);
     tmp = tmp - tmp2;
-    if(j > 1) 
+    if(j > 1)
       T = T + tmp .* tmp;
-    else 
-      T = tmp .* tmp; 
+    else
+      T = tmp .* tmp;
     end
   end
 
   T(zers) = 0; % cancel unknowns
- 
+
   T = sqrt(T); % costly operation
 
   mn_T = sum(sum(T)) * n_datainvs;
   T = T - mn_T;
   T(zers) = 0; % unknowns: zero force
-  
-  
+
+
   mi_T =  sum(sum(T .* D));
   mo_T =  sum(sum(T .* T));
 
@@ -228,19 +228,19 @@ for i = n_cycles:-1:1
   mi_T = mi_T * f;
   mo_T = mo_T * f;
 
-    
+
   % correlation quality output log
   sqrt(mi_T * mi_T / (mo_D * mo_T * f));
 
   tmpT = T * mi_T - D * mo_T;
   T = T + (0.1 + mn_T);
   tmpT = tmpT ./ T;
- 
-  % calc point i update strength 
+
+  % calc point i update strength
   for j = n_dim:-1:1
     if(j < n_dim) % else recycle value from loop above
       tmp2 = repmat(Y(:,j).', n_data, 1);  % all pairs of differences between first attrib in points
-      tmp = repmat(Y(:,j), 1, n_data); 
+      tmp = repmat(Y(:,j), 1, n_data);
       tmp = tmp - tmp2;
     end
     tmp = tmp .* tmpT;
@@ -250,7 +250,7 @@ for i = n_cycles:-1:1
 %  Y = Y + rate * i / n_cycles * pnt_del ./ sqrt(abs(pnt_del)+.001);
   Y = Y + rate * i * .25 * (1+mod(i,2)) / n_cycles * pnt_del ./ sqrt(abs(pnt_del)+.001);
 
-  if(plt>0) 
+  if(plt>0)
     set(0,'current',1);
     plot(Y(:,1),Y(:,2),'*');
 % 1D plot:   plot(1:size(Y,1),Y,'*');
@@ -302,7 +302,7 @@ end
 zers = find(D == 0);
 n_datainvs = 1. / (n_data * n_data - length(zers));
 
-if(sum(size(Y)) == 0) 
+if(sum(size(Y)) == 0)
   Y = randn(n_data, n_dim);
 end
 
@@ -319,29 +319,29 @@ if(plt>0)
 end
 
 
-for i = n_cycles:-1:1 
+for i = n_cycles:-1:1
 
   % distance matrix
   for j = 1:n_dim
     tmp2 = repmat(Y(:,j).', n_data, 1);  % all pairs of differences between first attrib in points
-    tmp = repmat(Y(:,j), 1, n_data); 
+    tmp = repmat(Y(:,j), 1, n_data);
     tmp = tmp - tmp2;
-    if(j > 1) 
+    if(j > 1)
       T = T + tmp .* tmp;
-    else 
-      T = tmp .* tmp; 
+    else
+      T = tmp .* tmp;
     end
   end
 
   T(zers) = 0; % cancel unknowns
- 
+
   T = sqrt(T); % costly operation
 
   mn_T = sum(sum(T)) * n_datainvs;
   T = T - mn_T;
   T(zers) = 0; % unknowns: zero force
-  
-  
+
+
   mi_T =  sum(sum(T .* D));
   mo_T =  sum(sum(T .* T));
 
@@ -349,19 +349,19 @@ for i = n_cycles:-1:1
   mi_T = mi_T * f;
   mo_T = mo_T * f;
 
-    
+
   % correlation quality output log
   sqrt(mi_T * mi_T / (mo_D * mo_T * f));
 
   tmpT = T * mi_T - D * mo_T;
   T = T + (0.1 + mn_T);
   tmpT = tmpT ./ T;
- 
-  % calc point i update strength 
+
+  % calc point i update strength
   for j = n_dim:-1:1
     if(j < n_dim) % else recycle value from loop above
       tmp2 = repmat(Y(:,j).', n_data, 1);  % all pairs of differences between first attrib in points
-      tmp = repmat(Y(:,j), 1, n_data); 
+      tmp = repmat(Y(:,j), 1, n_data);
       tmp = tmp - tmp2;
     end
     tmp = tmp .* tmpT;
@@ -371,7 +371,7 @@ for i = n_cycles:-1:1
 %  Y = Y + rate * i / n_cycles * pnt_del ./ sqrt(abs(pnt_del)+.001);
   Y = Y + rate * i * .25 * (1+mod(i,2)) / n_cycles * pnt_del ./ sqrt(abs(pnt_del)+.001);
 
-  if(plt>0) 
+  if(plt>0)
     plot(Y(:,1),Y(:,2),'*');
 % 1D plot:   plot(1:size(Y,1),Y,'*');
     drawnow;

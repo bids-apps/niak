@@ -8,7 +8,7 @@ function [pipeline,opt_pipe,files_in] = niak_demo_stability_rest(path_demo,opt)
 % INPUTS:
 %
 % PATH_DEMO
-%   (string) the full path to the preprocessed NIAK demo dataset. The dataset 
+%   (string) the full path to the preprocessed NIAK demo dataset. The dataset
 %   can be found at http://www.nitrc.org/frs/?group_id=411
 %
 % OPT
@@ -16,11 +16,11 @@ function [pipeline,opt_pipe,files_in] = niak_demo_stability_rest(path_demo,opt)
 %   will do here. The demo only changes one default:
 %
 %   FILES_IN.FMRI
-%      (structure, default grab the preprocessed demoniak) the input files 
+%      (structure, default grab the preprocessed demoniak) the input files
 %      from the preprocessing to be fed in the stability_rest pipeline.
 %
 %   FOLDER_OUT
-%      (string, default PATH_DEMO/stability_rest) where to store the 
+%      (string, default PATH_DEMO/stability_rest) where to store the
 %      results of the pipeline.
 %
 % _________________________________________________________________________
@@ -34,26 +34,26 @@ function [pipeline,opt_pipe,files_in] = niak_demo_stability_rest(path_demo,opt)
 %   (structure) the option to call NIAK_PIPELINE_STABILITY_REST
 %
 % FILES_IN
-%   (structure) the description of input files used to call 
+%   (structure) the description of input files used to call
 %   NIAK_PIPELINE_STABILITY_REST
 %
 % _________________________________________________________________________
 % COMMENTS
 %
 % Note 1:
-% The demo will apply the stability_rest pipeline on the preprocessed version 
-% of the DEMONIAK dataset. It is possible to configure the pipeline manager 
-% to use parallel computing using OPT.PSOM, see : 
+% The demo will apply the stability_rest pipeline on the preprocessed version
+% of the DEMONIAK dataset. It is possible to configure the pipeline manager
+% to use parallel computing using OPT.PSOM, see :
 % http://code.google.com/p/psom/wiki/PsomConfiguration
 %
 % NOTE 2:
-% The demo database exists in multiple file formats. NIAK looks into the demo 
-% path and is supposed to figure out which format you are intending to use 
-% by itself. 
+% The demo database exists in multiple file formats. NIAK looks into the demo
+% path and is supposed to figure out which format you are intending to use
+% by itself.
 %
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2013
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -93,7 +93,7 @@ opt = psom_struct_defaults(opt, ...
       false);
 
 %% Grab the results from the NIAK fMRI preprocessing pipeline
-if ~isempty(opt.files_in)&&~strcmp(opt.files_in,'gb_niak_omitted')    
+if ~isempty(opt.files_in)&&~strcmp(opt.files_in,'gb_niak_omitted')
     files_in = rmfield(opt.files_in,'fmri');
     [fmri_c,labels_f] = niak_fmri2cell(opt.files_in.fmri);
     for ee = 1:length(fmri_c)
@@ -101,15 +101,15 @@ if ~isempty(opt.files_in)&&~strcmp(opt.files_in,'gb_niak_omitted')
     end
 else
     %% Grab the results from the NIAK fMRI preprocessing pipeline
-    opt_g.min_nb_vol = 30; % the demo dataset is very short, so we have to lower considerably the minimum acceptable number of volumes per run 
+    opt_g.min_nb_vol = 30; % the demo dataset is very short, so we have to lower considerably the minimum acceptable number of volumes per run
     opt_g.type_files = 'rest'; % Specify to the grabber to prepare the files for the stability FIR pipeline
-    files_in = niak_grab_fmri_preprocess(path_demo,opt_g); 
+    files_in = niak_grab_fmri_preprocess(path_demo,opt_g);
 end
 opt = rmfield(opt,'files_in');
 
 %% Options: grid scales
 if ~isfield(opt,'grid_scales')||isempty(opt.grid_scales)
-    opt.grid_scales = [5 10]'; 
+    opt.grid_scales = [5 10]';
 end
 
 %% Options: scales to generate stability maps & time series
@@ -124,27 +124,27 @@ end
 
 %% Options: number of bootstrap samples (group stability)
 if ~isfield(opt,'stability_group')||~isfield(opt.stability_group,'nb_samps')||isempty(opt.stability_group.nb_samps)
-    opt.stability_group.nb_samps = 10; 
+    opt.stability_group.nb_samps = 10;
 end
 
 %% Options: generate results at the indiviudal level
 if ~isfield(opt,'flag_ind')
-    opt.flag_ind = true;   
+    opt.flag_ind = true;
 end
 
 %% Options: generate results at the mixed level
 if ~isfield(opt,'flag_ind')
-    opt.flag_mixed = true;   
+    opt.flag_mixed = true;
 end
 
 %% Options: generate results at the group level
 if ~isfield(opt,'flag_group')
-    opt.flag_group = true;   
+    opt.flag_group = true;
 end
 
 %% Options: generate network-level time series
 if ~isfield(opt,'flag_tseries_network')
-    opt.flag_tseries_network = true;   
+    opt.flag_tseries_network = true;
 end
 
 %% Options: minimum number of datasets

@@ -140,4 +140,3 @@ switch (gb_psom_OS)
     otherwise
 	gb_psom_localhost = 'unknown';
 end
-

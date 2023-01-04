@@ -3,15 +3,15 @@ function [in,out,opt] = niak_brick_init_qc_report(in,out,opt)
 %
 % SYNTAX: [IN,OUT,OPT] = NIAK_BRICK_INIT_QC_REPORT( IN , OUT , OPT )
 %
-% IN not used. Available to conform to the syntax of "bricks". 
+% IN not used. Available to conform to the syntax of "bricks".
 % OUT (string) the name of spreadsheet with tabular-separated values.
 % OPT.LIST_SUBJECT (cell of strings) the ID of the subject
-% OPT.FLAG_TEST (boolean, default false) if the flag is true, 
-%   nothing is done but update IN, OUT and OPT. 
+% OPT.FLAG_TEST (boolean, default false) if the flag is true,
+%   nothing is done but update IN, OUT and OPT.
 %
 % _________________________________________________________________________
 % Copyright (c) Yassine Benhajali, Pierre Bellec
-% Centre de recherche de l'institut de geriatrie de Montreal, 
+% Centre de recherche de l'institut de geriatrie de Montreal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Quebec, Canada, 2013-2016
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -44,7 +44,7 @@ end
 opt = psom_struct_defaults(opt, ...
     { 'list_subject' , 'flag_test' }, ...
     { NaN              , false});
-    
+
 if opt.flag_test
     return
 end
@@ -55,6 +55,6 @@ qc_report(2:end,1) = opt.list_subject;
 qc_report(1,1) = 'id_subject';
 qc_report(1,2) = 'QC';
 qc_report(2:end,2:end) = repmat({''},[length(opt.list_subject),1]);
-    
+
 %% Save the report
 niak_write_csv_cell(out,qc_report);

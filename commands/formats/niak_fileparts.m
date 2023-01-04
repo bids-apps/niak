@@ -26,7 +26,7 @@ function [path_f,name_f,ext_f,flag_zip,ext_short] = niak_fileparts(file_name);
 %       in NIAK_GB_VARS.M), in which case two extensions will be extracted.
 %
 % FLAG_ZIP
-%       (boolean) FLAG_ZIP is true if the first extension of the file is 
+%       (boolean) FLAG_ZIP is true if the first extension of the file is
 %       '.gz' (or actually the extension defined in GB_NIAK_ZIP_EXT defined
 %       in NIAK_GB_VARS.M)
 %
@@ -38,7 +38,7 @@ function [path_f,name_f,ext_f,flag_zip,ext_short] = niak_fileparts(file_name);
 %
 % _________________________________________________________________________
 % COMMENTS:
-% 
+%
 % This is essentially a wraper around the function FILEPARTS, but it
 % behaves differently for .gz files (see OUTPUTS).
 %
@@ -46,7 +46,7 @@ function [path_f,name_f,ext_f,flag_zip,ext_short] = niak_fileparts(file_name);
 % geriatrie de Montreal, 2010-2015
 % Maintainer : pbellec@criugm.qc.ca
 % See licensing information in the code.
-% Keywords : 
+% Keywords :
 
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal
@@ -84,7 +84,7 @@ niak_gb_vars
 if isempty(path_f)
     path_f = ['.' filesep];
 end
-                
+
 if strcmp(ext_f,GB_NIAK.zip_ext)
 	[tmp,name_f,ext_short] = fileparts(name_f);
     ext_f = [ext_short GB_NIAK.zip_ext];

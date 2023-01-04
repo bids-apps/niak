@@ -7,46 +7,46 @@ function [files_in,files_out,opt] = niak_brick_edge_partition(files_in,files_out
 % _________________________________________________________________________
 % INPUTS
 %
-% FILES_IN        
+% FILES_IN
 %    (string) a file name of a 3D volume filled with integer labels.
 %
-% FILES_OUT       
-%    (string, default <BASE_NAME>_edge.<EXT>) File name for output. Same as 
-%    FILES_IN, except that all voxels but the edges of the elements of the 
-%    partition are set to zero. 
+% FILES_OUT
+%    (string, default <BASE_NAME>_edge.<EXT>) File name for output. Same as
+%    FILES_IN, except that all voxels but the edges of the elements of the
+%    partition are set to zero.
 %
-% OPT           
-%    (structure) with the following fields.  
+% OPT
+%    (structure) with the following fields.
 %
 %    NB_ERODE
 %        (integer, default 1) the number of erosions used to define the edges of
 %        a binary mask.
 %
-%    FOLDER_OUT 
-%        (string, default: path of FILES_IN) If present, all default 
-%        outputs will be created in the folder FOLDER_OUT. The folder 
+%    FOLDER_OUT
+%        (string, default: path of FILES_IN) If present, all default
+%        outputs will be created in the folder FOLDER_OUT. The folder
 %        needs to be created beforehand.
 %
-%    FLAG_VERBOSE 
-%        (boolean, default 1) if the flag is 1, then the function 
+%    FLAG_VERBOSE
+%        (boolean, default 1) if the flag is 1, then the function
 %        prints some infos during the processing.
 %
-%    FLAG_TEST 
-%        (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%        do anything but update the default values in FILES_IN, 
+%    FLAG_TEST
+%        (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%        do anything but update the default values in FILES_IN,
 %        FILES_OUT and OPT.
-%        
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%           
+%
 % _________________________________________________________________________
 % COMMENTS
 %
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2013
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -85,7 +85,7 @@ if ~ischar(files_in)
 end
 
 %% Check output
-if nargin < 2 
+if nargin < 2
     files_out = '';
 end
 if ~ischar(files_out)
@@ -133,7 +133,7 @@ end
 for num_l = 1:nb_label
     if opt.flag_verbose
         niak_progress(num_l,nb_label);
-    end    
+    end
     num_c = labels(num_l);
     mask = vol==num_c;
     mask_inside = niak_morph(mask,['-successive ',repmat('E',[1 opt.nb_erode])],opt_m);

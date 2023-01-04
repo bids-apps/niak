@@ -7,15 +7,15 @@ function tseries_n = niak_normalize_tseries(tseries,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% TSERIES_N             
+% TSERIES_N
 %   (2D array) each column of TSERIES is a time series.
 %
 % OPT
-%   (structure or string) If string, see TYPE below. If structure, 
+%   (structure or string) If string, see TYPE below. If structure,
 %   the following fields are supported :
 %
 %   TYPE
-%      (string, default 'mean_var') 
+%      (string, default 'mean_var')
 %      the type of temporal normalization. Available options:
 %         'none'       : Don't do anything
 %         'mean'       : Translate the time series to a zero temporal mean.
@@ -32,7 +32,7 @@ function tseries_n = niak_normalize_tseries(tseries,opt)
 % _________________________________________________________________________
 % OUTPUTS :
 %
-% TSERIES_N             
+% TSERIES_N
 %       (2D array) same as data after temporal normalization.
 %
 % _________________________________________________________________________
@@ -44,8 +44,8 @@ function tseries_n = niak_normalize_tseries(tseries,opt)
 %
 % time series with zero variance are left as constant zeros.
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de geriatrie 
-% de Montreal, Departement d'informatique et de recherche operationnelle, 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de geriatrie
+% de Montreal, Departement d'informatique et de recherche operationnelle,
 % Universite de Montreal, 2008-2010.
 % Maintainer : pbellec@criugm.qc.ca
 % See licensing information in the code.
@@ -73,7 +73,7 @@ function tseries_n = niak_normalize_tseries(tseries,opt)
 %% Initialization and syntax checks %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Syntax 
+%% Syntax
 if ~exist('tseries','var')
     error('Syntax : TSERIES_N = NIAK_NORMALIZE_TSERIES(TSERIES,OPT) ; for more infos, type ''help niak_normalize_tseries''.')
 end
@@ -104,38 +104,38 @@ end
 %% The core of the function starts here %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[nt,nn] = size(tseries); 
+[nt,nn] = size(tseries);
 
 switch opt.type
-    
+
     case 'none'
         tseries_n = tseries;
 
     case {'mean','mean_var2','mean_var'}
-        
-        tseries_n = niak_correct_mean_var(tseries,opt.type);                
- 
+
+        tseries_n = niak_correct_mean_var(tseries,opt.type);
+
     case 'median_mad'
-        
+
         median_ts = median(tseries,1);
         tseries_n = tseries - ones([nt 1])*median_ts;
         std_ts = 1.4785*median(abs(tseries_n),1);
         if ~isempty(tseries_n)&&(any(std_ts~=0))
             tseries_n(:,std_ts~=0) = tseries_n(:,std_ts~=0)./(ones([nt 1])*std_ts(std_ts~=0));
         end
-        
+
     case 'grand_mean'
-        
+
         grand_mean = mean(tseries(:));
         tseries_n = 100*tseries/grand_mean;
-        
+
     case 'perc'
-        
+
         mean_ts = mean(tseries,1);
         tseries_n = 100*tseries./repmat(mean_ts,[nt 1]) - 100;
-                
+
     otherwise
 
         error('niak:statistics','%s: unknown type of correction',opt.type);
-        
+
 end

@@ -10,7 +10,7 @@ function [files_in,files_out,opt] = niak_brick_graph_prop(files_in,files_out,opt
 % FILES_IN
 %   (string) a .mat file  with the following variables:
 %
-%   CONN 
+%   CONN
 %      (vector) a vectorized version of the connectome
 %
 %   G
@@ -20,15 +20,15 @@ function [files_in,files_out,opt] = niak_brick_graph_prop(files_in,files_out,opt
 %      (string) the type of connectome (see OPT.TYPE in NIAK_BRICK_CONNECTOME)
 %
 %   THRESH
-%      (structure) parameters of the binarization of the connectome. See the OPT 
+%      (structure) parameters of the binarization of the connectome. See the OPT
 %      argument of NIAK_BUILD_GRAPH
 %
 %   IND_ROI
-%      (vector) the Nth row/column of CONN corresponds to the region IND_ROI(n) 
+%      (vector) the Nth row/column of CONN corresponds to the region IND_ROI(n)
 %      in the mask.
 %
 % FILES_OUT
-%    (string) the name of a .mat file with all the measures stored in indiviual 
+%    (string) the name of a .mat file with all the measures stored in indiviual
 %    variables called (MEASURE) (with MEASURE being the name of the measure):
 %
 %    (MEASURE).TYPE (string) the type of measure
@@ -38,7 +38,7 @@ function [files_in,files_out,opt] = niak_brick_graph_prop(files_in,files_out,opt
 % OPT
 %   (structure) with arbitrary fields (MEASURE). Each entry has the following fields:
 %
-%   (MEASURE).TYPE 
+%   (MEASURE).TYPE
 %      (string) the type of measure. Available options:
 %
 %      'Dcentrality': as defined in Buckner et al. 2009
@@ -67,12 +67,12 @@ function [files_in,files_out,opt] = niak_brick_graph_prop(files_in,files_out,opt
 %       the pipeline is executed twice).
 %
 %   FLAG_TEST
-%       (boolean, default: 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%       (boolean, default: 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
 %
 %   FLAG_VERBOSE
-%       (boolean, default: 1) If FLAG_VERBOSE == 1, write messages 
+%       (boolean, default: 1) If FLAG_VERBOSE == 1, write messages
 %       indicating progress.
 %
 % _________________________________________________________________________
@@ -95,14 +95,14 @@ function [files_in,files_out,opt] = niak_brick_graph_prop(files_in,files_out,opt
 %
 % Some of the measures employed here depend on function from the "brain connectivity toolbox"
 %   https://sites.google.com/site/bctnet/Home/functions
-% This software has to be installed to generate the networks properties, and is described 
+% This software has to be installed to generate the networks properties, and is described
 % in the following paper:
-%   Rubinov, M., Sporns, O., Sep. 2010. 
-%   Complex network measures of brain connectivity: Uses and interpretations. 
+%   Rubinov, M., Sporns, O., Sep. 2010.
+%   Complex network measures of brain connectivity: Uses and interpretations.
 %   NeuroImage 52 (3), 1059-1069.
 %   URL http://dx.doi.org/10.1016/j.neuroimage.2009.10.003
 %
-% Copyright (c) Pierre Bellec, Christian L. Dansereau, 
+% Copyright (c) Pierre Bellec, Christian L. Dansereau,
 % Centre de recherche de l'Institut universitaire de griatrie de Montral, 2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -150,11 +150,11 @@ opt = psom_struct_defaults(opt,list_fields,list_defaults,false);
 list_mes = fieldnames(opt);
 list_mes = list_mes(~ismember(list_mes,{'rand_seed','flag_test','flag_verbose'}));
 for num_m = 1:length(list_mes)
-    name = list_mes{num_m};    
+    name = list_mes{num_m};
     opt.(name) = psom_struct_defaults(opt.(name),{'type','param'},{NaN,[]});
     switch opt.(name).type
         case 'Dcentrality'
-            
+
         case 'p2p'
             if length(opt.(name).param)~=2
                 error('Please provide two indices to generate point-2-point connectivity in measure %s',mes)
@@ -164,15 +164,15 @@ for num_m = 1:length(list_mes)
                 error('Please provide an index to generate local clustering in measure %s',mes)
             end
         case 'avg_clustering'
-            
+
         case 'global_efficiency'
-            
+
         case 'local_efficiency'
             if length(opt.(name).param)~=1
                 error('Please provide an index to generate local clustering in measure %s',mes)
             end
         case 'modularity'
-        
+
         otherwise
             error('%s is an unknown measure',opt.(name).type)
     end
@@ -205,49 +205,49 @@ else
     G = niak_lvec2mat(conn.G);
     conn = niak_lvec2mat(conn.conn);
 end
-   
+
 for num_m = 1:length(list_mes)
     name = list_mes{num_m};
     if opt.flag_verbose
         fprintf('Generating measure %s (type %s) ...\n',name,opt.(name).type);
     end
-    
+
     switch mes.(name).type
-    
+
         case 'Dcentrality'
-        
+
             dG = sum(G,1)/size(G,1);
             dG = (dG - mean(dG))/std(dG); % the degree centrality is simply the degree, corrected to have a zero mean, unit variance distribution across the brain
             mes.(name).val = dG(ind_roi == mes.(name).param);
-            
+
         case 'p2p'
-        
+
             mes.(name).val = conn(ind_roi == mes.(name).param(1),ind_roi == mes.(name).param(2));
-            
+
         case 'clustering'
-                        
+
             C = clustering_coef_bu(G);
-            mes.(name).val = C(ind_roi == mes.(name).param);            
-            
-        case 'avg_clustering'        
-            
+            mes.(name).val = C(ind_roi == mes.(name).param);
+
+        case 'avg_clustering'
+
             mes.(name).val = mean(clustering_coef_bu(G));
-            
-        case 'global_efficiency'            
-            
+
+        case 'global_efficiency'
+
             mes.(name).val = efficiency_bin(G);
-            
+
         case 'local_efficiency'
-                    
+
             e = efficiency_bin(G,1);
             mes.(name).val = e(ind_roi == mes.(name).param);
-            
+
         case 'modularity'
-           
-            [Ci,mes.(name).val] = modularity_und(G);            
-            
+
+            [Ci,mes.(name).val] = modularity_und(G);
+
     end
-    
+
 end
 
 %% Save the results

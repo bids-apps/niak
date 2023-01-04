@@ -22,13 +22,13 @@ function [pipeline,opt] = niak_pipeline_stability_multi(files_in,opt)
 %       (string) a 3D volume defining the space.
 %
 %   INFOS
-%       (string, default 'gb_niak_omitted') the name of a CSV file. 
+%       (string, default 'gb_niak_omitted') the name of a CSV file.
 %       Example :
 %                 , SEX , HANDEDNESS
-%       <SUBJECT> , 0   , 0 
+%       <SUBJECT> , 0   , 0
 %       This type of file can be generated with Excel (save under CSV).
 %       The infos will be used to "stratify" the data, i.e. resampling of
-%       the data will be restricted within groups of subjects that share 
+%       the data will be restricted within groups of subjects that share
 %       identical infos. All strata will be given equal weights to build
 %       the consensus across subjects. If omitted, all subjects will belong
 %       to the same strata.
@@ -237,7 +237,7 @@ end
 
 %% Individual stability analysis
 pipeline = struct();
-for num_s = 1:nb_subject  
+for num_s = 1:nb_subject
     clear job_in job_out job_opt
     job_in  = cell_tseries{num_s};
     job_out = [opt.folder_out 'stability_ind' filesep list_subject{num_s} filesep 'stability_ind_' list_subject{num_s} '.mat'];
@@ -304,7 +304,7 @@ for num_s = 1:nb_subject
     clear job_in job_out job_opt
     job_in = pipeline.(['stability_ind_' list_subject{num_s}]).files_out;
     job_out.msteps = [opt.folder_out 'stability_ind' filesep list_subject{num_s} filesep 'msteps_ind_' list_subject{num_s} '.mat'];
-    job_out.table = [opt.folder_out 'stability_ind' filesep list_subject{num_s} filesep 'msteps_ind_' list_subject{num_s} '_table.csv'];    
+    job_out.table = [opt.folder_out 'stability_ind' filesep list_subject{num_s} filesep 'msteps_ind_' list_subject{num_s} '_table.csv'];
     job_opt.rand_seed = opt.rand_seed;
     job_opt.neigh        = opt.neigh;
     job_opt.param        = opt.param;
@@ -359,7 +359,7 @@ if (opt.flag_ind)&&~isempty(opt.scales_maps)
             pipeline = psom_add_job(pipeline,['stability_maps_ind_' list_subject{num_s}],'niak_brick_stability_maps',job_in,job_out,pipeline.(['stability_maps_ind_' list_subject{1}]).opt,false);
         end
 
-        % Figures 
+        % Figures
         clear job_in job_out job_opt
         job_in.stability = pipeline.(['stability_ind_' list_subject{num_s}]).files_out;
         job_in.hierarchy = pipeline.(['stability_ind_' list_subject{num_s}]).files_out;
@@ -397,17 +397,17 @@ if opt.flag_group&&~isempty(opt.scales_maps)
         job_out.stability_map_all{1}    = [opt.folder_out 'stability_group' filesep label_scale filesep 'compound_stability_map_group_' label_scale ext_f];
         job_out.stability_maps{1}       = [opt.folder_out 'stability_group' filesep label_scale filesep 'stability_maps_group_' label_scale ext_f];
         job_opt = opt.stability_maps;
-        job_opt.scales_maps = [scg scg scf];        
+        job_opt.scales_maps = [scg scg scf];
         pipeline = psom_add_job(pipeline,['stability_maps_group_' label_scale],'niak_brick_stability_maps',job_in,job_out,job_opt);
-        
-        % Figures 
+
+        % Figures
         clear job_in job_out job_opt
         job_in.stability = pipeline.(['stability_group_sci' num2str(sci)]).files_out;
         job_in.hierarchy = pipeline.(['stability_group_sci' num2str(sci)]).files_out;
         job_opt                = opt.stability_figure;
-        job_opt.scales_maps    = [scg scg scf];        
+        job_opt.scales_maps    = [scg scg scf];
         job_out{1}  = [opt.folder_out 'stability_group' filesep label_scale filesep 'figure_stability_group_' label_scale '.pdf'];
-        job_opt.labels{1} = ['sci' num2str(sci) ' scg' num2str(scg) ' scf' num2str(scf)];        
+        job_opt.labels{1} = ['sci' num2str(sci) ' scg' num2str(scg) ' scf' num2str(scf)];
         pipeline = psom_add_job(pipeline,['figure_stability_group_' label_scale],'niak_brick_stability_figure',job_in,job_out,job_opt);
     end
 end
@@ -434,12 +434,12 @@ if opt.flag_mixed&&~isempty(opt.scales_maps)
         job_opt = opt.stability_maps;
         job_opt.scales_maps = opt.scales_maps;
         pipeline = psom_add_job(pipeline,['stability_maps_mixed_' list_subject{num_s}],'niak_brick_stability_maps',job_in,job_out,job_opt);
-        
-        % Figures 
+
+        % Figures
         clear job_in job_out job_opt
         job_in.stability = pipeline.(['stability_ind_' list_subject{num_s}]).files_out;
         job_opt                = opt.stability_figure;
-        job_opt.scales_maps    = opt.scales_maps;     
+        job_opt.scales_maps    = opt.scales_maps;
         for num_sc = 1:nb_scales
             sci = opt.scales_maps(num_sc,1);
             scg = opt.scales_maps(num_sc,2);
@@ -447,13 +447,13 @@ if opt.flag_mixed&&~isempty(opt.scales_maps)
             label_scale = ['sci' num2str(sci) '_scg' num2str(scg) '_scf' num2str(scf)];
             job_in.hierarchy{num_sc} = pipeline.(['stability_group_sci' num2str(sci)]).files_out;
             job_out{num_sc}  = [opt.folder_out 'stability_mixed' filesep list_subject{num_s} filesep label_scale filesep 'figure_stability_mixed_' list_subject{num_s} '_' label_scale '.pdf'];
-            job_opt.labels{num_sc} = ['sci' num2str(sci) ' scg' num2str(scg) ' scf' num2str(scf)];        
+            job_opt.labels{num_sc} = ['sci' num2str(sci) ' scg' num2str(scg) ' scf' num2str(scf)];
         end
         pipeline = psom_add_job(pipeline,['figure_stability_mixed_' list_subject{num_s}],'niak_brick_stability_figure',job_in,job_out,job_opt);
     end
 end
 
-%% Run the pipeline 
+%% Run the pipeline
 if ~opt.flag_test
     psom_run_pipeline(pipeline,opt.psom);
 end

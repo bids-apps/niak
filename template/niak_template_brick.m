@@ -7,53 +7,53 @@ function [in,out,opt] = niak_template_brick(in,out,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% IN        
+% IN
 %   (string) a file name of a 3D+t fMRI dataset .
 %
 % OUT
 %   (structure) with the following fields:
-%       
+%
 %   CORRECTED_DATA
-%       (string, default <BASE NAME FMRI>_c.<EXT>) File name for processed 
+%       (string, default <BASE NAME FMRI>_c.<EXT>) File name for processed
 %       data.
-%       If OUT is an empty string, the name of the outputs will be 
+%       If OUT is an empty string, the name of the outputs will be
 %       the same as the inputs, with a '_c' suffix added at the end.
 %
 %   MASK
-%       (string, default <BASE NAME FMRI>_mask.<EXT>) File name for a mask 
-%       of the data. If OUT is an empty string, the name of the 
-%       outputs will be the same as the inputs, with a '_mask' suffix added 
+%       (string, default <BASE NAME FMRI>_mask.<EXT>) File name for a mask
+%       of the data. If OUT is an empty string, the name of the
+%       outputs will be the same as the inputs, with a '_mask' suffix added
 %       at the end.
 %
-% OPT           
-%   (structure) with the following fields.  
+% OPT
+%   (structure) with the following fields.
 %
-%   TYPE_CORRECTION       
+%   TYPE_CORRECTION
 %      (string, default 'mean_var') possible values :
-%      'none' : no correction at all                       
+%      'none' : no correction at all
 %      'mean' : correction to zero mean.
 %      'mean_var' : correction to zero mean and unit variance
-%      'mean_var2' : same as 'mean_var' but slower, yet does not use as 
+%      'mean_var2' : same as 'mean_var' but slower, yet does not use as
 %      much memory).
 %
-%   FOLDER_OUT 
-%      (string, default: path of IN) If present, all default outputs 
-%      will be created in the folder FOLDER_OUT. The folder needs to be 
+%   FOLDER_OUT
+%      (string, default: path of IN) If present, all default outputs
+%      will be created in the folder FOLDER_OUT. The folder needs to be
 %      created beforehand.
 %
-%   FLAG_VERBOSE 
-%      (boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%      (boolean, default 1) if the flag is 1, then the function prints
 %      some infos during the processing.
 %
-%   FLAG_TEST 
-%      (boolean, default 0) if FLAG_TEST equals 1, the brick does not do 
+%   FLAG_TEST
+%      (boolean, default 0) if FLAG_TEST equals 1, the brick does not do
 %      anything but update the default values in IN, OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % IN, OUT, OPT: same as inputs but updated with default values.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_CORRECT_MEAN_VAR
@@ -68,7 +68,7 @@ function [in,out,opt] = niak_template_brick(in,out,opt)
 % Note that this function is actually a fully functional brick to perform a
 % temporal normalization on fMRI time series (correction of mean, variance,
 % etc). That brick is pretty much useless, because it is just as simple to
-% apply NIAK_CORRECT_MEAN_VARIANCE "on-the-fly" in other bricks. It is 
+% apply NIAK_CORRECT_MEAN_VARIANCE "on-the-fly" in other bricks. It is
 % still a good brick example.
 %
 % _________________________________________________________________________
@@ -102,7 +102,7 @@ function [in,out,opt] = niak_template_brick(in,out,opt)
 
 %% global NIAK variables
 
-niak_gb_vars 
+niak_gb_vars
 
 %% Syntax
 if ~exist('in','var')||~exist('out','var')||~exist('opt','var')
@@ -113,7 +113,7 @@ end
 if ~ischar(in)
     error('IN should be a string');
 end
-    
+
 %% Options
 gb_name_structure = 'opt';
 gb_list_fields    = {'type_correction' , 'flag_verbose' , 'flag_test' , 'folder_out' };
@@ -151,7 +151,7 @@ if isempty(out.corrected_data)
             if strcmp(ext_f,'.gz')
                 [tmp,name_f,ext_f] = fileparts(name_f);
             end
-            
+
             name_files{num_f} = cat(2,opt.folder_out,filesep,name_f,'_c',ext_f);
         end
         out = char(name_filtered_data);
@@ -179,7 +179,7 @@ if flag_verbose
     fprintf('\n%s\n%s\n%s\n',stars,msg,stars);
 end
 
-%% Correct the time series 
+%% Correct the time series
 if flag_verbose
     fprintf('Correct the time series ...\n');
 end

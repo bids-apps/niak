@@ -7,19 +7,19 @@ function [files_in,files_out,opt] = niak_brick_neighbour(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS
 %
-%  * FILES_IN        
-%       (string) The name of a file which contains a 3D mask of regions of 
+%  * FILES_IN
+%       (string) The name of a file which contains a 3D mask of regions of
 %       interest (region I is filled with Is). This volume is refered to as
 %       MASK below.
 %
 %  * FILES_OUT
-%       (string, default <base FILES_IN>_neig.mat) the name of a .mat file 
+%       (string, default <base FILES_IN>_neig.mat) the name of a .mat file
 %       which will contain two variables :
 %
 %       NEIG
-%           (2D array) NEIG(i,:) is the list of neiighbours of voxel i. 
-%           All numbers refer to a position in FIND(MASK(:)). Because 
-%           all voxels do not necessarily have the same number of 
+%           (2D array) NEIG(i,:) is the list of neiighbours of voxel i.
+%           All numbers refer to a position in FIND(MASK(:)). Because
+%           all voxels do not necessarily have the same number of
 %           neighbours, 0 are used to pad each line.
 %
 %       IND
@@ -29,43 +29,43 @@ function [files_in,files_out,opt] = niak_brick_neighbour(files_in,files_out,opt)
 %       SIZE_VOX
 %           (scalar) the size of a voxel, in mm3
 %
-%  * OPT           
-%       (structure) with the following fields.  
+%  * OPT
+%       (structure) with the following fields.
 %
 %       FLAG_ALL
 %           (boolean, default false) if FLAG_ALL is true, NEIG/IND
 %           are computed for each roi independently. Those multiple
-%           variables are names NEIG_<NUM_R> and IND_<NUM_R> where 
+%           variables are names NEIG_<NUM_R> and IND_<NUM_R> where
 %           NUM_R is the number of the roi.
 %
 %       IND_ROIS
-%           (vector, default []) if not empty, the analysis is restricted 
+%           (vector, default []) if not empty, the analysis is restricted
 %           to the rois whose numbers are included in IND_ROIS.
 %
-%       TYPE_NEIG    
-%           (integer value, default 26) 
+%       TYPE_NEIG
+%           (integer value, default 26)
 %           definition of 3D-connexity (possible value 6,26)
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, the default 
-%           output name will be created in the folder FOLDER_OUT. The 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, the default
+%           output name will be created in the folder FOLDER_OUT. The
 %           folder needs to be created beforehand.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function
 %           prints some infos during the processing.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO
 %
@@ -104,7 +104,7 @@ function [files_in,files_out,opt] = niak_brick_neighbour(files_in,files_out,opt)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% global NIAK variables
-niak_gb_vars 
+niak_gb_vars
 
 %% Syntax
 if ~exist('files_in','var')||~exist('files_out','var')||~exist('opt','var')
@@ -162,7 +162,7 @@ if ~flag_all
     mask = mask>0;
 end
 
-%% Build neighbourhood 
+%% Build neighbourhood
 if flag_verbose
     fprintf('     Building neighbourhood...\n')
 end

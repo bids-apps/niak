@@ -5,7 +5,7 @@ function [direction_cosine,step,start,dimension_order] = niak_hdr_mat2minc(mat)
 %
 % SYNTAX:
 % [DIRECTION_COSINE,STEP,START,DIMENSION_ORDER] = NIAK_HDR_MAT2MINC(MAT)
-% 
+%
 % _________________________________________________________________________
 % INPUTS:
 %
@@ -24,7 +24,7 @@ function [direction_cosine,step,start,dimension_order] = niak_hdr_mat2minc(mat)
 % STEP  (vector 3*1) the step made at each voxel dimension along the
 %       DIRECTION_COSINES vector.
 %
-% DIMENSION_ORDER (string) the order in which the dimensions are stored. 
+% DIMENSION_ORDER (string) the order in which the dimensions are stored.
 %   Each letter ('x', 'y' or 'z') indicates a directions as follows:
 %   x: left -> right; y: posterior -> anterior; z: dorsal -> ventral
 %
@@ -42,7 +42,7 @@ function [direction_cosine,step,start,dimension_order] = niak_hdr_mat2minc(mat)
 % SEE ALSO:
 % NIAK_READ_HDR_MINC, NIAK_WRITE_MINC, NIAK_HDR_MINC2MAT
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Montreal Neurological Institute, 2008-2010
 % Departement d'informatique et de recherche operationnelle
 % Centre de recherche de l'institut de Geriatrie de Montreal
@@ -77,7 +77,7 @@ step = sqrt(diag(R'*R));
 dimension_order = 'xyz';
 dimension_order = dimension_order(ind);
 for num_d = 1:3
-    step(num_d) = step(num_d) * sign(R(ind(num_d),num_d));    
+    step(num_d) = step(num_d) * sign(R(ind(num_d),num_d));
 end
 
 direction_cosine = R * (diag(step.^(-1)));

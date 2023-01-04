@@ -16,18 +16,18 @@ function [files_in,files_out,opt] = niak_brick_stability_surf_plugin(files_in,fi
 %
 % FILES_OUT
 %   (string, optional) the name of a .mat file with the variables:
-%       PART is a VxK matrix, where the k-th column is the partition associated 
+%       PART is a VxK matrix, where the k-th column is the partition associated
 %       with the number of cluster OPT.SCALE_TAR(k).
 %
 % OPT
 %   (structure) with the following fields:
 %
 %   SCALE_TAR
-%       (vector) of K integers. The target scales  (i.e. number of final 
+%       (vector) of K integers. The target scales  (i.e. number of final
 %       clusters).
 %
 %   SCALE_REP
-%       (vector, default same as OPT.SCALE_TAR) The desired scales to be used 
+%       (vector, default same as OPT.SCALE_TAR) The desired scales to be used
 %       for generating the replication clusters at a later point.
 %
 %   NAME_DATA
@@ -136,7 +136,7 @@ else
     data_roi = data.(opt.name_data);
     part_roi = data.(opt.name_part);
 end
-    
+
 %% Build the plugin clustering
 
 if opt.flag_verbose

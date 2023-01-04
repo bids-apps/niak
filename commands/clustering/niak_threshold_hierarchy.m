@@ -11,17 +11,17 @@ function part = niak_threshold_hierarchy(hier,opt)
 %   (matrix) describes the hierarchy (see NIAK_HIERARCHICAL_CLUSTERING)
 %
 % OPT
-%   (structure) with the following fields - absent fields will be assigned 
+%   (structure) with the following fields - absent fields will be assigned
 %   a default value if possible.
 %
 %   TYPE
-%      (string, default 'nb_classes') the method to threshold the 
-%      hierarchy. Possible values : 'dist', 'nb_classes', 'size'. 
+%      (string, default 'nb_classes') the method to threshold the
+%      hierarchy. Possible values : 'dist', 'nb_classes', 'size'.
 %      See OPT.THRESH below.
 %
 %   THRESH
-%      (scalar) threshold for converting the hierarchy into a partition. 
-%      The exact meaning of THRESH depends on the method selected to 
+%      (scalar) threshold for converting the hierarchy into a partition.
+%      The exact meaning of THRESH depends on the method selected to
 %      "cut the tree" :
 %         if OPT.TYPE = 'dist', it is a threshold on the maximal
 %            distance between two clusters.
@@ -105,7 +105,7 @@ switch opt.type
 
         %% Merge clusters until a certain number of clusters is reached
         num_m = 1;
-        
+
         while (num_m<=N-1)&&(hier(num_m,1)<=thresh)
 
             x_object = hier(num_m,2);
@@ -120,14 +120,14 @@ switch opt.type
             taille(mask_x|mask_y) = taille(ind_x) + taille(ind_y);
             niveau(mask_x|mask_y) = hier(num_m,1);
             num_m = num_m+1;
-            
+
         end
-        
+
     case 'nb_classes'
-        
+
         %% Merge clusters until a certain number of clusters is reached
         num_m = 1;
-        
+
         while (N-num_m +1)>min(thresh)
 
             x_object = hier(num_m,2);
@@ -142,15 +142,15 @@ switch opt.type
             taille(mask_x|mask_y) = taille(ind_x) + taille(ind_y);
             niveau(mask_x|mask_y) = hier(num_m,1);
             num_m = num_m+1;
-            if flag_m 
+            if flag_m
                 if ismember(N-num_m+1,thresh)
                     part_final(:,thresh==N-num_m+1) = part;
-                end            
+                end
             end
         end
-        
+
     case 'size'
-        
+
         %% Merge clusters until a certain cluster size is reached
         while ((~isempty(hier))&&(max(taille)<thresh))
             x = find(objets == hier(1,2));
@@ -163,9 +163,9 @@ switch opt.type
             part = part(:,1:size(part,2) ~= y)>0;
             hier = hier(2:size(hier,1),:);
         end
-        
+
     otherwise
-        
+
         error('%s is an unkown method for OPT.TYPE',opt.type);
 end
 

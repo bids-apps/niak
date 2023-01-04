@@ -3,22 +3,22 @@ function mask_f = niak_find_str_cell(cell_str,cell_str2)
 %
 % SYNTAX:
 % MASK_F = NIAK_FIND_STR_CELL(CELL_STR,CELL_STR2)
-% 
+%
 % INPUTS:
 %   CELL_STR  (string or cell of strings)
 %   CELL_STR2 (string or cell of strings)
-% 
+%
 % OUTPUTS:
-%   MASK_F (vector) MASK_F(i) equals 1 if CELL_STR{i} contains CELL_STR2{j} 
-%      for any j, 0 otherwise. If one argument is a simple string, it is 
+%   MASK_F (vector) MASK_F(i) equals 1 if CELL_STR{i} contains CELL_STR2{j}
+%      for any j, 0 otherwise. If one argument is a simple string, it is
 %      converted into a cell of string with one element.
 %
 % SEE ALSO:
 %   NIAK_CMP_STR_CELL
 %
-% COMMENTS : 
+% COMMENTS :
 %   Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008-2010.
-%   Centre de recherche de l'institut de geriatrie de Montreal, Departement 
+%   Centre de recherche de l'institut de geriatrie de Montreal, Departement
 %   d'informatique et recherche operationnelle, Universite de Montreal, 2010-2014.
 %   Maintainer : pierre.bellec@criugm.qc.ca
 %   See licensing information in the code.

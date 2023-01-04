@@ -12,7 +12,7 @@ function [in,out,opt] = niak_brick_cmp_files(in,out,opt)
 %   TARGET (cell of strings) another list of files.
 %
 % OUT (string) the name of a .csv (report) file
-% 
+%
 % OPT (structure) with the following fields:
 %   BASE_SOURCE (string, mandatory) the base folder for SOURCE files.
 %   BASE_TARGET (string, mandatory) the base folder for TARGET files.
@@ -20,24 +20,24 @@ function [in,out,opt] = niak_brick_cmp_files(in,out,opt)
 %      if IN.SOURCE is omitted.
 %   BLACK_LIST_TARGET (string or cell of sting) the black list not to grab from TARGETS file and folder,
 %      if IN.TARGET is omitted.
-%   EPS (scalar, default 10^(-4)) the amount of "numeric noise" tolerated to 
+%   EPS (scalar, default 10^(-4)) the amount of "numeric noise" tolerated to
 %       declare two volumes to be equal
 %   FLAG_SOURCE_ONLY (boolean, default false) when comparing two matlab structures,
-%       the tests will only consider fields found in the source, i.e. if there are 
+%       the tests will only consider fields found in the source, i.e. if there are
 %       more fields in the target, those will be ignored. Only the variables found
 %       in the source will be compared with those from the target as well.
 %   FLAG_IGNORE_FORMAT (boolean, default 0) if the flag is on (1) all imaging data
-%       (.mnc, .mnc.gz, .nii, .nii.gz, .img) will be compared, regardless of extension. 
+%       (.mnc, .mnc.gz, .nii, .nii.gz, .img) will be compared, regardless of extension.
 %   FLAG_TEST (boolean, default 0) if the flag is 1, then the function does not
 %       do anything but update IN, OUT, OPT
-%   FLAG_VERBOSE (boolean, default 1) if the flag is 1, then the function 
+%   FLAG_VERBOSE (boolean, default 1) if the flag is 1, then the function
 %       prints some infos during the processing.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % IN, OUT, OPT are similar to the inputs, but updated with default values.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_GRAB_FOLDER
@@ -46,7 +46,7 @@ function [in,out,opt] = niak_brick_cmp_files(in,out,opt)
 % COMMENTS:
 %
 % NOTE 1:
-%   The report has one line per file (ignoring the base folder for both source 
+%   The report has one line per file (ignoring the base folder for both source
 %   and target). The columns are the following:
 %      'source' (boolean) the file exist in the source
 %      'target' (boolean) the file exist in the target
@@ -61,29 +61,29 @@ function [in,out,opt] = niak_brick_cmp_files(in,out,opt)
 %         in the header. NaN for any other file type.
 %      'same_dim' (boolean or NaN) the volumes have the same dimensions (.nii/.mnc)
 %         or the spreadsheets have the same dimension (.csv). NaN for any other file type.
-%      'dice_mask_brain' (scalar in [0,1] or NaN) the dice coefficient between the brain mask 
+%      'dice_mask_brain' (scalar in [0,1] or NaN) the dice coefficient between the brain mask
 %         of the two volumes (.nii/.mnc). NaN for any other file type.
-%      'max_diff' (positive scalar or NaN) the max absolute difference between the two 
+%      'max_diff' (positive scalar or NaN) the max absolute difference between the two
 %         volumes (.nii/.mnc) or spreadsheets (.csv). NaN for any other file type.
-%      'min_diff' (positive scalar or NaN) the min absolute difference between the two 
+%      'min_diff' (positive scalar or NaN) the min absolute difference between the two
 %         volumes (.nii/.mnc) or spreadsheets (.csv). NaN for any other file type.
-%      'mean_diff' (positive scalar or NaN) the mean absolute difference between the two 
+%      'mean_diff' (positive scalar or NaN) the mean absolute difference between the two
 %         volumes (.nii/.mnc) or spreadsheets (.csv). NaN for any other file type.
-%      'max_corr' (scalar in [0,1] or NaN) the max correlation between the time series 
-%         of voxels inside the brain mask between two 4D volumes (.nii/.mnc). 
+%      'max_corr' (scalar in [0,1] or NaN) the max correlation between the time series
+%         of voxels inside the brain mask between two 4D volumes (.nii/.mnc).
 %         NaN for any other file type.
-%      'min_corr' (scalar in [0,1] or NaN) the min correlation between the time series 
-%         of voxels inside the brain mask between two 4D volumes (.nii/.mnc). 
+%      'min_corr' (scalar in [0,1] or NaN) the min correlation between the time series
+%         of voxels inside the brain mask between two 4D volumes (.nii/.mnc).
 %         NaN for any other file type.
-%      'mean_corr' (scalar in [0,1] or NaN) the mean correlation between the time series 
-%         of voxels inside the brain mask between two 4D volumes (.nii/.mnc). 
+%      'mean_corr' (scalar in [0,1] or NaN) the mean correlation between the time series
+%         of voxels inside the brain mask between two 4D volumes (.nii/.mnc).
 %         NaN for any other file type.
 %
 % NOTE 2
 %   two files are identical if they exist in both source and target and
-%      * for .nii/.mnc: the headers are identical and the max absolute difference is 
+%      * for .nii/.mnc: the headers are identical and the max absolute difference is
 %        less than OPT.EPS
-%      * for .csv files: the labels are identical and the max absolute difference is 
+%      * for .csv files: the labels are identical and the max absolute difference is
 %        less than OPT.EPS
 %      * for .mat files: the content is identical up to Matlab/Octave's precision
 %
@@ -92,13 +92,13 @@ function [in,out,opt] = niak_brick_cmp_files(in,out,opt)
 %   to grab all files in SOURCE and TARGET.
 %
 % NOTE 4
-%   Two files are considered equivalent (and are being compared), if they are located in 
+%   Two files are considered equivalent (and are being compared), if they are located in
 %   identical folders with identical names, relative to the base folders
 %      OPT.BASE_SOURCE
 %      OPT.BASE_TARGET
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Griatrie de Montral, Dpartement d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Griatrie de Montral, Dpartement d'informatique et de recherche
 % oprationnelle, Universit de Montral, 2012-2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -197,20 +197,20 @@ for num_f = 1:length(files)
         tab(num_f,:) = [is_source(num_f) is_target(num_f) repmat(NaN,[1 size(tab,2)-2])];
         continue
     end
-    
+
     file_source = [opt.base_source files{num_f}];
     file_target = [opt.base_target files{num_f}];
     tab(num_f,1:2) = [1 1];
     switch ext_f
-        
+
         case {'.mnc','.mnc.gz','.nii','.img','.nii.gz','.*'}
             %% A 3D or 3D+t image
             [hdr_s,vol_s] = niak_read_vol(file_source);
             [hdr_t,vol_t] = niak_read_vol(file_target);
             hdr_s.info = rmfield(hdr_s.info,{'file_parent','history'});
             hdr_t.info = rmfield(hdr_t.info,{'file_parent','history'});
-            tab(num_f,4) = NaN; % 'same_labels' does not apply to a nifti/minc file           
-            tab(num_f,5) = NaN; % 'same_variables' does not apply to a nifti/minc file           
+            tab(num_f,4) = NaN; % 'same_labels' does not apply to a nifti/minc file
+            tab(num_f,5) = NaN; % 'same_variables' does not apply to a nifti/minc file
             tab(num_f,6) = psom_cmp_var(hdr_s.info,hdr_t.info); % compare the "info" section of the headers
             if (ndims(vol_s) == ndims(vol_t)) && min(size(vol_s)==size(vol_t))
                 tab(num_f,7) = 1; % the two volumes have the same dimensions
@@ -230,7 +230,7 @@ for num_f = 1:length(files)
                     tab(num_f,12) = NaN; % no brain voxel, so can't compute correlations
                     tab(num_f,13) = NaN; % no brain voxel, so can't compute correlations
                     tab(num_f,14) = NaN; % no brain voxel, so can't compute correlations
-                elseif ndims(vol_s)==4                    
+                elseif ndims(vol_s)==4
                     y_s = niak_vol2tseries(vol_s,mask);
                     y_t = niak_vol2tseries(vol_t,mask);
                     tab(num_f,9) = max(abs(y_s(:)-y_t(:))); % Compute the max difference between the two volumes
@@ -262,7 +262,7 @@ for num_f = 1:length(files)
                 tab(num_f,13) = NaN; % it's not possible to compute the min correlation
                 tab(num_f,14) = NaN; % it's not possible to compute the mean correlation
             end
-        
+
         case '.csv'
             %% A "comma-separated values" spreadsheet
             [tab_s,lx_s,ly_s] = niak_read_csv(file_source);
@@ -273,8 +273,8 @@ for num_f = 1:length(files)
             tab(num_f,7) = min(size(tab_s)==size(tab_t)); % test if the two spreadsheets have the same dimensions
             if ~tab(num_f,7)
                 tab(num_f,3)  = 0; % the two files are different
-                tab(num_f,4)  = 0; % not the same labels 
-                tab(num_f,9)  = NaN; % cannot compute the max difference                 
+                tab(num_f,4)  = 0; % not the same labels
+                tab(num_f,9)  = NaN; % cannot compute the max difference
                 tab(num_f,10) = NaN; % cannot compute the min difference
                 tab(num_f,11) = NaN; % cannot compute the mean difference
             else
@@ -284,15 +284,15 @@ for num_f = 1:length(files)
                 flag_same_nan = ~any(mask_nan_s~=mask_nan_t);
                 tab_s(mask_nan_s) = 0;
                 tab_t(mask_nan_t) = 0;
-                tab(num_f,9)  = max(abs(tab_s(:)-tab_t(:)));                
+                tab(num_f,9)  = max(abs(tab_s(:)-tab_t(:)));
                 tab(num_f,10) = min(abs(tab_s(:)-tab_t(:)));
                 tab(num_f,11) = mean(abs(tab_s(:)-tab_t(:)));
                 tab(num_f,3)  = tab(num_f,4) && flag_same_nan && (tab(num_f,9) <= opt.eps); % if the labels are identical and the differences are smaller than a tolerance level, consider that the two files are identical
-            end            
+            end
             tab(num_f,12) = NaN; % it's not possible to compute the max correlation
             tab(num_f,13) = NaN; % it's not possible to compute the min correlation
             tab(num_f,14) = NaN; % it's not possible to compute the mean correlation
-        
+
         case '.mat'
             %%  A matlab .mat file
             data_s = load(file_source);
@@ -312,7 +312,7 @@ for num_f = 1:length(files)
             tab(num_f,11) = NaN; % 'mean_diff' does not apply to a .mat file
             tab(num_f,12) = NaN; % it's not possible to compute the max correlation
             tab(num_f,13) = NaN; % it's not possible to compute the min correlation
-            tab(num_f,14) = NaN; % it's not possible to compute the mean correlation            
+            tab(num_f,14) = NaN; % it's not possible to compute the mean correlation
         otherwise
             %% Unsupported file types. Fill all test with NaN (non-applicable/undefined)
             tab(num_f,3:end) = repmat(NaN,[1 size(tab,2)-2]);

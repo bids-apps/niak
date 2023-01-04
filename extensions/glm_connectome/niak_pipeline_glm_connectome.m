@@ -7,78 +7,78 @@ function [pipeline,opt] = niak_pipeline_glm_connectome(files_in,opt)
 % ___________________________________________________________________________________
 % INPUTS
 %
-% FILES_IN  
-%   (structure) with the following fields : 
+% FILES_IN
+%   (structure) with the following fields :
 %
 %   FMRI.(SUBJECT).(SESSION).(RUN)
-%      (string) a 3D+t fMRI dataset. The fields (SUBJECT), (SESSION) and (RUN) are 
+%      (string) a 3D+t fMRI dataset. The fields (SUBJECT), (SESSION) and (RUN) are
 %      arbitrary.
 %
 %   NETWORKS.(NETWORK)
-%      (string) a file name of a mask of brain networks (network I is filled 
-%      with Is, 0 is for the background). The analysis will be done at the level 
+%      (string) a file name of a mask of brain networks (network I is filled
+%      with Is, 0 is for the background). The analysis will be done at the level
 %      of these networks.
 %
 %   MODEL.INDIVIDUAL.(SUBJECT).INTRA_RUN.(SESSION).(RUN)
-%      (structure, optional) with the following fields : 
+%      (structure, optional) with the following fields :
 %
 %      COVARIATE
-%         (string, optional) the name of a CSV file describing the covariates at the 
+%         (string, optional) the name of a CSV file describing the covariates at the
 %         intra-run level. Example:
 %         MOTION_X , MOTION_Y , MOTION_Z
 %         0.03     , 0.02     , 0.8
 %         0.05     , 0.9      , 0.6
-%         Note that the labels of each column will be used as the names of the coavariates 
-%         in the model. Each row corresponds to one time frames in the time series. When the 
-%         fMRI time series have been scrubbed (i.e. some time frames are missing), missing 
-%         time frames should be specified anyway.If some initial volumes have been suppressed, 
-%         missing time frames should also be specified and OPT.SUPPRESS_VOL should be specified. 
+%         Note that the labels of each column will be used as the names of the coavariates
+%         in the model. Each row corresponds to one time frames in the time series. When the
+%         fMRI time series have been scrubbed (i.e. some time frames are missing), missing
+%         time frames should be specified anyway.If some initial volumes have been suppressed,
+%         missing time frames should also be specified and OPT.SUPPRESS_VOL should be specified.
 %
 %      EVENT
 %         (string, optional) the name of a CSV file describing
 %         the event model. Example :
-%                  , TIMES , DURATION , AMPLITUDE 
-%         'motor'  , 12    , 5        , 1  
-%         'visual' , 12    , 5        , 1  
-%         The first column defines the names of the condition that can be used as covariates in 
+%                  , TIMES , DURATION , AMPLITUDE
+%         'motor'  , 12    , 5        , 1
+%         'visual' , 12    , 5        , 1
+%         The first column defines the names of the condition that can be used as covariates in
 %         the model. The times have to be specified in seconds, with the beginning of the acquisition
-%         starting at 0. 
-%       
+%         starting at 0.
+%
 %   MODEL.INDIVIDUAL.(SUBJECT).INTER_RUN
-%      (string, default intercept) the name of a CSV file describing the  
+%      (string, default intercept) the name of a CSV file describing the
 %      covariates for intra-subject inter-run analysis. Example:
-%                      , DAY 
-%      <SESSION>_<RUN> , 1   
-%      <SESSION>_<RUN> , 2   
+%                      , DAY
+%      <SESSION>_<RUN> , 1
+%      <SESSION>_<RUN> , 2
 %      This type of file can be generated with Excel (save under CSV).
 %      Each column defines a covariate that can be used in a linear model.
 %      The labels <RUN> have to be consistent with MODEL.INTRA_RUN and FMRI
 %
 %   MODEL.GROUP
-%      (string, optional) the name of a CSV file describing the covariates at the level of group. 
+%      (string, optional) the name of a CSV file describing the covariates at the level of group.
 %      Example :
 %                , SEX , HANDENESS
 %      <SUBJECT> , 0   , 0
 %      This type of file can be generated with Excel (save under CSV).
 %      Each column defines a covariate that can be used in a linear model.
-%      The labels (SUBJECT) have to be consistent with FILES_IN.FMRI       
-%  
-% OPT
-%   (structure) with the following fields : 
+%      The labels (SUBJECT) have to be consistent with FILES_IN.FMRI
 %
-%   FOLDER_OUT 
-%      (string) where to write the results of the pipeline. 
+% OPT
+%   (structure) with the following fields :
+%
+%   FOLDER_OUT
+%      (string) where to write the results of the pipeline.
 %
 %   FWE
 %      (scalar, default 0.05) the overall family-wise error, i.e. the probablity to have the observed
 %      number of discoveries, agregated across all scales, under the global null hypothesis of no association.
 %
 %   FDR
-%      (scalar, default 0.05) the level of acceptable false-discovery rate 
+%      (scalar, default 0.05) the level of acceptable false-discovery rate
 %      for the t-maps.
 %
 %   TYPE_FDR
-%      (string, default 'BH-global') how the FDR is controled. 
+%      (string, default 'BH-global') how the FDR is controled.
 %      See the TYPE argument of NIAK_GLM_FDR.
 %
 %   NB_SAMPS
@@ -86,64 +86,64 @@ function [pipeline,opt] = niak_pipeline_glm_connectome(files_in,opt)
 %      used to test the significance of the number of discoveries.
 %
 %   NB_BATCH
-%      (integer, default 10) the number of batches to perform the permutation tests. The actual number of 
+%      (integer, default 10) the number of batches to perform the permutation tests. The actual number of
 %      permutation samples is NB_SAMPS*NB_BATCH.
 %
 %   FLAG_RAND
-%      (boolean, default false) if the flag is false, the pipeline is 
+%      (boolean, default false) if the flag is false, the pipeline is
 %      deterministic. Otherwise, the random number generator is initialized
 %      based on the clock for each job.
 %
 %   MIN_NB_VOL
-%       (integer, default 10) the minimal number of volumes in a run allowed to estimate a connectome. 
-%       This is assessed after the SELECT field of OPT.TEST.RUN is applied. 
+%       (integer, default 10) the minimal number of volumes in a run allowed to estimate a connectome.
+%       This is assessed after the SELECT field of OPT.TEST.RUN is applied.
 %       Subjects who have a run that does not meet this criterion are automatically excluded
-%       from the analysis. 
+%       from the analysis.
 %
 %   TEST.(LABEL).GROUP
-%      (structure, optional) By default the contrast is on the intercept (average of all connectomes 
+%      (structure, optional) By default the contrast is on the intercept (average of all connectomes
 %      across all subjects). The following fields are supported:
 %
 %      CONTRAST.(NAME)
 %         (structure, the fields (NAME) need to correspond to a column in FILES_IN.MODEL.GROUP)
-%         The fields found in CONTRAST will determine which covariates enter the model. 
+%         The fields found in CONTRAST will determine which covariates enter the model.
 %         CONTRAST.(NAME) is the weight of the covariate NAME in the contrast.
-% 
+%
 %      INTERACTION
 %         (structure, optional) with multiple entries and the following fields :
-%          
+%
 %         LABEL
 %            (string) a label for the interaction covariate.
 %
 %         FACTOR
 %            (cell of string) covariates that are being multiplied together to build the
-%            interaction covariate. 
+%            interaction covariate.
 %
 %         FLAG_NORMALIZE_INTER
-%            (boolean,default true) if FLAG_NORMALIZE_INTER is true, the factor of interaction 
-%            will be normalized to a zero mean and unit variance before the interaction is 
+%            (boolean,default true) if FLAG_NORMALIZE_INTER is true, the factor of interaction
+%            will be normalized to a zero mean and unit variance before the interaction is
 %            derived (independently of OPT.<LABEL>.GROUP.NORMALIZE below.
 %
 %      PROJECTION
 %         (structure, optional) with multiple entries and the following fields :
 %
 %         SPACE
-%            (cell of strings) a list of the covariates that define the space to project 
-%            out from (i.e. the covariates in ORTHO, see below, will be projected 
+%            (cell of strings) a list of the covariates that define the space to project
+%            out from (i.e. the covariates in ORTHO, see below, will be projected
 %            in the space orthogonal to SPACE).
 %
 %         ORTHO
-%            (cell of strings, default all the covariates except those in space) a list of 
+%            (cell of strings, default all the covariates except those in space) a list of
 %            the covariates to project in the space orthogonal to SPACE (see above).
 %
 %         FLAG_INTERCEPT
-%            (boolean, default true) if the flag is true, add an intercept in SPACE (even 
+%            (boolean, default true) if the flag is true, add an intercept in SPACE (even
 %            when the model does not have an intercept).
 %
 %      NORMALIZE_X
-%         (structure or boolean, default true) If a boolean and true, all covariates of the 
+%         (structure or boolean, default true) If a boolean and true, all covariates of the
 %         model are normalized (see NORMALIZE_TYPE below).
-%         If a structure, the fields <NAME> need to correspond to the label of a column in the 
+%         If a structure, the fields <NAME> need to correspond to the label of a column in the
 %         file FILES_IN.MODEL.GROUP):
 %
 %         <NAME>
@@ -152,7 +152,7 @@ function [pipeline,opt] = niak_pipeline_glm_connectome(files_in,opt)
 %
 %      NORMALIZE_Y
 %         (boolean, default false) If true, the data is normalized (see NORMALIZE_TYPE below).
-% 
+%
 %      NORMALIZE_TYPE
 %         (string, default 'mean') Available options:
 %            'mean': correction to a zero mean (for each column)
@@ -164,12 +164,12 @@ function [pipeline,opt] = niak_pipeline_glm_connectome(files_in,opt)
 %
 %      FLAG_GLOBAL_MEAN
 %         (boolean, default false) if FLAG_GLOBAL_MEAN is true, the average connectivity is
-%         computed for each subject, and is added as a confound in the group regression. The name 
-%         of the covariate added to the model is 'global_mean'. This option is only available in 
+%         computed for each subject, and is added as a confound in the group regression. The name
+%         of the covariate added to the model is 'global_mean'. This option is only available in
 %         group level tests.
 %
 %      SELECT
-%         (structure, optional) with multiple entries and the following fields:           
+%         (structure, optional) with multiple entries and the following fields:
 %
 %         LABEL
 %            (string) the covariate used to select entries *before normalization*
@@ -181,7 +181,7 @@ function [pipeline,opt] = niak_pipeline_glm_connectome(files_in,opt)
 %            (scalar, default []) only values higher (strictly) than MIN are retained.
 %
 %         MAX
-%            (scalar, default []) only values lower (strictly) than MAX are retained. 
+%            (scalar, default []) only values lower (strictly) than MAX are retained.
 %
 %         OPERATION
 %            (string, default 'or') the operation that is applied to select the frames.
@@ -191,57 +191,57 @@ function [pipeline,opt] = niak_pipeline_glm_connectome(files_in,opt)
 %
 %      MULTISITE
 %         (string, default '') If non-empty, it selects one of the variable of FILES_IN.MODEL
-%         **as specified in the .csv** (i.e., no demean etc). Each value in this variable is 
-%         coding for a different site per subject. The results at each site are aggregated using 
+%         **as specified in the .csv** (i.e., no demean etc). Each value in this variable is
+%         coding for a different site per subject. The results at each site are aggregated using
 %         a simple averaging, akin to statistics used in a meta-analysis, see COMMENTS below.
-%         If left empty, this step is ignored. Note that the MULTISTE variable will not 
+%         If left empty, this step is ignored. Note that the MULTISTE variable will not
 %         be included in the model. This option is only available in TEST.(LABEL).GROUP,
 %         not in TEST.(LABEL).INTER_RUN or TEST.(LABEL).INTRA_RUN.
 %
 %   TEST.(LABEL).INTER_RUN
-%      (structure, optional) The same fields as TEST.(LABEL).GROUP are supported, except that 
-%      the name of the covariates must be the same as those used in 
-%      FILES_IN.MODEL.INDIVIDUAL.(SUBJECT).INTER_RUN. By default the contrast is on the intercept 
-%      (average of the connectomes across all runs). 
+%      (structure, optional) The same fields as TEST.(LABEL).GROUP are supported, except that
+%      the name of the covariates must be the same as those used in
+%      FILES_IN.MODEL.INDIVIDUAL.(SUBJECT).INTER_RUN. By default the contrast is on the intercept
+%      (average of the connectomes across all runs).
 %
 %   TEST.(LABEL).INTRA_RUN
 %      (structure, optional) with the following fields:
 %
 %      TYPE
-%         (string, default 'correlation') The other fields depend on this parameter. 
+%         (string, default 'correlation') The other fields depend on this parameter.
 %         Available options:
-%         'correlation' : simple Pearson's correlation coefficient. 
+%         'correlation' : simple Pearson's correlation coefficient.
 %         'glm' : run a general linear model estimation
 %
 %         case 'correlation'
 %
 %            FLAG_FISHER
 %               (boolean, default true) if the flag is on, the correlation values are normalized
-%               using a Fisher's transform. 
+%               using a Fisher's transform.
 %
 %            PROJECTION
-%               (cell of strings) a list of the covariates that will be regressed out from the 
+%               (cell of strings) a list of the covariates that will be regressed out from the
 %               time series (an intercept will be automatically added).
 %
 %            SELECT
-%               (structure, optional) The correlation will be derived only on the selected volumes. 
+%               (structure, optional) The correlation will be derived only on the selected volumes.
 %               By default all the volumes are used. See OPT.TEST.<LABEL>.GROUP.SELECT above.
 %
 %            SELECT_DIFF
-%               (structure, optional) If SELECT_DIFF is specified has two entries, the 
-%               measure will be the difference in correlations between the two subsets of time frames 
-%               SELECT_DIFF-SELECT, instead a single correlation coefficient. 
+%               (structure, optional) If SELECT_DIFF is specified has two entries, the
+%               measure will be the difference in correlations between the two subsets of time frames
+%               SELECT_DIFF-SELECT, instead a single correlation coefficient.
 %               See OPT.TEST.<LABEL>.GROUP.SELECT above.
 %
 %         case 'glm'
 %
 %            same as OPT.MODEL.GROUP except that (1) there is a covariate called 'seed' in the model_group
-%            which will be iterated over all possible seeds; and (2) the default test is a contrast on the 
+%            which will be iterated over all possible seeds; and (2) the default test is a contrast on the
 %            seed. Note that the default for the NORMALIZE_Y parameter is true at the run level.
-% 
+%
 %   FLAG_MAPS
-%      (boolean, default true) if the flag is true, all sorts of maps are 
-%      generated. Otherwise, the results of the tests are only saved in 
+%      (boolean, default true) if the flag is true, all sorts of maps are
+%      generated. Otherwise, the results of the tests are only saved in
 %      the form of a .mat file.
 %
 %   PSOM
@@ -259,10 +259,10 @@ function [pipeline,opt] = niak_pipeline_glm_connectome(files_in,opt)
 %      (boolean, default true) Print some advancement infos.
 %
 % _________________________________________________________________________
-% OUTPUTS : 
+% OUTPUTS :
 %
-% PIPELINE 
-%   (structure) describe all jobs that need to be performed in the 
+% PIPELINE
+%   (structure) describe all jobs that need to be performed in the
 %   pipeline. This structure is meant to be use in the function
 %   PSOM_RUN_PIPELINE.
 %
@@ -272,11 +272,11 @@ function [pipeline,opt] = niak_pipeline_glm_connectome(files_in,opt)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% The statistics on the overall probability to find the observed volume of 
+% The statistics on the overall probability to find the observed volume of
 % discoveries is only meaningfull for non-trivial group-level contasts (i.e.
-% when the contrast is not on the intercept). Additional (optional) permutation 
-% tests for within-run and within-subject contrasts in on the list of features 
-% for future implementation. 
+% when the contrast is not on the intercept). Additional (optional) permutation
+% tests for within-run and within-subject contrasts in on the list of features
+% for future implementation.
 %
 % Copyright (c) Pierre Bellec, Jalloul Bouchkara
 %               Centre de recherche de l'institut de Griatrie de Montral
@@ -336,7 +336,7 @@ list_network = fieldnames(files_in.networks);
 %% Resample the networks
 for num_n = 1:length(list_network)
     clear job_in job_out job_opt
-    network = list_network{num_n};  
+    network = list_network{num_n};
     job_in.source = files_in.networks.(network);
     job_in.target = cell_fmri{1};
     job_out = [folder_out network filesep 'networks_' network ext_f];
@@ -371,9 +371,9 @@ for ss = 1:length(list_subject)
     pipeline = psom_add_job(pipeline,['connectome_' subject],'niak_brick_connectome_multiscale',in,out,jopt);
 end
 
-%% Run GLM estimation 
-for nn = 1:length(list_network)    
-    clear job_in 
+%% Run GLM estimation
+for nn = 1:length(list_network)
+    clear job_in
     network = list_network{nn};
     for ss = 1:length(list_subject)
         subject = list_subject{ss};
@@ -403,7 +403,7 @@ for nn = 1:length(list_network)
             job_out.perc_discovery = [folder_out network filesep test filesep 'perc_disc_' test '_' network ext_f  ];
         end
         pipeline = psom_add_job(pipeline,[network '_glm_' test],'niak_brick_glm_connectome',job_in,job_out,job_opt);
-    end    
+    end
 end
 
 %% Permutation test on the volume of findings
@@ -414,7 +414,7 @@ job_opt.nb_samps = opt.nb_samps;
 
 for num_b = 1:opt.nb_batch
     for tt = 1:length(list_test)
-        test = list_test{tt};            
+        test = list_test{tt};
         job_in = cell(length(list_network),1);
         for num_n = 1:length(list_network)
             network = list_network{num_n};
@@ -440,12 +440,12 @@ for tt = 1:length(list_test)
         job_in.(test){num_b} = pipeline.(name_job_in).files_out;
     end
     job_out = [folder_out 'summary_findings.csv'];
-    job_opt.p = opt.fwe;       
+    job_opt.p = opt.fwe;
     job_opt.label_network = list_network;
 end
-pipeline = psom_add_job(pipeline,['summary_findings'],'niak_brick_summary_glm_connectome',job_in,job_out,job_opt); 
-    
-%% Run the pipeline 
+pipeline = psom_add_job(pipeline,['summary_findings'],'niak_brick_summary_glm_connectome',job_in,job_out,job_opt);
+
+%% Run the pipeline
 if ~opt.flag_test
     psom_run_pipeline(pipeline,opt.psom);
 end
@@ -481,7 +481,7 @@ for num_s = 1:length(list_subject)
         end
         files_tseries.(subject) = files_tmp;
     else
-        list_session = fieldnames(files_subject);       
+        list_session = fieldnames(files_subject);
         if isstruct(files_subject.(list_session{1}))
             files_tmp = struct;
             for num_sess = 1:length(list_session)

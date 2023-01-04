@@ -7,16 +7,16 @@ function [files_in,files_out,opt] = niak_brick_math_vol(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN        
+% FILES_IN
 %    (cell of strings) each entry is a file name of a volume. All
 %    datasets need to be in the same space (either one individual, or
 %    stereotaxic space).
 %
-% FILES_OUT    
+% FILES_OUT
 %    (string) the name for the resulting volume.
-%   
-% OPT        
-%    (structure) with the following fields.  
+%
+% OPT
+%    (structure) with the following fields.
 %
 %    OPT_OPERATION
 %        (any type, default [])
@@ -24,30 +24,30 @@ function [files_in,files_out,opt] = niak_brick_math_vol(files_in,files_out,opt)
 %    OPERATION
 %        (string) An operation that will be submitted to EVAL in order
 %        to generate the resulting volume. Note that the data in
-%        FILES_IN{I} is accessible in a variable VOL_IN{I}. 
+%        FILES_IN{I} is accessible in a variable VOL_IN{I}.
 %        The header of FILES_IN{1} is called HDR_FUNC.
-%        The final result should be stored in a variable called VOL. 
+%        The final result should be stored in a variable called VOL.
 %        The variable OPT_OPERATION is also available in memory.
 %
 %    FLAG_EXTRA
-%        (boolean, default 1) keep the extra information in the 
-%        header. 
+%        (boolean, default 1) keep the extra information in the
+%        header.
 %
-%    FLAG_VERBOSE 
-%        (boolean, default 1) if the flag is 1, then the function 
+%    FLAG_VERBOSE
+%        (boolean, default 1) if the flag is 1, then the function
 %        prints some infos during the processing.
 %
-%    FLAG_TEST 
-%        (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%        do anything but update the default values in FILES_IN, 
+%    FLAG_TEST
+%        (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%        do anything but update the default values in FILES_IN,
 %        FILES_OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_MASK_BRAIN
@@ -106,11 +106,11 @@ nb_files = length(files_in);
 
 %% Read inputs
 for num_f = 1:nb_files
-    
+
     if flag_verbose
         fprintf('Reading vol%i from file %s ...\n',num_f,files_in{num_f});
     end
-    
+
     [hdr,vol_tmp] = niak_read_vol(files_in{num_f});
     vol_in{num_f} = vol_tmp;
 
@@ -119,7 +119,7 @@ for num_f = 1:nb_files
         if ~flag_extra&&isfield(hdr_func,'extra')
             hdr_func = rmfield(hdr_func,'extra');
         end
-    end   
+    end
 
 end
 

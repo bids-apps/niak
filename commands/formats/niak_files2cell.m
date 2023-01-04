@@ -12,20 +12,20 @@ function cell_files = niak_files2cell(files)
 % _________________________________________________________________________
 % INPUTS :
 %
-% FILES         
-%       (string, cell of strings or a structure where each terminal field 
+% FILES
+%       (string, cell of strings or a structure where each terminal field
 %       is a string or a cell of strings) All those strings are file names.
 %
 % _________________________________________________________________________
 % OUTPUTS :
 %
-% CELL_FILES    
-%       (cell of strings) all file names in FILES stored in a cell of 
-%       strings (wheter it was initially string, cell of strings or 
+% CELL_FILES
+%       (cell of strings) all file names in FILES stored in a cell of
+%       strings (wheter it was initially string, cell of strings or
 %       structure does not matter).
 %
 % _________________________________________________________________________
-% COMMENTS : 
+% COMMENTS :
 %
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
@@ -54,18 +54,18 @@ num_cell = 1;
 cell_files = cell(0);
 
 if isstruct(files)     % That's a structure
-    
+
     files = files(:);
-    
+
     if length(files)>1
-        
+
         for num_e = 1:length(files)
             cell_tmp = niak_files2cell(files(num_e));
             cell_files(end+1:end+length(cell_tmp)) = cell_tmp;
         end
-        
+
     else
-        
+
         list_field = fieldnames(files);
 
         for num_f = 1:length(list_field) %% Loop over the fields
@@ -79,9 +79,9 @@ if isstruct(files)     % That's a structure
     end
 
 elseif iscellstr(files) %% That's a cell
-    
+
     files = files(:);
-    
+
     for num_i = 1:length(files)
 
         if ~strcmp(files{num_i},'gb_niak_omitted')&~isempty(files{num_i})
@@ -90,7 +90,7 @@ elseif iscellstr(files) %% That's a cell
         end
 
     end
-    
+
 elseif ischar(files) % That's a string
 
     for num_f = 1:size(files,1)
@@ -98,13 +98,13 @@ elseif ischar(files) % That's a string
             cell_files{num_cell} = sub_suppress_doublon(files(num_f,:));
         end
     end
-    
-else    
-    
+
+else
+
     if ~isempty(files)
         error('FILES should be a string or a cell of strings, or a structure with arbitrary depths whos terminal fields are strings or cell of strings');
     end
-    
+
 end
 
 function str2 = sub_suppress_doublon(str)

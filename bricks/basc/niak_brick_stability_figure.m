@@ -11,14 +11,14 @@ function [files_in,files_out,opt] = niak_brick_stability_figure(files_in,files_o
 %   (structure) with the following fields :
 %
 %   STABILITY
-%       (string) a .mat file containing two variables STAB and NB_CLASSES. 
-%       STAB(:,S) is a vectorized version of a stability matrix with 
+%       (string) a .mat file containing two variables STAB and NB_CLASSES.
+%       STAB(:,S) is a vectorized version of a stability matrix with
 %       NB_CLASSES(S) random clusters.
 %
 %   HIERARCHY
 %       (string or cell of strings, default FILES_IN.STABILITY) a .mat file
-%       containing two variables HIER and NB_CLASSES. HIER{K} is the 
-%       hierarchy associated with the consensus clustering for 
+%       containing two variables HIER and NB_CLASSES. HIER{K} is the
+%       hierarchy associated with the consensus clustering for
 %       NB_CLASSES(K) random clusters. If FILES_IN.HIERARCHY has multiple
 %       entires, HIERARCHY{L} is used to generate FILES_OUT{L}.
 %
@@ -41,9 +41,9 @@ function [files_in,files_out,opt] = niak_brick_stability_figure(files_in,files_o
 %   SCALES_MAPS
 %       (array, default []) SCALES_MAPS(K,:) is the list of scales that will
 %       be used to generate stability maps:
-%           SCALES_MAPS(K,1) is the number of clusters used to select the 
+%           SCALES_MAPS(K,1) is the number of clusters used to select the
 %               stability matrix.
-%           SCALES_MAPS(K,2) is the number of clusters used to select the 
+%           SCALES_MAPS(K,2) is the number of clusters used to select the
 %               consensus hierarchy.
 %           SCALES_MAPS(K,3) is the (final) number of consensus clusters
 %               used to define the order and represent the partition.
@@ -155,32 +155,32 @@ for num_f = 1:length(files_out)
     if flag_verbose
         fprintf('    %s\n',files_out{num_f});
     end
-    
-    %% Read the hierarchy    
+
+    %% Read the hierarchy
     hier = load(files_in.hierarchy{min(length(files_in.hierarchy),num_f)},'hier','nb_classes');
     nb_classes_hier = hier.nb_classes;
-    hier = hier.hier;    
-    mask_hier = (nb_classes_hier==opt.scales_maps(num_f,end-1));    
-        
+    hier = hier.hier;
+    mask_hier = (nb_classes_hier==opt.scales_maps(num_f,end-1));
+
     %% Read the stability matrix
     stab = load(files_in.stability,name_stab,'nb_classes');
     nb_classes = stab.nb_classes;
     mask = nb_classes==opt.scales_maps(num_f,1);
     stab = stab.(name_stab);
     mat = niak_vec2mat(stab(:,mask));
-    
+
     %% Derive the partition & associated order
-    opt_t.thresh = opt.scales_maps(num_f,end);        
+    opt_t.thresh = opt.scales_maps(num_f,end);
     part = niak_threshold_hierarchy(hier{mask_hier},opt_t);
     order = niak_part2order(part,mat);
-    
+
     %% generate a pdf of the stability matrix
     file_tmp = [psom_path_tmp 'fig.pdf'];
     hfa = figure;
     subplot(1,2,1)
     niak_visu_matrix(mat(order,order));
     title(sprintf('stability matrix %s',opt.labels{num_f}))
-    
+
     subplot(1,2,2)
     niak_visu_part(part(order));
     colorbar

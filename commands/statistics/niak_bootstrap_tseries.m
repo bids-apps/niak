@@ -14,28 +14,28 @@ function tseries_boot = niak_bootstrap_tseries(tseries,opt)
 %   (structure) with the following fields:
 %
 %   DGP
-%       (string, default 'CBB') the method used to resample the data. 
+%       (string, default 'CBB') the method used to resample the data.
 %       Available options : 'CBB' (recommended), 'AR1B', 'AR1G'
 %
 %   BLOCK_LENGTH (if OPT.DGP == 'CBB')
-%       (integer, default [2*ceil(sqrt(T)) 3*ceil(sqrt(T))]) window width 
-%       used in the circular block bootstrap. If multiple values are 
+%       (integer, default [2*ceil(sqrt(T)) 3*ceil(sqrt(T))]) window width
+%       used in the circular block bootstrap. If multiple values are
 %       specified, a random parameter is selected in the list.
 %
 %   T_BOOT
-%       (integer, default same as TSERIES) the number of time frames of the 
+%       (integer, default same as TSERIES) the number of time frames of the
 %       bootstrap time series.
 %
 %   INDEPENDENCE
-%       (boolean, default 0) if INDEPENDENCE == 1, then the distributions 
-%       of the time series associated with different regions are 
+%       (boolean, default 0) if INDEPENDENCE == 1, then the distributions
+%       of the time series associated with different regions are
 %       independent.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % TSERIES_BOOT
-%   (matrix, size T*N) TSERIES_BOOT(:,i) is a bootstrap samples from the 
+%   (matrix, size T*N) TSERIES_BOOT(:,i) is a bootstrap samples from the
 %   time series of region i.
 %
 % _________________________________________________________________________
@@ -44,25 +44,25 @@ function tseries_boot = niak_bootstrap_tseries(tseries,opt)
 % NOTE 1:
 % The different resampling methods are :
 %
-% 'AR1B' : 
-%   Bootstrap sample of multiple time series based on a semi-paramteric 
-%   scheme mixing an auto-regressive temporal model and i.i.d. bootstrap of 
+% 'AR1B' :
+%   Bootstrap sample of multiple time series based on a semi-paramteric
+%   scheme mixing an auto-regressive temporal model and i.i.d. bootstrap of
 %   the "innovations"
 %
-% 'AR1G' : 
-%   Boostrap sample of multiple time series based on a parametric model of 
-%   Gaussian data with arbitrary spatial correlations and first-order 
+% 'AR1G' :
+%   Boostrap sample of multiple time series based on a parametric model of
+%   Gaussian data with arbitrary spatial correlations and first-order
 %   auto-regressive temporal correlations.
 %
-% 'CBB' : 
+% 'CBB' :
 %   Circular-block-bootstrap sample of multiple time series.
 %
 % More details about the resampling schemes can be found in the following
 % reference :
 % P. Bellec; G. Marrelec; H. Benali, A bootstrap test to investigate
-% changes in brain connectivity for functional MRI. Statistica Sinica, 
-% special issue on Statistical Challenges and Advances in Brain Science, 
-% 2008, 18: 1253-1268. 
+% changes in brain connectivity for functional MRI. Statistica Sinica,
+% special issue on Statistical Challenges and Advances in Brain Science,
+% 2008, 18: 1253-1268.
 %
 % Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,Montreal
 %               Neurological Institute, McGill University, 2008-2010.
@@ -135,7 +135,7 @@ if strcmp(opt.dgp,'AR1B')||strcmp(opt.dgp,'AR1G')
     AR_coeff = mean(AR_coeff)*ones(size(AR_coeff));
 end
 
-%% In the case a Gaussian model is used, estimate the temporal and 
+%% In the case a Gaussian model is used, estimate the temporal and
 %% spatial correlations.
 if strcmp(opt.dgp,'AR1G')
     Dt = abs(meshgrid(1:t_boot)-meshgrid(1:t_boot)');
@@ -143,7 +143,7 @@ if strcmp(opt.dgp,'AR1G')
     sqrtRt = chol(Rt)';
     if ~flag_ind
         Rs = niak_build_correlation(tseries);
-        sqrtRs = chol(Rs);    
+        sqrtRs = chol(Rs);
     end
 end
 
@@ -155,7 +155,7 @@ switch opt.dgp
         else
             tseries_boot = sub_CBB_tseries_ind(tseries,t_boot,block_length);
         end
-        
+
     case 'AR1B'
         if ~flag_ind
             tseries_boot = sub_AR1B_tseries(tseries,t_boot,AR_coeff,res);
@@ -163,13 +163,13 @@ switch opt.dgp
             tseries_boot = sub_AR1B_tseries_ind(tseries,t_boot,block_length);
         end
 
-    case 'AR1G'  
+    case 'AR1G'
         if ~flag_ind
             tseries_boot = sub_AR1G_tseries(sqrtRt,sqrtRs,t_boot,size(tseries,2));
         else
             tseries_boot = sub_AR1G_tseries(sqrtRt,eye([size(tseries,2) size(tseries,2)]),t_boot,size(tseries,2));
         end
-        
+
     otherwise
         error(cat(2,opt.dgp,' : unknown data-generating process'))
 end

@@ -9,12 +9,12 @@ function part = niak_stability_vol2part(vol,mask, opt)
 %
 % VOL
 %   (size of MASK x T) the VOL(:,...,:,t) corresponds to the volues of PART(t,:),
-%   organized like MASK. In other words, the "t"th volume, the "i"th region of 
+%   organized like MASK. In other words, the "t"th volume, the "i"th region of
 %   mask is "painted" with the value PART(t,i).
 %
 % MASK
-%   (array with arbitrary number of dimensions, coding for "space", with a 
-%   total of V elements) 
+%   (array with arbitrary number of dimensions, coding for "space", with a
+%   total of V elements)
 %   MASK==I is a binary mask of region I.
 %
 % OPT.MATCH
@@ -27,17 +27,17 @@ function part = niak_stability_vol2part(vol,mask, opt)
 % OUTPUTS:
 %
 % PART
-%   (array T x V) PART(t,I) is the number associated with region I for 
+%   (array T x V) PART(t,I) is the number associated with region I for
 %   volume #i
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % Copyright (c) Pierre Bellec
-%   McConnell Brain Imaging Center, Montreal 
+%   McConnell Brain Imaging Center, Montreal
 %   Neurological Institute, McGill University, 2007-2011.
-%   Centre de recherche de l'institut de Gériatrie de Montréal, 
-%   Département d'informatique et de recherche opérationnelle, 
+%   Centre de recherche de l'institut de Gériatrie de Montréal,
+%   Département d'informatique et de recherche opérationnelle,
 %   Université de Montréal, 2011-2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.

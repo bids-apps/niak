@@ -18,7 +18,7 @@ function mat = niak_part2mat(part,flag_binary);
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% MAT           
+% MAT
 %    (array) a square matrix. MAT(I,J) equals K (or 1 if FLAG_BINARY)
 %    if regions I and J are together in cluster K, and zero otherwise.
 %
@@ -28,7 +28,7 @@ function mat = niak_part2mat(part,flag_binary);
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007-2010.
 %               Centre de recherche de l'institut de gériatrie de Montréal,
 %               Département d'informatique et de recherches opérationnelles,

@@ -4,15 +4,15 @@ function transf = niak_param2transf(rot,tsl)
 %
 % SYNTAX:
 % TRANSF = NIAK_PARAM2TRANSF(ROT,TSL)
-% 
+%
 % _________________________________________________________________________
 % INPUTS:
 %
-% ROT 
-%       (array 3*1) the rotation parameters (in x, y and z planes). 
+% ROT
+%       (array 3*1) the rotation parameters (in x, y and z planes).
 %       Unit is degrees.
 %
-% TSL 
+% TSL
 %       (array 3*1) the translation parameters.
 %
 % _________________________________________________________________________
@@ -23,15 +23,15 @@ function transf = niak_param2transf(rot,tsl)
 %
 % _________________________________________________________________________
 % COMMENTS:
-% 
-% This code was written by Giampiero Campa,  
+%
+% This code was written by Giampiero Campa,
 % PhD, Research Assistant Professor
 % West Virginia University, Aerospace Engineering Dept.
 % Morgantown, WV, 26506-6106, USA, Copyright 1/11/96
 % See
 % http://www.mathworks.com/matlabcentral/fileexchange/loadFile.do?objectId=956&objectType=File
 %
-% Modified by Pierre Bellec, McConnel Brain Imaging Center, Montreal 
+% Modified by Pierre Bellec, McConnel Brain Imaging Center, Montreal
 % Neurological Institute, McGill University, Montreal, Canada, 2008.
 % Changing inputs/outputs formats.
 % Maintainer : pbellec@bic.mni.mcgill.ca
@@ -72,7 +72,7 @@ function z=vp(x,y)
 % z=vp(x,y); z = 3d cross product of x and y
 % vp(x) is the 3d cross product matrix : vp(x)*y=vp(x,y).
 %
-% by Giampiero Campa.  
+% by Giampiero Campa.
 
 z=[  0    -x(3)   x(2);
     x(3)    0    -x(1);

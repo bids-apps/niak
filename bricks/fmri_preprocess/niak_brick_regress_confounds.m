@@ -1,5 +1,5 @@
 function [files_in,files_out,opt]=niak_brick_regress_confounds(files_in,files_out,opt)
-% Regress confounds from fMRI time series 
+% Regress confounds from fMRI time series
 %
 % SYNTAX :
 % NIAK_BRICK_REGRESS_CONFOUNDS(FILES_IN,FILES_OUT,OPT)
@@ -10,19 +10,19 @@ function [files_in,files_out,opt]=niak_brick_regress_confounds(files_in,files_ou
 % FILES_IN
 %   (structure) with the following fields:
 %
-%   FMRI 
+%   FMRI
 %      (string) the fmri time-series
 %
 %   CONFOUNDS
-%      (string) the name of a file with (compressed) tab-separated values. 
-%      Each column corresponds to a "confound" effect. 
+%      (string) the name of a file with (compressed) tab-separated values.
+%      Each column corresponds to a "confound" effect.
 %      see template/niak_confounds.json for a list of expected confounds.
 %
-% FILES_OUT 
-%      (string, default FOLDER_OUT/<base FMRI>_cor.<ext FMRI>) the name 
+% FILES_OUT
+%      (string, default FOLDER_OUT/<base FMRI>_cor.<ext FMRI>) the name
 %      of a 3D+t file. Same as FMRI with the confounds regressed out.
 %
-% OPT 
+% OPT
 %
 %   FOLDER_OUT
 %      (string, default folder of FMRI) the folder where the default outputs
@@ -34,34 +34,34 @@ function [files_in,files_out,opt]=niak_brick_regress_confounds(files_in,files_ou
 %   FLAG_HIGH
 %      (boolean, default false) turn on/off the correction of high frequencies
 %
-%   FLAG_GSC 
+%   FLAG_GSC
 %      (boolean, default false) turn on/off global signal correction
 %
-%   FLAG_MOTION_PARAMS 
-%      (boolean, default true) turn on/off the removal of the 6 motion 
+%   FLAG_MOTION_PARAMS
+%      (boolean, default true) turn on/off the removal of the 6 motion
 %      parameters + the square of 6 motion parameters.
 %
-%   FLAG_WM 
-%      (boolean, default true) turn on/off the removal of the average 
+%   FLAG_WM
+%      (boolean, default true) turn on/off the removal of the average
 %      white matter signal.
 %
 %   FLAG_VENT
-%      (boolean, default true) turn on/off the removal of the average 
+%      (boolean, default true) turn on/off the removal of the average
 %      signal in the lateral ventricles.
 %
 %   FLAG_COMPCOR
-%      (boolean, default false) turn on/off COMPCOR 
+%      (boolean, default false) turn on/off COMPCOR
 %
 %   FLAG_SCRUBBING
-%      (boolean, default true) turn on/off the "scrubbing" of volumes with 
+%      (boolean, default true) turn on/off the "scrubbing" of volumes with
 %      excessive motion.
 %
-%   PCT_VAR_EXPLAINED 
-%      (boolean, default 0.95) the % of variance explained by the selected 
+%   PCT_VAR_EXPLAINED
+%      (boolean, default 0.95) the % of variance explained by the selected
 %      PCA components when reducing the dimensionality of motion parameters.
 %
-%   FLAG_PCA_MOTION 
-%      (boolean, default true) turn on/off the PCA reduction of motion 
+%   FLAG_PCA_MOTION
+%      (boolean, default true) turn on/off the PCA reduction of motion
 %      parameters.
 %
 % _________________________________________________________________________
@@ -71,23 +71,23 @@ function [files_in,files_out,opt]=niak_brick_regress_confounds(files_in,files_ou
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
 %
 % _________________________________________________________________________
-% COMMENTS: 
+% COMMENTS:
 %
-% See template/niak_confounds.json in the niak folder for a list of 
-%   admissible confound labels. 
+% See template/niak_confounds.json in the niak folder for a list of
+%   admissible confound labels.
 %
-% The estimator of the global average using PCA is described in the 
+% The estimator of the global average using PCA is described in the
 % following publication:
 %
-%   F. Carbonell, P. Bellec, A. Shmuel. Validation of a superposition model 
-%   of global and system-specific resting state activity reveals anti-correlated 
+%   F. Carbonell, P. Bellec, A. Shmuel. Validation of a superposition model
+%   of global and system-specific resting state activity reveals anti-correlated
 %   networks. Brain Connectivity 2011 1(6): 496-510. doi:10.1089/brain.2011.0065
 %
-% For an overview of the regression steps as well as the "scrubbing" of 
+% For an overview of the regression steps as well as the "scrubbing" of
 % volumes with excessive motion, see:
 %
 %   J. D. Power, K. A. Barnes, Abraham Z. Snyder, B. L. Schlaggar, S. E. Petersen
-%   Spurious but systematic correlations in functional connectivity MRI networks 
+%   Spurious but systematic correlations in functional connectivity MRI networks
 %   arise from subject motion
 %   NeuroImage Volume 59, Issue 3, 1 February 2012, Pages 21422154
 %
@@ -96,18 +96,18 @@ function [files_in,files_out,opt]=niak_brick_regress_confounds(files_in,files_ou
 %
 % For a description of the COMPCOR method:
 %
-%   Behzadi, Y., Restom, K., Liau, J., Liu, T. T., Aug. 2007. A component based 
-%   noise correction method (CompCor) for BOLD and perfusion based fMRI. 
+%   Behzadi, Y., Restom, K., Liau, J., Liu, T. T., Aug. 2007. A component based
+%   noise correction method (CompCor) for BOLD and perfusion based fMRI.
 %   NeuroImage 37 (1), 90-101. http://dx.doi.org/10.1016/j.neuroimage.2007.04.042
-% 
+%
 %   This other paper describes more accurately the COMPCOR implemented in NIAK:
-%   Chai, X. J., Castan, A. N. N., Ongr, D., Whitfield-Gabrieli, S., Jan. 2012. 
-%   Anticorrelations in resting state networks without global signal regression. 
+%   Chai, X. J., Castan, A. N. N., Ongr, D., Whitfield-Gabrieli, S., Jan. 2012.
+%   Anticorrelations in resting state networks without global signal regression.
 %   NeuroImage 59 (2), 1420-1428. http://dx.doi.org/10.1016/j.neuroimage.2011.08.048
 
 % Note that a maximum number of (# degrees of freedom)/2 are removed through compcor.
 %
-% Copyright (c) Christian L. Dansereau, Felix Carbonell, Pierre Bellec 
+% Copyright (c) Christian L. Dansereau, Felix Carbonell, Pierre Bellec
 % Research Centre of the Montreal Geriatric Institute
 % & Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2012
@@ -162,7 +162,7 @@ if isempty(files_out.scrubbing)
     files_out.scrubbing = cat(2,opt.folder_out,filesep,name_f,'_scrub.mat');
 end
 
-if opt.flag_test 
+if opt.flag_test
     return
 end
 
@@ -195,7 +195,7 @@ x2 = [];
 labels = {};
 
 %% Slow time drifts
-if opt.flag_slow 
+if opt.flag_slow
     if opt.flag_verbose
         fprintf('Adding slow time drifts ...\n')
     end
@@ -209,7 +209,7 @@ else
 end
 
 %% High frequencies
-if opt.flag_high 
+if opt.flag_high
     if opt.flag_verbose
         fprintf('Adding high frequency noise...\n')
     end
@@ -302,17 +302,17 @@ mask_manual = strcmp(all_labels,'manual');
 if any(mask_manual)
     if opt.flag_verbose
        fprintf('Adding user-specified confounds...\n')
-    end    
+    end
     x2 = [x2 x(:,mask_manual)];
     labels = [labels all_labels(mask_manual)];
 end
 
-%% Regress confounds 
+%% Regress confounds
 if ~isempty(x2)
     if opt.flag_verbose
         fprintf('Regressing the confounds...\n    Total number of confounds: %i\n    Total number of time points for regression: %i\n',size(x,2),sum(~mask_scrubbing))
     end
-    
+
     %% Normalize data
     y_mean = mean(y(~mask_scrubbing,:),1); % Exclude time points with excessive motion to estimate mean/std
     y_std  =  std(y(~mask_scrubbing,:),[],1);
@@ -329,19 +329,19 @@ if ~isempty(x2)
     y = y - x2*res.beta; % Generate the residuals for all time points combined
     y = y + repmat(y_mean,[size(y,1) 1]); % put the mean back in the time series
     vol_denoised = reshape(y',size(vol));
-    
+
 else
 
     warning('Found no confounds to regress! Leaving the dataset as is')
     vol_denoised = vol;
 
 end
-    
+
 %% Save the fMRI dataset after regressing out the confounds
 if ~strcmp(files_out.filtered_data,'gb_niak_omitted')
     if opt.flag_verbose
         fprintf('Saving results in %s ...\n',files_out.filtered_data);
-    end  
+    end
     hdr_vol.file_name = files_out.filtered_data;
     if isfield(hdr_vol,'extra')
         % Store the regression covariates in the extra .mat companion that comes with the 3D+t dataset

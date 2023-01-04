@@ -125,7 +125,7 @@ end
 
 %% Get rid of small clusters
 if flag_verbose
-    fprintf('     Sieving small clusters ...')    
+    fprintf('     Sieving small clusters ...')
 end
 tic;
 mask_head = niak_find_connex_roi(mask_head,opt_neig);
@@ -139,7 +139,7 @@ end
 
 %% Expanding the mask
 if flag_verbose
-    fprintf('     Expanding and inverting the brain ...')    
+    fprintf('     Expanding and inverting the brain ...')
 end
 tic;
 mask_head = niak_morph(~mask_head,'-distance',opt_m);

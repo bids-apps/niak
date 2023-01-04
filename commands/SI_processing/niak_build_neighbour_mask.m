@@ -12,18 +12,18 @@ function mask_neig = niak_build_neighbour_mask(mask,mask_sub,opt)
 % _________________________________________________________________________
 % INPUTS :
 %
-% MASK    
+% MASK
 %       (3D array) binary mask of one 3D-region of interest (1s inside,
 %       0s outside)
 %
 % MASK_NEIG
-%       (3D array) subpart of MASK. 
+%       (3D array) subpart of MASK.
 %
 % OPT
-%       (structure) with the following fields : 
+%       (structure) with the following fields :
 %
-%       TYPE_NEIG    
-%           (integer value, default 26) 
+%       TYPE_NEIG
+%           (integer value, default 26)
 %           The parameter of neighbourhood. Available options : 6 or 26
 %
 %       IND

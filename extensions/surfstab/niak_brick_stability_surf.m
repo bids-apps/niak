@@ -24,11 +24,11 @@ function [files_in,files_out,opt] = niak_brick_stability_surf(files_in,files_out
 %       corresponds to OPT.SCALE(i).
 %
 %   NEIGH
-%       (string, optional) the name of a .mat file, with a variable called 
-%       OPT.NAME_NEIGH. This is a VxW matrix, where each the v-th row 
-%       is the list of neighbours of vertex v (potentially paded with zeros). 
+%       (string, optional) the name of a .mat file, with a variable called
+%       OPT.NAME_NEIGH. This is a VxW matrix, where each the v-th row
+%       is the list of neighbours of vertex v (potentially paded with zeros).
 %       If unspecified, the neighbourhood matrix is generated for the standard
-%       MNI surface with ~80k vertices. 
+%       MNI surface with ~80k vertices.
 %
 % FILES_OUT
 %   (string)
@@ -40,15 +40,15 @@ function [files_in,files_out,opt] = niak_brick_stability_surf(files_in,files_out
 %       (vector, optional) the scales for the replication clusters. There
 %       has to be exactly the same number of replication and target scales
 %       (see OPT.SACLE_TAR for reference).
-%      
+%
 %   SCALE_TAR
 %       (vector, optional) if not specified this will be taken from the
-%       partition in FILES_IN.PART. 
-%       There may be cases when the scales cannot be accurately retrieved 
-%       from FILES_IN.PART - for example if some clusters in the target 
-%       partition were removed by stable core masking and the true target 
-%       scale was not saved in a variable called SCALE_TAR inside the 
-%       partition structure. In these cases, it is necessary to set 
+%       partition in FILES_IN.PART.
+%       There may be cases when the scales cannot be accurately retrieved
+%       from FILES_IN.PART - for example if some clusters in the target
+%       partition were removed by stable core masking and the true target
+%       scale was not saved in a variable called SCALE_TAR inside the
+%       partition structure. In these cases, it is necessary to set
 %       OPT.SCALE_TAR to the correct values.
 %
 %   NB_SAMPS
@@ -91,15 +91,15 @@ function [files_in,files_out,opt] = niak_brick_stability_surf(files_in,files_out
 %                         retained in each sample (default 60%)
 %
 %   NAME_NEIGH
-%       (string, default 'neigh') if FILES_IN.NEIGH is specified, the name 
-%       of the variable coding for the neighbour matrix. 
+%       (string, default 'neigh') if FILES_IN.NEIGH is specified, the name
+%       of the variable coding for the neighbour matrix.
 %
 %   NAME_DATA
 %       (string, default 'data') the name of the variable that contains
 %       the data.
 %
 %   NAME_PART
-%       (string, default 'part' or 'core_part' if opt.flag_core is set to true) 
+%       (string, default 'part' or 'core_part' if opt.flag_core is set to true)
 %       the name of the fieldname in FILE_IN.PART that contains the partition.
 %
 %   RAND_SEED
@@ -111,7 +111,7 @@ function [files_in,files_out,opt] = niak_brick_stability_surf(files_in,files_out
 %       (boolean, default true) turn on/off the verbose.
 %
 %   FLAG_TEST
-%       (boolean, default false) if the flag is true, the brick does not do 
+%       (boolean, default false) if the flag is true, the brick does not do
 %       anything but updating the values of FILES_IN, FILES_OUT and OPT.
 %
 % _________________________________________________________________________
@@ -233,7 +233,7 @@ if opt.flag_verbose
     fprintf('Building the neighbourhood matrix for the surface ...\n')
 end
 if strcmp(files_in.neigh,'gb_niak_omitted')
-    ssurf = niak_read_surf('',true,opt.flag_verbose);    
+    ssurf = niak_read_surf('',true,opt.flag_verbose);
 else
     in_neigh = load(files_in.neigh,opt.name_neigh);
     ssurf.neigh = in_neigh.(opt.name_neigh);
@@ -376,7 +376,7 @@ for rr = 1:opt.nb_samps
             opt_t.thresh = opt.scale_rep;
             % Store more things
             tmp_store.hier = hier_s;
-            
+
         case 'kcores'
             tmp_store.data_s = data_s;
 
@@ -442,7 +442,7 @@ for scale_id = rand_inds
             end
         end
     end
-    
+
     % Threshold the replication data on the replication scale
     opt_t.thresh = scale_rep;
     if opt.flag_verbose
@@ -454,12 +454,12 @@ for scale_id = rand_inds
     out.(scale_name) = zeros(scale_tar,V);
     for b_id = 1:opt.nb_samps
         tmp = boot_store{b_id};
-        
+
         switch opt.clustering.type
             case 'hierarchical'
                 part_s = niak_threshold_hierarchy(tmp.hier,opt_t);
                 part_s_sc = niak_part2vol(part_s,tmp.part_roi_s);
-                
+
             case 'kcores'
                 data_bs = tmp.data_s;
                 part_s_sc = niak_kmeans_cores(data_bs, part_t, scale_tar)';
@@ -473,8 +473,8 @@ for scale_id = rand_inds
                 % stable core step. Create an empty stability map
                 out.(scale_name)(ss,:) = 0;
             else
-                
-                % Find the clusters in the replication-partition that lie in 
+
+                % Find the clusters in the replication-partition that lie in
                 % the target cluster
                 list_inter = unique(part_s_sc(part_t==ss));
                 val_inter = zeros(scale_rep,1);
@@ -493,7 +493,7 @@ for scale_id = rand_inds
     % Average
     out.(scale_name) = out.(scale_name) / opt.nb_samps;
     % Done with scale
-    
+
     if opt.flag_verbose
         fprintf('Updating stab.%s results ...\n     %s\n',...
                 scale_name, files_out);

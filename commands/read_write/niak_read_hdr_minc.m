@@ -5,17 +5,17 @@ function hdr = niak_read_hdr_minc(file_name)
 % SYNTAX:
 % HDR = NIAK_READ_HDR_MINC(FILE_NAME)
 %
-% FILE_NAME     
+% FILE_NAME
 %   (string) name of a single 3D+t minc file or a 3D minc file.
-% HDR           
-%   (structure) contain a description of the data. For a list of fields 
+% HDR
+%   (structure) contain a description of the data. For a list of fields
 %   common to all data types, see NIAK_READ_VOL.
-%   HDR.DETAILS 
+%   HDR.DETAILS
 %     (structure) describe the standard variables of a minc file.
-%     Each field of HDR.DETAILS is one variable of the MINC files, 
+%     Each field of HDR.DETAILS is one variable of the MINC files,
 %     and is a structure with two fields.
-%   HDR.DETAILS.<VAR_NAME>.VARATTS 
-%     (cell of string) the list of the attribute name.                   
+%   HDR.DETAILS.<VAR_NAME>.VARATTS
+%     (cell of string) the list of the attribute name.
 %   HDR.DETAILS.<VAR_NAME>.ATTVALUE
 %     (cell of string/double) a list of the attribute values.
 %
@@ -153,7 +153,7 @@ while ~isempty(cell_header)&&~flag_end
             else % If the line does not define a variable, then it defines the attribute of a variable
 
                 flag_pb = false;
-                
+
                 if flag_OK % The attribute is from a standard variable
 
                     %% Parse the attribute line
@@ -161,7 +161,7 @@ while ~isempty(cell_header)&&~flag_end
 
                     nb_atts = nb_atts+1;
                     try
-                        hdr.details.(var_name).varatts{nb_atts} = cell_words{2};                        
+                        hdr.details.(var_name).varatts{nb_atts} = cell_words{2};
                     catch
                         warning('There was a problem setting up the attribute %s in %s. It will be ignored',cell_words{2},var_name)
                         flag_pb = true;

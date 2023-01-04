@@ -3,9 +3,9 @@ function [tab,labels_line,labels_col] = niak_read_tab(file_name)
 % _________________________________________________________________________
 % SUMMARY NIAK_READ_TAB
 %
-% Read a table from a text file. 
+% Read a table from a text file.
 % The first line and first columns are assumed to be string labels, while
-% the rest of the table is assumed to be a numerical array. 
+% the rest of the table is assumed to be a numerical array.
 % The "line" labels are optional.
 %
 % SYNTAX:
@@ -14,20 +14,20 @@ function [tab,labels_line,labels_col] = niak_read_tab(file_name)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILE_NAME     
+% FILE_NAME
 %       (string) the name of the text file (usually ends in .dat)
-% 
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% TAB   (matrix M*N) the numerical data array. 
+% TAB   (matrix M*N) the numerical data array.
 %
-% LABELS_LINE        
+% LABELS_LINE
 %       (cell of strings 1*?) LABELS_LINE{NUM_L} is the label of line NUM_L in
 %       TAB.
 %
 % LABELS_COL
-%       (cell of strings 1*N) LABELS_COL{NUM_C} is the label of column 
+%       (cell of strings 1*N) LABELS_COL{NUM_C} is the label of column
 %       NUM_C in TAB.
 %
 % _________________________________________________________________________
@@ -81,17 +81,17 @@ for num_v = 2:length(cell_tab)
     line_tmp = niak_string2words(cell_tab{num_v});
     if length(line_tmp) ~= nb_col
         if length(line_tmp) == nb_col + 1
-         
+
             labels_line{num_v-1} = line_tmp{1};
             tab(num_v-1,:) = str2num(char(line_tmp(2:end)));
         else
             line = str2num(char(line_tmp));
             if num_v == 2
                 warning(cat(2,'all the lines of ',file_name,' should have the same number of columns! (separator is space)'));
-                tab = zeros([length(cell_tab)-1 length(line)]);                                
+                tab = zeros([length(cell_tab)-1 length(line)]);
             end
             tab(num_v-1,:) = str2num(char(line_tmp));
-        end 
+        end
 
     else
         labels_line{num_v-1} = '';

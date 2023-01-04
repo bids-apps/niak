@@ -36,7 +36,7 @@ This toolbox contains patches submitted by the following contributors:
   - loadjson crashes for sparse real column vector.
   - loadjson crashes for sparse complex column vector.
   - Data is corrupted by savejson for sparse real row vector.
-  - savejson crashes for sparse complex row vector. 
+  - savejson crashes for sparse complex row vector.
 
 - Yul Kang <yul.kang.on at gmail.com>
   patches for svn revision 415.
@@ -49,5 +49,5 @@ This toolbox contains patches submitted by the following contributors:
 - Insik Kim <insik92 at gmail.com>
   (Pull#12) Bug fix: Resolving bug that cell type is converted to json with transposed data
 
-- Sertan Senturk 
+- Sertan Senturk
   (Pull#10,#11)  Feature: Added matlab object saving to savejson and saveubjson

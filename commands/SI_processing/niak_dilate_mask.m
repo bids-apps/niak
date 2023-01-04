@@ -11,12 +11,12 @@ function mask2 = niak_dilate_mask(mask,type_neig,nb_iter,mask_old)
 % _________________________________________________________________________
 % INPUTS :
 %
-% MASK    
-%       (3D array) 
+% MASK
+%       (3D array)
 %       binary mask of one 3D-region of interest (1s inside, 0s outside)
 %
-% TYPE_NEIG    
-%       (integer value, default 26) 
+% TYPE_NEIG
+%       (integer value, default 26)
 %       definition of 3D-connexity (possible value 6,26)
 %
 % NB_ITER
@@ -26,9 +26,9 @@ function mask2 = niak_dilate_mask(mask,type_neig,nb_iter,mask_old)
 % _________________________________________________________________________
 % OUTPUTS :
 %
-% MASK2 
-%       (3D array) 
-%       binary mask, comprising all voxels of mask as well as their 
+% MASK2
+%       (3D array)
+%       binary mask, comprising all voxels of mask as well as their
 %       neighbors.
 %
 % _________________________________________________________________________
@@ -78,14 +78,14 @@ if nargin > 3
 end
 
 if nb_iter > 1
-    mask_edge = mask2;    
+    mask_edge = mask2;
     mask_edge(mask) = false;
     if nargin > 3
         mask_edge(mask_old) = false;
     end
     mask2 = niak_dilate_mask(mask_edge,type_neig,nb_iter-1,mask2);
 end
-    
+
 %%%%%%%%%%%%%%%%%%%
 %% Subfunctions %%%
 %%%%%%%%%%%%%%%%%%%

@@ -1,6 +1,6 @@
 function [files_in,files_out,opt] = niak_brick_anat2func(files_in,files_out,opt)
 % Coregister a T1 image with a T2* EPI image of the same subject.
-% The estimated transformation is a rigid-body (lsq6) transform. 
+% The estimated transformation is a rigid-body (lsq6) transform.
 % The two images are assumed not to be too far from each other.
 %
 % SYNTAX:
@@ -13,47 +13,47 @@ function [files_in,files_out,opt] = niak_brick_anat2func(files_in,files_out,opt)
 %   (structure) with the following fields :
 %
 %   FUNC
-%       (string) a file with one fMRI volume. 
+%       (string) a file with one fMRI volume.
 %
 %   MASK_FUNC
-%       (string, default 'gb_niak_omitted') a file with a binary mask of 
-%       the brain in the functional space. The mask needs to be in the same 
-%       voxel & world space as the functional image. If not specified a 
+%       (string, default 'gb_niak_omitted') a file with a binary mask of
+%       the brain in the functional space. The mask needs to be in the same
+%       voxel & world space as the functional image. If not specified a
 %       mask will be estimated using NIAK_MASK_BRAIN.
 %
 %   ANAT
 %       (string) a file with one T1 volume of the same subject.
 %
 %   MASK_ANAT
-%       (string) a file with a binary mask of the brain in the anatomical 
-%       data. The mask needs to be in the same voxel & world space as the 
+%       (string) a file with a binary mask of the brain in the anatomical
+%       data. The mask needs to be in the same voxel & world space as the
 %       anatomical image.
 %
 %   TRANSFORMATION_INIT
-%       (string, default identity) an initial guess of the transformation 
-%       from the anatomical image to the functional image (e.g. the inverse 
-%       of the transformation from T1 native space to stereotaxic linear 
-%       space if the anat is in stereotaxic linear space). 
+%       (string, default identity) an initial guess of the transformation
+%       from the anatomical image to the functional image (e.g. the inverse
+%       of the transformation from T1 native space to stereotaxic linear
+%       space if the anat is in stereotaxic linear space).
 %
 % FILES_OUT
-%   (structure) with the following fields. Note that if a field is an empty 
-%   string, a default value will be used to name the outputs. If a field is 
-%   ommited, the output won't be saved at all (this is equivalent to 
+%   (structure) with the following fields. Note that if a field is an empty
+%   string, a default value will be used to name the outputs. If a field is
+%   ommited, the output won't be saved at all (this is equivalent to
 %   setting up the output file names to 'gb_niak_omitted').
 %
 %   TRANSFORMATION
 %       (string, default: transf_<BASE_ANAT>_to_<BASE_FUNC>.XFM)
-%       File name for saving the transformation from the anatomical space 
+%       File name for saving the transformation from the anatomical space
 %       to the functional space.
 %
 %   ANAT_HIRES
-%       (string, default <BASE_ANAT>_nativefunc_hires) File name for saving 
-%       the anatomical image resampled in the space of the functional 
+%       (string, default <BASE_ANAT>_nativefunc_hires) File name for saving
+%       the anatomical image resampled in the space of the functional
 %       space, using native resolution.
 %
 %   ANAT_LOWRES
 %       (string, default <BASE_ANAT>_nativefunc_hires)
-%       File name for saving the anatomical image resampled in the space of 
+%       File name for saving the anatomical image resampled in the space of
 %       the functional space, using the target resolution.
 %
 % OPT
@@ -64,41 +64,41 @@ function [files_in,files_out,opt] = niak_brick_anat2func(files_in,files_out,opt)
 %       Gaussian smoothing applied at iteration I.
 %
 %   LIST_STEP
-%       (vector, default [4,4,4,2,1]) LIST_STEP(I) is the step of MINCTRACC 
+%       (vector, default [4,4,4,2,1]) LIST_STEP(I) is the step of MINCTRACC
 %       at iteration I.
 %
 %   LIST_SIMPLEX
-%       (vector, default [8,4,2,2,1]) LIST_SIMPLEX(I) is the simplex 
+%       (vector, default [8,4,2,2,1]) LIST_SIMPLEX(I) is the simplex
 %       parameter of MINCTRACC at iteration I.
 %
 %   LIST_MES
-%       (cell of string, default {'mi','mi','mi','mi','mi'}) 
-%       LIST_MES{I} is the measure (cost function) used to coregister the 
+%       (cell of string, default {'mi','mi','mi','mi','mi'})
+%       LIST_MES{I} is the measure (cost function) used to coregister the
 %       two volumes in MINCTRACC at iteration I.
 %
 %   INIT
-%       (string, default 'identity') how to set the initial guess of the 
-%       transformation. 
-%           'center': translation to align the centers of mass. 
+%       (string, default 'identity') how to set the initial guess of the
+%       transformation.
+%           'center': translation to align the centers of mass.
 %           'identity' : identity transformation.
-%       The 'center' option usually does more harm than good. Use it only 
-%       if you have very big misrealignement between the two images 
+%       The 'center' option usually does more harm than good. Use it only
+%       if you have very big misrealignement between the two images
 %       (say, > 2 cm).
 %
 %   FLAG_INVERT_TRANSF_INIT
-%       (boolean, default false) if the flag is true, the transformation 
-%       provided in FILES_IN.TRANSFORMATION_INIT will be inverted before 
+%       (boolean, default false) if the flag is true, the transformation
+%       provided in FILES_IN.TRANSFORMATION_INIT will be inverted before
 %       being applied.
 %
 %   FLAG_INVERT_TRANSF_OUTPUT
 %       (boolean, default false) if the flag is true, the outpout
-%       transformation provided in FILES_OUT.TRANSFORMATION will be 
-%       inverted, i.e. the transformation goes from functional to 
+%       transformation provided in FILES_OUT.TRANSFORMATION will be
+%       inverted, i.e. the transformation goes from functional to
 %       anatomical space.
 %
 %   FLAG_NU_CORRECT
 %       (boolean, default false) if FLAG_NU_CORRECT == 1, the NU_CORRECT
-%       method is used to correct for non-uniformity of the B0 field on 
+%       method is used to correct for non-uniformity of the B0 field on
 %       the functional volume.
 %
 %   ARG_NU_CORRECT
@@ -106,22 +106,22 @@ function [files_in,files_out,opt] = niak_brick_anat2func(files_in,files_out,opt)
 %       See "nu_correct -help" in a terminal for more infos.
 %
 %   FWHM_MASKING
-%       (real value, default 8) the FWHM of the blurring kernel used to 
-%       extract the mask of the brain in the functional volume, if the mask 
+%       (real value, default 8) the FWHM of the blurring kernel used to
+%       extract the mask of the brain in the functional volume, if the mask
 %       was not specified.
-%       
+%
 %   FOLDER_OUT
-%       (string, default: path of FILES_IN) If present, all default outputs 
-%       will be created in the folder FOLDER_OUT. The folder needs to be 
+%       (string, default: path of FILES_IN) If present, all default outputs
+%       will be created in the folder FOLDER_OUT. The folder needs to be
 %       created beforehand.
 %
 %   FLAG_TEST
-%       (boolean, default: 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%       (boolean, default: 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
 %
 %   FLAG_VERBOSE
-%       (boolean, default: 1) If FLAG_VERBOSE == 1, write messages 
+%       (boolean, default: 1) If FLAG_VERBOSE == 1, write messages
 %       indicating progress.
 %
 % _________________________________________________________________________
@@ -142,9 +142,9 @@ function [files_in,files_out,opt] = niak_brick_anat2func(files_in,files_out,opt)
 %   rigid-body coregistration (lsq6).
 %
 % NOTE 2:
-%   The procedure is iterative : at each iteration the level of blurring 
-%   and the refinement of the search grid is adapted. In the default 
-%   behavior, the blurring is slowly decreased from 8 to 1 mm FWHM. 
+%   The procedure is iterative : at each iteration the level of blurring
+%   and the refinement of the search grid is adapted. In the default
+%   behavior, the blurring is slowly decreased from 8 to 1 mm FWHM.
 %   Coregistration is based on mutual information. This approach has been
 %   very largely inspired by a PERL script by Andrew Janke and Claude
 %   Lepage, itself inspired by best1stepnlreg.pl by Steve Robinson. See
@@ -153,14 +153,14 @@ function [files_in,files_out,opt] = niak_brick_anat2func(files_in,files_out,opt)
 %   costumized (as well as the number of iterations).
 %
 % NOTE 3:
-%   The quality of this approach critically relies on the T1 brain mask. 
-%   This brick should therefore be used in conjunction with 
-%   NIAK_BRICK_T1_PREPROCESS (this is what's being done in 
+%   The quality of this approach critically relies on the T1 brain mask.
+%   This brick should therefore be used in conjunction with
+%   NIAK_BRICK_T1_PREPROCESS (this is what's being done in
 %   NIAK_PIPELINE_FMRI_PREPROCESS).
 %
 % _________________________________________________________________________
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% griatrie de Montral, dpartement d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% griatrie de Montral, dpartement d'informatique et de recherche
 % oprationnelle, Universit de Montral, 2008-10.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -256,7 +256,7 @@ end
 
 %% Verbose
 if flag_verbose
-    msg = 'T1-T2 COREGISTRATION';    
+    msg = 'T1-T2 COREGISTRATION';
     stars = repmat('*',[1 length(msg)]);
     fprintf('%s\n%s\n%s\n',stars,msg,stars);
     fprintf('Source : %s\n',files_in.anat);
@@ -271,14 +271,14 @@ path_tmp = niak_path_tmp('_coregister');                % The temporary folder
 % Functional stuff ...
 file_func_init      = [path_tmp 'func_init.mnc'];       % The original volume
 file_func_crop      = [path_tmp 'func_crop.mnc'];       % The cropped volume
-file_mask_func      = [path_tmp 'mask_func.mnc'];       % The brain mask 
-file_mask_func_crop = [path_tmp 'mask_func_crop.mnc'];  % The cropped brain mask 
+file_mask_func      = [path_tmp 'mask_func.mnc'];       % The brain mask
+file_mask_func_crop = [path_tmp 'mask_func_crop.mnc'];  % The cropped brain mask
 
 % Anatomical stuff ...
-file_anat_init      = [path_tmp 'anat_init.mnc'];       % The original volume 
+file_anat_init      = [path_tmp 'anat_init.mnc'];       % The original volume
 file_anat_crop      = [path_tmp 'anat_crop.mnc'];       % The cropped volume
-file_mask_anat      = [path_tmp 'mask_anat.mnc'];       % The brain mask 
-file_mask_anat_crop = [path_tmp 'mask_anat_crop.mnc'];  % The cropped brain mask 
+file_mask_anat      = [path_tmp 'mask_anat.mnc'];       % The brain mask
+file_mask_anat_crop = [path_tmp 'mask_anat_crop.mnc'];  % The cropped brain mask
 
 % transformations ...
 file_transf_init    = [path_tmp 'transf_init.xfm'];     % The initial transformation
@@ -293,7 +293,7 @@ file_tmp2           = [path_tmp 'vol_tmp2.mnc'];        % Temporary volume #2
 %% Initial transformation
 if strcmp(files_in.transformation_init,'gb_niak_omitted')
     transf = eye(4);
-else    
+else
     transf = niak_read_transf(files_in.transformation_init);
     if flag_invert_transf_init
         transf = transf^(-1);
@@ -375,7 +375,7 @@ switch opt.init
 
         if flag_verbose
             fprintf('Deriving a reasonable guess of the transformation by matching the brain masks ...\n');
-        end     
+        end
         ind = find(mask_func>0);
         [x,y,z] = ind2sub(size(mask_func),ind);
         coord = (hdr_func.info.mat*[x';y';z';ones([1 length(x)])]);
@@ -384,7 +384,7 @@ switch opt.init
         [x,y,z] = ind2sub(size(mask_anat),ind);
         coord = (hdr_anat.info.mat*[x';y';z';ones([1 length(x)])]);
         center_anat = mean(coord,2)';
-        transf_guess = eye(4);        
+        transf_guess = eye(4);
         transf_guess(1:3,4) = (center_func(1:3)-center_anat(1:3))';
         niak_write_transf(transf_guess,file_transf_guess);
 
@@ -403,7 +403,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 opt_smooth.flag_verbose = false;
 opt_smooth.flag_edge    = true;
-    
+
 opt_res.voxel_size         = false;
 opt_res.flag_invert_transf = false;
 opt_res.flag_verbose       = false;
@@ -413,8 +413,8 @@ for num_i = 1:length(list_fwhm)
     %% Setting up parameters value for this iteration
     opt_smooth.fwhm = list_fwhm(num_i);
     step_val        = list_step(num_i);
-    simplex_val     = list_simplex(num_i);    
-    mes_val         = list_mes{num_i};    
+    simplex_val     = list_simplex(num_i);
+    mes_val         = list_mes{num_i};
     if flag_verbose
         fprintf('\n***************\nIteration %i\nSmoothing %1.2f\nStep %1.2f\nSimplex %1.2f\n***************\n',num_i,opt_smooth.fwhm,step_val,simplex_val);
     end
@@ -423,37 +423,37 @@ for num_i = 1:length(list_fwhm)
     if flag_verbose
         fprintf('Copying the functional brain mask ... \n');
     end
-   
+
     [tmp,mask_func_c] = niak_read_vol(file_mask_func);
     mask_func_c = round(mask_func_c)>0;
-    system(['cp ' file_mask_func ' ' file_mask_func_crop]);  
-      
+    system(['cp ' file_mask_func ' ' file_mask_func_crop]);
+
     %% Crop anatomical mask
     if flag_verbose
         fprintf('Resampling the anatomical brain mask in functional space... \n');
     end
-   
+
     % resample anatomical mask in functional space keeping FOV
-    clear files_in_res files_out_res 
+    clear files_in_res files_out_res
     files_in_res.source         = file_mask_anat;
     files_in_res.target         = file_mask_anat;
     files_in_res.transformation = file_transf_guess;
     files_out_res               = file_tmp;
     opt_res.flag_tfm_space      = true;
     opt_res.interpolation       = 'nearest_neighbour';
-    niak_brick_resample_vol(files_in_res,files_out_res,opt_res);    
-    
+    niak_brick_resample_vol(files_in_res,files_out_res,opt_res);
+
     [tmp,mask_anat_c] = niak_read_vol(file_tmp);
     mask_anat_c = round(mask_anat_c)>0;
-    system(['cp ' file_tmp ' ' file_mask_anat_crop]);    
-    
+    system(['cp ' file_tmp ' ' file_mask_anat_crop]);
+
     %% smooth & crop anat
     if flag_verbose
         fprintf('Cropping & smoothing the anatomical image in the functional space ...\n');
     end
-    
+
     % resample anatomical volume in functional space
-    clear files_in_res files_out_res 
+    clear files_in_res files_out_res
     files_in_res.source         = file_anat_init;
     files_in_res.target         = file_anat_init;
     files_in_res.transformation = file_transf_guess;
@@ -468,36 +468,36 @@ for num_i = 1:length(list_fwhm)
     files_in_tmp{2} = file_mask_anat_crop;
     files_out_tmp   = file_tmp2;
     niak_brick_smooth_vol(files_in_tmp,files_out_tmp,opt_smooth);
-    
+
     % Crop the anatomical volume
     [hdr_anat,vol_anat]    = niak_read_vol(file_tmp2);
-    vol_anat(~mask_anat_c) = 0;  
-    vol_anat(mask_anat_c)  = vol_anat(mask_anat_c)-median(vol_anat(mask_anat_c));  
+    vol_anat(~mask_anat_c) = 0;
+    vol_anat(mask_anat_c)  = vol_anat(mask_anat_c)-median(vol_anat(mask_anat_c));
     thresh_anat = min(vol_anat(:));
     hdr_anat.file_name     = file_anat_crop;
     niak_write_vol(hdr_anat,vol_anat);
-    
+
     %% smooth & crop func
     if flag_verbose
         fprintf('Cropping & smoothing the functional image ...\n');
     end
-        
+
     % Smooth the functional volume
     clear files_in_tmp files_out_tmp opt_tmp
     files_in_tmp{1} = file_func_init;
     files_in_tmp{2} = file_mask_func_crop;
     files_out_tmp   = file_tmp;
     niak_brick_smooth_vol(files_in_tmp,files_out_tmp,opt_smooth);
-    
+
     % Crop the functional volume
     [hdr_func,vol_func]    = niak_read_vol(file_tmp);
-    vol_func(~mask_func_c) = 0;    
+    vol_func(~mask_func_c) = 0;
     vol_func(mask_func_c)  = vol_func(mask_func_c) - median(vol_func(mask_func_c));
     hdr_func.file_name     = file_func_crop;
     thresh_func = min(vol_func(:));
-    niak_write_vol(hdr_func,vol_func);        
+    niak_write_vol(hdr_func,vol_func);
 
-    %% applying MINCTRACC    
+    %% applying MINCTRACC
     instr_minctracc = cat(2,'minctracc ',file_anat_crop,' ',file_func_crop,' ',file_transf_est,' -',mes_val,' -threshold ',num2str(floor(thresh_anat)),' ',num2str(floor(thresh_func)),' ',' -identity -simplex ',num2str(simplex_val),' -tol 0.00005 -step ',num2str(step_val),' ',num2str(step_val),' ',num2str(step_val),' -lsq6 -clobber');
 
     if flag_verbose
@@ -510,8 +510,8 @@ for num_i = 1:length(list_fwhm)
     if flag_verbose
         fprintf(str_log);
     end
-    
-    %% Updating the guess    
+
+    %% Updating the guess
     system(['rm ' file_transf_tmp]);
     [s,str_err] = system(['xfmconcat ' file_transf_guess ' ' file_transf_est ' ' file_transf_tmp]);
     if s~=0
@@ -519,7 +519,7 @@ for num_i = 1:length(list_fwhm)
     end
     system(['rm ' file_transf_est]);
     system(['rm ' file_transf_guess]);
-    system(['cp ' file_transf_tmp ' ' file_transf_guess]);    
+    system(['cp ' file_transf_tmp ' ' file_transf_guess]);
 
 end
 
@@ -560,7 +560,7 @@ if ~strcmp(files_out.anat_hires,'gb_niak_omitted')||~strcmp(files_out.anat_lowre
         end
         files_in_res.source = files_in.anat;
         files_in_res.target = files_in.func;
-        files_in_res.transformation = file_transf_est;        
+        files_in_res.transformation = file_transf_est;
         files_out_res = files_out.anat_hires;
         opt_res.flag_tfm_space = 1;
         opt_res.flag_invert_transf = 0;
@@ -576,7 +576,7 @@ if ~strcmp(files_out.anat_hires,'gb_niak_omitted')||~strcmp(files_out.anat_lowre
         end
         files_in_res.source = files_in.anat;
         files_in_res.target = files_in.func;
-        files_in_res.transformation = file_transf_est;                
+        files_in_res.transformation = file_transf_est;
         files_out_res = files_out.anat_lowres;
         opt_res.flag_tfm_space = 0;
         opt_res.flag_invert_transf = 0;

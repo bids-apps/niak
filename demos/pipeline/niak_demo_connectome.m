@@ -8,20 +8,20 @@ function [pipeline,opt_pipe,files_in] = niak_demo_connectome(path_demo,opt)
 % INPUTS:
 %
 % PATH_DEMO
-%   (string) the full path to the preprocessed NIAK demo dataset. The dataset 
+%   (string) the full path to the preprocessed NIAK demo dataset. The dataset
 %   can be found at http://www.nitrc.org/frs/?group_id=411
 %
 % OPT
 %   (structure, optional) Any argument passed to NIAK_PIPELINE_CONNECTOME
-%   will do here. The demo only changes one default and enforces a few 
+%   will do here. The demo only changes one default and enforces a few
 %   parameters (see COMMENTS below):
 %
 %   FILES_IN.FMRI
-%      (structure, default grab the preprocessed demoniak) the input files 
+%      (structure, default grab the preprocessed demoniak) the input files
 %      from the preprocessing to be fed in the connectome dataset.
 %
 %   FOLDER_OUT
-%      (string, default PATH_DEMO/connectome) where to store the 
+%      (string, default PATH_DEMO/connectome) where to store the
 %      results of the pipeline.
 %
 % _________________________________________________________________________
@@ -35,26 +35,26 @@ function [pipeline,opt_pipe,files_in] = niak_demo_connectome(path_demo,opt)
 %   (structure) the option to call NIAK_PIPELINE_CONNECTOME
 %
 % FILES_IN
-%   (structure) the description of input files used to call 
+%   (structure) the description of input files used to call
 %   NIAK_PIPELINE_CONNECTOME
 %
 % _________________________________________________________________________
 % COMMENTS
 %
 % Note 1:
-% The demo will apply the connectome pipeline on the preprocessed version 
-% of the DEMONIAK dataset. It is possible to configure the pipeline manager 
-% to use parallel computing using OPT.PSOM, see : 
+% The demo will apply the connectome pipeline on the preprocessed version
+% of the DEMONIAK dataset. It is possible to configure the pipeline manager
+% to use parallel computing using OPT.PSOM, see :
 % http://code.google.com/p/psom/wiki/PsomConfiguration
 %
 % NOTE 2:
-% The demo database exists in multiple file formats. NIAK looks into the demo 
-% path and is supposed to figure out which format you are intending to use 
-% by itself. 
+% The demo database exists in multiple file formats. NIAK looks into the demo
+% path and is supposed to figure out which format you are intending to use
+% by itself.
 %
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de griatrie de Montral, 
+% Centre de recherche de l'institut de griatrie de Montral,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2013
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -97,9 +97,9 @@ if ~isempty(opt.files_in)&&~strcmp(opt.files_in,'gb_niak_omitted')
     files_in.fmri = opt.files_in.fmri;
 else
     %% Grab the results from the NIAK fMRI preprocessing pipeline
-    opt_g.min_nb_vol = 15; % the demo dataset is very short, so we have to lower considerably the minimum acceptable number of volumes per run 
+    opt_g.min_nb_vol = 15; % the demo dataset is very short, so we have to lower considerably the minimum acceptable number of volumes per run
     opt_g.type_files = 'roi'; % Specify to the grabber to prepare the files for the region growing pipeline
-    files_in.fmri = niak_grab_fmri_preprocess(path_demo,opt_g).fmri; % Replace the folder by the path where the results of the fMRI preprocessing pipeline were stored. 
+    files_in.fmri = niak_grab_fmri_preprocess(path_demo,opt_g).fmri; % Replace the folder by the path where the results of the fMRI preprocessing pipeline were stored.
 end
 
 %% Set the seeds

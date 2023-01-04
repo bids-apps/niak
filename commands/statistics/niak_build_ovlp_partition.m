@@ -27,14 +27,14 @@ function ovlp = niak_build_ovlp_partition(part1,part2,method);
 % COMMENTS:
 %
 % Let K = PART1(I) and L = PART2(I). Let C = (PART1==K) be the cluster that
-% contains I in the first partition, and D = (PART2==K) be the cluster that 
+% contains I in the first partition, and D = (PART2==K) be the cluster that
 % contains I in the second partition. Finally, let #C (resp. #D) be the
 % number of elements in C (resp. D). The relative overlap at I is defined
 % as :
-% 
+%
 % OVLP(I) = #(C&D)/max(#C,#D)
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -72,8 +72,8 @@ switch method
         ovlp = zeros([N 1]);
         for n = 1:N
             C = part1 == part1(n);
-            D = part2 == part2(n);            
-            ovlp(n) = sum(C&D)/max(sum(C),sum(D));           
+            D = part2 == part2(n);
+            ovlp(n) = sum(C&D)/max(sum(C),sum(D));
         end
     case 'fast'
         size1 = niak_build_size_roi(part1);

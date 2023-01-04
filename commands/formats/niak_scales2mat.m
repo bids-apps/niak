@@ -11,13 +11,13 @@ function scales_mat = niak_scales2mat(scales,neigh);
 %   (vector) a list of integers
 %
 % NEIGH
-%   (vector 1*3, default [0.7 0.1 1.3] percentage that define the 
+%   (vector 1*3, default [0.7 0.1 1.3] percentage that define the
 %   neighbourhood of a scale.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% SCALES_MAT           
+% SCALES_MAT
 %   (array) For each row, SCALES_MAT(I,2) is a scale and SCALES_MAT(I,1) a
 %   neighbour of this scale. All possible pairs of scales/neighbours are
 %   listed.
@@ -35,7 +35,7 @@ function scales_mat = niak_scales2mat(scales,neigh);
 %               Université de Montréal, 2010
 % Maintainer : pbellec@criugm.qc.ca
 % See licensing information in the code.
-% Keywords : 
+% Keywords :
 
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal
@@ -60,9 +60,9 @@ if nargin < 2
 end
 nb_points = 0;
 scales2 = cell([length(scales) 1]);
-for num_s = 1:length(scales)    
+for num_s = 1:length(scales)
     scales2{num_s} = unique(ceil(scales(num_s)*(neigh(1):neigh(2):neigh(3))));
-    nb_points = nb_points + length(scales2{num_s});   
+    nb_points = nb_points + length(scales2{num_s});
 end
 
 num_p = 0;
@@ -70,7 +70,7 @@ scales_mat = zeros([nb_points 2]);
 for num_s = 1:length(scales)
     for num_g = 1:length(scales2{num_s})
         scales_mat(num_p+1:num_p+length(scales2{num_s}),1) = scales(num_s);
-        scales_mat(num_p+1:num_p+length(scales2{num_s}),2) = scales2{num_s};        
-    end    
+        scales_mat(num_p+1:num_p+length(scales2{num_s}),2) = scales2{num_s};
+    end
     num_p = num_p+length(scales2{num_s});
 end

@@ -1,9 +1,9 @@
 function [pipeline,opt] = niak_pipeline_t1_preprocess(files_in,opt)
-% Run a pipeline to preprocess a collection of T1 scans. 
-% The preprocessing includes linear and non-linear coregistration in the 
-% MNI stereotaxic space, along with various additional intermediate steps 
-% (non-uniformity correction, intensity normalization, brain extraction) 
-% and tissue classification. Also generate a summary of the coregistration 
+% Run a pipeline to preprocess a collection of T1 scans.
+% The preprocessing includes linear and non-linear coregistration in the
+% MNI stereotaxic space, along with various additional intermediate steps
+% (non-uniformity correction, intensity normalization, brain extraction)
+% and tissue classification. Also generate a summary of the coregistration
 % fit across subjects.
 %
 % SYNTAX:
@@ -12,22 +12,22 @@ function [pipeline,opt] = niak_pipeline_t1_preprocess(files_in,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-%   FILES_IN  
-%       (structure) with the following fields : 
+%   FILES_IN
+%       (structure) with the following fields :
 %
 %       <SUBJECT>
 %           (string) raw anatomical (T1-weighted MR) volume.
 %
-%   OPT   
-%       (structure) with the following fields : 
+%   OPT
+%       (structure) with the following fields :
 %
 %       T1_PREPROCESS
 %           (structure) the options of the NIAK_BRICK_T1_PREPROCESS
 %           function. Defaults should work.
 %
-%       FOLDER_OUT 
-%           (string) where to write the results of the pipeline. For the 
-%           actual content of folder_out, see the internet 
+%       FOLDER_OUT
+%           (string) where to write the results of the pipeline. For the
+%           actual content of folder_out, see the internet
 %           documentation :
 %           http://wiki.bic.mni.mcgill.ca/index.php/NiakT1Preprocess
 %
@@ -45,9 +45,9 @@ function [pipeline,opt] = niak_pipeline_t1_preprocess(files_in,opt)
 %
 %
 % _________________________________________________________________________
-% OUTPUTS: 
+% OUTPUTS:
 %
-%   PIPELINE 
+%   PIPELINE
 %       (structure) describe all jobs that need to be performed in the
 %       pipeline.
 %
@@ -55,10 +55,10 @@ function [pipeline,opt] = niak_pipeline_t1_preprocess(files_in,opt)
 % COMMENTS:
 %
 % _________________________________________________________________________
-% SEE ALSO: 
+% SEE ALSO:
 % NIAK_PIPELINE_FMRI_PREPROCESS, NIAK_BRICK_T1_PREPROCESS
 % _________________________________________________________________________
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,
 % Montreal Neurological Institute, McGill University, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -98,25 +98,25 @@ end
 if ~isstruct(files_in)
 
     error('FILES_IN should be a struture!')
-    
+
 else
-   
+
     list_subject = fieldnames(files_in);
     nb_subject = length(list_subject);
     list_anat = cell([length(list_subject) 1]);
-    
+
     for num_s = 1:nb_subject
-        
+
         subject = list_subject{num_s};
         data_subject = files_in.(subject);
-        
+
         if ~ischar(data_subject)
             error('FILES_IN.%s should be a string!',upper(subject));
         end
-        
-        list_anat{num_s} = files_in.(subject);        
+
+        list_anat{num_s} = files_in.(subject);
     end
-    
+
 end
 
 %% Options
@@ -134,12 +134,12 @@ opt.psom(1).path_logs = [opt.folder_out 'logs' filesep];
 if isempty(path_f)
     path_f = '.';
 end
-                
+
 if strcmp(ext_f,GB_NIAK.zip_ext)
 	[tmp,name_f,ext_f] = fileparts(name_f);
     ext_f = cat(2,ext_f,GB_NIAK.zip_ext);
 end
-            
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Brick for individual T1 preprocessing %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -148,10 +148,10 @@ for num_s = 1:nb_subject
 
     % Names
     clear files_in_tmp files_out_tmp opt_tmp
-    name_brick = 'niak_brick_t1_preprocess';    
+    name_brick = 'niak_brick_t1_preprocess';
     subject = list_subject{num_s};
     name_job = ['t1_preprocess_' subject];
-    
+
     % Files in
     files_in_tmp = list_anat{num_s};
 
@@ -165,20 +165,20 @@ for num_s = 1:nb_subject
     files_out_tmp.mask_stereolin = '';
     files_out_tmp.mask_stereonl = '';
     files_out_tmp.classify = '';
-    
-    % Opt    
-    opt_tmp = opt.t1_preprocess;    
+
+    % Opt
+    opt_tmp = opt.t1_preprocess;
     opt_tmp.folder_out = [opt.folder_out subject filesep];
-    
+
     % Add job
     pipeline = psom_add_job(pipeline,name_job,name_brick,files_in_tmp,files_out_tmp,opt_tmp);
-    
-    % get file names for quality control   
+
+    % get file names for quality control
     files_in_qc_lin.mask{num_s} = pipeline.(name_job).files_out.mask_stereolin;
-    files_in_qc_lin.vol{num_s}  = pipeline.(name_job).files_out.anat_nuc_stereolin;    
+    files_in_qc_lin.vol{num_s}  = pipeline.(name_job).files_out.anat_nuc_stereolin;
     files_in_qc_nl.mask{num_s}  = pipeline.(name_job).files_out.mask_stereolin;
-    files_in_qc_nl.vol{num_s}   = pipeline.(name_job).files_out.anat_nuc_stereonl;    
-    
+    files_in_qc_nl.vol{num_s}   = pipeline.(name_job).files_out.anat_nuc_stereonl;
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

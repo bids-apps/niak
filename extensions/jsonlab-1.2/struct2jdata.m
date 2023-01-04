@@ -9,17 +9,17 @@ function newdata=struct2jdata(data,varargin)
 % input:
 %      data: a struct array. If data contains JData keywords in the first
 %            level children, these fields are parsed and regrouped into a
-%            data object (arrays, trees, graphs etc) based on JData 
+%            data object (arrays, trees, graphs etc) based on JData
 %            specification. The JData keywords are
 %               "_ArrayType_", "_ArraySize_", "_ArrayData_"
 %               "_ArrayIsSparse_", "_ArrayIsComplex_"
-%      opt: (optional) a list of 'Param',value pairs for additional options 
+%      opt: (optional) a list of 'Param',value pairs for additional options
 %           The supported options include
-%               'Recursive', if set to 1, will apply the conversion to 
+%               'Recursive', if set to 1, will apply the conversion to
 %                            every child; 0 to disable
 %
 % output:
-%      newdata: the covnerted data if the input data does contain a JData 
+%      newdata: the covnerted data if the input data does contain a JData
 %               structure; otherwise, the same as the input.
 %
 % examples:
@@ -28,7 +28,7 @@ function newdata=struct2jdata(data,varargin)
 %      ubjdata=struct2jdata(obj);
 %
 % license:
-%     BSD License, see LICENSE_BSD.txt files for details 
+%     BSD License, see LICENSE_BSD.txt files for details
 %
 % -- this function is part of JSONLab toolbox (http://iso2mesh.sf.net/cgi-bin/index.cgi?jsonlab)
 %

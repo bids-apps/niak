@@ -4,8 +4,8 @@ function R = niak_corr_model_homogeneous(afc,nb_rois);
 % SUMMARY NIAK_CORR_MODEL_HOMOGENEOUS
 %
 % Generates a spatial correlation matrix following an homogeneous model.
-% The regions are grouped into disjoints clusters C_I. Let C_K and C_L be 
-% the clusters containing regions I and J, with I ~= J. 
+% The regions are grouped into disjoints clusters C_I. Let C_K and C_L be
+% the clusters containing regions I and J, with I ~= J.
 % The correlation between I and J is :
 %
 % R_(I,J) = afc_(K,L)
@@ -37,7 +37,7 @@ function R = niak_corr_model_homogeneous(afc,nb_rois);
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.

@@ -11,16 +11,16 @@ function [files_in,files_out,opt] = niak_brick_autocorrelation(files_in,files_ou
 % _________________________________________________________________________
 % INPUTS
 %
-%  * FILES_IN        
+%  * FILES_IN
 %       (string) file name of a 3D+t dataset. See NIAK_READ_VOL for
 %       supported formats
 %
-%  * FILES_OUT 
+%  * FILES_OUT
 %       (structure) with the following fields. Note that if a field
-%       is left empty, the default name will be used. If a field is absent, 
+%       is left empty, the default name will be used. If a field is absent,
 %       the specified output will not be generated.
 %
-%       SPATIAL 
+%       SPATIAL
 %           (string, default <BASE NAME>_autocorr_spat.<EXT>)
 %           Output name for the spatial autocorrelation map
 %
@@ -28,29 +28,29 @@ function [files_in,files_out,opt] = niak_brick_autocorrelation(files_in,files_ou
 %           (string, default <BASE NAME>_autocorr_temp.<EXT>)
 %           Output name for the temporal autocorrelation map
 %
-%  * OPT           
-%       (structure) with the following fields.  
+%  * OPT
+%       (structure) with the following fields.
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, all default 
-%           outputs will be created in the folder FOLDER_OUT. The folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, all default
+%           outputs will be created in the folder FOLDER_OUT. The folder
 %           needs to be created beforehand.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function
 %           prints some infos during the processing.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO
 % NIAK_BUILD_AUTOCORRELATION

@@ -1,5 +1,5 @@
 function [files,opt] = niak_grab_qc_preprocess(path_data,opt)
-% Grab files created by NIAK_PIPELINE_FMRI_PREPROCESS  needed by 
+% Grab files created by NIAK_PIPELINE_FMRI_PREPROCESS  needed by
 % NIAK_QC_FMRI_PREPROCESS
 %
 % SYNTAX:
@@ -9,28 +9,28 @@ function [files,opt] = niak_grab_qc_preprocess(path_data,opt)
 % INPUTS:
 %
 % PATH_DATA
-%   (string, default [pwd filesep], aka './') full path to the outputs of 
+%   (string, default [pwd filesep], aka './') full path to the outputs of
 %   NIAK_PIPELINE_FMRI_PREPROCESS
 %
 % OPT
 %   (structure) with the following fields:
 %
 %   FILE_EXT
-%      (string, default '.mnc.gz') files extension possible esxtention 
+%      (string, default '.mnc.gz') files extension possible esxtention
 %      '.nii' , '.nii.gz' , '.mnc' , '.mnc.gz'
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % FILES_OUT
 %   (structure) the list of all expected outputs of the fMRI preprocessing
-%   pipeline to be fed to NIAK_QC_FMRI_PREPROCESS. 
+%   pipeline to be fed to NIAK_QC_FMRI_PREPROCESS.
 %
 % OPT
 %   (structure) with the following fields:
 %
 %   FLAG_INCOMPLETE
-%      (boolean, default false) If the preprocessing pipeline is not completed this 
-%       option tuns to true. 
+%      (boolean, default false) If the preprocessing pipeline is not completed this
+%       option tuns to true.
 %
 % _________________________________________________________________________
 % SEE ALSO:
@@ -38,13 +38,13 @@ function [files,opt] = niak_grab_qc_preprocess(path_data,opt)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% This "data grabber" based on the output folder of 
+% This "data grabber" based on the output folder of
 % NIAK_PIPELINE_FMRI_PREPROCESS
 % It grabs only files nedded by NIAK_QC_FMRI_PREPROCESS fonction.
 %
 % The grabber will build a list of outputs neded by the fonction NIAK_QC_FMRI_PREPROCESS.
-% The list can build even if PATH_DATA does not 
-% exist. Otherwise, a limited number of outputs actually need to be present 
+% The list can build even if PATH_DATA does not
+% exist. Otherwise, a limited number of outputs actually need to be present
 % for the list to build:
 %   * The individual subfolders in the 'anat' folder.
 %   * The 'quality_control' folder
@@ -116,7 +116,7 @@ end
 file_scrub = [path_qc 'group_motion' filesep 'qc_scrubbing_group.csv'];
 if exist(file_scrub)
    fprintf('Congrats seems that you completed your preprocessing pepeline\n')
-else 
+else
     warning('Seems that your preprocessing pipeline is not fully completed, do not worry you will be able to QC\n')
     opt.flag_incomplete = true;
 end
@@ -133,7 +133,7 @@ for num_s = 1:length(list_subject)
                   'classify_stereolin' , ...
                   'mask_stereolin'     , ...
                   'mask_stereonl'};
-                   
+
     list_func = { 'mask_stereonl'  , ...
                   'mean_stereonl'  , ...
                   'std_stereonl'};
@@ -150,13 +150,13 @@ for num_s = 1:length(list_subject)
     for num_t = 1:length(list_transf)
         files.anat.(subject).transf.(list_transf{num_t}) = [path_anat_subj 'transf_' subject '_' list_transf{num_t} '.xfm'];
     end
-    
+
     % Add the grids for non-linear transform
     files.anat.(subject).nativefunc_to_stereonl_grid = [path_anat_subj 'transf_' subject '_nativefunc_to_stereonl_grid_0.mnc'];
     files.anat.(subject).stereolin_to_stereonl_grid  = [path_anat_subj 'transf_' subject '_stereolin_to_stereonl_grid.mnc'];
 end
 
-%% Grab the AAL template 
+%% Grab the AAL template
 files.template_aal = [path_anat 'template_aal.mnc.gz'];
 
 %% Grab the results of quality control -- Group confounds
@@ -199,14 +199,14 @@ files.quality_control.group_motion.scrubbing       = [path_qc 'group_motion' fil
 %% Grab the results of quality control -- INDIVIDUAL
 for num_s = 1:length(list_subject)
     subject = list_subject{num_s};
-    
-    %% Subject level   
-    
+
+    %% Subject level
+
     % CORSICA
     files.quality_control.individual.(subject).corsica.stem = [path_qc subject filesep 'corsica' filesep subject '_mask_stem_funcstereonl' ext];
     files.quality_control.individual.(subject).corsica.vent = [path_qc subject filesep 'corsica' filesep subject '_mask_vent_funcstereonl' ext];
     files.quality_control.individual.(subject).corsica.wm   = [path_qc subject filesep 'corsica' filesep subject '_mask_wm_funcstereonl' ext];
-    
+
     % MOTION
     files.quality_control.individual.(subject).motion.coregister.csv = [path_qc subject filesep 'motion_correction' filesep 'tab_coregister_motion.csv'];
     files.quality_control.individual.(subject).motion.coregister.pdf = [path_qc subject filesep 'motion_correction' filesep 'fig_coregister_motion.pdf'];

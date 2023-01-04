@@ -52,7 +52,7 @@ function stab = niak_stability_tseries(tseries,opt)
 %                   default uses 60% timepoints. Can be controlled by
 %                   opt.sampling.opt.perc.
 %               'bootstrap' : see the description of the OPT
-%                   argument in NIAK_BOOTSTRAP_TSERIES. Default is 
+%                   argument in NIAK_BOOTSTRAP_TSERIES. Default is
 %                   OPT.TYPE = 'CBB' (a circular block bootstrap is
 %                   applied).
 %               'mplm' : see the description of the OPT argument in
@@ -65,11 +65,11 @@ function stab = niak_stability_tseries(tseries,opt)
 %
 %       TYPE
 %           (string, default 'hierarchical') the clustering algorithm
-%           Available options : 
+%           Available options :
 %               'kmeans': k-means (euclidian distance)
-%               'hierarchical': a HAC based on a squared euclidian 
+%               'hierarchical': a HAC based on a squared euclidian
 %                   distance.
-%               'hierarchical_e2' : a HAC based on the eta-square 
+%               'hierarchical_e2' : a HAC based on the eta-square
 %                   distance (see NIAK_BUILD_ETA2)
 %               'kcores' : k-means cores for a reference partition
 %
@@ -214,7 +214,7 @@ for num_s = 1:opt.nb_samps
     tseries_boot = niak_normalize_tseries(tseries_boot,opt.normalize);
 
     if ismember(opt.clustering.type,'hierarchical') % for methods that produce a hierarchy
-        
+
         switch opt.clustering.type
             case 'hierarchical'
                 D    = niak_build_distance(tseries_boot).^2;
@@ -229,7 +229,7 @@ for num_s = 1:opt.nb_samps
         for num_sc = 1:nb_s
             stab(:,num_sc) = stab(:,num_sc) + niak_mat2vec(niak_part2mat(part(:,num_sc),true));
         end
-        
+
     else % for clustering methods
 
         for num_sc = 1:nb_s
@@ -242,7 +242,7 @@ for num_s = 1:opt.nb_samps
                 case 'neural-gas'
 
                     part = niak_neural_gas(tseries_boot,opt.clustering.opt);
-                    
+
                 case 'kcores'
                     part = niak_kmeans_cores(tseries_boot, ...
                            opt.clustering.opt.target_part(:, num_sc),...

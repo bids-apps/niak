@@ -4,10 +4,10 @@
                 Version 7.11.0.584 (R2010b) 64-bit (glnxa64)
                               August 16, 2010
 
- 
+
   To get started, type one of these: helpwin, helpdesk, or demo.
   For product information, visit www.mathworks.com.
- 
+
 >> >> >> >> >> ===============================================
 >> example1.json
 {
@@ -151,4 +151,4 @@ CloseDoc()}]}}}}
 ===============================================
 >> example4.json
 {Udata[{Usample{Urhoi}}{Usample{Urhoi}}[[$i#U[$i#U[$i#U][SUPaperSUScissorsSUStone][CaSUb\SUc"SUd\"SUe"[SUf\"[SUg[\SUh[\"]]}
->> 
+>>

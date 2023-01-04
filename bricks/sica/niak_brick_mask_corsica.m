@@ -7,24 +7,24 @@ function [files_in,files_out,opt] = niak_brick_mask_corsica(files_in,files_out,o
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN        
+% FILES_IN
 %   (structure) with the following fields :
 %
 %   MASK_VENT_STEREO
-%       (string) the file 
+%       (string) the file
 %       name of a binary mask of ventricles in stereotaxic non-linear space.
 %
 %   MASK_WM_STEREO
-%       (string) the file name of a binary mask of the white matter in stereotaxic 
+%       (string) the file name of a binary mask of the white matter in stereotaxic
 %       non-linear space.
 %
 %   MASK_STEM_STEREO
-%       (string) the file 
+%       (string) the file
 %       name of a binary mask of brain stem in stereotaxic non-linear space.
 %
 %   MASK_BRAIN
 %       (string) the file name of a binary mask of the brain in the same space
-%       as the functional (either linear or non-linear stereotaxic, 
+%       as the functional (either linear or non-linear stereotaxic,
 %       see OPT.TARGET_SPACE below.
 %
 %   FUNCTIONAL_SPACE
@@ -42,77 +42,77 @@ function [files_in,files_out,opt] = niak_brick_mask_corsica(files_in,files_out,o
 %
 %   AAL
 %       (string) the file name of the AAL template (resampled in the same
-%       space as the functional data). This template will be used to exclude 
+%       space as the functional data). This template will be used to exclude
 %       voxels from the white matter segmentation. This is necessary in particular
 %       to exclude the basal ganglia and thalami which sometimes end up being included
 %       in the segmentation of the white matter.
 %
-% FILES_OUT   
-%   (structure) with the following fields : 
-%   
+% FILES_OUT
+%   (structure) with the following fields :
+%
 %   MASK_VENT_IND
-%       (string) the file name of a binary mask of ventricles in native 
+%       (string) the file name of a binary mask of ventricles in native
 %       functional space.
 %
 %   MASK_STEM_IND
-%       (string) the file name of a binary mask of brain stem in native 
+%       (string) the file name of a binary mask of brain stem in native
 %       functional space.
 %
 %   WHITE_MATTER_IND
-%       (string) the file name of a binary mask of white matter in native 
+%       (string) the file name of a binary mask of white matter in native
 %       functional space.
-%       
-% OPT           
-%   (structure) with the following fields.  
+%
+% OPT
+%   (structure) with the following fields.
 %
 %   TARGET_SPACE
 %       (string, default 'stereonl') which space will be used to resample
 %       the masks. Available options:
-%          'stereolin' : stereotaxic space using a linear transformation. 
+%          'stereolin' : stereotaxic space using a linear transformation.
 %          'stereonl' : stereotaxic space using a non-linear transformation.
 %
-%   FOLDER_OUT 
-%       (string, default: path of FILES_IN.MASK_SEGMENTATION) 
-%       If present, the output will be created in the folder FOLDER_OUT. 
+%   FOLDER_OUT
+%       (string, default: path of FILES_IN.MASK_SEGMENTATION)
+%       If present, the output will be created in the folder FOLDER_OUT.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
-%   FLAG_TEST 
-%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%       do anything but update the default values in FILES_IN, FILES_OUT 
+%   FLAG_TEST
+%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%       do anything but update the default values in FILES_IN, FILES_OUT
 %       and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_BRICK_T1_PREPROCESS, NIAK_PIPELINE_CORSICA
 %
 % _________________________________________________________________________
 % COMMENTS:
-% 
-% The mask of the stem is derived from the non-linear transformation, and 
+%
+% The mask of the stem is derived from the non-linear transformation, and
 % grey matter voxels are excluded.
 %
-% The ventricle mask is derived from the non-linear transformation, and 
+% The ventricle mask is derived from the non-linear transformation, and
 % is intersected with CSF voxels.
 %
-% The white matter mask is derived from the non-linear transformation, and voxels 
-% falling in the AAL template are excluded (the AAL template providing a loose 
-% segmentation of the grey matter, more robust than automated segmentations for 
+% The white matter mask is derived from the non-linear transformation, and voxels
+% falling in the AAL template are excluded (the AAL template providing a loose
+% segmentation of the grey matter, more robust than automated segmentations for
 % the basal ganglia & thalami) as well as voxels that do not fall in the mask
-% of the brain. The largest connex component is finally identified with 
+% of the brain. The largest connex component is finally identified with
 % NIAK_FIND_CONNEX_ROI and serves as the final white matter mask.
 %
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
-% geriatrie de Montreal, Departement d'informatique et recherche 
+% geriatrie de Montreal, Departement d'informatique et recherche
 % operationnelle, Universite de Montreal, 2010.
 % Maintainer : pbellec@criugm.qc.ca
 % See licensing information in the code.
@@ -192,7 +192,7 @@ files_out_res               = [folder_tmp 'brain_segmentation_ind.mnc'];
 
 opt_res.interpolation       = 'nearest_neighbour';
 niak_brick_resample_vol(files_in_res,files_out_res,opt_res);
-if flag_verbose    
+if flag_verbose
     fprintf('%1.2f sec.\n',toc)
 end
 
@@ -212,7 +212,7 @@ end
 files_out_res               = [folder_tmp 'mask_wm_template.mnc'];
 opt_res.interpolation       = 'nearest_neighbour';
 niak_brick_resample_vol(files_in_res,files_out_res,opt_res);
-if flag_verbose    
+if flag_verbose
     fprintf('%1.2f sec.\n',toc)
 end
 
@@ -231,7 +231,7 @@ end
 files_out_res               = [folder_tmp 'mask_vent_ind.mnc'];
 opt_res.interpolation       = 'nearest_neighbour';
 niak_brick_resample_vol(files_in_res,files_out_res,opt_res);
-if flag_verbose    
+if flag_verbose
     fprintf('%1.2f sec.\n',toc)
 end
 
@@ -250,7 +250,7 @@ end
 files_out_res               = [folder_tmp 'mask_aal.mnc'];
 opt_res.interpolation       = 'nearest_neighbour';
 niak_brick_resample_vol(files_in_res,files_out_res,opt_res);
-if flag_verbose    
+if flag_verbose
     fprintf('%1.2f sec.\n',toc)
 end
 
@@ -269,7 +269,7 @@ end
 files_out_res               = [folder_tmp 'mask_stem_ind.mnc'];
 opt_res.interpolation       = 'nearest_neighbour';
 niak_brick_resample_vol(files_in_res,files_out_res,opt_res);
-if flag_verbose    
+if flag_verbose
     fprintf('%1.2f sec.\n',toc)
 end
 
@@ -284,7 +284,7 @@ files_in_math{2}    = [folder_tmp 'mask_vent_ind.mnc'];
 files_out_math      = files_out.mask_vent_ind;
 opt_math.operation  = 'vol = (vol_in{2} > 0) & (round(vol_in{1}) == 1);';
 niak_brick_math_vol(files_in_math,files_out_math,opt_math);
-if flag_verbose    
+if flag_verbose
     fprintf('%1.2f sec.\n',toc)
 end
 
@@ -299,7 +299,7 @@ files_in_math{2}    = [folder_tmp 'mask_wm_template.mnc'];
 files_out_math      = files_out.white_matter_ind;
 opt_math.operation  = 'vol = (vol_in{2} > 0) & (round(vol_in{1}) == 3);';
 niak_brick_math_vol(files_in_math,files_out_math,opt_math);
-if flag_verbose    
+if flag_verbose
     fprintf('%1.2f sec.\n',toc)
 end
 
@@ -314,10 +314,10 @@ files_in_math{2}    = [folder_tmp 'mask_stem_ind.mnc'];
 files_out_math      = files_out.mask_stem_ind;
 opt_math.operation  = 'vol = (vol_in{2} > 0) & (round(vol_in{1}) ~= 2);';
 niak_brick_math_vol(files_in_math,files_out_math,opt_math);
-if flag_verbose    
+if flag_verbose
     fprintf('%1.2f sec.\n',toc)
 end
-        
+
 %% Clean up temporary files
 [status,msg] = system(['rm -rf ' folder_tmp]);
 if status ~= 0

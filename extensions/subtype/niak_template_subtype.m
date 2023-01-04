@@ -34,7 +34,7 @@
 %% Setting input/output files %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Clear the workspace 
+%% Clear the workspace
 clear all
 
 %% Set up the files_in structure
@@ -109,5 +109,3 @@ opt.chi2.group_col_id = 'Group';    % string name of the column in files_in.mode
 
 opt.flag_test = false;  % Put this flag to true to just generate the pipeline without running it.
 [pipeline,opt] = niak_pipeline_subtype(files_in,opt);
-
-

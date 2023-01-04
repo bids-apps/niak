@@ -11,27 +11,27 @@ function vol_g = niak_gradient_vol(vol,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL     
-%       (3D array) 
+% VOL
+%       (3D array)
 %
-% OPT     
+% OPT
 %       (structure) with the following fields :
 %
-%       MASK    
-%           (3D array, same size as VOL, default ones(size(VOL))) 
+%       MASK
+%           (3D array, same size as VOL, default ones(size(VOL)))
 %           a binary mask of interest (0 outside the mask, 1 inside).
 %
-%       NEIGH   
-%           (string, default '26-connexity') the type of neighborhood 
+%       NEIGH
+%           (string, default '26-connexity') the type of neighborhood
 %           to include in the gradient calculation. Possible values :
 %          '4-connexity','6-connexity','26-connexity'.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% VOL_G   
-%       (3D array, same size as VOL) 
-%       at each voxel, VOL_G is the mean square gradient of VOL at this 
+% VOL_G
+%       (3D array, same size as VOL)
+%       at each voxel, VOL_G is the mean square gradient of VOL at this
 %       voxel and along all the specified directions.
 %
 % _________________________________________________________________________
@@ -76,19 +76,19 @@ gb_list_defaults = {ones(size(vol)),'26-connexity'};
 niak_set_defaults
 
 switch neigh
-    
+
     case '4-connexity'
-        
+
         grad_dir = [0 -1 0; 0 1 0; -1 0 0; 1 0 0];
-        
+
     case '6-connexity'
-        
+
         grad_dir = [ 0 0 -1; 0 0 1; 0 -1 0; 0 1 0; -1 0 0; 1 0 0];
 
     case '26-connexity'
-        
+
         grad_dir = [1 1 0; -1 1 0; 1 -1 0; -1 -1 0; 0 -1 0; 0 1 0; -1 0 0; 1 0 0;1 1 1; -1 1 1; 1 -1 1; -1 -1 1; 0 -1 1; 0 1 1; -1 0 1; 1 0 1; 0 0 1; 1 1 -1; -1 1 -1; 1 -1 -1; -1 -1 -1; 0 -1 -1; 0 1 -1; -1 0 -1; 1 0 -1; 0 0 -1];
-        
+
 end
 
 [nx,ny,nz] = size(vol);
@@ -100,21 +100,21 @@ grad_v = zeros(size(vol_v));
 nb_neigh = zeros(size(vol_v));
 
 for num_d = 1:size(grad_dir,1)
-    
+
     indx2 = indx + grad_dir(num_d,1);
     indy2 = indy + grad_dir(num_d,2);
     indz2 = indz + grad_dir(num_d,3);
-    
+
     mask_lim = (indx2>0)&(indx2<=nx)&(indy2>0)&(indy2<=ny)&(indz2>0)&(indz2<=nz);
-    
+
     indx2 = indx2(mask_lim);
     indy2 = indy2(mask_lim);
     indz2 = indz2(mask_lim);
-    
+
     ind2 = sub2ind(size(vol),indx2,indy2,indz2);
-    
+
     grad_v(mask_lim) = grad_v(mask_lim) + (vol(ind(mask_lim))-vol(ind2)).^2;
-    
+
     nb_neigh(mask_lim) = nb_neigh(mask_lim)+1;
 
 end

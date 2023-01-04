@@ -3,17 +3,17 @@ function opt = niak_update_fwhm_varatio(opt)
 % SUMMARY NIAK_UPDATE_FWHM_VARATIO
 %
 % Updates the values of fwhm and df required for smoothing autocorrelations
-% 
+%
 % SYNTAX:
 % OPT = NIAK_UPDATE_FWHM_VARATIO(OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% OPT         
+% OPT
 %       structure with the following fields :
 %
-%       FWHM       
+%       FWHM
 %           Structure with the fields VARATIO and DATA.
 %
 %       DF
@@ -28,20 +28,20 @@ function opt = niak_update_fwhm_varatio(opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% OPT         
+% OPT
 %       Updated structure.
 % _________________________________________________________________________
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the MULTISTAT function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -105,4 +105,3 @@ if (isnan(fwhm.varatio)) || (fwhm.varatio > fwhm_varatio_limit)
    fwhm.varatio = Inf;
 end
 opt.fwhm = fwhm;
-  

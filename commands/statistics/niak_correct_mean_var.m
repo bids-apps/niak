@@ -7,15 +7,15 @@ function tseries_n = niak_correct_mean_var(tseries,type_correction)
 % _________________________________________________________________________
 % INPUTS:
 %
-% TSERIES_N             
+% TSERIES_N
 %       (2D array) each column of TSERIES is a time series.
 %
-% TYPE_CORRECTION       
+% TYPE_CORRECTION
 %       (string, default 'mean_var') possible values :
-%           'none' : no correction at all                       
+%           'none' : no correction at all
 %           'mean' : correction to zero mean.
 %           'mean_var' : correction to zero mean and unit variance
-%           'mean_var2' : same as 'mean_var' but slower, yet does not use 
+%           'mean_var2' : same as 'mean_var' but slower, yet does not use
 %               as much memory).
 %
 % _________________________________________________________________________
@@ -60,32 +60,32 @@ if isempty(type_correction)
     type_correction = 'mean_var';
 end
 
-[nt,nn] = size(tseries); 
+[nt,nn] = size(tseries);
 
 % Correction of mean and eventually variance
 switch type_correction
-    
+
     case 'none'
         tseries_n = tseries;
 
     case 'mean_var'
-        
+
         mean_ts = mean(tseries,1);
         tseries_n = tseries - ones([nt 1])*mean_ts;
-        std_ts = (1/sqrt(nt-1))*sqrt(sum(tseries_n.^2,1));        
-        if max(std_ts)>0           
+        std_ts = (1/sqrt(nt-1))*sqrt(sum(tseries_n.^2,1));
+        if max(std_ts)>0
             tseries_n(:,std_ts~=0) = tseries_n(:,std_ts~=0)./(ones([nt 1])*std_ts(std_ts~=0));
         end
 
     case 'mean_var2'
-        
+
         mean_ts = mean(tseries,1);
         tseries_n = zeros(size(tseries));
-        
+
         for num_n = 1:nn
             tseries_n(:,num_n) = tseries(:,num_n) - mean_ts(num_n);
         end
-        
+
         std_ts = (1/sqrt(nt-1))*sqrt(sum(tseries_n.^2,1));
         for num_n=1:nn
             if std_ts(num_n)~=0
@@ -94,12 +94,12 @@ switch type_correction
         end
 
     case 'mean'
-        
+
         mean_ts = mean(tseries,1);
         tseries_n = tseries - ones([nt 1])*mean_ts;
-        
-    otherwise        
-        
+
+    otherwise
+
         error('niak:statistics','%s: unknown type of correction',type_correction);
 
 end

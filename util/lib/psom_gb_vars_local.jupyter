@@ -28,5 +28,3 @@ gb_psom_mode_garbage = 'background';
 
 % Options for the maximal number of jobs
 gb_psom_max_queued = 4;
-
-

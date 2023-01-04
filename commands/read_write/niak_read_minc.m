@@ -4,21 +4,21 @@ function [hdr,vol] = niak_read_minc(file_name,precision_data)
 %
 % SYNTAX:
 % [HDR,VOL] = NIAK_READ_MINC(FILE_NAME)
-% 
+%
 % _________________________________________________________________________
 % INPUT:
 %
-% FILE_NAME         
+% FILE_NAME
 %       (string) a 3D+t or 3D minc file.
 %
 % _________________________________________________________________________
 % OUTPUT:
 %
-% VOL           
+% VOL
 %       (3D+t or 3D array of double) the fMRI or MRI data.
 %
 % HDR
-%       a structure containing a description of the data. See NIAK_READ_VOL 
+%       a structure containing a description of the data. See NIAK_READ_VOL
 %       and NIAK_READ_HDR_MINC for details.
 %
 % _________________________________________________________________________
@@ -27,14 +27,14 @@ function [hdr,vol] = niak_read_minc(file_name,precision_data)
 % NIAK_READ_HDR_MINC, NIAK_WRITE_MINC, NIAK_READ_VOL, NIAK_WRITE_VOL
 %
 % _________________________________________________________________________
-% COMMENTS: 
+% COMMENTS:
 %
-% Use shell commands MINCINFO (for minc1), MINCHEADER and MINCTORAW which 
+% Use shell commands MINCINFO (for minc1), MINCHEADER and MINCTORAW which
 % requires a proper install of minc tools. This function is
-% creating temporary files. If it does not work, try to change the location 
-% of temporary files using the GB_NIAK_TMP variable defined in 
+% creating temporary files. If it does not work, try to change the location
+% of temporary files using the GB_NIAK_TMP variable defined in
 % the NIAK_GB_VARS function.
-% 
+%
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -74,11 +74,11 @@ if nargout == 2
 
     %% extracting the data in float precision in the temporary file
     [flag,str_info] = system(cat(2,'minctoraw -',precision_data,' -normalize ',file_name,' > ',file_tmp));
-    
+
     if flag>0
         error(sprintf('niak:read : %s',str_info))
     end
-    
+
     %% reading information
     hf = fopen(file_tmp,'r');
     try

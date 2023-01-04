@@ -112,11 +112,10 @@ if status
     end
     error(result)
 else
-    [hdr,vol_m] = niak_read_vol(file_tmp2);    
+    [hdr,vol_m] = niak_read_vol(file_tmp2);
     if pad_size>0
         vol_m = niak_unpad_vol(vol_m,opt_pad.pad_size);
     end
     delete(file_tmp);
     delete(file_tmp2);
 end
-

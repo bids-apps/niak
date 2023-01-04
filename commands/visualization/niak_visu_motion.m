@@ -11,38 +11,38 @@ function [] = niak_visu_motion(vol,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL           
+% VOL
 %       (4D array) a 3D+t dataset.
 %
-% OPT           
+% OPT
 %       (structure, optional) has the following fields:
 %
-%       SPEED 
+%       SPEED
 %           (real number, default 0.2) pause between two images (in sec)
 %
-%       TYPE_SLICE 
-%           (string, default 'axial') the plane of slices in the montage. 
-%           Available options : 'axial', 'coronal', 'sagital'. This option 
-%           assumes the volume is in 'xyz' convention (left to right, 
+%       TYPE_SLICE
+%           (string, default 'axial') the plane of slices in the montage.
+%           Available options : 'axial', 'coronal', 'sagital'. This option
+%           assumes the volume is in 'xyz' convention (left to right,
 %           posterior to anterior, ventral to dorsal).
 %
-%       TYPE_COLOR 
+%       TYPE_COLOR
 %           (string, default 'jet') colormap name.
 %
-%       FWHM 
-%           (double, default 0) smooth the image with an isotropic Gaussian 
+%       FWHM
+%           (double, default 0) smooth the image with an isotropic Gaussian
 %           kernel of FWHM fwhm (in voxels).
 %
-%       TYPE_FLIP 
-%           (string, default 'rot90') make rotation and flip of the slice 
-%           representation. see NIAK_FLIP_VOL for options. 
+%       TYPE_FLIP
+%           (string, default 'rot90') make rotation and flip of the slice
+%           representation. see NIAK_FLIP_VOL for options.
 %           'rot90' will work for axial slices of a volume oriented
-%           from left to right, from anterior to posterior, and 
-%           from ventral to dorsal. In this case, left is left on the 
+%           from left to right, from anterior to posterior, and
+%           from ventral to dorsal. In this case, left is left on the
 %           image.
 %
-%       VOL_LIMITS 
-%           (vector 1*2, default [min(vol(:)) max(vol(:))]) limits of the 
+%       VOL_LIMITS
+%           (vector 1*2, default [min(vol(:)) max(vol(:))]) limits of the
 %           color scaling.
 %
 %       ORDER
@@ -70,7 +70,7 @@ function [] = niak_visu_motion(vol,opt)
 %
 % Then you may want to use matlab syntax to extract a subpart of the
 % volume, because a movie of a full volume with tens of slices is a bit
-% too much. For example, the following command will make a motion of the 
+% too much. For example, the following command will make a motion of the
 % 20th and 21st axial slices of the 4D data. :
 %
 % >> niak_visu_motion(vol(:,:,20:21,:));
@@ -134,7 +134,7 @@ while ~flag_exit
         else
             niak_visu_matrix(vol(:,num_t),opt);
         end
-    else        
+    else
         niak_montage(vol(:,:,:,num_t),opt);
     end
     if ~flag_play
@@ -150,7 +150,7 @@ while ~flag_exit
         case ''
             if num_t < nt
                 num_t = num_t+1;
-            else 
+            else
                 num_t = 1;
             end
         case 'p'

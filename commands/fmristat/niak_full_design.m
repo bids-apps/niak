@@ -1,58 +1,58 @@
 function matrix_x = niak_full_design(x_cache,trend,opt)
-% Contructs the full design matrix of the model 
+% Contructs the full design matrix of the model
 % (concatenates the information in x_cache and trends)
-% 
+%
 % SYNTAX:
 % [MATRIX_X] = NIAK_FULL_DESIGN(X_CACHE,TREND,OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% X_CACHE 
+% X_CACHE
 %   (structure) with fields TR, X ,and W. See NIAK_FMRI_DESIGN.
 %
-% TREND       
-%   (3D array) temporal, spatial trends and additional confounds for 
+% TREND
+%   (3D array) temporal, spatial trends and additional confounds for
 %   every slice. See NIAK_MAKE_TRENDS.
-% 
-% OPT         
+%
+% OPT
 %   (structure, optional) with the following fields :
 %
-%   EXCLUDE: 
-%       a list of frames that should be excluded from the analysis. 
+%   EXCLUDE:
+%       a list of frames that should be excluded from the analysis.
 %       Default is [].
 %
 %   NUM_HRF_BASES
-%       row vector indicating the number of basis functions for the hrf 
-%       for each response, either 1 or 2 at the moment. At least one basis 
+%       row vector indicating the number of basis functions for the hrf
+%       for each response, either 1 or 2 at the moment. At least one basis
 %       functions is needed to estimate the magnitude, but two basis functions
 %       are needed to estimate the delay.
-%     
-%   BASIS_TYPE 
+%
+%   BASIS_TYPE
 %       selects the basis functions for the hrf used for delay
-%       estimation, or whenever NUM_HRF_BASES = 2. These are convolved 
+%       estimation, or whenever NUM_HRF_BASES = 2. These are convolved
 %       with the stimulus to give the responses in Dim 3 of X_CACHE.X:
-%           'taylor' - use hrf and its first derivative (components 1 and 2), or 
+%           'taylor' - use hrf and its first derivative (components 1 and 2), or
 %           'spectral' - use first two spectral bases (components 3 and 4 of Dim 3).
-%           Default is 'spectral'. 
+%           Default is 'spectral'.
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% MATRIX_X      
+% MATRIX_X
 %   (3D array) of the full design matrix, a different matrix for each
 %   slice.
 % _________________________________________________________________________
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -96,14 +96,14 @@ niak_set_defaults
 
 
 switch lower(opt.basis_type)
-case 'taylor',    
+case 'taylor',
    basis1=1;
    basis2=2;
-case 'spectral',    
+case 'spectral',
    basis1=3;
    basis2=4;
-otherwise, 
-   disp('Unknown basis_type.'); 
+otherwise,
+   disp('Unknown basis_type.');
    return
 end
 

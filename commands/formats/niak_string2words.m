@@ -7,14 +7,14 @@ function cell_words = niak_string2words(vec_string,list_blanks)
 %
 % SYNTAX
 % cell_words = NIAK_STRING2WORDS(VEC_STRING,LIST_BLANKS)
-% 
+%
 % _________________________________________________________________________
 % INPUT
 %
 % VEC_STRING
 %       (vector of strings) containing words separated by blanks
 %
-% LIST_BLANKS   
+% LIST_BLANKS
 %       (cell of string, default {}) a list of characters that
 %       will be considered as blanks in addition to ' '.
 %
@@ -26,7 +26,7 @@ function cell_words = niak_string2words(vec_string,list_blanks)
 %
 % _________________________________________________________________________
 % COMMENTS
-% 
+%
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -66,4 +66,3 @@ if ~isempty(vec_string)
 else
     cell_words = cell(0);
 end
-

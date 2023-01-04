@@ -1,5 +1,5 @@
 function [sil,intra,inter] = niak_build_avg_silhouette(mat,hier,flag_verbose)
-% Estimate the average silhouette at all levels of a hierarchy. 
+% Estimate the average silhouette at all levels of a hierarchy.
 %
 % SYNTAX:
 % [SIL,INTRA,INTER] = NIAK_BUILD_AVG_SILHOUETTE(MAT,HIER,[FLAG_VERBOSE])
@@ -16,12 +16,12 @@ function [sil,intra,inter] = niak_build_avg_silhouette(mat,hier,flag_verbose)
 %
 % FLAG_VERBOSE
 %       (boolean, default true) Print some advancement infos.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS :
 %
 % SIL
-%   (vector, size N*1) SIL(I) is the average silhouette of the partition 
+%   (vector, size N*1) SIL(I) is the average silhouette of the partition
 %   with I clusters.
 %
 % INTRA
@@ -50,7 +50,7 @@ function [sil,intra,inter] = niak_build_avg_silhouette(mat,hier,flag_verbose)
 % Interpretation and Validation of Cluster Analysis". Computational and
 % Applied Mathematics 20: 53–65.
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,
 % Montreal Neurological Institute, McGill University, 2008-2010.
 % Centre de recherche de l'institut de Gériatrie de Montréal
 % Département d'informatique et de recherche opérationnelle
@@ -113,63 +113,61 @@ if flag_verbose
 end
 
 for num_i = 1:N-2
-    
+
     num_c = N-num_i;
-    
+
     if flag_verbose
         if floor(perc_verb^(-1)*num_i/(N-1))>floor(perc_verb^(-1)*(num_i-1)/(N-1))
             fprintf(' %1.0f',100*(num_i/(N-1)));
         end
     end
-  
+
     % Get the fusion info
     cx = hier(num_i,2);
     cy = hier(num_i,3);
     cz = hier(num_i,4);
-    
+
     mask_x = part == cx;
     mask_y = part == cy;
     mask_z = mask_x|mask_y;
-    
+
     indx = find(labels==cx,1);
     indy = find(labels==cy,1);
-    
+
     % update the partition and labels
     part(mask_z) = cz;
     labels(indx) = cz;
-    labels(indy) = NaN;    
-    
+    labels(indy) = NaN;
+
     % update size
     nx = siz(indx);
     ny = siz(indy);
     siz(indx) = nx+ny;
     siz(indy) = NaN;
     mask_clust(indy) = false;
-    
+
     % update the within-cluster total similarity
     S(indx) = S(indx) + S(indy) + sum(sum(mat(mask_x,mask_y)));
-    
+
     % update the region-to-cluster average similarity
     B(:,indx) = (nx*B(:,indx) + ny*B(:,indy))/(nx+ny);
     B(:,indy) = -Inf;
-    
-    mask_up = (list_nn==indx)|(list_nn==indy);    
+
+    mask_up = (list_nn==indx)|(list_nn==indy);
     [score_nn(mask_up),list_nn(mask_up)] = max(B(mask_up,mask_clust),[],2);
     list_clust = find(mask_clust);
     list_nn(mask_up) = list_clust(list_nn(mask_up));
-    
-    % Compute the average silhouette    
+
+    % Compute the average silhouette
     weig = siz(mask_clust);
     weig(weig==1) = 0;
-    weig(weig>0) = (weig(weig>1)-1).^(-1);   
+    weig(weig>0) = (weig(weig>1)-1).^(-1);
     intra(num_c) = 2*sum(weig.*S(mask_clust))/N;
     inter(num_c) = sum(score_nn)/N;
     sil(num_c) = intra(num_c) - inter(num_c);
-    
+
 end
 
 if flag_verbose
     fprintf(' Done ! \n');
 end
-
-        

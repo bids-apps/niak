@@ -8,7 +8,7 @@ function [files_in,files_out,opt] = niak_brick_graph_summary(files_in,files_out,
 % INPUTS:
 %
 % FILES_IN
-%   (structure) with arbitrary names SUBJECT. FILES_IN.(SUBJECT) is a .mat file 
+%   (structure) with arbitrary names SUBJECT. FILES_IN.(SUBJECT) is a .mat file
 %   with measures stored in indiviual variables MEASURE as follows
 %
 %    (MEASURE).TYPE (string) the type of measure
@@ -23,12 +23,12 @@ function [files_in,files_out,opt] = niak_brick_graph_summary(files_in,files_out,
 %   (structure) with arbitrary fields (MEASURE). Each entry has the following fields:
 %
 %   FLAG_TEST
-%       (boolean, default: 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%       (boolean, default: 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
 %
 %   FLAG_VERBOSE
-%       (boolean, default: 1) If FLAG_VERBOSE == 1, write messages 
+%       (boolean, default: 1) If FLAG_VERBOSE == 1, write messages
 %       indicating progress.
 %
 % _________________________________________________________________________
@@ -44,8 +44,8 @@ function [files_in,files_out,opt] = niak_brick_graph_summary(files_in,files_out,
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Each measure should be found with identical names across all .mat files, 
-% otherwise the brick will send back an error. The list of measures is 
+% Each measure should be found with identical names across all .mat files,
+% otherwise the brick will send back an error. The list of measures is
 % defined by the first .mat file.
 %
 % _________________________________________________________________________
@@ -112,7 +112,7 @@ for num_s = 1:length(list_subject)
     prop = load(files_in.(subject));
     if num_s == 1
         list_mes = fieldnames(prop);
-        tab = zeros(length(list_subject),length(list_mes));        
+        tab = zeros(length(list_subject),length(list_mes));
     end
     for num_m = 1:length(list_mes)
         tab(num_s,num_m) = prop.(list_mes{num_m}).val;

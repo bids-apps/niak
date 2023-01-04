@@ -8,10 +8,10 @@ function [files_in,files_out,opt] = niak_brick_qc_motion_correction_ind(files_in
 % INPUTS:
 %
 % FILES_IN
-%   (structure) with the following fields : 
+%   (structure) with the following fields :
 %
 %   VOL
-%       (cell of string) multiple file names of 3D+t datasets in the same 
+%       (cell of string) multiple file names of 3D+t datasets in the same
 %       space.
 %
 %   MOTION_PARAMETERS
@@ -60,32 +60,32 @@ function [files_in,files_out,opt] = niak_brick_qc_motion_correction_ind(files_in
 %   (structure) with the following fields.
 %
 %   LABELS_VOL
-%       (cell of strings, default FILES_IN) the labels used for each entry 
+%       (cell of strings, default FILES_IN) the labels used for each entry
 %       in the tables.
 %
 %   LABEL
-%       (string, default name of FILES_IN{1}, without path or extension) 
+%       (string, default name of FILES_IN{1}, without path or extension)
 %       used in the default names.
 %
 %   MASK
-%       (structure) the options of NIAK_BRICK_MASK_BRAIN. 
+%       (structure) the options of NIAK_BRICK_MASK_BRAIN.
 %
 %   THRESH
-%       (real number, default 0.95) the threshold used to define a group 
+%       (real number, default 0.95) the threshold used to define a group
 %       mask based on the average of all individual masks.
 %
 %   FOLDER_OUT
 %       (string, default: path of FILES_IN)
-%       If present, the output will be created in the folder FOLDER_OUT. 
+%       If present, the output will be created in the folder FOLDER_OUT.
 %       The folder needs to be created beforehand.
 %
 %   FLAG_VERBOSE
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
 %   FLAG_TEST
-%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
 %
 % _________________________________________________________________________
@@ -102,19 +102,19 @@ function [files_in,files_out,opt] = niak_brick_qc_motion_correction_ind(files_in
 % COMMENTS:
 %
 % NOTE 1:
-%   The individual masks are averaged, resutling in a volume with values 
-%   between 0 and 1. 0 corresponds to voxels that were in no individual 
-%   brain mask, while 1 corresponds to voxels that were in all invidual 
+%   The individual masks are averaged, resutling in a volume with values
+%   between 0 and 1. 0 corresponds to voxels that were in no individual
+%   brain mask, while 1 corresponds to voxels that were in all invidual
 %   brain masks.
 %   The group mask is this average brain mask after threshold (OPT.THRESH).
 %
 % NOTE 2:
-%   The first column ('perc_overlap_mask') is the percentage of overlap of 
-%   the group mask and each individual mask, relative to the size of the 
-%   individual masks. This is to check the consistency of the field of 
+%   The first column ('perc_overlap_mask') is the percentage of overlap of
+%   the group mask and each individual mask, relative to the size of the
+%   individual masks. This is to check the consistency of the field of
 %   views across masks.
-%   The second column ('xcorr_vol') is a spatial cross-correlation of the 
-%   individual volume with the average volume, restricted to the group 
+%   The second column ('xcorr_vol') is a spatial cross-correlation of the
+%   individual volume with the average volume, restricted to the group
 %   brain mask.
 %
 % _________________________________________________________________________
@@ -254,7 +254,7 @@ for num_f = 1:nb_file
     tsl = zeros([size(motion_params.transf,3) 3]);
     for num_t = 1:size(motion_params.transf,3)
         [rot(num_t,:),tsl(num_t,:)] = niak_transf2param(motion_params.transf(:,:,num_t));
-    end    
+    end
     subplot(2,1,1)
     plot(rot)
     legend('rotation x','rotation y','rotation z')

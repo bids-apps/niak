@@ -39,11 +39,11 @@ function [] = niak_visu_points(coord,val,opt)
 % EXAMPLE:
 % coord = randn([2 100]);
 % val = sqrt(sum(coord.^2,1));
-% niak_visu_points(coord,val);  
+% niak_visu_points(coord,val);
 %
 % _________________________________________________________________________
 % SEE ALSO:
-% NIAK_VISU_MDS 
+% NIAK_VISU_MDS
 %
 % Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,
 % Montreal Neurological Institute, McGill University, 2008.

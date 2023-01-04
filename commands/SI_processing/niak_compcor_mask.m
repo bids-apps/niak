@@ -6,23 +6,23 @@ function mask = niak_compcor_mask(vol,perc,method);
 %
 % INPUTS:
 %   VOL (3D+t array) an fMRI dataset
-%   PERC (scalar, default 0.02) the proportion of voxels considered to have a 
+%   PERC (scalar, default 0.02) the proportion of voxels considered to have a
 %      "high" standard deviation (in time).
-%   METHOD (string, default 'slice') how to define "high" standard deviation. 
+%   METHOD (string, default 'slice') how to define "high" standard deviation.
 %      'slice': top PERC of voxels per slice
 %      'global': top PERC of voxels globally
 %
 % OUTPUTS
-%   MASK (3D array) a binary mask of high standard deviation voxels 
+%   MASK (3D array) a binary mask of high standard deviation voxels
 %
 % REFERENCE
-%   Behzadi, Y., Restom, K., Liau, J., Liu, T. T., Aug. 2007. A component based 
-%   noise correction method (CompCor) for BOLD and perfusion based fMRI. 
+%   Behzadi, Y., Restom, K., Liau, J., Liu, T. T., Aug. 2007. A component based
+%   noise correction method (CompCor) for BOLD and perfusion based fMRI.
 %   NeuroImage 37 (1), 90-101. http://dx.doi.org/10.1016/j.neuroimage.2007.04.042
 %
-% Copyright (c) Pierre Bellec, 
-%   Centre de recherche de l'institut de 
-%   Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec,
+%   Centre de recherche de l'institut de
+%   Gériatrie de Montréal, Département d'informatique et de recherche
 %   opérationnelle, Université de Montréal, 2013
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.

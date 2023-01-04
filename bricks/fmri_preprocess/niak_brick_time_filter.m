@@ -1,6 +1,6 @@
 function [files_in,files_out,opt] = niak_brick_time_filter(files_in,files_out,opt)
 % Perform time high-pass and low-pass filtering using linear fitting of
-% a discrete cosine basis. 
+% a discrete cosine basis.
 %
 % SYNTAX:
 % [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_SLICE_TIMING(FILES_IN,FILES_OUT,OPT)
@@ -8,75 +8,75 @@ function [files_in,files_out,opt] = niak_brick_time_filter(files_in,files_out,op
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN        
-%    (string OR array of strings) a file name of a 3D+t dataset OR an 
-%    array of strings where each line is a file name of 3D data, all in 
+% FILES_IN
+%    (string OR array of strings) a file name of a 3D+t dataset OR an
+%    array of strings where each line is a file name of 3D data, all in
 %    the same space.
 %
 % FILES_OUT
-%    (structure) with the following fields.  Note that if a field is an 
-%    empty string, a default value will be used to name the outputs. 
-%    If a field is ommited, the output won't be saved at all (this is 
-%    equivalent to setting up the output file names to 
-%    'gb_niak_omitted'). 
-%              
-%    FILTERED_DATA 
-%        (string or array of strings, default <FILES_IN>_F.<EXT>) 
-%        File names for outputs. 
+%    (structure) with the following fields.  Note that if a field is an
+%    empty string, a default value will be used to name the outputs.
+%    If a field is ommited, the output won't be saved at all (this is
+%    equivalent to setting up the output file names to
+%    'gb_niak_omitted').
 %
-%    BETA_HIGH 
-%        (string or array of strings, default <FILES_IN>_BETA_HIGH.<EXT>) 
+%    FILTERED_DATA
+%        (string or array of strings, default <FILES_IN>_F.<EXT>)
+%        File names for outputs.
+%
+%    BETA_HIGH
+%        (string or array of strings, default <FILES_IN>_BETA_HIGH.<EXT>)
 %        File name for the volumes of the regression coeffients in high
-%        frequency. 
-%        Tip : In ANLYZE 7.5 format, a file name needs to be specified 
-%        for each DC. You can use the function NIAK_BUILD_DC to 
-%        determine how many high-frequency DC there will be, OR you can 
-%        specify one string ending by '_'. File names with suffix 
+%        frequency.
+%        Tip : In ANLYZE 7.5 format, a file name needs to be specified
+%        for each DC. You can use the function NIAK_BUILD_DC to
+%        determine how many high-frequency DC there will be, OR you can
+%        specify one string ending by '_'. File names with suffix
 %        '000<i>.ext' will be automatically generated.
 %
-%    BETA_LOW 
-%        (string or array of strings, default <FILES_IN>_BETA_LOW.<EXT>) 
+%    BETA_LOW
+%        (string or array of strings, default <FILES_IN>_BETA_LOW.<EXT>)
 %        File name for the volumes of the regression coeffients in low
-%        frequency. Tip : In ANLYZE 7.5 format, a file name needs to be 
-%        specified for each DC. You can use the function NIAK_BUILD_DC 
-%        to determine how many low-frequency DC there will be, OR you 
-%        can specify one string ending by '_'. File names with suffix 
+%        frequency. Tip : In ANLYZE 7.5 format, a file name needs to be
+%        specified for each DC. You can use the function NIAK_BUILD_DC
+%        to determine how many low-frequency DC there will be, OR you
+%        can specify one string ending by '_'. File names with suffix
 %        '000<i>.ext' will be automatically generated.
 %
-%    DC_HIGH 
-%        (string, default <FILES_IN>_DC_HIGH.DAT) File name for the 
-%        matrix of high frequency discrete cosine. The matrix is saved 
-%        in text format with 5 decimals. The first line defines the 
-%        frequency associated with each cosine. 
+%    DC_HIGH
+%        (string, default <FILES_IN>_DC_HIGH.DAT) File name for the
+%        matrix of high frequency discrete cosine. The matrix is saved
+%        in text format with 5 decimals. The first line defines the
+%        frequency associated with each cosine.
 %
-%    DC_LOW 
-%        (string, default <FILES_IN>_DC_LOW.DAT) 
-%        File name for the matrix of low frequency discrete cosine. The 
-%        matrix is saved in text format with 5 decimals. The first line 
-%        defines the frequency associated with each cosine. 
-%           
-%    VAR_HIGH 
-%        (string, default <FILES_IN>_VAR_HIGH.<EXT>) 
-%        File name for the volume of percentage of variance in high 
-%        frequencies. If this field is ommited, the volume will not be 
+%    DC_LOW
+%        (string, default <FILES_IN>_DC_LOW.DAT)
+%        File name for the matrix of low frequency discrete cosine. The
+%        matrix is saved in text format with 5 decimals. The first line
+%        defines the frequency associated with each cosine.
+%
+%    VAR_HIGH
+%        (string, default <FILES_IN>_VAR_HIGH.<EXT>)
+%        File name for the volume of percentage of variance in high
+%        frequencies. If this field is ommited, the volume will not be
 %        saved. If it is empty, the default name will be applied.
 %
-%    VAR_LOW 
-%        (string, default <FILES_IN>_VAR_LOW.<EXT>) 
-%        File name for the volume of percentage of variance in low 
-%        frequencies. If this field is ommited, the volume will not be 
+%    VAR_LOW
+%        (string, default <FILES_IN>_VAR_LOW.<EXT>)
+%        File name for the volume of percentage of variance in low
+%        frequencies. If this field is ommited, the volume will not be
 %        saved. If it is empty, the default name will be applied.
 %
-% OPT        
+% OPT
 %    (structure) with the following fields:
 %
-%    FLAG_VERBOSE 
+%    FLAG_VERBOSE
 %        (boolean, default: 1) If FLAG_VERBOSE == 1, write
 %        messages indicating progress.
 %
-%    FLAG_TEST 
-%        (boolean, default: 0) if FLAG_TEST equals 1, the brick does not 
-%        do anything but update the default values in FILES_IN, 
+%    FLAG_TEST
+%        (boolean, default: 0) if FLAG_TEST equals 1, the brick does not
+%        do anything but update the default values in FILES_IN,
 %        FILES_OUT and OPT.
 %
 %    FLAG_MEAN
@@ -85,26 +85,26 @@ function [files_in,files_out,opt] = niak_brick_time_filter(files_in,files_out,op
 %        suppressed as soon as a high-pass filter is applied with a
 %        threshold greater than 0).
 %
-%    HP 
+%    HP
 %        (real, default: 0.01) the cut-off frequency for high pass
 %        filtering. opt.hp = -Inf means no high-pass filtering.
 %
-%    LP 
-%        (real, default: Inf) the cut-off frequency for low pass 
+%    LP
+%        (real, default: Inf) the cut-off frequency for low pass
 %        filtering. opt.lp = Inf means no low-pass filtering.
 %
-%    FOLDER_OUT 
-%        (string, default: path of FILES_IN) If present, all default 
-%        outputs will be created in the folder FOLDER_OUT. The folder 
+%    FOLDER_OUT
+%        (string, default: path of FILES_IN) If present, all default
+%        outputs will be created in the folder FOLDER_OUT. The folder
 %        needs to be created beforehand.
 %
-%    TR 
-%        (real, default : use image information) the repetition time of 
-%        the time series (s) which is the inverse of the sampling 
-%        frequency (Hz). Specify a value here only if you want to 
-%        override the information in the image, or if you are using an 
+%    TR
+%        (real, default : use image information) the repetition time of
+%        the time series (s) which is the inverse of the sampling
+%        frequency (Hz). Specify a value here only if you want to
+%        override the information in the image, or if you are using an
 %        image format where this information is absent, i.e. analyze.
-%         
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
@@ -118,7 +118,7 @@ function [files_in,files_out,opt] = niak_brick_time_filter(files_in,files_out,op
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,
 % Montreal Neurological Institute, McGill University, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -237,7 +237,7 @@ if isempty(files_out.dc_low)
 end
 
 
-if flag_test == 1    
+if flag_test == 1
     return
 end
 
@@ -248,7 +248,7 @@ end
 if flag_verbose
     msg = 'Temporal filtering of fMRI data';
     stars = repmat('*',[1 length(msg)]);
-    fprintf('\n%s\n%s\n%s\n',stars,msg,stars);    
+    fprintf('\n%s\n%s\n%s\n',stars,msg,stars);
 end
 
 %% Reading data
@@ -258,13 +258,13 @@ end
 [hdr,vol] = niak_read_vol(files_in);
 
 if (opt.tr == -Inf)
-    
+
     if isfield(hdr.info,'tr')
         opt.tr = hdr.info.tr;
     else
         error('please specify the TR of the fMRI data in opt.tr')
     end
-    
+
 else
     opt_f.tr = opt.tr;
 end
@@ -381,10 +381,10 @@ if ~strcmp(files_out.dc_low,'gb_niak_omitted')
     if flag_verbose
         fprintf('Writting the (low frequency) discrete cosines in %s ...\n',files_out.dc_low);
     end
-%     fid = fopen(files_out.dc_low,'w');    
+%     fid = fopen(files_out.dc_low,'w');
 %     fprintf(fid,'Component %i (frequency %1.5f); ',[1:length(extras.freq_dc_low) ; extras.freq_dc_low']);
 %     fprintf(fid,'\n');
-%     
+%
 %     for num_l = 1:size(extras.tseries_dc_low,1)
 %         fprintf(fid,'%1.5f ',extras.tseries_dc_low(num_l,:));
 %         fprintf(fid,'\n');
@@ -400,10 +400,10 @@ if ~strcmp(files_out.dc_high,'gb_niak_omitted')
     if flag_verbose
         fprintf('Writting the (high frequency) discrete cosines in %s ...\n',files_out.dc_high);
     end
-%     fid = fopen(files_out.dc_high,'w');    
+%     fid = fopen(files_out.dc_high,'w');
 %     fprintf(fid,'Component %i (frequency %1.5f); ',[1:length(extras.freq_dc_high)'; extras.freq_dc_high']);
 %     fprintf(fid,'\n');
-%     
+%
 %     for num_l = 1:size(extras.tseries_dc_high,1)
 %         fprintf(fid,'%1.5f ',extras.tseries_dc_high(num_l,:));
 %         fprintf(fid,'\n');
@@ -423,7 +423,7 @@ if ~strcmp(files_out.var_low,'gb_niak_omitted')
     hdr_out.file_name = files_out.var_low;
     vol_var_low = zeros([nx ny nz]);
     var_low = var(extras.tseries_dc_low*extras.beta_dc_low);
-    vol_var_low(mask>0) = var_low./var_vol;    
+    vol_var_low(mask>0) = var_low./var_vol;
     opt_hist.command = 'niak_brick_time_filter';
     opt_hist.files_in = files_in;
     opt_hist.files_out = files_out.beta_low;
@@ -442,8 +442,8 @@ if ~strcmp(files_out.var_high,'gb_niak_omitted')
     hdr_out.file_name = files_out.var_high;
     vol_var_high = zeros([nx ny nz]);
     if ~isempty(extras.tseries_dc_high)
-        var_high = var(extras.tseries_dc_high*extras.beta_dc_high);    
-        vol_var_high(mask>0) = var_high./var_vol;    
+        var_high = var(extras.tseries_dc_high*extras.beta_dc_high);
+        vol_var_high(mask>0) = var_high./var_vol;
     end
     opt_hist.command = 'niak_brick_time_filter';
     opt_hist.files_in = files_in;

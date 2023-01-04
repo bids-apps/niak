@@ -10,10 +10,10 @@ echo Welcome to NIAK in your browser, powered by jupyter!
 echo NIAK is now available on your machine
 echo Open your favorite browser at the following address: http://localhost:8080
 echo If that does not work, then try http://${CONTAINER_IP=}:8080
-echo "Then click New --> Octave" 
+echo "Then click New --> Octave"
 echo
-echo The PASSWORD is: NIAK 
+echo The PASSWORD is: NIAK
 echo
 echo For a tutorials on how to run Niak, go to http://niak.simexp-lab.org/niak_tutorials.html
 echo For the notebook logs, look in "${LOG_FILE}"
-wait $jupyter_pid  
+wait $jupyter_pid

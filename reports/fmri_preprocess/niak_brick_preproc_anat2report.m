@@ -3,11 +3,11 @@ function [in,out,opt] = niak_brick_preproc_anat2report(in,out,opt)
 %
 % SYNTAX: [IN,OUT,OPT] = NIAK_BRICK_PREPROC_ANAT2REPORT(IN,OUT,OPT)
 %
-% IN (string) The name of a .csv file with measures of spatial correlation 
+% IN (string) The name of a .csv file with measures of spatial correlation
 %  between individual and average group BOLD images, after registration.
 % OUT (string) The name of a .js file with one variable:
 %   dataT1 spatial correlation of individual and group anat images.
-% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but 
+% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but
 %    update IN, OUT and OPT.
 %
 % Copyright (c) Pierre Bellec
@@ -35,22 +35,22 @@ function [in,out,opt] = niak_brick_preproc_anat2report(in,out,opt)
 % THE SOFTWARE.
 
 %% Defaults
-if ~ischar(in) 
+if ~ischar(in)
     error('IN should be a string');
 end
 
-if ~ischar(out) 
+if ~ischar(out)
     error('OUT should be a string');
 end
 
 if nargin < 3
     opt = struct;
-end    
+end
 opt = psom_struct_defaults ( opt , ...
     { 'flag_test' }, ...
     { false         });
 
-if opt.flag_test 
+if opt.flag_test
     return
 end
 

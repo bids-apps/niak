@@ -13,7 +13,7 @@ function [files_in,files_out,opt] = niak_brick_subtype_weight(files_in, files_ou
 %   (structure) with the following fields:
 %
 %   DATA.<NETWORK>
-%       (string) path to the network stack with the preprocessed individual 
+%       (string) path to the network stack with the preprocessed individual
 %       brain maps for each network
 %
 %   SUBTYPE.<NETWORK>
@@ -27,16 +27,16 @@ function [files_in,files_out,opt] = niak_brick_subtype_weight(files_in, files_ou
 %       (string, default 'subtype_weights.mat') a .mat file with two variables.
 %       WEIGHT_MAT  (#subjects x #subtype x #networks) the subtype weights
 %       LIST_SUBJECT (#subjects x 1 cell array of strings) the subject
-%           labels for each row of WEIGHT_MAT. 
-%       LIST_NETWORK (#networks x 1 cell array of strings) the labels of each 
+%           labels for each row of WEIGHT_MAT.
+%       LIST_NETWORK (#networks x 1 cell array of strings) the labels of each
 %           network in the third dimension of WEIGHT_MAT
 %   WEIGHTS_CSV
 %       (cell array, default 'sbt_weights_net_<NETWORK>.csv') a csv version of
-%       the weight matrix. 
+%       the weight matrix.
 %
 %   WEIGHTS_PDF
 %       (cell array, default 'fig_sbt_weights_net_<NETWORK>.pdf') a pdf figure
-%       representing the weight matrix. 
+%       representing the weight matrix.
 %
 % OPT
 %   (structure) with the following fields:
@@ -56,13 +56,13 @@ function [files_in,files_out,opt] = niak_brick_subtype_weight(files_in, files_ou
 %       supplied. When the flag is true, the brick will calculate a new
 %       partition based on the weights to order subjects for the weight
 %       matrix.
-%   
+%
 %
 %   FLAG_VERBOSE
 %       (boolean, default true) turn on/off the verbose.
 %
 %   FLAG_TEST
-%       (boolean, default false) if the flag is true, the brick does not do 
+%       (boolean, default false) if the flag is true, the brick does not do
 %       anything but updating the values of FILES_IN, FILES_OUT and OPT.
 %
 % _________________________________________________________________________
@@ -75,8 +75,8 @@ function [files_in,files_out,opt] = niak_brick_subtype_weight(files_in, files_ou
 % COMMENTS:
 %
 % Copyright (c) Pierre Bellec, Sebastian Urchs
-% Centre de recherche de l'institut de Griatrie de Montral, 
-% Dpartement d'informatique et de recherche oprationnelle, 
+% Centre de recherche de l'institut de Griatrie de Montral,
+% Dpartement d'informatique et de recherche oprationnelle,
 % Universit de Montral, 2010-2016.
 % Maintainer : sebastian.urchs@mail.mcgill.ca
 % See licensing information in the code.
@@ -161,11 +161,11 @@ for net_id = 1:n_networks
     tmp_data = load(files_in.data.(network));
     data = tmp_data.stack;
     list_subject = tmp_data.provenance.subjects(:,1);
-    
+
     % Get the network subtype maps (i.e. for each subtype one)
     tmp_sbt = load(files_in.subtype.(network));
     sbt = tmp_sbt.sub.map;
-    
+
     % If this is the first network, pre-allocate the weight matrix
     if net_id == 1
         % Get the number of subtypes
@@ -174,7 +174,7 @@ for net_id = 1:n_networks
         n_sub = size(data, 1);
         weight_mat = zeros(n_sub, n_sbt, n_networks);
     end
-    % Extract the weights and store them 
+    % Extract the weights and store them
     weight_mat(:, :, net_id) = niak_corr(data', sbt');
 end
 
@@ -206,7 +206,7 @@ end
 %% Visualize the weight matrix for each network as a pdf
 for net_id = 1:n_networks
     network = list_network{net_id};
-    
+
     if opt.flag_external
         % if external subtypes are supplied, generate a new partition to get the subject order
         % Get the network stack data
@@ -225,7 +225,7 @@ for net_id = 1:n_networks
         tmp_subj_order = load(files_in.subtype.(network));
         subj_order = tmp_subj_order.subj_order;
     end
-    
+
     % Create a hidden figure
     fig = figure('Visible', 'off');
     net_weight = weight_mat(:, :, net_id);

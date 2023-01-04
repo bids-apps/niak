@@ -43,10 +43,10 @@ function [sil,a,b] = niak_build_silhouette(mat,part,flag_normalize)
 %   (vector, size N*1) A(I) is the average stability of I with other
 %   regions in the cluster of I.
 %
-% B 
+% B
 %   (vector, size N*1) B(I) is the maximal average stability of I with the
 %   regions of any cluster that does not include I.
-%  
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_BUILD_AVG_SILHOUETTE, NIAK_BUILD_MAX_SIL

@@ -9,13 +9,13 @@ function c = niak_hot_cold(n,per);
 %   PER (scalar, default 0.5) the proportion of hot colors
 %
 % OUTPUTS:
-%   C (matrix Nx3) each row is the red/green/blue intensity in the color (from 0 to 1) 
+%   C (matrix Nx3) each row is the red/green/blue intensity in the color (from 0 to 1)
 
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2010-2011.
 % Maintainer : pierre.bellec@criugm.qc.ca
-% Keywords : 
+% Keywords :
 %
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal
@@ -53,4 +53,3 @@ if ~isempty(c2)
     c2(size(c2,1):-1:1,:);
 end
 c = [c2(size(c2,1):-1:1,:) ; c1];
-

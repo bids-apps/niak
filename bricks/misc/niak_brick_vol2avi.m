@@ -7,15 +7,15 @@ function [files_in,files_out,opt] = niak_brick_vol2avi(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN        
+% FILES_IN
 %   (string) a file name of a 3D+t fMRI dataset .
 %
 % FILES_OUT
 %   (string, default <BASE FILES_IN>.avi) with the following fields:
-%       
 %
-% OPT           
-% 	(structure) with the following fields.  
+%
+% OPT
+% 	(structure) with the following fields.
 %
 %   ARG
 %       (string, default '') extra arguments that will be passed to the
@@ -27,26 +27,26 @@ function [files_in,files_out,opt] = niak_brick_vol2avi(files_in,files_out,opt)
 %   	+/- 2 MAD estimates of the standard deviation (this computation
 %   	will be restricted to a brain mask).
 %
-%	FOLDER_OUT 
-%   	(string, default: path of FILES_IN) If present, all default outputs 
-%       will be created in the folder FOLDER_OUT. The folder needs to be 
+%	FOLDER_OUT
+%   	(string, default: path of FILES_IN) If present, all default outputs
+%       will be created in the folder FOLDER_OUT. The folder needs to be
 %       created beforehand.
 %
-%   FLAG_VERBOSE 
-%   	(boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%   	(boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
-%   FLAG_TEST 
-%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%   FLAG_TEST
+%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 % NIAK_MONTAGE
@@ -111,7 +111,7 @@ niak_set_defaults
 [path_f,name_f,ext_f] = niak_fileparts(files_in); % parse the folder, file name and extension of the input
 
 if strcmp(opt.folder_out,'') % if the output folder is left empty, use the same folder as the input
-    opt.folder_out = path_f;    
+    opt.folder_out = path_f;
 end
 
 if isempty(files_out)
@@ -144,7 +144,7 @@ if ~isfield(opt.montage,'vol_limits')
     mask = niak_mask_brain(abs(vol));
     tseries = niak_vol2tseries(vol,mask);
     med_vol = median(tseries(:));
-    std_vol = niak_mad(tseries(:));   
+    std_vol = niak_mad(tseries(:));
     opt.montage.vol_limits = [med_vol-2*std_vol,med_vol+2*std_vol];
 end
 
@@ -153,15 +153,15 @@ nb_dig = length(num2str(nt));
 if flag_verbose
     fprintf('Generating individual png volume montage ...\n    volume : ');
 end
-    
-for num_t = 1:nt    
+
+for num_t = 1:nt
     if flag_verbose
         fprintf(' %i',num_t);
     end
 
     file_tmp = [path_tmp 'vol_' repmat('0',[1 nb_dig-length(num2str(num_t))]) num2str(num_t) '.png'];
     niak_montage(vol(:,:,:,num_t),opt.montage);
-    print(file_tmp,'-dpng');    
+    print(file_tmp,'-dpng');
 end
 if flag_verbose
         fprintf('\nConversion to video using FFMPEG ...\n');

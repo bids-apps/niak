@@ -7,37 +7,37 @@ function [pipe,opt,status] = niak_test_all(path_test,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% PATH_TEST.DEMONIAK (string, default download nifti test data in 'test_niak_nii') 
+% PATH_TEST.DEMONIAK (string, default download nifti test data in 'test_niak_nii')
 %   the path to the (raw, small) NIAK demo dataset.
 % PATH_TEST.TEMPLATE (string, default download the mnc cambridge template from figshare)
-% PATH_TEST.TARGET (string, default download minc1 target data in 'target') 
-% PATH_TEST.RESULT (string, default 'result') where to store the results of 
+% PATH_TEST.TARGET (string, default download minc1 target data in 'target')
+% PATH_TEST.RESULT (string, default 'result') where to store the results of
 %   the tests.
 %
 % OPT.FLAG_TARGET (boolean, default false) if FLAG_TARGET == true, no comparison
-%   with reference version of the results will be performed, but all test 
-%   pipelines will still run. If this flag is used, PATH_TEST.TARGET does not 
+%   with reference version of the results will be performed, but all test
+%   pipelines will still run. If this flag is used, PATH_TEST.TARGET does not
 %   need to be specified.
 % OPT.FORMAT (string, default 'mnc1') the format to use for the test
 %   Either 'nii' or 'mnc1'.
-% OPT.FLAG_TEST (boolean, default false) if FLAG_TEST == true, the demo will 
+% OPT.FLAG_TEST (boolean, default false) if FLAG_TEST == true, the demo will
 %   just generate the test PIPELINE.
-%   the folder where the results of reference for the tests have previously 
+%   the folder where the results of reference for the tests have previously
 %   been generated (see OPT.FLAG_TARGET above).
 % OPT.PSOM (structure) the options of the pipeline manager. See the OPT
-%   argument of PSOM_RUN_PIPELINE. Note that the field PSOM.PATH_LOGS will be 
-%   set up by the pipeline. By default OPT.PSOM.FLAG_PAUSE is false (do 
+%   argument of PSOM_RUN_PIPELINE. Note that the field PSOM.PATH_LOGS will be
+%   set up by the pipeline. By default OPT.PSOM.FLAG_PAUSE is false (do
 %   not wait for the user to confirm starting the tests).
 %
-% OPT.PARTIAL_TEST (cell of strings) if given only the pipeline in the 
+% OPT.PARTIAL_TEST (cell of strings) if given only the pipeline in the
 %   list will be tested, if empty, all test are ran.
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% PIPELINE (structure) a formal description of the test pipeline. 
+% PIPELINE (structure) a formal description of the test pipeline.
 %   See PSOM_RUN_PIPELINE.
 % OPT (structure) same as the input, updated
-% STATUS (integer) returns 0 if all tests pass, 1 if there are failures, and 
+% STATUS (integer) returns 0 if all tests pass, 1 if there are failures, and
 %    [] if OPT.FLAG_TEST is true.
 %
 % _________________________________________________________________________
@@ -45,8 +45,8 @@ function [pipe,opt,status] = niak_test_all(path_test,opt)
 %
 % The reference datasets can be found on the NITRC repository:
 % http://www.nitrc.org/frs/?group_id=411
-% 
-% This test will apply the following pipeline on the DEMONIAK dataset, and 
+%
+% This test will apply the following pipeline on the DEMONIAK dataset, and
 % will optionally compare the outputs to a reference version of the
 % results:
 %   * fMRI preprocessing NIAK_PIPELINE_FMRI_PREPROCESS
@@ -61,16 +61,16 @@ function [pipe,opt,status] = niak_test_all(path_test,opt)
 %
 % Note that with OPT.FLAG_TARGET on, the region growing and connectome pipelines
 % are fed the output of the preprocessing pipeline. When the flag is off, by contrast,
-% these pipelines use the provided target preprocessing results as inputs. 
+% these pipelines use the provided target preprocessing results as inputs.
 % This means that even if the preprocessing results do not replicate exactly,
 % the region growing and/or connectome pipelines may exactly replicate.
 %
-% It is possible to configure the pipeline manager to use parallel 
-% computing using OPT.PSOM, see : 
+% It is possible to configure the pipeline manager to use parallel
+% computing using OPT.PSOM, see :
 % http://code.google.com/p/psom/wiki/PsomConfiguration
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Geriatrie de Montreal, Departement d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Geriatrie de Montreal, Departement d'informatique et de recherche
 % oprationnelle, Universite de Montreal, 2013-2014.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -121,7 +121,7 @@ path_test = psom_struct_defaults(path_test, ...
 
 %% Check the demoniak data
 if isempty(path_test.demoniak)
-    % Grab the demoniak dataset    
+    % Grab the demoniak dataset
     [status,err,data_demoniak] = niak_wget(struct('type',['data_test_niak_' opt.format]));
     path_test.demoniak = data_demoniak.path;
     if status
@@ -131,7 +131,7 @@ else
     fprintf('I am going to use the demoniak data at %s', path_test.demoniak);
 end
 
-%% Grab the demoniak dataset    
+%% Grab the demoniak dataset
 if ~opt.flag_target&&isempty(path_test.target)
     [status,err,data_target] = niak_wget(struct('type',['target_test_niak_' opt.format]));
     path_test.target = data_target.path;
@@ -299,6 +299,6 @@ pipe = psom_merge_pipeline(pipe,niak_test_glm_connectome(path_test,opt_glm),'gun
 %% Run the tests
 if ~opt.flag_test
     status = psom_run_pipeline(pipe,opt.psom);
-else 
+else
     status = [];
 end

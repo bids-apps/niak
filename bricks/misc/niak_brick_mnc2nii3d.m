@@ -109,29 +109,29 @@ opt_3d.flag_test = false;
 
 try
     for num_f = 1:length(list_files)
-        
+
         file_name = list_files{num_f};
         if ~exist(file_name,'file')
             source_file = [files_in filesep file_name];
         else
             source_file = file_name;
         end
-        
+
         [path_tmp,name_tmp,ext] = fileparts(file_name);
         if strcmp(ext,GB_NIAK.zip_ext)
             [path_tmp,name_tmp,ext] = fileparts(name_tmp);
         end
-        
+
         if strcmp(ext,'.mnc')
             msg = sprintf('Converting %s ...\n',file_name);
             if flag_verbose
                 fprintf('%s',msg)
             end
-            
+
             if flag_skip
                 opt_3d.flag_test = true;
                 [var_tmp,files_out_3d] = niak_brick_4d_to_3d(source_file,'',opt_3d);
-                
+
                 flag_exist = true;
                 for num_g = 1:length(files_out_3d)
                     [path_tmp,name_tmp,ext] = fileparts(files_out_3d{num_g});
@@ -144,7 +144,7 @@ try
             else
                 flag_exist = false;
             end
-            
+
             if ~flag_exist
                 opt_3d.flag_test = false;
                 [var_tmp,files_out_3d] = niak_brick_4d_to_3d(source_file,'',opt_3d);
@@ -156,7 +156,7 @@ try
                     target_file = [files_out filesep name_tmp '.nii'];
                     instr_cp = ['mnc2nii ',arg_mnc2nii,' ',files_out_3d{num_g},' ',target_file];
                     if ~strcmp(source_file,target_file)
-                        
+
                         [flag_err,err_msg] = system(instr_cp);
                         if flag_err
                             error(err_msg)
@@ -169,7 +169,7 @@ try
                     fprintf('%s',msg)
                 end
             end
-            
+
         else
             target_file = [files_out filesep file_name];
             flag_exist = exist(target_file,'file')&flag_skip;
@@ -192,21 +192,21 @@ try
                     fprintf('%s%s',msg,msg2)
                 end
             end
-            
+
         end
     end
-    
+
    system(['rm -rf ' tmp_folder]);
-    
+
     if flag_recursive
-        
+
         for num_d = 1:length(list_dir)
-            
+
             niak_brick_mnc2nii3d([files_in filesep list_dir{num_d}],[files_out filesep list_dir{num_d}],opt);
-            
+
         end
     end
-    
+
 catch
     errmsg = lasterror;
     system(['rm -rf ' tmp_folder]);

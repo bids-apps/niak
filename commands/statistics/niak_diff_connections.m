@@ -1,44 +1,44 @@
 function [score_ref, score_ind] = niak_diff_connections(ref_data, ind_data, target, opt)
-% Create outcome mesures for the preprocessing based on two reference DB a control population and a patients population. 
+% Create outcome mesures for the preprocessing based on two reference DB a control population and a patients population.
 %
-% SYNTAX : 
+% SYNTAX :
 % [] = NIAK_DIFF_CONNECTIONS()
 %
 % _________________________________________________________________________
 % INPUTS :
 %
-%   REF_DATA      
+%   REF_DATA
 %       (structure) a structure with R_ind representing the correlation
 %       matrix for each subject 3rd dim is the subject space.
 %
-%   IND_DATA      
+%   IND_DATA
 %       (2D array) this is the connectome of the individual parcelized with
 %       the same scale as the ref_data.
 %
-%   TARGET      
+%   TARGET
 %       cordinates to compute the outcome mesures. For a network2network
 %       difference use first and second colum to specify wich network to
 %       compare. for a specific network vs. all the other network use the
 %       first colum only, if you whant to combine network add the id in the
 %       rows.
-% OPT       
+% OPT
 %       (structure, optional) with the following fields:
 %
-%      
+%
 % _________________________________________________________________________
 % OUTPUTS :
 %
-% SCORE_REF        
+% SCORE_REF
 %       (vector) HF(I) is the handle of the Ith figure used.
 %
-% SCORE_IND        
+% SCORE_IND
 %       (vector) HF(I) is the handle of the Ith figure used.
 %
 %
 % _________________________________________________________________________
 % COMMENTS :
 %
-% Copyright (c) Christian L. Dansereau, 
+% Copyright (c) Christian L. Dansereau,
 % Centre de recherche de l'Institut universitaire de gériatrie de Montréal,
 % 2012.
 % Maintainer : pbellec@bic.mni.mcgill.ca
@@ -66,7 +66,7 @@ function [score_ref, score_ind] = niak_diff_connections(ref_data, ind_data, targ
 %% select the two vector or unit to compare
 for i=1:size(target,1)
 
-    
+
     if size(target,2) == 1
         % vector analysis
         for j=1:size(ref_data.R_ind,3)
@@ -75,7 +75,7 @@ for i=1:size(target,1)
         end
         % individual
         score_ind(i) = sqrt(sum((mean(ref_data.R_ind(:,target(i),:),3) - ind_data(:,target(i))).^2));
-        
+
     elseif size(target,2) == 2
         % p2p analysis
         for j=1:size(ref_data.R_ind,3)
@@ -86,13 +86,10 @@ for i=1:size(target,1)
         score_ind(i) = ind_data(target(i,1),target(i,2));
 
     end
-    
-    
+
+
 end
 
 %% Avg of all connections
 score_ref = mean(score_ref,1);
 score_ind = mean(score_ind);
-
-
-

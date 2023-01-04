@@ -7,11 +7,11 @@ function [Y,X] = niak_visu_spectrum(tseries,tr,flag_visu);
 % _________________________________________________________________________
 % INPUTS:
 %
-% TSERIES 
+% TSERIES
 %    (1D array T*N) one or multiple 1D signal (1st dimension is samples)
 %
-% TR            
-%    (real number, default 1) the repetition time of the time series. This 
+% TR
+%    (real number, default 1) the repetition time of the time series. This
 %    function assumes a regular sampling).
 %
 % FLAG_VISU
@@ -38,10 +38,10 @@ function [Y,X] = niak_visu_spectrum(tseries,tr,flag_visu);
 % The function plots the power spectrum of the signal on the current figure.
 % Multiple time series lead to subplots.
 %
-% The spectrum is normalized by the energy of the signal (sum of the energy 
+% The spectrum is normalized by the energy of the signal (sum of the energy
 % at all frequencies equals 1).
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % McConnell Brain Imaging Center,
 % Montreal Neurological Institute, McGill University, 2008-2010.
 % Centre de recherche de l'institut de Gériatrie de Montréal,
@@ -87,15 +87,15 @@ for num_f = 1:n
         subplot(M,N,num_f);
     end
     ftseries = abs(fft(tseries(:,num_f))).^2;
-    ftseries = ftseries(1:length(X));    
+    ftseries = ftseries(1:length(X));
     if num_f == 1
         Y = zeros([size(ftseries,1) n]);
     end
     Y(:,num_f) = ftseries/sum(ftseries);
     if flag_visu
-        plot(X,Y(:,num_f),'*-');        
+        plot(X,Y(:,num_f),'*-');
         xlabel('Relative energy')
         xlabel('Frequency')
-        axis([min(X),max(X),0,1]);    
+        axis([min(X),max(X),0,1]);
     end
 end

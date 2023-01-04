@@ -7,47 +7,47 @@ function [files_in,files_out,opt] = niak_brick_classify(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS
 %
-%   FILES_IN        
+%   FILES_IN
 %       (structure) with the following fields :
 %
 %       VOL
 %           (string) the file name of an MR volume (typically T1 or T2).
 %
 %       MASK
-%           (string, default 'gb_niak_omitted') the file name of a binary 
-%           mask of a region of interest. If unspecified (or equal to 
+%           (string, default 'gb_niak_omitted') the file name of a binary
+%           mask of a region of interest. If unspecified (or equal to
 %           'gb_niak_omitted'), no mask is used.
 %
 %       TRANSF
-%           (string, default 'gb_niak_omitted') non-linear transformation 
-%           to map the tags from stereotaxic space to subject 
+%           (string, default 'gb_niak_omitted') non-linear transformation
+%           to map the tags from stereotaxic space to subject
 %
 %   FILES_OUT
 %       (string, default <FILES_IN.VOL>_CLASSIFY.<EXT>) Integer labels
 %       coding for cerebrospinal fluid / gray matter / white matter (in
 %       this order).
 %
-%   OPT           
+%   OPT
 %       (structure) with the following fields:
 %
 %       ARG
-%           (string, default '') any argument that will be 
-%           passed to the CLASSIFY command (see comments below). 
+%           (string, default '') any argument that will be
+%           passed to the CLASSIFY command (see comments below).
 %
-%       FLAG_VERBOSE 
+%       FLAG_VERBOSE
 %           (boolean, default: 1) If FLAG_VERBOSE == 1, write
 %           messages indicating progress.
 %
-%       FLAG_TEST 
-%           (boolean, default: 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default: 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, all default 
-%           outputs will be created in the folder FOLDER_OUT. The folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, all default
+%           outputs will be created in the folder FOLDER_OUT. The folder
 %           needs to be created beforehand.
-%               
+%
 % _________________________________________________________________________
 % OUTPUTS
 %
@@ -62,10 +62,10 @@ function [files_in,files_out,opt] = niak_brick_classify(files_in,files_out,opt)
 % COMMENTS:
 %
 %   This function is a simple NIAK-compliant wrapper around the minc tool
-%   called CLASSIFY_CLEAN. Type "classify_clean -help" in a terminal for 
+%   called CLASSIFY_CLEAN. Type "classify_clean -help" in a terminal for
 %   more infos.
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,
 % Montreal Neurological Institute, McGill University, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -133,11 +133,11 @@ if strcmp(opt.folder_out,'')
     opt.folder_out = path_f;
 end
 
-if isempty(files_out)    
+if isempty(files_out)
     files_out = [opt.folder_out,filesep,name_f,'_classify',ext_f];
 end
 
-if flag_test == 1    
+if flag_test == 1
     return
 end
 
@@ -148,7 +148,7 @@ end
 if flag_verbose
     msg = 'Tissue classification on an MR volume';
     stars = repmat('*',[1 length(msg)]);
-    fprintf('\n%s\n%s\n%s\n',stars,msg,stars);    
+    fprintf('\n%s\n%s\n%s\n',stars,msg,stars);
 end
 
 %% Setting up the system call to NU_CORRECT
@@ -196,4 +196,3 @@ end
 %% Writting outputs
 niak_brick_copy(file_tmp_classify,files_out,struct('flag_fmri',true));
 psom_clean(path_tmp)
-

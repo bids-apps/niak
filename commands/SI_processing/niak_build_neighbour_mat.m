@@ -1,6 +1,6 @@
 function decxyz = niak_build_neighbour_mat(type_neig)
-% Build a translation matrix to derive spatial neighbour of 3D voxels. 
-% Each row of the matrix is a translation that applies to the 3D 
+% Build a translation matrix to derive spatial neighbour of 3D voxels.
+% Each row of the matrix is a translation that applies to the 3D
 % coordinates of a voxel
 %
 % SYNTAX :
@@ -9,8 +9,8 @@ function decxyz = niak_build_neighbour_mat(type_neig)
 % _________________________________________________________________________
 % INPUTS :
 %
-% TYPE_NEIG 
-%   (scalar or vector 1*4, default 6) the type of spatial connexity. 
+% TYPE_NEIG
+%   (scalar or vector 1*4, default 6) the type of spatial connexity.
 %   Possible values for scalars : 4, 6, 8, 18, 26
 %   If TYPE_NEIG is a vector, the three first elements are the size of
 %   voxels in X, Y and Z directions, and the last element is the radius of
@@ -20,7 +20,7 @@ function decxyz = niak_build_neighbour_mat(type_neig)
 % OUTPUTS :
 %
 % DECXYZ
-%    (matrix) DECXYZ(I,:) is a translation that applies to the 3D 
+%    (matrix) DECXYZ(I,:) is a translation that applies to the 3D
 %    coordinates of a voxel to get one spatial neighbour. The number of
 %    rows of DECXYZ depends on the type of spatial connexity.
 %
@@ -94,12 +94,12 @@ if length(type_neig)==1
 else
     voxel_size = type_neig(1:3);
     radius = type_neig(4);
-    
+
     % Get the voxels in the ball defined by the radius
     mask_neig = ones([ceil(1.2*radius/voxel_size(1))*2 ceil(1.2*radius/voxel_size(2))*2 ceil(1.2*radius/voxel_size(3))*2]);
     ind = find(mask_neig);
     [x,y,z] = ind2sub(size(mask_neig),ind);
-    
+
     % Adjusting the coordinates from voxel space to physical space
     mat = eye(4);
     mat(1:3,1:3) = diag(voxel_size);
@@ -107,7 +107,7 @@ else
     coord_phy = (mat(1:3,1:3)*(coord_vox') + mat(1:3,4)*ones([1 size(coord_vox,1)]))';
     center_vox = ceil(size(mask_neig)/2)';
     center_phy = mat(1:3,1:3)*center_vox + mat(1:3,4);
-    
+
     % Definition of the distance
     dist = sqrt(sum((coord_phy - ones([size(coord_phy,1) 1])*center_phy').^2,2));
     list_neig = find(dist<=radius);

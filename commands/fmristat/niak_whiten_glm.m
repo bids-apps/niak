@@ -4,21 +4,21 @@ function [stats_vol] = niak_whiten_glm(vol,rho_vol,opt)
 %
 % Estimates the parameters of the GLM based on the whitened residuals
 % obtained from a linear autoregressive model.
-% 
+%
 % SYNTAX:
 % [STATS_VOL] = NIAK_WHITEN_GLM(VOL,RHO_VOL,OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL         
+% VOL
 %       (4D array) a 3D+t dataset
 %
-% RHO_VOL      
+% RHO_VOL
 %       (4D array) 3D + numlags dataset
 %       Estimated parameters of the autoregressive lineal model.
 %
-% OPT         
+% OPT
 %       structure with the following fields :
 %
 %       MATRIX_X
@@ -29,20 +29,20 @@ function [stats_vol] = niak_whiten_glm(vol,rho_vol,opt)
 %            colum vector of the spatial average time courses, obtained
 %            from niak_make_trends.
 %
-%       PCNT: 
-%           if PCNT=1(Default), then the data is converted to percentages 
+%       PCNT:
+%           if PCNT=1(Default), then the data is converted to percentages
 %           before analysis by dividing each frame by its spatial average,* 100%.
 %
-%       EXCLUDE: 
-%           is a list of frames that should be excluded from the analysis. 
+%       EXCLUDE:
+%           is a list of frames that should be excluded from the analysis.
 %           Default is [].
 %
 %       NUMLAGS
 %           (integer, default 1) The order (p) of the autoregressive model.
 %
 %       NUM_HRF_BASES
-%           row vector indicating the number of basis functions for the hrf 
-%           for each response, either 1 or 2 at the moment. At least one basis 
+%           row vector indicating the number of basis functions for the hrf
+%           for each response, either 1 or 2 at the moment. At least one basis
 %           functions is needed to estimate the magnitude, but two basis functions
 %           are needed to estimate the delay.
 %
@@ -53,34 +53,34 @@ function [stats_vol] = niak_whiten_glm(vol,rho_vol,opt)
 %       NUMTRENDS
 %           number of trends in the model.
 %
-%       CONTRASTS       
+%       CONTRASTS
 %       updated matrix of full contrasts of the model.
 %
 %       WHICH_STATS
-%            Number of Contrasts X 9 binary matrix correspondings to the 
+%            Number of Contrasts X 9 binary matrix correspondings to the
 %            desired statistical outputs
 %
 %       CONTRAST_IS_DELAY
-%            Binary vector specifying the desired contrasts for delays 
-%            
+%            Binary vector specifying the desired contrasts for delays
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% STATS_VOL      
+% STATS_VOL
 %       (4D array) 3D + number of stats dataset
 %       Estimated parameters of the autoregressive lineal model.
 % _________________________________________________________________________
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -143,7 +143,7 @@ numcontrasts = size(contrasts,1);
 
 indk1=((keep(2:n)-keep(1:n-1))==1);
 k1=find(indk1)+1;
-  
+
 vol = reshape(vol,[nx*ny*nz nt]);
 vol = vol(:,keep);
 
@@ -161,9 +161,9 @@ if ~isempty(contrasts)
    % Set up for second loop:
    X_type=[ones(1,sum(num_hrf_bases==1))*1 ones(1,sum(num_hrf_bases==2))*2 ...
          ones(1,sum(num_hrf_bases==2))*3 ones(1,numtrends)*4 ];
-   
+
    find_X_is_mag=[find(X_type==1) find(X_type==2) find(X_type==4)];
-   
+
    find_contrast_is_mag=find(~contrast_is_delay);
    find_response_is_mag=[find(num_hrf_bases==1) find(num_hrf_bases==2) ...
          numresponses+(1:numtrends)];
@@ -190,7 +190,7 @@ for k=1:nz
       % use dummy unique values so every pixel is analysed seperately:
       irho=(1:numpix)';
    end
-   
+
    for rho=unique(irho)'
       pix=find(irho==rho);
       Ystar=Y(:,pix);
@@ -230,7 +230,7 @@ for k=1:nz
          wresid_slice(pix,:)=(resid.*repmat(sdd,n,1))';
       end
       V=pinvXstar*pinvXstar';
-     
+
       % estimate magnitudes:
       mag_ef=contr_mag*betahat(find_X_is_mag,:);
       VV=V(find_X_is_mag,find_X_is_mag);
@@ -243,7 +243,7 @@ for k=1:nz
             cVcinv=pinv(contr_mag_F*VV*contr_mag_F');
             SST=sum((cVcinv*mag_ef(isF,:)).*mag_ef(isF,:),1);
             Fstat_slice(pix,1)=(SST./(SSE+(SSE<=0)).*(SSE>0)/p*Df)';
-      end      
+      end
    end
    for k_cont=1:numcontrasts
       if which_stats(k_cont,1)
@@ -251,23 +251,23 @@ for k=1:nz
          stats_vol.t(:,:,k,k_cont) = reshape(tstat_slice(:,k_cont),nx,ny);
       end
       if which_stats(k_cont,2)
-         stats_vol.ef(:,:,k,k_cont) = reshape(effect_slice(:,k_cont),nx,ny); 
+         stats_vol.ef(:,:,k,k_cont) = reshape(effect_slice(:,k_cont),nx,ny);
       end
       if which_stats(k_cont,3)
-         stats_vol.sd(:,:,k,k_cont) = reshape(sdeffect_slice(:,k_cont),nx,ny); 
+         stats_vol.sd(:,:,k,k_cont) = reshape(sdeffect_slice(:,k_cont),nx,ny);
       end
    end
    if any(which_stats(:,4))
       Fstat_slice=min(Fstat_slice,10000);
-      stats_vol.f(:,:,k) = reshape(Fstat_slice,nx,ny); 
+      stats_vol.f(:,:,k) = reshape(Fstat_slice,nx,ny);
    end
    if which_stats(1,6)
-      stats_vol.resid(:,:,k,:) = reshape(resid_slice,nx,ny,n);  
-   end  
-   if which_stats(1,7) 
-      stats_vol.wresid(:,:,k,:) = reshape(wresid_slice,nx,ny,n);   
-   end  
+      stats_vol.resid(:,:,k,:) = reshape(resid_slice,nx,ny,n);
+   end
+   if which_stats(1,7)
+      stats_vol.wresid(:,:,k,:) = reshape(wresid_slice,nx,ny,n);
+   end
    if which_stats(1,8)
-      stats_vol.ar(:,:,k,:) = reshape(A_slice,nx,ny,numlags);    
+      stats_vol.ar(:,:,k,:) = reshape(A_slice,nx,ny,numlags);
    end
 end

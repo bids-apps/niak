@@ -65,7 +65,7 @@ function [] = niak_write_minc(hdr,vol)
 % variable NIAK_GB_ZIP in the file NIAK_GB_VARS with the appropriate
 % command line).
 %
-% Specifying the name of the raw data file can also save a significant 
+% Specifying the name of the raw data file can also save a significant
 % amount of time.
 % _________________________________________________________________________
 % SEE ALSO:
@@ -161,7 +161,7 @@ fclose(hf);
 if ~isempty(hdr.like)
     str_raw = ['rawtominc -float -clobber -like ' hdr.like,' -input ' file_tmp ' ' file_name];
     [flag_fail,err_msg] = system(str_raw);
-    
+
     if flag_fail
         error(err_msg)
     end
@@ -183,13 +183,13 @@ else
     dim_order = zeros([ndims(vol) 1]);
     if (ndims(vol) == 4)&&(length(hdr.info.dimension_order)==3)
         hdr.info.dimension_order = [hdr.info.dimension_order 't'];
-    end    
-    for num_d = 1:ndims(vol)    
+    end
+    for num_d = 1:ndims(vol)
         dim_order(num_d) = findstr('xyzt',hdr.info.dimension_order(num_d));
     end
-    
+
     %% Build the dimension order argument for minc to raw
-    dim_names = {'xspace,','yspace,','zspace,','time,'};    
+    dim_names = {'xspace,','yspace,','zspace,','time,'};
     arg_dim_order = [dim_names{dim_order(end:-1:1)}]; % the order notations in NetCDF/HDF5 is reversed compared to matlab
 
     %% While we're at it, build a list of order field names for spatial

@@ -1,6 +1,6 @@
 function [] = niak_visu_gaussian(data,opt)
-% Plot an histogram of data along with a fitter Gaussian distribution. 
-% The parameters of the Gaussian ate initialized by the median and the median 
+% Plot an histogram of data along with a fitter Gaussian distribution.
+% The parameters of the Gaussian ate initialized by the median and the median
 % absolute deviation to the median and further adjusted with fminsearch.
 %
 % SYNTAX:
@@ -19,21 +19,21 @@ function [] = niak_visu_gaussian(data,opt)
 %      (integer, default length(DATA)/100) the number of bins used in the histogram.
 %
 %   BINS
-%      (vector, default regular grid on min/max) the bins used to build 
-%      the histogram. 
+%      (vector, default regular grid on min/max) the bins used to build
+%      the histogram.
 %
 %   MEAN
-%      (scalar, default estimated) the mean of the Gaussian distribution. 
+%      (scalar, default estimated) the mean of the Gaussian distribution.
 %      By default it is fitted to the data.
 %
 %   STD
-%      (scalar, default estimated) the standard deviation of the Gaussian 
+%      (scalar, default estimated) the standard deviation of the Gaussian
 %      distribution. By default it is fitted to the data.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Research Centre of the Montreal Geriatric Institute
 % & Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2012

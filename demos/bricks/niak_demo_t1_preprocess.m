@@ -8,21 +8,21 @@ function [files_in,files_out,opt] = niak_demo_t1_preprocess(path_demo)
 % INPUTS:
 %
 % PATH_DEMO
-%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS) 
-%       the full path to the NIAK demo dataset. The dataset can be found in 
-%       multiple file formats at the following address : 
+%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS)
+%       the full path to the NIAK demo dataset. The dataset can be found in
+%       multiple file formats at the following address :
 %       http://www.bic.mni.mcgill.ca/users/pbellec/demo_niak/
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% FILES_IN,FILES_OUT,OPT : outputs of NIAK_BRICK_T1_PREPROCESS (a 
+% FILES_IN,FILES_OUT,OPT : outputs of NIAK_BRICK_T1_PREPROCESS (a
 % description of input and output files with all options).
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
-% 
+%
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
@@ -54,23 +54,23 @@ niak_gb_vars
 
 %% Setting input/output files
 switch GB_NIAK.format_demo
-        
+
     case 'minc2' % If data are in minc2 format
-        
+
         %% The two datasets have actually been acquired in the same
         %% session, but this is just to demonstrate how the procedure works
         %% in general.
         file_anat = cat(2,GB_NIAK.path_demo,filesep,'anat_subject1.mnc');
-        
+
     case 'minc1'
-        
+
         %% The two datasets have actually been acquired in the same
         %% session, but this is just to demonstrate how the procedure works
         %% in general.
         file_anat = cat(2,GB_NIAK.path_demo,filesep,'anat_subject1.mnc.gz');
-        
-    otherwise 
-        
+
+    otherwise
+
         error('niak:demo','%s is an unsupported file format for this demo. See help to change that.',GB_NIAK.format_demo)
 end
 

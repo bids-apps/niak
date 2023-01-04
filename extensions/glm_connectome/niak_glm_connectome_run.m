@@ -13,33 +13,33 @@ function [spc,model_n,opt] = niak_glm_connectome_run(model_tseries,opt)
 %      (vector T*N) the time series data (by column)
 %
 %   TIME_FRAMES
-%      (vector, default regular grid 1Hz sampling rate) TIME_FRAMES(T) is the time 
+%      (vector, default regular grid 1Hz sampling rate) TIME_FRAMES(T) is the time
 %      associated with Y(T,:).
 %
 %   MASK_SUPPRESSED
-%      (vector TC*N, default no suppressed) MASK_SUPPRESSED(TC) indicates if the time frame 
-%      number TC was suppressed from the original series (MASK_SUPPRESSED has T zeros elements, 
+%      (vector TC*N, default no suppressed) MASK_SUPPRESSED(TC) indicates if the time frame
+%      number TC was suppressed from the original series (MASK_SUPPRESSED has T zeros elements,
 %      corresponding to the rows of TSERIES).
 %
 %   CONFOUNDS
-%      (matrix T*C, default no condounds) CONFOUNDS(:,C) is a confound covariate that was 
+%      (matrix T*C, default no condounds) CONFOUNDS(:,C) is a confound covariate that was
 %      regressed out from TSERIES
 %
 %   LABELS_CONFOUNDS
 %      (cell of strings, default no labels) LABELS_CONFOUNDS{C} is the label of CONFOUNDS(:,C)
 %
-%   COVARIATE   
+%   COVARIATE
 %      (structure, default no covariate) with the following fields:
 %
-%      X 
+%      X
 %         (matrix TC*K) covariates to include in the model.
 %
 %      LABELS_Y
 %         (cell of strings 1*K) LABELS_Y{K} is the label of COVARIATE.X(:,K)
-%           
+%
 %   EVENT
 %      (structure, default no event) with the following fields:
-%      
+%
 %      X
 %         (matrix NE*3) X(E,1) is the time of an event (time 0 is the beginning of the scan)
 %                       X(E,2) is the duration of the event
@@ -47,93 +47,93 @@ function [spc,model_n,opt] = niak_glm_connectome_run(model_tseries,opt)
 %
 %      LABELS_X
 %         (cell of strings NE*1) LABELS_X{E} is the label of the event X(E,:). Note that the same
-%         LABEL needs to be used for all events of the same type, and will be used for the 
+%         LABEL needs to be used for all events of the same type, and will be used for the
 %         associated covariate in the model.
-% 
+%
 %   NETWORK
-%       (3D array or vector, defaut 1:nb_voxel) 0 is the background (excluded) and network I is 
+%       (3D array or vector, defaut 1:nb_voxel) 0 is the background (excluded) and network I is
 %       filled with Is. the signal will be averaged on these networks to generate the connectome.
-%       The vectorized version of NETWORK should correspond to the spatial (second) dimension of 
+%       The vectorized version of NETWORK should correspond to the spatial (second) dimension of
 %       MODEL_TSERIES.TSERIES.
 %
 % OPT
 %   (structure, optional) with the following fields:
 %
 %   TYPE
-%      (string, default 'correlation') The other fields depend on this parameter. 
+%      (string, default 'correlation') The other fields depend on this parameter.
 %      Available options:
-%         'correlation' : simple Pearson's correlation coefficient. 
+%         'correlation' : simple Pearson's correlation coefficient.
 %         'glm' : run a general linear model estimation
 %
 %   case 'correlation'
 %
 %      FLAG_FISHER
 %         (boolean, default true) if the flag is on, the correlation values are normalized
-%         using a Fisher's transform. 
+%         using a Fisher's transform.
 %
 %      PROJECTION
-%         (cell of strings) a list of the covariates that will be regressed out from the 
+%         (cell of strings) a list of the covariates that will be regressed out from the
 %         time series (an intercept will be automatically added).
 %
 %      SELECT
-%         (structure, optional) The correlation will be derived only on the selected volumes. 
+%         (structure, optional) The correlation will be derived only on the selected volumes.
 %         By default all the volumes are used. See OPT.SELECT in the 'glm' case below.
 %
 %      SELECT_DIFF
-%         (structure, optional) If SELECT_DIFF is specified has two entries, the 
-%         measure will be the difference in correlations between the two subsets of time frames 
-%         SELECT_DIFF-SELECT, instead a single correlation coefficient. See OPT.SELECT in the 'glm' 
+%         (structure, optional) If SELECT_DIFF is specified has two entries, the
+%         measure will be the difference in correlations between the two subsets of time frames
+%         SELECT_DIFF-SELECT, instead a single correlation coefficient. See OPT.SELECT in the 'glm'
 %         case below for syntax.
 %
 %   case 'glm'
 %
 %      CONTRAST.<NAME>
-%         (scalar, default contrast.seed = 1) with arbitray fields <NAME>, which needs to 
+%         (scalar, default contrast.seed = 1) with arbitray fields <NAME>, which needs to
 %         correspond to either 'seed' (the time series of a seed) or any of the covariates defined
-%         in the model, typically as an interaction term. The fields found in CONTRAST will determine 
-%         which covariates enter the model. CONTRAST.<NAME> is the weight of the covariate NAME in 
+%         in the model, typically as an interaction term. The fields found in CONTRAST will determine
+%         which covariates enter the model. CONTRAST.<NAME> is the weight of the covariate NAME in
 %         the contrast.
-% 
+%
 %      INTERACTION
 %         (structure, optional) with multiple entries and the following fields :
-%       
+%
 %         LABEL
 %            (string) a label for the interaction covariate.
 %
 %         FACTOR
 %            (cell of string) covariates that are being multiplied together to build the
-%            interaction covariate. 
+%            interaction covariate.
 %
 %         FLAG_NORMALIZE_INTER
-%            (boolean,default true) if FLAG_NORMALIZE_INTER is true, the factor of interaction 
-%            will be normalized to a zero mean and unit variance before the interaction is 
+%            (boolean,default true) if FLAG_NORMALIZE_INTER is true, the factor of interaction
+%            will be normalized to a zero mean and unit variance before the interaction is
 %            derived (independently of OPT.<LABEL>.GROUP.NORMALIZE below.
 %
 %      PROJECTION
 %         (structure, optional) with multiple entries and the following fields :
 %
 %         SPACE
-%            (cell of strings) a list of the covariates that define the space to project 
-%            out from (i.e. the covariates in ORTHO, see below, will be projected 
+%            (cell of strings) a list of the covariates that define the space to project
+%            out from (i.e. the covariates in ORTHO, see below, will be projected
 %            in the space orthogonal to SPACE).
 %
 %         ORTHO
-%            (cell of strings, default all the covariates except those in space) a list of 
+%            (cell of strings, default all the covariates except those in space) a list of
 %            the covariates to project in the space orthogonal to SPACE (see above).
 %
 %         FLAG_INTERCEPT
-%            (boolean, default true) if the flag is true, add an intercept in SPACE (even 
+%            (boolean, default true) if the flag is true, add an intercept in SPACE (even
 %            when the model does not have an intercept).
 %
 %      NORMALIZE_X
-%         (structure or boolean, default false) If a boolean and true, all covariates of the 
-%         model are normalized to a zero mean and unit variance. If a structure, the 
-%         fields <NAME> need to correspond to the label of a column in the 
+%         (structure or boolean, default false) If a boolean and true, all covariates of the
+%         model are normalized to a zero mean and unit variance. If a structure, the
+%         fields <NAME> need to correspond to the label of a column in the
 %         file FILES_IN.MODEL.GROUP):
 %
 %         <NAME>
 %             (arbitrary value) if <NAME> is present, then the covariate is normalized
-%             to a zero mean and a unit variance. 
+%             to a zero mean and a unit variance.
 %
 %      NORMALIZE_Y
 %          (boolean, default true) If true, the data is corrected to a zero mean and unit variance,
@@ -144,7 +144,7 @@ function [spc,model_n,opt] = niak_glm_connectome_run(model_tseries,opt)
 %         added to the model.
 %
 %      SELECT
-%         (structure, optional) with multiple entries and the following fields:           
+%         (structure, optional) with multiple entries and the following fields:
 %
 %         LABEL
 %            (string) the covariate used to select entries *before normalization*
@@ -156,8 +156,8 @@ function [spc,model_n,opt] = niak_glm_connectome_run(model_tseries,opt)
 %            (scalar, default []) only values higher (or equal) than MIN are retained.
 %
 %         MAX
-%            (scalar, default []) only values lower (or equal) than MAX are retained. 
-% 
+%            (scalar, default []) only values lower (or equal) than MAX are retained.
+%
 %         OPERATION
 %            (string, default 'or') the operation that is applied to select the frames.
 %            Available options:
@@ -166,31 +166,31 @@ function [spc,model_n,opt] = niak_glm_connectome_run(model_tseries,opt)
 %
 %________________________________________________________________________________
 % OUTPUTS:
-%  
-% SPC       
-%   (vector N*N) the statistical parametric connectome. 
+%
+% SPC
+%   (vector N*N) the statistical parametric connectome.
 %
 % MODEL_N
 %   (structure) the linear model used to generate the connectome.
-%  
+%
 % OPT
 %   (structure) same as the input, but updated with default values.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
-% The full model contains an intercept, the seed that is used to derive one 
+% The full model contains an intercept, the seed that is used to derive one
 % column of the connectome, the events convolved with an hemodynamic response,
-% the manyally specified covariates as well as the confounds that were regressed 
+% the manyally specified covariates as well as the confounds that were regressed
 % out on the time series (typically during the preprocessing). Interaction terms
 % can be derived by combination of all of the above.
 %
-% In 'glm' model, the confounds will be regressed out of all other covariates 
-% (along with the intercept) before model estimation. 
+% In 'glm' model, the confounds will be regressed out of all other covariates
+% (along with the intercept) before model estimation.
 %
-% Copyright (c) Pierre Bellec, Jalloul Bouchkara, 
-%               Centre de recherche de l'institut de 
-%               Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Jalloul Bouchkara,
+%               Centre de recherche de l'institut de
+%               Gériatrie de Montréal, Département d'informatique et de recherche
 %               opérationnelle, Université de Montréal, 2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -246,11 +246,11 @@ switch opt.type
         list_fields   = { 'select' , 'contrast'   , 'projection' , 'flag_intercept' , 'interaction' , 'normalize_x' , 'type'        , 'normalize_y' };
         list_defaults = { {}       , def_contrast , struct()     , true             , {}            , false         , 'correlation' , true          };
         opt = psom_struct_defaults(opt,list_fields,list_defaults);
-end    
+end
 
 %% Case of a difference in correlation
 if strcmp(opt.type,'correlation') && isfield(opt.select_diff,'label')
-    opt1 = rmfield(opt,'select_diff');    
+    opt1 = rmfield(opt,'select_diff');
     [spc1,model_n(1)] = niak_glm_connectome_run(model_tseries,opt1);
     opt2 = opt1;
     opt2.select = opt.select_diff;
@@ -272,13 +272,13 @@ else
     conf.x = [];
     conf.labels_y = {};
 end
-  
+
 %% Add the events convolved with an hemodynamic response to the model
 if isfield(model_tseries.event,'x')&&~isempty(model_tseries.event.x)
-    [list_event,tmp,all_event]  = unique(model_tseries.event.labels_x); 
+    [list_event,tmp,all_event]  = unique(model_tseries.event.labels_x);
     opt_m.events = [all_event(:) model_tseries.event.x];
     opt_m.frame_times = model_tseries.time_frames;
-    x_cache =  niak_fmridesign(opt_m); 
+    x_cache =  niak_fmridesign(opt_m);
     conf.x = [conf.x x_cache.x(:,:,1,1)];
     conf.labels_y = [conf.labels_y(:) ; list_event(:)];
 end
@@ -307,9 +307,9 @@ try
 switch opt.type
 
     case 'correlation'
-    
+
         %% the user wants to work with a simple correlation coefficient
-        opt_n.select = opt.select;        
+        opt_n.select = opt.select;
         if ~isempty(opt.projection)
             for num_f = 1:length(opt.projection)
                 opt_n.contrast.(opt.projection{num_f}) = 1;
@@ -332,7 +332,7 @@ switch opt.type
             N = ones(size(model_n.y,2),1);
         end
         spc = niak_build_correlation(model_n.y);
-        ir = var(model_n.y,[],1)';       
+        ir = var(model_n.y,[],1)';
         mask_0 = (N==0)|(N==1);
         N(mask_0) = 10;
         ir = ((N.^2).*ir-N)./(N.*(N-1));
@@ -341,40 +341,40 @@ switch opt.type
         if opt.flag_fisher
             spc = niak_fisher(spc);
         end
-        return    
+        return
 
     case 'glm'
-    
+
         %% a general linear model estimation
 
         %% Average time series on networks
         if ~isempty(model.network)
             conf.y = niak_build_tseries(conf.y,model_tseries.network);
         end
-        
+
         %% initialization of spc
         spc = zeros(size(conf.y,2),size(conf.y,2));
         opt_model = rmfield(opt,'type');
         opt_model.normalize_type = 'mean_var';
-        
+
         % add the seed field to the labels_y, output an error if it is already present
         if ismember('seed',conf.labels_y)
             error('''seed'' was found as a label in the list of covariate/event/confound. This label is reserved for the seed region (which is iterated over the full connectome')
         end
         conf.labels_y = [{'seed'} ; conf.labels_y(:)];
 
-        %% loop of the effects matrix 
-        for num_i = 1:size(conf.y,2)            
+        %% loop of the effects matrix
+        for num_i = 1:size(conf.y,2)
             model_n = conf;
             model_n.x = [niak_normalize_tseries(model_tseries.tseries(:,num_i)) model_n.x];
             model_n = niak_normalize_model(model_n,opt_model);
             opt_o.test = 'ttest';
-            results = niak_glm(model_n,opt_o); 
-            spc(:,num_i) = results.eff ; 
-        end  
-        
+            results = niak_glm(model_n,opt_o);
+            spc(:,num_i) = results.eff ;
+        end
+
     otherwise
-    
+
         error('%s is an unkown type of statistical parametric connectome',opt.type)
 end
 catch

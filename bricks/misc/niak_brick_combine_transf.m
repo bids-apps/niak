@@ -7,31 +7,31 @@ function [files_in,files_out,opt] = niak_brick_combine_transf(files_in,files_out
 % _________________________________________________________________________
 % INPUTS:
 %
-%   FILES_IN      
+%   FILES_IN
 %       (cell of strings) each entry in the name of a .mat file with one
 %       variable TRANSF. The first variable can have multiple entries, i.e.
 %       TRANSF(:,:,I) is a transformation. The name of the variable can be
 %       changed, see OPT.VAR_NAME below.
 %
-%   FILES_OUT 
+%   FILES_OUT
 %       (string) the name of a MAT file with one TRANSF variable, which is
 %       the combined transformations from all inputs, from the first to the
 %       last in that order.
 %
-%   OPT           
+%   OPT
 %       (structure, optional) has the following fields:
 %
 %       VAR_NAME
 %           (string, default 'transf') the name of the transformation
 %           variable.
 %
-%       FLAG_TEST 
-%           (boolean, default: 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN and 
+%       FLAG_TEST
+%           (boolean, default: 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN and
 %           FILES_OUT.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function prints 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function prints
 %           some infos during the processing.
 %
 % _________________________________________________________________________
@@ -43,8 +43,8 @@ function [files_in,files_out,opt] = niak_brick_combine_transf(files_in,files_out
 % _________________________________________________________________________
 % COMMENTS:
 %
-% The TRANSF variables are standard 4*4 matrix array representation of 
-% an affine transformation [M T ; 0 0 0 1] for (y=M*x+T) 
+% The TRANSF variables are standard 4*4 matrix array representation of
+% an affine transformation [M T ; 0 0 0 1] for (y=M*x+T)
 %
 % Copyright (c) Pierre Bellec, McConnell Brain Imaging Center,
 % Montreal Neurological Institute, McGill University, 2008.
@@ -113,7 +113,7 @@ for num_f = 1:nb_file
         for num_t = 1:nb_transf
             transf(:,:,num_t) = data.(var_name)*transf(:,:,num_t);
         end
-    end    
+    end
 end
 
 %%%%%%%%%%%%%%%%%%

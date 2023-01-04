@@ -12,18 +12,18 @@ function [vol_s,vol_t] = niak_build_autocorrelation(vol,mask)
 % INPUTS:
 %
 %  * VOL
-%       (cell of strings 2*1) file names of two 3D+t dataset. 
+%       (cell of strings 2*1) file names of two 3D+t dataset.
 %
 %  * MASK
 %       (volume, default all voxels) Binary mask. If specified, the
 %       computation will be restricted to the inside of the mask.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 %
@@ -85,7 +85,7 @@ vol_s = zeros(size(mask));
 nb_vois = zeros(size(mask));
 
 for num_vois = 1:size(vois,1)
-    
+
     mx = lx + vois(num_vois,1); my = ly + vois(num_vois,2); mz = lz + vois(num_vois,3);
     in_vol = ones(size(mx));
     in_vol((mx<1)|(mx>size(mask,1))|(my<1)|(my>size(mask,2))|(mz<1)|(mz>size(mask,3))) = 0;

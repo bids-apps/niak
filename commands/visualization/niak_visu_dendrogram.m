@@ -7,7 +7,7 @@ function niak_visu_dendrogram(X,IM,expH)
 % _________________________________________________________________________
 % INPUTS:
 %
-% HIER      
+% HIER
 %       (matrix) must have the following form:
 %             Column 1: Level of new link
 %             Column 2: Entity no x
@@ -24,7 +24,7 @@ function niak_visu_dendrogram(X,IM,expH)
 %
 % _________________________________________________________________________
 % SEE ALSO:
-% NIAK_HIERARCHICAL_CLUSTERING, 
+% NIAK_HIERARCHICAL_CLUSTERING,
 %
 % _________________________________________________________________________
 % COMMENTS:
@@ -87,15 +87,15 @@ if iscell(X);
     end
 else
     [m,n]=size(X);
-    
+
     % Firstly sort out the order that the entities appear on
     % the x-axis and stor in sc
-    
-    sc=X(m,[2 3]);                   
+
+    sc=X(m,[2 3]);
     for i=1:m-1
         j=m-i;
         l=length(sc);
-        sci=find(sc==X(j,4));        
+        sci=find(sc==X(j,4));
         if isempty(sci)
             sc = [X(j,[2 3]) sc(1:l)];
         else
@@ -103,7 +103,7 @@ else
             sc=[sc(1:sci-1) X(j,[2 3]) sc(sci:l-1)];
         end
     end
-    
+
     rg=max(X(:,1))-min(X(:,1));
     ymin=min(X(:,1))-(rg)/10;
     ymax=max(X(:,1))+(rg)/10;
@@ -114,9 +114,9 @@ else
 %    clf
     axis([0 m+1 ymin ymax])                    % Set axis ranges
     set(gca,'XTick',[1:m+1])                   % Set position of X tic marks
-    set(gca,'XTickLabel',sc(1:m+1))            % Set x tic labels 
+    set(gca,'XTickLabel',sc(1:m+1))            % Set x tic labels
     hold on
-    
+
     if flag_sim
         list_y = (ymin:rg/10:ymax);
         set(gca,'Ytick',list_y);
@@ -134,7 +134,7 @@ else
         y20=yc(X(i,3));
         y2=X(i,1);                               % y2 = level of join
         x1=ct(find(ct(X(i,2))==sc));             % Find plotting co-ords for
-        x2=ct(find(ct(X(i,3))==sc));             % the entities joined                
+        x2=ct(find(ct(X(i,3))==sc));             % the entities joined
         plot([x1 x1],[y10 y2]);                  % Plot first vertical line
         plot([x2 x2],[y20 y2]);                  % Plot second vertical line
         plot([x1 x2],[y2 y2]);                   % Plot horizontal connecting line

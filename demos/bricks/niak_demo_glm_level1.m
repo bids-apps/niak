@@ -8,30 +8,30 @@ function [files_in,files_out,opt] = niak_demo_glm_level1(path_demo,opt_demo)
 % OUTPUT
 %
 % PATH_DEMO
-%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS) 
-%       the full path to the NIAK demo dataset. The dataset can be found in 
-%       multiple file formats at the following address : 
+%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS)
+%       the full path to the NIAK demo dataset. The dataset can be found in
+%       multiple file formats at the following address :
 %       http://www.bic.mni.mcgill.ca/users/pbellec/demo_niak/
 %
 % OPT
-%       (structure, optional) with the following fields : 
+%       (structure, optional) with the following fields :
 %
 %       FLAG_TEST
-%           (boolean, default false) if FLAG_TEST == true, the demo will 
-%           just generate the FILES_IN, FILES_OUT and OPT structure, 
+%           (boolean, default false) if FLAG_TEST == true, the demo will
+%           just generate the FILES_IN, FILES_OUT and OPT structure,
 %           otherwise it will run the brick.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % NOTE 1
-%   This demo will run an analysis of the motor condition of subject 1, 
+%   This demo will run an analysis of the motor condition of subject 1,
 %   using a boxcar design.
-% 
+%
 % NOTE 2:
-%   The demo database exists in multiple file formats.NIAK looks into the 
-%   demo path and is supposed to figure out which format you are 
-%   intending to use by himself. You can the format by changing the 
+%   The demo database exists in multiple file formats.NIAK looks into the
+%   demo path and is supposed to figure out which format you are
+%   intending to use by himself. You can the format by changing the
 %   variable GB_NIAK_FORMAT_DEMO in the script NIAK_GB_VARS.
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
@@ -89,7 +89,7 @@ events = [1 -13.98 30 1; 1 43.98 30 1; 1 103.98 30 1]; % The design is block/res
 X_cache = fmridesign(frame_times,slice_times,events);
 files_in.design = cat(2,GB_NIAK.path_demo,filesep,'motor_design.mat');
 save(files_in.design,'X_cache');
-   
+
 %% In which format is the niak demo ?
 format_demo = 'minc2';
 if exist(cat(2,path_demo,'anat_subject1.mnc'))
@@ -104,19 +104,19 @@ end
 
 %% Setting input/output files
 switch format_demo
-    
+
     case 'minc1' % If data are in minc1 format
 
         files_in.fmri = cat(2,path_demo,filesep,'func_motor_subject1.mnc.gz');
-        
+
     case 'minc2' % If data are in minc2 format
 
         files_in.fmri = cat(2,path_demo,filesep,'func_motor_subject1.mnc');
-        
-    otherwise 
-        
+
+    otherwise
+
         error('niak:demo','%s is an unsupported file format for this demo. See help to change that.',GB_NIAK.format_demo)
-        
+
 end
 
 %% Outputs
@@ -148,4 +148,3 @@ opt.pcnt = 0;
 [files_in,files_out,opt] = niak_brick_glm_level1(files_in,files_out,opt);
 
 %% Note that opt.interpolation_method has been updated, as well as files_out
-

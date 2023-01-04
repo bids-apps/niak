@@ -3,26 +3,26 @@ function [eigenvariates,eigenvalues] = niak_pca_fmristat(vol,mask,opt)
 % SUMMARY NIAK_PCA
 %
 % Create spatial average from a volume
-% 
+%
 % SYNTAX:
 % [EIGENVARIATES,EIGENVALUES] = NIAK_PCA(VOL,MASK,OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL         
+% VOL
 %       (4D array) a 3D+t dataset
-% 
+%
 % MASK
-%       (3D volume, default all voxels) a binary mask of the voxels that 
+%       (3D volume, default all voxels) a binary mask of the voxels that
 %       will be included in the analysis.
 %
-% OPT         
+% OPT
 %       structure with the following fields :
 %
-%       EXCLUDE 
-%             (vector, default []) 
-%             A list of frames that should be excluded from the analysis. 
+%       EXCLUDE
+%             (vector, default [])
+%             A list of frames that should be excluded from the analysis.
 %             This must be used with Siemens EPI scans to remove the
 %             first few frames, which do not represent steady-state images.
 %
@@ -30,36 +30,36 @@ function [eigenvariates,eigenvalues] = niak_pca_fmristat(vol,mask,opt)
 %            1 for PCA on covariances(default), 0 for PCA on correlations.
 %
 %       X_REMOVE
-%            Design matrix with a row for each frame of the covariates to be 
-%            removed from the data before doing the PCA. 
-%            Default is ones(numX,1), i.e. removing the mean image over time; 
+%            Design matrix with a row for each frame of the covariates to be
+%            removed from the data before doing the PCA.
+%            Default is ones(numX,1), i.e. removing the mean image over time;
 %            use [ones(numX,1) (1:numX)'] to remove a linear drift as well.
 %
 %       X_INTEREST
-%            Design matrix with a row for each frame of the covariates of interest. 
+%            Design matrix with a row for each frame of the covariates of interest.
 %            The PCA is done on the effects for these covariates,
-%            i.e. a Partial Least-Squares (PLS) analysis. 
+%            i.e. a Partial Least-Squares (PLS) analysis.
 %            Default is eye(numX), i.e. a PCA on all the frames or files.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-%   EIGENVARIATES 
+%   EIGENVARIATES
 %        matrix of column vectors representing eigenvariates.
 %
-%   EIGENVALUES 
+%   EIGENVALUES
 %        vector of eigenvalues.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the PCA_IMAGE function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
 %              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
@@ -184,4 +184,3 @@ VX = UX*Vs(:,is(1:p));
 D = diag(D);
 eigenvalues = sqrt(D(is(1:p)));
 eigenvariates = VX;
- 

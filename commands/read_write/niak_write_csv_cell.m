@@ -1,5 +1,5 @@
 function  [err,msg] = niak_write_csv_cell(file_name,csv_cell,separator)
-% Write a cell of strings into a CSV (comma-separated values) text file. 
+% Write a cell of strings into a CSV (comma-separated values) text file.
 %
 % SYNTAX:
 % [ERR,MSG] = NIAK_WRITE_CSV_CELL(FILE_NAME,CSV_CELL,SEPARATOR)
@@ -7,8 +7,8 @@ function  [err,msg] = niak_write_csv_cell(file_name,csv_cell,separator)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILE_NAME     
-%   (string) the name of the text file. This usually ends in .csv for comma-separated 
+% FILE_NAME
+%   (string) the name of the text file. This usually ends in .csv for comma-separated
 %   values, .tsv for tabulation-separated values and and can have a .gz extension for
 %   compressed files.
 %
@@ -16,8 +16,8 @@ function  [err,msg] = niak_write_csv_cell(file_name,csv_cell,separator)
 %   (cell of strings/float) the data
 %
 % SEPARATOR
-%   (string, default ',' for csv files, char(9) - tabulation - for .tsv files, ',' otherwise) 
-%   The character used to separate values. 
+%   (string, default ',' for csv files, char(9) - tabulation - for .tsv files, ',' otherwise)
+%   The character used to separate values.
 %
 % _________________________________________________________________________
 % OUTPUTS:
@@ -25,7 +25,7 @@ function  [err,msg] = niak_write_csv_cell(file_name,csv_cell,separator)
 % ERR
 %   (boolean) if ERR == 1 an error occured, ERR = 0 otherwise.
 %
-% MSG 
+% MSG
 %   (string) the error message (empty if ERR==0).
 %
 % _________________________________________________________________________
@@ -35,12 +35,12 @@ function  [err,msg] = niak_write_csv_cell(file_name,csv_cell,separator)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% The extension of zipped files is assumed to be .gz. The tools used to zip 
-% files is 'gzip'. This setting can be changed by changing the variables 
+% The extension of zipped files is assumed to be .gz. The tools used to zip
+% files is 'gzip'. This setting can be changed by changing the variables
 % GB_NIAK_ZIP_EXT and GB_NIAK_UNZIP in the file NIAK_GB_VARS.
 
-% Copyright (c) Pierre Bellec, 
-% Centre de recherche de l'institut de griatrie de Montral, 
+% Copyright (c) Pierre Bellec,
+% Centre de recherche de l'institut de griatrie de Montral,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2013-2015
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -96,12 +96,12 @@ end
 [hf,msg] = fopen(file_name,'w');
 if hf == -1
     err = 1;
-else 
+else
     err = 0;
 end
 
 for numx = 1:nx
-    for numy = 1:ny        
+    for numy = 1:ny
         if ischar(csv_cell{numx,numy})
             sw = '%s';
         elseif isnumeric(csv_cell{numx,numy})
@@ -112,13 +112,13 @@ for numx = 1:nx
             end
         else
             error('all cells should be either string or numeric variables')
-        end 
+        end
         if numy ~= ny
-            fprintf(hf,[sw separator],csv_cell{numx,numy});            
+            fprintf(hf,[sw separator],csv_cell{numx,numy});
         else
             fprintf(hf,[sw '\n'],csv_cell{numx,numy});
-        end     
-    end    
+        end
+    end
 end
 
 fclose(hf);

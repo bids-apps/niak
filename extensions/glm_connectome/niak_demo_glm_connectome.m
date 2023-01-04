@@ -3,13 +3,13 @@ function [pipeline,opt_pipe,files_in] = niak_demo_glm_connectome(path_demo,opt)
 %
 % [PIPELINE,OPT_PIPE,FILES_IN] = NIAK_DEMO_GLM_CONNECTOME(PATH_DEMO,OPT)
 %
-% PATH_DEMO (string) the full path to the preprocessed NIAK demo dataset. The dataset 
+% PATH_DEMO (string) the full path to the preprocessed NIAK demo dataset. The dataset
 %   can be found at http://www.nitrc.org/frs/?group_id=411
 % OPT (structure, optional) Any argument passed to NIAK_PIPELINE_GLM_CONNECTOME
 %   will do here. Many parameters are hard-coded though (see code). In addition:
-% OPT.FILES_IN.FMRI (structure, default grab the preprocessed demoniak) the input files 
+% OPT.FILES_IN.FMRI (structure, default grab the preprocessed demoniak) the input files
 %   from the preprocessing to be fed in the glm_connectome pipeline.
-% OPT.FOLDER_OUT (string, default PATH_DEMO/glm_connectome) where to store the 
+% OPT.FOLDER_OUT (string, default PATH_DEMO/glm_connectome) where to store the
 %   results of the pipeline.
 %
 % PIPELINE (structure) a formal description of the pipeline. See PSOM_RUN_PIPELINE.
@@ -18,7 +18,7 @@ function [pipeline,opt_pipe,files_in] = niak_demo_glm_connectome(path_demo,opt)
 %
 % Copyright (c) Pierre Bellec, see license in the code.
 
-% Centre de recherche de l'institut de griatrie de Montral, 
+% Centre de recherche de l'institut de griatrie de Montral,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2013
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -55,7 +55,7 @@ if nargin < 2
 end
 opt = psom_struct_defaults(opt, ...
       { 'files_in'            , 'folder_out'}, ...
-      { 'gb_niak_omitted'     , ''          },false);      
+      { 'gb_niak_omitted'     , ''          },false);
 if isempty(opt.folder_out)
     opt.folder_out = [path_demo.stability_fir,'glm_connectome',filesep];
 end
@@ -63,13 +63,13 @@ opt.folder_out = niak_full_path(opt.folder_out);
 
 
 %% Grab the results from the NIAK fMRI preprocessing pipeline
-if ~isempty(opt.files_in)&&~strcmp(opt.files_in,'gb_niak_omitted')  
+if ~isempty(opt.files_in)&&~strcmp(opt.files_in,'gb_niak_omitted')
     files_in.fmri = opt.files_in.fmri;
 else
     %% Grab the results from the NIAK fMRI preprocessing pipeline
-    opt_g.min_nb_vol = 30; % the demo dataset is very short, so we have to lower considerably the minimum acceptable number of volumes per run 
-    opt_g.type_files = 'fir'; % Specify to the grabber to prepare the files for the stability FIR pipeline    
-    files_in = rmfield(niak_grab_fmri_preprocess(path_demo,opt_g),{'mask','areas'}); 
+    opt_g.min_nb_vol = 30; % the demo dataset is very short, so we have to lower considerably the minimum acceptable number of volumes per run
+    opt_g.type_files = 'fir'; % Specify to the grabber to prepare the files for the stability FIR pipeline
+    files_in = rmfield(niak_grab_fmri_preprocess(path_demo,opt_g),{'mask','areas'});
 end
 
 %% Duplicate one run
@@ -86,7 +86,7 @@ files_du.fmri.subject2c.session1.motor = files_in.fmri.subject2.session1.motor;
 files_du.fmri.subject2d.session1.motor = files_in.fmri.subject1.session1.motor;
 files_in = files_du;
 
-%% Now use the NIAK Cambridge s100 template twice 
+%% Now use the NIAK Cambridge s100 template twice
 files_in.networks.cambridge100 = [GB_NIAK.path_niak 'template' filesep 'basc_cambridge_sc100.mnc.gz'];
 files_in.networks.cambridge100bis = [GB_NIAK.path_niak 'template' filesep 'basc_cambridge_sc100.mnc.gz'];
 
@@ -111,7 +111,7 @@ opt.nb_batch = 2; % The permutation tests are separated into NB_BATCH independen
 opt.flag_rand = false; % if the flag is false, the pipeline is deterministic. Otherwise, the random number generator is initialized based on the clock for each job.
 
 %% The tests
-opt.test.mean_subjects.group.contrast.intercept  = 1; 
+opt.test.mean_subjects.group.contrast.intercept  = 1;
 
 opt.test.effect_subject1.group.contrast.subject1 = 1;
 

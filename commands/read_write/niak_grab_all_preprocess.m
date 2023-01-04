@@ -8,15 +8,15 @@ function files = niak_grab_all_preprocess(path_data,files_in)
 % INPUTS:
 %
 % PATH_DATA
-%   (string, default [pwd filesep], aka './') full path to the outputs of 
+%   (string, default [pwd filesep], aka './') full path to the outputs of
 %   NIAK_PIPELINE_FMRI_PREPROCESS
 %
 % FILES_IN
-%   (structure, default struct() ) the FILES_IN structure fed to the fMRI 
+%   (structure, default struct() ) the FILES_IN structure fed to the fMRI
 %   preprocessing pipeline. If left empty, some minimal information are
 %   gathered from the folder to build the list of expected outputs (see
-%   the COMMENTS section below). However, if these information are 
-%   incomplete or corrupted, the list of expected outputs may be 
+%   the COMMENTS section below). However, if these information are
+%   incomplete or corrupted, the list of expected outputs may be
 %   inaccurate.
 %
 % _________________________________________________________________________
@@ -24,7 +24,7 @@ function files = niak_grab_all_preprocess(path_data,files_in)
 %
 % FILES_OUT
 %   (structure) the list of all expected outputs of the fMRI preprocessing
-%   pipeline. 
+%   pipeline.
 %
 % _________________________________________________________________________
 % SEE ALSO:
@@ -32,16 +32,16 @@ function files = niak_grab_all_preprocess(path_data,files_in)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% This "data grabber" based on the output folder of 
+% This "data grabber" based on the output folder of
 % NIAK_PIPELINE_FMRI_PREPROCESS
-% It grabs way more things than NIAK_GRAB_FMRI_PREPROCESS, but it does not 
+% It grabs way more things than NIAK_GRAB_FMRI_PREPROCESS, but it does not
 % have any filtering features. This grabber was developped to run automated
 % reproducibility tests across NIAK versions and production sites.
 %
 % The grabber will build a fairly exhaustive list of outputs.
-% If FILES_IN is specified, or a file `pipe_parameters.mat` can be found in 
+% If FILES_IN is specified, or a file `pipe_parameters.mat` can be found in
 % PATH_DATA, the list will build even if PATH_DATA does not contain all expected
-% outputs. Otherwise, a limited number of outputs actually need to be present 
+% outputs. Otherwise, a limited number of outputs actually need to be present
 % for the list to build:
 %   * The individual subfolders in the 'quality_control' folder.
 %   * The qc_scrubbing_group.csv file in 'quality_control/group_motion'
@@ -91,11 +91,11 @@ if nargin<2
         flag_in = false;
         ext = '';
     end
-else 
+else
     flag_in = true;
 end
 
-if flag_in 
+if flag_in
     [files_c,label] = niak_fmri2cell(files_in);
     [path_tmp,name_tmp,ext] = niak_fileparts(files_c{1});
 end
@@ -152,14 +152,14 @@ else
         if ~isempty(ind_r)
             for num_r = 1:length(ind_r)
                 ind_e = regexp(labx_scrub{ind_r(num_r)},'_');
-                ind_e = ind_e(end);            
+                ind_e = ind_e(end);
                 run = labx_scrub{ind_r(num_r)}((ind_e+1):end);
                 session = labx_scrub{ind_r(num_r)}((length(subject)+2):(ind_e-1));
                 files.fmri.vol.(subject).(session).(run) = '';
             end
         else
 	    error('I could not find any fmri dataset for subject %s, that''s weird.',subject);
-        end    
+        end
     end
 end
 
@@ -173,14 +173,14 @@ for num_f = 1:length(lc)
     else
         list_ext = {ext};
     end
-    for num_e = 1:length(list_ext)    
+    for num_e = 1:length(list_ext)
         file_fmri = [base_fmri list_ext{num_e}];
         if flag_in||psom_exist(file_fmri)
             ext = list_ext{num_e};
             files.fmri.vol.(lc(num_f).subject).(lc(num_f).session).(lc(num_f).run) = file_fmri;
             files.fmri.extra.(lc(num_f).subject).(lc(num_f).session).(lc(num_f).run) = [base_fmri '_extra.mat'];
         end
-     end     
+     end
 end
 
 %% Grab the parameters
@@ -210,13 +210,13 @@ for num_s = 1:length(list_subject)
 %                  'pve_gm_stereolin'   , ... % Commented out because it is an optional output
 %                  'pve_disc_stereolin' , ... % Commented out because it is an optional output
 
-                   
+
     list_func = { 'mask_stereonl'  , ...
                   'mean_stereonl'  , ...
                   'std_stereonl'   , ...
                   'mask_stem_stereo' , ...
                   'mask_vent_stereo' , ...
-                  'mask_wm_stereo' 
+                  'mask_wm_stereo'
                   };
     list_transf = { 'nativefunc_to_stereolin' , ...
                     'nativefunc_to_stereonl'  , ...
@@ -231,7 +231,7 @@ for num_s = 1:length(list_subject)
     for num_t = 1:length(list_transf)
         files.anat.(subject).transf.(list_transf{num_t}) = [path_anat_subj 'transf_' subject '_' list_transf{num_t} '.xfm'];
     end
-    
+
     % Add the grids for non-linear transform
     files.anat.(subject).nativefunc_to_stereonl_grid = [path_anat_subj 'transf_' subject '_nativefunc_to_stereonl_grid_0.mnc'];
     files.anat.(subject).stereolin_to_stereonl_grid  = [path_anat_subj 'transf_' subject '_stereolin_to_stereonl_grid.mnc'];
@@ -270,8 +270,8 @@ files.quality_control.group_motion.scrubbing       = [path_qc 'group_motion' fil
 %% Grab the results of quality control -- INDIVIDUAL
 for num_s = 1:length(list_subject)
     subject = list_subject{num_s};
-    
-    %% Subject level   
+
+    %% Subject level
 
     % MOTION
     files.quality_control.individual.(subject).motion.coregister.csv = [path_qc subject filesep 'motion_correction' filesep 'tab_coregister_motion.csv'];
@@ -283,7 +283,7 @@ end
 %% Grab resampled data
 for num_s = 1:length(list_subject)
     subject = list_subject{num_s};
-    
+
     %% Run level
     list_session = fieldnames ( files.fmri.vol.(subject) );
     for num_sess = 1:length(list_session)
@@ -302,7 +302,7 @@ end
 %% Grab the intermediate results
 for num_s = 1:length(list_subject)
     subject = list_subject{num_s};
-    
+
     %% Run level
     list_session = fieldnames ( files.fmri.vol.(subject) );
     for num_sess = 1:length(list_session)

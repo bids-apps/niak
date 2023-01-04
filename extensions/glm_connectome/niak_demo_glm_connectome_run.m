@@ -1,8 +1,8 @@
 function [stab,tseries,opt] = niak_demo_glm_connectome_run(opt)
 % This is a script to demonstrate how to estimate a statistical parametric
-% connectome based on a fMRI run. 
+% connectome based on a fMRI run.
 %
-% The code is organized by blocks which can be copy/pasted and executed in 
+% The code is organized by blocks which can be copy/pasted and executed in
 % a Matlab or Octave session.
 %
 % _________________________________________________________________________
@@ -43,8 +43,8 @@ model_tseries.time_frames = 2*([0:9 20:109]); % The time associated with each fr
 model_tseries.mask_suppressed = [false(1,10) true(1,10) false(1,90)]; % MASK_SUPPRESSED indicates which time frames were suppressed from the original time series
 model_tseries.confounds = randn([100 10]); % a bunch of confounds, usually come from the preprocessing (slow time drifts, motion parameters, etc)
 model_tseries.labels_confounds = repmat({'confounds'},[1 10]);
-model_tseries.covariate.x = randn([110 2]); % Some manually specified covariates for the linear model. Note that this covariate has to include the same number of time frames as the original fMRI time series (here 110). 
-model_tseries.covariate.labels_y = { 'cov1' , 'cov2' }; 
+model_tseries.covariate.x = randn([110 2]); % Some manually specified covariates for the linear model. Note that this covariate has to include the same number of time frames as the original fMRI time series (here 110).
+model_tseries.covariate.labels_y = { 'cov1' , 'cov2' };
 model_tseries.event.x = [10 3 1 ; 40 3 2 ; 70 5 1 ; 100 3 2]; % Some time for events
 model_tseries.event.labels_x = { 'fixation' , 'visual' , 'fixation' , 'visual'}; % The labels associated to each event. Events of the same type are merged to generate one covariate
 

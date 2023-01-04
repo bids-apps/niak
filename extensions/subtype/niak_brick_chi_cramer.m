@@ -1,5 +1,5 @@
 function [files_in,files_out,opt] = niak_brick_chi_cramer(files_in,files_out,opt)
-% Builds contingency table and calculates Chi-2 and Cramer's V statistics 
+% Builds contingency table and calculates Chi-2 and Cramer's V statistics
 % for subtype pipeline
 %
 % SYNTAX:
@@ -8,18 +8,18 @@ function [files_in,files_out,opt] = niak_brick_chi_cramer(files_in,files_out,opt
 %
 % INPUTS:
 %
-% FILES_IN 
+% FILES_IN
 %   (structure) with the following fields:
 %
 %   MODEL
-%       (string) a .csv files coding for the 
-%       pheno data. Is expected to have a header and a first column 
-%       specifying the case IDs/names corresponding to the data in 
+%       (string) a .csv files coding for the
+%       pheno data. Is expected to have a header and a first column
+%       specifying the case IDs/names corresponding to the data in
 %       FILES_IN.DATA
 %
 %   SUBTYPE
-%       (string, default 'gb_niak_omitted) path to the subtype maps for 
-%       a given network. The following field is expected to be inside the 
+%       (string, default 'gb_niak_omitted) path to the subtype maps for
+%       a given network. The following field is expected to be inside the
 %       structure inside the .mat file.
 %       PART
 %           (vector) PART(I) = J if the object I is in the class J.
@@ -27,8 +27,8 @@ function [files_in,files_out,opt] = niak_brick_chi_cramer(files_in,files_out,opt
 %       Note: Must be supplied when files_in.weights is omitted
 %
 %   WEIGHTS
-%       (string, default 'gb_niak_omitted) path to the subtype_weights.mat 
-%       file containing subtype weights for each subject, generated from 
+%       (string, default 'gb_niak_omitted) path to the subtype_weights.mat
+%       file containing subtype weights for each subject, generated from
 %       NIAK_BRICK_SUBTYPE_WEIGHT
 %       Note: Must be supplied when files_in.subtype is omitted and when
 %       OPT.FLAG_WEIGHTS is true
@@ -60,11 +60,11 @@ function [files_in,files_out,opt] = niak_brick_chi_cramer(files_in,files_out,opt
 %       outputs are generated
 %
 %   GROUP_COL_ID
-%       (string, default 'Group') the column name in the model csv that 
-%       separates subjects into groups to compare chi-squared and 
+%       (string, default 'Group') the column name in the model csv that
+%       separates subjects into groups to compare chi-squared and
 %       Cramer's V stats
 %
-%   NETWORK 
+%   NETWORK
 %       (integer, default 'gb_niak_omitted') the number of the desired
 %       network; must be supplied when OPT.FLAG_WEIGHTS is true
 %
@@ -81,7 +81,7 @@ function [files_in,files_out,opt] = niak_brick_chi_cramer(files_in,files_out,opt
 %       (.mat) contains the following variables:
 %
 %       MODEL
-%           (structure) contains the fields: 
+%           (structure) contains the fields:
 %               SUBJECT_ID: list of subject IDs
 %               PARTITION: the subtypes in which subjects were clustered
 %                   from files_in.subtype
@@ -90,7 +90,7 @@ function [files_in,files_out,opt] = niak_brick_chi_cramer(files_in,files_out,opt
 %                   to presence of NaN values
 %       STATS
 %           (structure) with the following fields:
-%               CHI2 (structure): 
+%               CHI2 (structure):
 %                   EXPECTED: contains expected cell frequencies
 %                   X2: computed CHI2 stat
 %                   DF: degrees of freedom
@@ -103,7 +103,7 @@ function [files_in,files_out,opt] = niak_brick_chi_cramer(files_in,files_out,opt
 %       (.csv) containing the calculated contingency table
 %
 %   PIE_CHART_(n).PDF
-%       pie charts illustrating the proportions of data in n groups in 
+%       pie charts illustrating the proportions of data in n groups in
 %       each subtype
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
@@ -128,7 +128,7 @@ end
 opt = psom_struct_defaults(opt,...
       { 'folder_out' , 'group_col_id' , 'network'        , 'flag_weights', 'flag_verbose' , 'flag_test' },...
       { ''           , 'Group'        , 'gb_niak_omitted', false         , true           , false       });
-if strcmp(files_in.weights, 'gb_niak_omitted') && opt.flag_weights 
+if strcmp(files_in.weights, 'gb_niak_omitted') && opt.flag_weights
     error('When OPT.FLAG_WEIGHTS is true, FILES_IN.WEIGHTS must be specified')
 end
 if strcmp(opt.network, 'gb_niak_omitted') && opt.flag_weights
@@ -210,7 +210,7 @@ col_val = unique(col)'; % find unique values from input column to differentiate 
 [i, j] = find(~isnan(col_val)); % find the non-NaN values
 list_mask = unique(j); % find unique values from non-NaN values
 % Retain only non-NaN in data and differentiating variables
-list_gg = col_val(list_mask); 
+list_gg = col_val(list_mask);
 ret_col = col(sub_ret);
 
 nb_subtype = max(part); % get number of subtypes from partition
@@ -249,7 +249,7 @@ n_sum = sum(sum(contab)); % sum of everything
 kk = min(n_row,n_col);
 stats.cramerv = sqrt(stats.chi2.X2/(n_sum*(kk-1))); % calculate cramer's v
 
-%% Work around the incompatibilities between Matlab and Octave 
+%% Work around the incompatibilities between Matlab and Octave
 is_octave = logical(exist('OCTAVE_VERSION', 'builtin') ~= 0);
 
 % Pie chart visualization
@@ -286,7 +286,7 @@ end
 
 %% Save the model and stats
 save(files_out.stats,'model','stats')
-    
+
 end
 
 function path_array = make_paths(out_path, template, scales)
@@ -300,4 +300,3 @@ function path_array = make_paths(out_path, template, scales)
     end
 return
 end
-

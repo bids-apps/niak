@@ -7,53 +7,53 @@ function [files_in,files_out,opt] = niak_brick_subclusters(files_in,files_out,op
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILES_IN        
+% FILES_IN
 %   (structure) with the following fields:
 %
 %   CLUSTER
 %      (string) file name of a 3D volume with the first level of clustering.
 %
-%   SUBCLUSTER 
+%   SUBCLUSTER
 %      (string) file name of a 3D volume with the subcluster level.
 %
 %   FIR
-%      (string, optional) a .mat file with the results of tests on the 
+%      (string, optional) a .mat file with the results of tests on the
 %      significance of finite-impulse response estimates (FIR). If specified,
 %      a file with tests associated to each set of subclusters will be generated.
-%    
+%
 %   TTEST
 %      (string, optional) file name of a 4D volumes of t-tests. If specified, a file_name
 %      with tests associated to each set of subclusters will be generated.
 %
-% FILES_OUT 
-%   (structure) with the following fields : 
-%       
+% FILES_OUT
+%   (structure) with the following fields :
+%
 %   SUBCLUSTER
-%       (cell of strings, default <FOLDER_OUT>/<BASE_NAME>_clustI.<EXT>) 
-%       SUBCLUSTER{I} is the file name to save the decomposition of cluster 
-%       I into subclusters. 
+%       (cell of strings, default <FOLDER_OUT>/<BASE_NAME>_clustI.<EXT>)
+%       SUBCLUSTER{I} is the file name to save the decomposition of cluster
+%       I into subclusters.
 %
 %   SUBFIR
 %       (cell of strings, default <FOLDER_OUT>/<BASE_NAME_FIR>_clustI.<EXT>)
 %       SUBFIR{I} is the FIR tests associated with SUBLCLUSTER{I}. The file
-%       FILES_IN.FIR has to be specified if that output is generated. 
+%       FILES_IN.FIR has to be specified if that output is generated.
 %
 %   SUBTTEST
-%       (cell of strings, default <FOLDER_OUT>/<BASE_NAME_TTEST>_clustI.<EXT>) 
-%       SUBTTEST{I} is a 4D volume with all the t-test maps associated with 
+%       (cell of strings, default <FOLDER_OUT>/<BASE_NAME_TTEST>_clustI.<EXT>)
+%       SUBTTEST{I} is a 4D volume with all the t-test maps associated with
 %       SUBCLUSTER{I}.
 %
 %   MATCHING
 %       (string, default <FOLDER_OUT>/<BASE_NAME>_matching.mat)
 %       a mat file with the following variable :
-%   
+%
 %       MATCHING
 %           (cell of vectors) MATCHING{I}(J) is the number of the subcluster
-%           used in FILES_IN.SUBCLUSTERS that was found as the Jth subcluster 
+%           used in FILES_IN.SUBCLUSTERS that was found as the Jth subcluster
 %           of the Ith cluster (in FILES_IN.CLUSTERS).
 %
 %       IND_OVLP
-%           (vector) IND_OVLP(K) is the number of the cluster with maximal 
+%           (vector) IND_OVLP(K) is the number of the cluster with maximal
 %           overlap with the subcluster K.
 %
 %       SCORE_OVLP
@@ -64,25 +64,25 @@ function [files_in,files_out,opt] = niak_brick_subclusters(files_in,files_out,op
 %           (vector) NB_SUB(I) is the number of subclusters for cluster I.
 %
 %   NOMATCH
-%       (string, default <FOLDER_OUT>/<BASE_NAME>_clust0.<EXT>) 
+%       (string, default <FOLDER_OUT>/<BASE_NAME>_clust0.<EXT>)
 %       the file name to save the subclusters which do not match with any
 %       cluster.
 %
 %   NOMATCH_FIR
 %       (string, default <FOLDER_OUT>/<BASE_NAME_FIR>_clust0.<EXT>)
-%       the file name to save the FIR tests of the subclusters which do 
+%       the file name to save the FIR tests of the subclusters which do
 %       not match with any cluster.
 %
 %   NOMATCH_TTEST
 %       (string, default <FOLDER_OUT>/<BASE_NAME_TTTEST>_clust0.<EXT>)
-%       the file name to save the t-tests of the subclusters which do 
+%       the file name to save the t-tests of the subclusters which do
 %       not match with any cluster.
 %
-% OPT           
-%   (structure) with the following fields.  
+% OPT
+%   (structure) with the following fields.
 %
 %   PERC_OVERLAP
-%       (real, default 0.2) The minimal relative overlap of a subcluster 
+%       (real, default 0.2) The minimal relative overlap of a subcluster
 %       into a cluster to enable inclusion in the subcluster list.
 %
 %   FLAG_RAND
@@ -90,29 +90,29 @@ function [files_in,files_out,opt] = niak_brick_subclusters(files_in,files_out,op
 %       subclusters are randomized. This is useful if for some reason
 %       the order of the cluster is related to their spatial proximity.
 %       Randomizing the order allows to apply a regular colormap when
-%       displaying the clusters and ensure that spatially close clusters 
+%       displaying the clusters and ensure that spatially close clusters
 %       will not have systematically similar colors.
 %
-%   FOLDER_OUT 
-%       (string, default: path of FILES_IN) If present, all default 
-%       outputs will be created in the folder FOLDER_OUT. The folder 
+%   FOLDER_OUT
+%       (string, default: path of FILES_IN) If present, all default
+%       outputs will be created in the folder FOLDER_OUT. The folder
 %       needs to be created beforehand.
 %
-%   FLAG_VERBOSE 
-%       (boolean, default 1) if the flag is 1, then the function prints 
+%   FLAG_VERBOSE
+%       (boolean, default 1) if the flag is 1, then the function prints
 %       some infos during the processing.
 %
-%   FLAG_TEST 
-%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do 
-%       anything but update the default values in FILES_IN, FILES_OUT and 
+%   FLAG_TEST
+%       (boolean, default 0) if FLAG_TEST equals 1, the brick does not do
+%       anything but update the default values in FILES_IN, FILES_OUT and
 %       OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO:
 %
@@ -123,12 +123,12 @@ function [files_in,files_out,opt] = niak_brick_subclusters(files_in,files_out,op
 % clusters. The subcluster K is then assigned to the cluster IND_OVLP(K)
 % with largest overlap SCORE_OVLP(K).
 %
-% To work well, this method of decomposition should be applied on a 
-% quasi-hierarchy, i.e. each of the subcluster is almost included in one of 
+% To work well, this method of decomposition should be applied on a
+% quasi-hierarchy, i.e. each of the subcluster is almost included in one of
 % the first level clusters.
 %
 % _________________________________________________________________________
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Centre de recherche de l'institut de Gériatrie de Montréal
 % Département d'informatique et de recherche opérationnelle
 % Université de Montréal, 2011
@@ -194,7 +194,7 @@ if flag_test == 1 %% Because it is necessary to read the input to produce output
     return
 end
 
-[hdr,vol1] = niak_read_vol(files_in.cluster); 
+[hdr,vol1] = niak_read_vol(files_in.cluster);
 vol1 = double(round(vol1));
 [hdr2,vol2] = niak_read_vol(files_in.subcluster);
 vol2 = double(round(vol2));
@@ -231,7 +231,7 @@ end
 
 if isempty(files_out.nomatch_ttest)
     [path_f,name_f,ext_f] = niak_fileparts(files_in.ttest);
-    files_out.nomatch_ttest = cat(2,opt.folder_out,filesep,name_f,'_clust0',ext_f);    
+    files_out.nomatch_ttest = cat(2,opt.folder_out,filesep,name_f,'_clust0',ext_f);
 end
 
 if isempty(files_out.nomatch_fir)
@@ -240,7 +240,7 @@ if isempty(files_out.nomatch_fir)
 end
 
 if flag_verbose
-    fprintf('Performing subcluster anaysis on two clusterings.\nReference clustering : %s\nSubclustering :%s\n',files_in.cluster,files_in.subcluster);        
+    fprintf('Performing subcluster anaysis on two clusterings.\nReference clustering : %s\nSubclustering :%s\n',files_in.cluster,files_in.subcluster);
     fprintf('%i clusters found in the reference\n',nb_clust1);
     fprintf('%i clusters found in the subclustering\n',nb_clust2);
 end
@@ -255,7 +255,7 @@ for num_c = 1:nb_clust2
     roi_ovlp = vol1(vol2==num_c);
     nb_vox = length(roi_ovlp);
     roi_ovlp = roi_ovlp(roi_ovlp~=zeros);
-    if ~isempty(roi_ovlp)        
+    if ~isempty(roi_ovlp)
         ind_cand = unique(roi_ovlp);
         score_cand = zeros(size(ind_cand));
         for num_i = 1:length(ind_cand)
@@ -275,7 +275,7 @@ for num_c = 1:nb_clust2
 end
 
 %% Read t-tests
-if ~strcmp(files_out.nomatch_ttest,'gb_niak_omitted')    
+if ~strcmp(files_out.nomatch_ttest,'gb_niak_omitted')
     [hdr_ttest,ttest] = niak_read_vol(files_in.ttest);
 end
 
@@ -298,24 +298,24 @@ for num_c = 0:nb_clust1
         if ~strcmp(files_out.nomatch,'gb_niak_omitted')
             for num_e = 1:length(ind_tmp)
                 vol_sub(vol2==ind_tmp(num_e)) = num_e;
-            end            
+            end
             hdr.file_name = files_out.nomatch;
             niak_write_vol(hdr,vol_sub);
         end
 
         %% NO MATCH : SUB-TTEST
-        if ~strcmp(files_out.nomatch_ttest,'gb_niak_omitted')                
+        if ~strcmp(files_out.nomatch_ttest,'gb_niak_omitted')
             sub_ttest = zeros([size(vol1) max(length(ind_tmp),1)]);
             for num_e = 1:length(ind_tmp)
                 sub_ttest(:,:,:,num_e) = ttest(:,:,:,ind_tmp(num_e));
-            end                 
+            end
             hdr_ttest.file_name = files_out.nomatch_ttest;
             niak_write_vol(hdr_ttest,sub_ttest);
         end
 
         %% NO MATCH : SUB-FIR
-        if ~strcmp(files_out.nomatch_fir,'gb_niak_omitted')            
-            test_fir.mean = tests.test_fir.mean(:,ind_tmp); 
+        if ~strcmp(files_out.nomatch_fir,'gb_niak_omitted')
+            test_fir.mean = tests.test_fir.mean(:,ind_tmp);
             test_fir.std  = tests.test_fir.std(:,ind_tmp);
             test_fir.pce  = tests.test_fir.pce(:,ind_tmp);
             test_fir.fdr  = tests.test_fir.fdr(:,ind_tmp);
@@ -332,19 +332,19 @@ for num_c = 0:nb_clust1
                     end
                 end
             end
-            save(files_out.nomatch_fir,'test_fir','test_diff'); 
+            save(files_out.nomatch_fir,'test_fir','test_diff');
         end
         if flag_verbose
             fprintf('%i subclusters could not be associated with any cluster: %s\n',length(ind_tmp),files_out.nomatch);
         end
-    else        
+    else
         nb_sub(num_c) = length(matching{num_c});
         ind_sub{num_c} = matching{num_c};
         if flag_rand
             ind_sub{num_c} = ind_sub{num_c}(randperm(length(ind_sub{num_c})));
         end
         score_sub{num_c} = score_ovlp(ind_sub{num_c});
-        
+
         for num_e = 1:length(ind_sub{num_c})
             vol_sub(vol2==ind_sub{num_c}(num_e)) = num_e;
         end
@@ -354,11 +354,11 @@ for num_c = 0:nb_clust1
         end
 
         %% SUB-TTEST
-        if ~strcmp(files_out.subttest,'gb_niak_omitted')                
+        if ~strcmp(files_out.subttest,'gb_niak_omitted')
             subttest = zeros([size(vol1) max(length(ind_sub{num_c}),1)]);
             for num_e = 1:length(ind_sub{num_c})
                 subttest(:,:,:,num_e) = ttest(:,:,:,ind_sub{num_c}(num_e));
-            end            
+            end
             hdr_ttest.file_name = files_out.subttest{num_c};
             niak_write_vol(hdr_ttest,subttest);
         end
@@ -385,11 +385,11 @@ for num_c = 0:nb_clust1
             end
             save(files_out.subfir{num_c},'test_fir','test_diff');
         end
-        
+
         if flag_verbose
             fprintf('Cluster number %i was decomposed into %i subclusters : %s\n',num_c,length(ind_sub{num_c}),files_out.subcluster{num_c});
         end
-    end    
+    end
 end
 
 if ~strcmp(files_out.matching,'gb_niak_omitted')

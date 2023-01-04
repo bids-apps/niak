@@ -4,7 +4,7 @@ function vol2 = niak_flip_vol(vol,type)
 %
 % vol2 = niak_flip_vol(vol,type)
 %
-% ENTREES 
+% ENTREES
 % vol       (3D array) 3D volume
 % type      (string) a transform (possible values : 'rot90','rot180','rot270','fliplr')
 %
@@ -42,17 +42,17 @@ for z=1:nc
     switch lower(type)
         case 'rot90'
             vol2(:,:,z)=flipud(vol(:,:,z)');
-        
+
         case 'rot180'
-            vol2(:,:,z)=flipud(fliplr(vol(:,:,z)));   
-            
+            vol2(:,:,z)=flipud(fliplr(vol(:,:,z)));
+
         case 'rot270'
-            vol2(:,:,z)=fliplr(vol(:,:,z)'); 
-            
+            vol2(:,:,z)=fliplr(vol(:,:,z)');
+
         case 'fliplr'
-            vol2(:,:,z)=fliplr(vol(:,:,z));  
-            
+            vol2(:,:,z)=fliplr(vol(:,:,z));
+
         otherwise
-            vol2(:,:,z)=vol(:,:,z);   
+            vol2(:,:,z)=vol(:,:,z);
     end
 end

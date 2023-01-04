@@ -22,8 +22,8 @@ function mask_brain = niak_mask_brain_t1(anat,opt)
 %
 %       SIZE_SPHERE
 %           (scalar, default 25) To find the brain, the procedure will test
-%           the which portion of a sphere of radius SIZE_SPHERE and 
-%           centered on the center of gravity of each component is included 
+%           the which portion of a sphere of radius SIZE_SPHERE and
+%           centered on the center of gravity of each component is included
 %           in this component. The unit of the radius are the one of
 %           VOXEL_SIZE.
 %
@@ -86,7 +86,7 @@ function mask_brain = niak_mask_brain_t1(anat,opt)
 %   MASK_BRAIN
 %       (volume) a binary mask of the brain tissues, i.e. gray matter,
 %       white matter and inner CSF. Ideally, the veinous sinus and dura
-%       should be stripped out, but usually most of it is still included 
+%       should be stripped out, but usually most of it is still included
 %       in the mask. The skull and fat should be masked out.
 %
 % _________________________________________________________________________
@@ -97,15 +97,15 @@ function mask_brain = niak_mask_brain_t1(anat,opt)
 % COMMENTS
 %
 % This method is not accurate, but should be quite robust to
-% poor-quality scans. The algorithm is similar conceptually to the 
+% poor-quality scans. The algorithm is similar conceptually to the
 % competitive region growing approach proposed in :
 %
 % J. G. Park & C. Lee (2009). `Skull stripping based on region growing for
 % magnetic resonance brain images'. NeuroImage 47(4):1394-1407.
 %
 % The actual implementation was still markedly different. It is 3D rather
-% than 2D and the competitive region growing algorithm exploits the concept 
-% of spatial density rather than more standard morphomathematical 
+% than 2D and the competitive region growing algorithm exploits the concept
+% of spatial density rather than more standard morphomathematical
 % operations. Specifically, the main stages are the following :
 %
 %   1. Rough head and gray matter segmentation using intensity
@@ -127,8 +127,8 @@ function mask_brain = niak_mask_brain_t1(anat,opt)
 %   3. Holes in the brain mask are filled using morphomathematical
 %   operations.
 %
-% 	4. The spinal cord can optionally be removed from the mask. This is 
-%   done by excluding voxels that are more than 150mm apart from the center 
+% 	4. The spinal cord can optionally be removed from the mask. This is
+%   done by excluding voxels that are more than 150mm apart from the center
 %   of mass of the brain. This distance threshold can be ajusted using
 %   OPT.DIST_BRAIN . Setting it up to Inf will result in keeping
 %   everything.
@@ -226,7 +226,7 @@ if flag_verbose
     fprintf('Filling holes in the brain ...\n')
 end
 
-if flag_verbose    
+if flag_verbose
     fprintf('     Expanding the brain ... ')
 end
 tic
@@ -269,7 +269,7 @@ end
 
 %% Remove spinal cord
 if flag_verbose
-    fprintf('Removing the spinal cord... ')   
+    fprintf('Removing the spinal cord... ')
     tic
 end
 
@@ -306,7 +306,7 @@ opt_neig.flag_within_mask = false;
 opt_neig.flag_position = false;
 
 for num_c = 1:nb_comp
-    % Extract the coordinates of the center of gravity    
+    % Extract the coordinates of the center of gravity
     ind = find(mask);
     coord = sub_center(mask,ind);
     indg = sub2ind(size(mask),coord(1),coord(2),coord(3));

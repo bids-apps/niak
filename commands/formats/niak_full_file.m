@@ -13,13 +13,13 @@ function file_name_f = niak_full_file(file_name)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% FILE_NAME_F 
+% FILE_NAME_F
 %   (string) same as FILE_NAME, but in a absolute path.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 % Centre de recherche de l'institut de Gériatrie de Montréal,
 % Département d'informatique et de recherche opérationnelle,
 % Université de Montréal, 2012.
@@ -48,4 +48,3 @@ function file_name_f = niak_full_file(file_name)
 [path_f,name_f,ext_f] = niak_fileparts(file_name);
 path_f = niak_full_path(path_f);
 file_name_f = [path_f name_f ext_f];
-

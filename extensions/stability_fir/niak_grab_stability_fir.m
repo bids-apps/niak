@@ -8,7 +8,7 @@
 % INPUTS:
 %
 % PATH_DATA
-%   (string, default [pwd filesep], aka './') full path to the outputs of 
+%   (string, default [pwd filesep], aka './') full path to the outputs of
 %   NIAK_PIPELINE_STABILITY_FIR at the group level.
 %
 % OPT
@@ -16,22 +16,22 @@
 %
 %   TYPE
 %      (string, default 'consensus') the type of network clusters. Available options:
-%      'consensus' : the original consensus clusters 
-%      'core' : the stability core of the consensus clusters. 
-%      'adjusted' : the clusters are defined by the stability maps associated with 
+%      'consensus' : the original consensus clusters
+%      'core' : the stability core of the consensus clusters.
+%      'adjusted' : the clusters are defined by the stability maps associated with
 %         the stability cores.
-%      'threshold' : the clusters are defined by the stabilitsy maps associated with 
+%      'threshold' : the clusters are defined by the stabilitsy maps associated with
 %         the stability cores, and a minimal stability threshold is applied.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % FILES
-%   (structure) the exact fields depend on OPT.TYPE_FILES. 
+%   (structure) the exact fields depend on OPT.TYPE_FILES.
 %
 %   NETWORKS.<LABEL_NETWORK>
-%      (string) a file name of a mask of partition into brain networks 
-%      (network I is filled with Is, 0 is for the background). 
+%      (string) a file name of a mask of partition into brain networks
+%      (network I is filled with Is, 0 is for the background).
 %
 % _________________________________________________________________________
 % SEE ALSO:
@@ -40,7 +40,7 @@
 % _________________________________________________________________________
 % COMMENTS:
 %
-% This "data grabber" is designed to work with the output of 
+% This "data grabber" is designed to work with the output of
 % NIAK_PIPELINE_STABILITY_FIR to be fed in NIAK_PIPELINE_GLM_FIR
 %
 % Copyright (c) Pierre Bellec
@@ -96,7 +96,7 @@ if ~exist(path_data,'dir')
     error('Could not find the %s folder',path_data)
 end
 files_scales = dir([path_data 'sci*']);
-    
+
 for num_s = 1:length(files_scales);
     scale = files_scales(num_s).name;
     flag_scale = files_scales(num_s).isdir&~strcmp(scale,'.')&~strcmp(scale,'..');
@@ -108,10 +108,10 @@ for num_s = 1:length(files_scales);
     num_e = 0;
     while (~flag_exist)&&(num_e<length(list_ext))
         num_e = num_e+1;
-        files.networks.(scale) = [path_scale 'brain_partition_' opt.type '_group_' scale list_ext{num_e}];            
+        files.networks.(scale) = [path_scale 'brain_partition_' opt.type '_group_' scale list_ext{num_e}];
         flag_exist = psom_exist(files.networks.(scale));
     end
     if ~flag_exist
         error('Could not find the %s partition at scale %s',opt.type,scale);
-    end    
+    end
 end

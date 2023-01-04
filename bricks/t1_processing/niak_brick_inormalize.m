@@ -5,16 +5,16 @@ function [files_in,files_out,opt] = niak_brick_inormalize(files_in,files_out,opt
 %
 % FILES_IN.VOL (string) the file name of a brain volume.
 % FILES_IN.MODEL (string) the file name a model volume.
-% FILES_OUT (string, default <FILES_IN.T1>_IN.<EXT>) The brain volume 
+% FILES_OUT (string, default <FILES_IN.T1>_IN.<EXT>) The brain volume
 %   after intensity normalization.
 % OPT.ARG (string, default '') any argument that will be passed to the
-%   NU_CORRECT command (see comments below). 
+%   NU_CORRECT command (see comments below).
 % OPT.FLAG_VERBOSE (boolean, default: 1) If FLAG_VERBOSE == 1, write
 %   messages indicating progress.
-% OPT.FLAG_TEST (boolean, default: 0) if FLAG_TEST equals 1, the brick does 
+% OPT.FLAG_TEST (boolean, default: 0) if FLAG_TEST equals 1, the brick does
 %   not do anything but update the default values in FILES_IN, FILES_OUT and OPT.
-% OPT.FOLDER_OUT (string, default: path of FILES_IN) If present, all default 
-%   outputs will be created in the folder FOLDER_OUT. The folder needs to be 
+% OPT.FOLDER_OUT (string, default: path of FILES_IN) If present, all default
+%   outputs will be created in the folder FOLDER_OUT. The folder needs to be
 %   created beforehand.
 %
 % * The structures FILES_IN, FILES_OUT and OPT are updated with default
@@ -27,9 +27,9 @@ function [files_in,files_out,opt] = niak_brick_inormalize(files_in,files_out,opt
 % Copyright (c) Pierre Bellec. See license in the code.
 % SEE ALSO: NIAK_BRICK_MASK_BRAIN_T1, NIAK_PIPELINE_BRICK_PREPROCESS
 
-% McConnell Brain Imaging Center, 
+% McConnell Brain Imaging Center,
 % Montreal Neurological Institute, McGill University, 2008-2010.
-% Centre de recherche de l'institut de griatrie de Montral, 
+% Centre de recherche de l'institut de griatrie de Montral,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2010-2014
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -80,7 +80,7 @@ end
 if ~ischar(files_out)
     error('FILES_OUT should be a string.');
 end
-    
+
 %% Options
 gb_name_structure = 'opt';
 gb_list_fields = {'arg','flag_verbose','folder_out','flag_test'};
@@ -102,11 +102,11 @@ if strcmp(opt.folder_out,'')
     opt.folder_out = path_f;
 end
 
-if isempty(files_out)    
+if isempty(files_out)
     files_out.t1_nu = [opt.folder_out,filesep,name_f,'_in',ext_f];
 end
 
-if flag_test == 1    
+if flag_test == 1
     return
 end
 
@@ -117,7 +117,7 @@ end
 if flag_verbose
     msg = 'Intensity normalization on brain volume';
     stars = repmat('*',[1 length(msg)]);
-    fprintf('\n%s\n%s\n%s\n',stars,msg,stars);    
+    fprintf('\n%s\n%s\n%s\n',stars,msg,stars);
 end
 
 %% Applying INORMALIZE
@@ -168,4 +168,3 @@ end
 if flag_conv
     niak_brick_copy(tmp_out,files_out,struct('flag_fmri',true));
 end
-

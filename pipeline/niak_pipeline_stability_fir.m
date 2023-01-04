@@ -7,53 +7,53 @@ function [pipeline,opt] = niak_pipeline_stability_fir(files_in,opt)
 % _________________________________________________________________________
 % INPUTS
 %
-% FILES_IN  
-%   (structure) with the following fields : 
+% FILES_IN
+%   (structure) with the following fields :
 %
 %   FMRI.<SUBJECT>.<SESSION>.<RUN>
-%       (string) a list of fMRI datasets, acquired in the same 
-%       session (small displacements). 
-%       The field names <SUBJECT>, <SESSION> and <RUN> can be any arbitrary 
+%       (string) a list of fMRI datasets, acquired in the same
+%       session (small displacements).
+%       The field names <SUBJECT>, <SESSION> and <RUN> can be any arbitrary
 %       strings.
 %       All data in FILES_IN.<SUBJECT> should be from the same subject.
 %
 %   TIMING.<SUBJECT>.<SESSION>.<RUN>
-%       (string) a .csv file coding for the time of events. Note that 
-%       OPT.NAME_CONDITION can be used to specify the name of the condition 
-%       of interest (by default the first one is used). It is also 
-%       possible to use OPT.NAME_BASELINE to specify which condition 
+%       (string) a .csv file coding for the time of events. Note that
+%       OPT.NAME_CONDITION can be used to specify the name of the condition
+%       of interest (by default the first one is used). It is also
+%       possible to use OPT.NAME_BASELINE to specify which condition
 %       will be used as baseline (by default the first one is used).
 %       Example :
-%                    , TIMES , DURATION 
-%         'motor'    , 4     , 8        
-%         'baseline' , 12    , 5        
-%         'motor'    , 17    , 8        
-%         'baseline' , 25    , 5        
+%                    , TIMES , DURATION
+%         'motor'    , 4     , 8
+%         'baseline' , 12    , 5
+%         'motor'    , 17    , 8
+%         'baseline' , 25    , 5
 %
 %   INFOS
 %       (string) the name of a CSV file. Example :
 %                 , SEX , HANDENESS
-%       <SUBJECT> , 0   , 0 
+%       <SUBJECT> , 0   , 0
 %       This type of file can be generated with Excel (save under CSV).
 %       The infos will be used to "stratify" the data, i.e. resampling of
-%       the data will be restricted within groups of subjects that share 
+%       the data will be restricted within groups of subjects that share
 %       identical infos. All strata will be given equal weights to build
 %       the consensus across subjects.
 %
 %   AREAS
-%       (string, default AAL template from NIAK) the name of the brain 
-%       parcelation template that will be used to constrain the region 
+%       (string, default AAL template from NIAK) the name of the brain
+%       parcelation template that will be used to constrain the region
 %       growing.
 %
 %   MASK
-%       (string) a file name of a binary mask common to all subjects and 
+%       (string) a file name of a binary mask common to all subjects and
 %       runs.
 %
-% OPT   
-%   (structure) with the following fields : 
-%       
-%   FOLDER_OUT 
-%       (string) where to write the results of the pipeline. 
+% OPT
+%   (structure) with the following fields :
+%
+%   FOLDER_OUT
+%       (string) where to write the results of the pipeline.
 %
 %   GRID_SCALES
 %       (vector) GRID_SCALES describes the grid of scale parameters that
@@ -91,21 +91,21 @@ function [pipeline,opt] = niak_pipeline_stability_fir(files_in,opt)
 %       If PARAM is larger than 1, it is assumed to be an integer, which is
 %       used directly to set the number of scales in MSTEPS.
 %
-%   NB_SAMPS_FDR 
-%       (integer, default 1000) the number of bootstrap samples used to derive 
+%   NB_SAMPS_FDR
+%       (integer, default 1000) the number of bootstrap samples used to derive
 %       the FDR tests.
 %
 %   FLAG_ROI
-%       (boolean, default false) if the flag is true, the pipeline is only 
+%       (boolean, default false) if the flag is true, the pipeline is only
 %       going to perform the region growing.
 %
 %   NAME_CONDITION
-%       (string) NAME_CONDITION is the name of the condition 
-%       of interest. If empty, the first condition is used. 
+%       (string) NAME_CONDITION is the name of the condition
+%       of interest. If empty, the first condition is used.
 %
 %   NAME_BASELINE
-%       (string) NAME_BASELINE is the name of the condition 
-%       to use as baseline. If empty, the first condition is used. 
+%       (string) NAME_BASELINE is the name of the condition
+%       to use as baseline. If empty, the first condition is used.
 %
 %   FIR
 %       (structure) see the OPT argument of NIAK_BRICK_FIR. The default
@@ -113,15 +113,15 @@ function [pipeline,opt] = niak_pipeline_stability_fir(files_in,opt)
 %       NIAK_BRICK_FIR_TSERIES.
 %
 %   NB_MIN_FIR
-%       (integer, defaut 1) the minimum number of FIR trials for a subject to enter the 
+%       (integer, defaut 1) the minimum number of FIR trials for a subject to enter the
 %       analysis.
 %
 %   REGION_GROWING
-%       (structure) see the OPT argument of NIAK_PIPELINE_REGION_GROWING. 
+%       (structure) see the OPT argument of NIAK_PIPELINE_REGION_GROWING.
 %       The default parameters may work.
 %
 %   STABILITY_FIR
-%       (structure, with 2 entries) see NIAK_BRICK_STABILITY_FIR. The 
+%       (structure, with 2 entries) see NIAK_BRICK_STABILITY_FIR. The
 %       default parameters may work.
 %
 %   STABILITY_GROUP
@@ -131,13 +131,13 @@ function [pipeline,opt] = niak_pipeline_stability_fir(files_in,opt)
 %   STABILITY_MAPS
 %       (structure) the options that will be passed to
 %       NIAK_BRICK_STABILITY_MAPS
-% 
+%
 %   STABILITY_FIGURE
 %       (structure) the options that will be passed to
 %       NIAK_BRICK_STABILITY_FIGURE
 %
 %   FDR_FIR
-%       (structure) the options that will be passed to 
+%       (structure) the options that will be passed to
 %       NIAK_BRICK_FDR_FIR.
 %
 %   RAND_SEED
@@ -162,10 +162,10 @@ function [pipeline,opt] = niak_pipeline_stability_fir(files_in,opt)
 %       (boolean, default true) Print some advancement infos.
 %
 % _________________________________________________________________________
-% OUTPUTS : 
+% OUTPUTS :
 %
-% PIPELINE 
-%   (structure) describe all jobs that need to be performed in the 
+% PIPELINE
+%   (structure) describe all jobs that need to be performed in the
 %   pipeline. This structure is meant to be use in the function
 %   PSOM_RUN_PIPELINE.
 %
@@ -177,9 +177,9 @@ function [pipeline,opt] = niak_pipeline_stability_fir(files_in,opt)
 %
 % NOTE 1:
 % The steps of the pipeline are the following :
-%  
+%
 %   1. Masking the brain in functional data
-%   2. Extracting the time series and estimated FIR in each area 
+%   2. Extracting the time series and estimated FIR in each area
 %   3. Performing region growing in each area independently based on FIR
 %      estimates.
 %   4. Merging all regions of all areas into one mask of regions, along
@@ -188,7 +188,7 @@ function [pipeline,opt] = niak_pipeline_stability_fir(files_in,opt)
 %      See NIAK_PIPELINE_STABILITY_MULTI
 %   6. Group-level stability analysis
 %      See NIAK_PIPELINE_STABILITY_MULTI
-%   7. Group-level test of significance of the average FIR per network, as 
+%   7. Group-level test of significance of the average FIR per network, as
 %      well as the significance of the difference in FIR across networks.
 %
 % NOTE 2:
@@ -196,10 +196,10 @@ function [pipeline,opt] = niak_pipeline_stability_fir(files_in,opt)
 % as inputs. See NIAK_PIPELINE_FMRI_PREPROCESS.
 %
 % NOTE 3:
-% If TIMING is a string, the same timing file will apply to all subjects. 
+% If TIMING is a string, the same timing file will apply to all subjects.
 %
 % _________________________________________________________________________
-% Copyright (c) Pierre Bellec, 
+% Copyright (c) Pierre Bellec,
 %               Centre de recherche de l'institut de Griatrie de Montral
 %               Dpartement d'informatique et de recherche oprationnelle
 %               Universit de Montral, 2010-2013
@@ -295,7 +295,7 @@ if strcmp(file_atoms,'gb_niak_omitted')
         job_opt.flag_test    = true;
         pipeline = psom_add_job(pipeline,['fir_subject_' subject],'niak_brick_fir',job_in,job_out,job_opt);
     end
-    
+
     %% Region growing
     clear job_in job_out job_opt
     job_in.fmri           = cell_fir;
@@ -318,7 +318,7 @@ end
 
 %% Response estimate at the ROI level
 files_tseries = cell([nb_subject 1]);
-if ~opt.flag_fir        
+if ~opt.flag_fir
     for num_s = 1:nb_subject
         subject = list_subject{num_s};
         clear job_in job_out job_opt
@@ -331,7 +331,7 @@ if ~opt.flag_fir
         job_opt.name_baseline  = opt.name_baseline;
         files_tseries{num_s}  = job_out;
         pipeline = psom_add_job(pipeline,['roi_tseries_subject_' subject],'niak_brick_fir_tseries',job_in,job_out,job_opt);
-    end    
+    end
 else
     error('OPT.FLAG_FIR is currently unsupported')
     %for num_s = 1:nb_subject
@@ -339,7 +339,7 @@ else
     %end
 end
 
-%% Run the stability analysis 
+%% Run the stability analysis
 if ~opt.flag_roi
     clear job_in job_out job_opt
     for num_s = 1:nb_subject
@@ -388,10 +388,10 @@ if ~isempty(opt.scales_maps)&&~opt.flag_roi
         files_fir_group{num_s}  = job_out;
         pipeline = psom_add_job(pipeline,['fir_group_level_' subject],'niak_brick_fir_tseries',job_in,job_out,job_opt);
     end
-    
+
     %% Group-level tests
     clear job_in job_out job_opt
-    job_in.fir = files_fir_group; 
+    job_in.fir = files_fir_group;
     job_opt = opt.fdr_fir;
     for num_sc = 1:nb_scales
         label_scale = ['sci' num2str(opt.scales_maps(num_sc,1)) '_scg' num2str(opt.scales_maps(num_sc,2)) '_scf' num2str(opt.scales_maps(num_sc,end))];
@@ -399,7 +399,7 @@ if ~isempty(opt.scales_maps)&&~opt.flag_roi
         job_out.fdr = [opt.folder_out 'stability_group' filesep label_scale filesep 'fdr_group_average_' label_scale '.mat'];
         job_opt.network = label_scale;
         pipeline = psom_add_job(pipeline,['fdr_group_average_' label_scale],'niak_brick_fdr_fir',job_in,job_out,job_opt,false);
-    end    
+    end
 end
 
 %%%%%%%%%%%%%%%%%%%%%%

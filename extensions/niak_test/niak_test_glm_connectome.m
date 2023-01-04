@@ -8,26 +8,26 @@ function [pipe,opt] = niak_test_glm_connectome(path_test,opt)
 % INPUTS:
 %
 % PATH_TEST (string) where to store the results of the tests
-% OPT.FLAG_TEST (boolean, default false) if FLAG_TEST == true, the demo will 
+% OPT.FLAG_TEST (boolean, default false) if FLAG_TEST == true, the demo will
 %   just generate the test PIPELINE.
 % OPT.PSOM (structure) the options of the pipeline manager. See the OPT
-%   argument of PSOM_RUN_PIPELINE. Note that the field PSOM.PATH_LOGS will be 
+%   argument of PSOM_RUN_PIPELINE. Note that the field PSOM.PATH_LOGS will be
 %   set up by the pipeline.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% PIPELINE (structure) a formal description of the test pipeline. 
+% PIPELINE (structure) a formal description of the test pipeline.
 %   See PSOM_RUN_PIPELINE.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
-% The data for the tests can be generated with 
+% The data for the tests can be generated with
 %   NIAK_TEST_GLM_CONNECTOME_DATA
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Gériatrie de Montréal, Département d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Gériatrie de Montréal, Département d'informatique et de recherche
 % opérationnelle, Université de Montréal, 2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -91,7 +91,7 @@ jopt.test.avg_corr_young.group.contrast.intercept = 1;
 jopt.test.avg_corr_young.group.select.label = {'age'};
 jopt.test.avg_corr_young.group.select.max = 40;
 
-% Correlation with age for all 
+% Correlation with age for all
 jopt.test.corr_vs_age.group.contrast.age = 1;
 pipe = psom_merge_pipeline(pipe,niak_pipeline_glm_connectome(in,jopt));
 list_job = fieldnames(pipe);

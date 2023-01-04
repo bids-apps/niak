@@ -8,28 +8,28 @@ function [pipeline,opt_pipe,files_in] = niak_test_fmripreproc_demoniak(path_test
 % INPUTS:
 %
 % PATH_TEST.DEMONIAK (string) the path to the NIAK demo dataset.
-% PATH_TEST.REFERENCE (string) the full path to a reference version of the 
-%   results of the fMRI preprocessing pipeline. 
+% PATH_TEST.REFERENCE (string) the full path to a reference version of the
+%   results of the fMRI preprocessing pipeline.
 % PATH_TEST.RESULT (string) where to store the results of the test.
 %
-% Any field normally passed in OPT to NIAK_PIPELINE_FMRI_PREPROCESS can be used 
+% Any field normally passed in OPT to NIAK_PIPELINE_FMRI_PREPROCESS can be used
 % here. In addition the following options are available:
 %
 % OPT.FLAG_TARGET (boolean, default false) if FLAG_TARGET == true, no comparison
-%   with reference version of the results will be performed, but all test 
+%   with reference version of the results will be performed, but all test
 %   pipelines will still run. If this flag is used, PATH_TEST.REFERENCE
 %   does not need to be specified.
 % OPT.FLAG_CLEAN_UP (boolean, default true) remove all intermediate outputs.
-% OPT.FLAG_TEST (boolean, default false) if FLAG_TEST == true, the demo will 
+% OPT.FLAG_TEST (boolean, default false) if FLAG_TEST == true, the demo will
 %   just generate the test PIPELINE.
 % OPT.PSOM (structure) the options of the pipeline manager. See the OPT
-%   argument of PSOM_RUN_PIPELINE. Note that the field PSOM.PATH_LOGS will be 
+%   argument of PSOM_RUN_PIPELINE. Note that the field PSOM.PATH_LOGS will be
 %   set up by the pipeline.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% PIPELINE (structure) a formal description of the test pipeline. 
+% PIPELINE (structure) a formal description of the test pipeline.
 %   See PSOM_RUN_PIPELINE.
 % OPT_PIPE (structure) the options used to call the pipeline.
 % FILES_IN (structure) the input files of the pipeline.
@@ -37,22 +37,22 @@ function [pipeline,opt_pipe,files_in] = niak_test_fmripreproc_demoniak(path_test
 % _________________________________________________________________________
 % COMMENTS:
 %
-% The DEMONIAK dataset can be found in multiple file formats at the following 
+% The DEMONIAK dataset can be found in multiple file formats at the following
 % address: http://www.nitrc.org/frs/?group_id=411
 %
 % This test will apply the full fMRI preprocessing pipeline on the DEMONIAK
 % dataset, and will compare the outputs to a reference version of the
-% preprocessing. 
+% preprocessing.
 %
-% It is possible to configure the pipeline manager to use parallel 
-% computing using OPT.PSOM, see : 
+% It is possible to configure the pipeline manager to use parallel
+% computing using OPT.PSOM, see :
 % http://code.google.com/p/psom/wiki/PsomConfiguration
 %
 % OPT.SIZE_OUTPUT is forced to 'all', but the entire content of the preprocessing
 % is deleted if the test is successful.
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
-% Griatrie de Montral, Dpartement d'informatique et de recherche 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
+% Griatrie de Montral, Dpartement d'informatique et de recherche
 % oprationnelle, Universit de Montral, 2012-2013.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -95,8 +95,8 @@ if isfield(opt,'flag_cleanup')
     flag_cleanup = opt.flag_cleanup;
     opt_demo = rmfield(opt,'flag_cleanup');
 else
-    flag_cleanup = true;   
-    opt_demo = opt; 
+    flag_cleanup = true;
+    opt_demo = opt;
 end
 
 if isfield(opt_demo,'flag_target')
@@ -140,7 +140,7 @@ if ~flag_target
     pipeline.test_regression.dep = list_jobs;
 
     %% Clean-up intermediate outputs
-    if flag_cleanup 
+    if flag_cleanup
         pipeline = psom_add_clean(pipeline,'clean_preproc',opt_demo.folder_out);
         pipeline.clean_preproc.dep = { 'test_regression' , 'test_sanity'};
     end

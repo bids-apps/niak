@@ -12,53 +12,53 @@ function [files_in,files_out,opt] = niak_brick_roc(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS :
 %
-%  * FILES_IN        
+%  * FILES_IN
 %       (structure) with the following fields :
 %
-%       GROUND_TRUTH 
-%           (string) a 3D volume with a binary map of all true positives. 
+%       GROUND_TRUTH
+%           (string) a 3D volume with a binary map of all true positives.
 %
-%       SPM 
+%       SPM
 %           (string) a 3D statistical map. Bigger (absolute) values are
 %           assumed to correspond to more significant results.
 %
-%  * FILES_OUT 
+%  * FILES_OUT
 %       (string, default <BASE_SPM>_roc.dat)
 %       The ROC stored in a text file 2D array (number of bins times 3).
 %       See COMMENTS for the details.
-%       
 %
-%  * OPT           
-%       (structure) with the following fields.  
-%       BINS 
-%           (vector, default ) 
-%           If NB_COMP is comprised between 0 and 1, NB_COMP is assumed to 
+%
+%  * OPT
+%       (structure) with the following fields.
+%       BINS
+%           (vector, default )
+%           If NB_COMP is comprised between 0 and 1, NB_COMP is assumed to
 %           be the percentage of the total variance that needs to be kept.
-%           If NB_COMP is an integer, greater than 1, NB_COMP is the number 
-%           of components that will be generated (the procedure always 
-%           consider the principal components ranked according to the energy 
-%           they explain in the data. 
+%           If NB_COMP is an integer, greater than 1, NB_COMP is the number
+%           of components that will be generated (the procedure always
+%           consider the principal components ranked according to the energy
+%           they explain in the data.
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, all default 
-%           outputs will be created in the folder FOLDER_OUT. The folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, all default
+%           outputs will be created in the folder FOLDER_OUT. The folder
 %           needs to be created beforehand.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function
 %           prints some infos during the processing.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS :
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO :
 %
@@ -66,8 +66,8 @@ function [files_in,files_out,opt] = niak_brick_roc(files_in,files_out,opt)
 % COMMENTS :
 %
 % NOTE 1:
-% The first column of FILES_OUT is the lower bound of the bins (in terms of 
-% sensitivity), the second column is the upper bound of the bins (again in 
+% The first column of FILES_OUT is the lower bound of the bins (in terms of
+% sensitivity), the second column is the upper bound of the bins (again in
 % terms of sensitivity), and the third column is the specificity.
 %
 % NOTE 2:
@@ -188,7 +188,7 @@ for num_b = 1:length(bins)-1
     roc_curve(num_b) = mean(sens((spec>=bins(num_b))&(spec<bins(num_b+1))));
 end
 
-%% Saving the ROC 
+%% Saving the ROC
 if flag_verbose
     fprintf('\nSaving the ROC ...\n')
 end

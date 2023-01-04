@@ -17,18 +17,18 @@ function [files_in,files_out,opt] = niak_brick_boot_curves(files_in,files_out,op
 %       (cell of strings) Each entry is curve in text format : first column
 %       is the absciss, assumed to be similar for every curves, and second
 %       column is the curve itself. The first line is assumed to be string
-%       labels. 
+%       labels.
 %
-%  * FILES_OUT 
-%       (string) a table in text format. 
-%       First line : the absciss. Second line : the mean of the curves. 
+%  * FILES_OUT
+%       (string) a table in text format.
+%       First line : the absciss. Second line : the mean of the curves.
 %       Third line : the std of the curves. Fourth line : a bootstrap
 %       estimate of the std of the mean of the curves. Following lines : the
 %       percentiles of simple bootstrap confidence interval on
 %       the mean (see OPT.PERCENTILES).
 %
-%  * OPT           
-%       (structure) with the following fields.  
+%  * OPT
+%       (structure) with the following fields.
 %
 %       PERCENTILES
 %           (vector, default [0.0005 0.025 0.975 0.9995])
@@ -40,26 +40,26 @@ function [files_in,files_out,opt] = niak_brick_boot_curves(files_in,files_out,op
 %           compute the standard-deviation-of-the-mean and the
 %           bootstrap confidence interval on the mean.
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) If present, all default 
-%           outputs will be created in the folder FOLDER_OUT. The folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN) If present, all default
+%           outputs will be created in the folder FOLDER_OUT. The folder
 %           needs to be created beforehand.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function
 %           prints some info during the processing.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
-%           
+%
 % _________________________________________________________________________
 % OUTPUTS :
 %
 % The structures FILES_IN, FILES_OUT and OPT are updated with default
 % valued. If OPT.FLAG_TEST == 0, the specified outputs are written.
-%              
+%
 % _________________________________________________________________________
 % SEE ALSO :
 %
@@ -165,11 +165,11 @@ for num_f = 1:nb_files
         if length(absc)~= size(tab,1)
             error('All tables should have the same number of columns')
         end
-        
+
         if min(absc==tab(:,1))==0
             error('All curves should have the same sample grid (first column)')
         end
-        
+
         all_curves(:,num_f) = tab(:,2);
     end
 end

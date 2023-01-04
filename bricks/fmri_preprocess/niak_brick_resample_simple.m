@@ -1,34 +1,34 @@
 function [in,out,opt] = niak_brick_resample_simple(in,out,opt)
-% Resample a 3D/4D volume into a target space using nearest neighbour interpolation. 
-% No transformation supported. 
+% Resample a 3D/4D volume into a target space using nearest neighbour interpolation.
+% No transformation supported.
 %
 % [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_RESAMPLE_SIMPLE(FILES_IN,FILES_OUT,OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-%   FILES_IN      
+%   FILES_IN
 %       (structure) with the following fields :
 %
-%       SOURCE 
+%       SOURCE
 %           (string) name of the file to resample (can be 3D+t).
 %
-%       TARGET 
+%       TARGET
 %           (string, default none) name of the file defining space.
 %
-%   FILES_OUT 
+%   FILES_OUT
 %       (string) the name of the output resampled volume.
 %
-%   OPT           
+%   OPT
 %       (structure, optional) has the following fields:
 %
-%       FLAG_TEST 
-%           (boolean, default: 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN and 
+%       FLAG_TEST
+%           (boolean, default: 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN and
 %           FILES_OUT.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) if the flag is 1, then the function prints 
+%       FLAG_VERBOSE
+%           (boolean, default 1) if the flag is 1, then the function prints
 %           some infos during the processing.
 %
 %
@@ -41,15 +41,15 @@ function [in,out,opt] = niak_brick_resample_simple(in,out,opt)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% This implementation is based purely on Matlab/Octave code, and currently 
+% This implementation is based purely on Matlab/Octave code, and currently
 % only supports nearest_neighbour interpolation.
 %
-% Input/output can be minc or nifti (any variant), and on-the-flight conversion 
+% Input/output can be minc or nifti (any variant), and on-the-flight conversion
 % between formats is also supported (e.g. the input can be minc and the output
-% nifti). 
+% nifti).
 %
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de geriatrie de Montreal, 
+% Centre de recherche de l'institut de geriatrie de Montreal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Quebec, Canada, 2016
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -89,7 +89,7 @@ if nargin < 3
     opt = struct();
 end
 opt = psom_struct_defaults(opt, ...
-      { 'flag_test' , 'flag_verbose' }, ..., 
+      { 'flag_test' , 'flag_verbose' }, ...,
       { false       , true           });
 
 if opt.flag_test == 1

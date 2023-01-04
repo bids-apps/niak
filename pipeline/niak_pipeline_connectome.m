@@ -7,36 +7,36 @@ function [pipeline,opt] = niak_pipeline_connectome(files_in,opt)
 % ___________________________________________________________________________________
 % INPUTS
 %
-% FILES_IN  
-%   (structure) with the following fields : 
+% FILES_IN
+%   (structure) with the following fields :
 %
 %   NETWORK
-%      (string) a file name of a mask of brain networks (network I is filled 
-%      with Is, 0 is for the background). The analysis will be done at the level 
+%      (string) a file name of a mask of brain networks (network I is filled
+%      with Is, 0 is for the background). The analysis will be done at the level
 %      of these networks.
 %
 %   FMRI.(SUBJECT).(SESSION).(RUN)
-%      (string) a 3D+t fMRI dataset. The fields <SUBJECT>, <SESSION> and <RUN> can be 
-%      any arbitrary string. 
-% 
+%      (string) a 3D+t fMRI dataset. The fields <SUBJECT>, <SESSION> and <RUN> can be
+%      any arbitrary string.
+%
 %   SEEDS
 %      (string, default 'gb_niak_omitted') the name of a .csv file with a list of seeds.
 %      If omitted, all seeds are included, and seed I is labeld "seedI".
-%      
+%
 % OPT
-%   (structure) with the following fields : 
+%   (structure) with the following fields :
 %
 %   LABEL_NETWORK
 %      (string, default 'rois') the label for the network.
 %
 %   CONNECTOME
-%      (structure) see the OPT argument of NIAK_BRICK_CONNECTOME. 
+%      (structure) see the OPT argument of NIAK_BRICK_CONNECTOME.
 %
-%   FOLDER_OUT 
-%      (string) where to write the results of the pipeline. 
-% 
+%   FOLDER_OUT
+%      (string) where to write the results of the pipeline.
+%
 %   FLAG_P2P
-%      (boolean, default true) turn on/off the generation of point-to-point 
+%      (boolean, default true) turn on/off the generation of point-to-point
 %      connectivity estimates (a .csv FILES_IN.SEEDS file must be provided)
 %
 %   FLAG_GLOBAL_PROP
@@ -48,22 +48,22 @@ function [pipeline,opt] = niak_pipeline_connectome(files_in,opt)
 %      properties.
 %
 %   FLAG_RMAP
-%      (boolean, default true) turn on/off the generation of correlation 
-%      maps. 
+%      (boolean, default true) turn on/off the generation of correlation
+%      maps.
 %
 %   REPORT_RMAP
 %      (structure, optional) with the following fields:
-%      AVG.THRESH (scalar, default [-0.15 0.25]) if empty, does nothing. 
-%        If a scalar, any value below threshold becomes transparent. If two values, 
-%        anything between these two values become transparent. 
-%      AVG.LIMITS (vector 1x2, default [-0.3 0.5]) the limits for the colormap. 
-%        By defaut it is using [min,max]. If a string is specified, the function 
+%      AVG.THRESH (scalar, default [-0.15 0.25]) if empty, does nothing.
+%        If a scalar, any value below threshold becomes transparent. If two values,
+%        anything between these two values become transparent.
+%      AVG.LIMITS (vector 1x2, default [-0.3 0.5]) the limits for the colormap.
+%        By defaut it is using [min,max]. If a string is specified, the function
 %        will implement an adaptative strategy.
-%      IND.THRESH (scalar, default [-0.15 0.35]) if empty, does nothing. 
-%        If a scalar, any value below threshold becomes transparent. If two values, 
-%        anything between these two values become transparent. 
-%      IND.LIMITS (vector 1x2, default [-0.5 0.8]) the limits for the colormap. 
-%        By defaut it is using [min,max]. If a string is specified, the function 
+%      IND.THRESH (scalar, default [-0.15 0.35]) if empty, does nothing.
+%        If a scalar, any value below threshold becomes transparent. If two values,
+%        anything between these two values become transparent.
+%      IND.LIMITS (vector 1x2, default [-0.5 0.8]) the limits for the colormap.
+%        By defaut it is using [min,max]. If a string is specified, the function
 %        will implement an adaptative strategy.
 %
 %   PSOM
@@ -71,19 +71,19 @@ function [pipeline,opt] = niak_pipeline_connectome(files_in,opt)
 %      OPT argument of PSOM_RUN_PIPELINE. Default values can be used here.
 %      Note that the field PSOM.PATH_LOGS will be set up by the pipeline.
 %
-%   FLAG_SYM 
-%      (boolean, default true) if true use a symmetric MNI template background, 
-%      otherwise use an asymmetric one. 
+%   FLAG_SYM
+%      (boolean, default true) if true use a symmetric MNI template background,
+%      otherwise use an asymmetric one.
 %
 %   FLAG_RAND
-%      (boolean, default false) some of the graph measures (such as the 
-%      modularity) have some random components, which means that slight 
+%      (boolean, default false) some of the graph measures (such as the
+%      modularity) have some random components, which means that slight
 %      variations of the measure will be observed if the measure is repeated
 %      multiple times. By default, NIAK will control the seeds of the random
-%      number generator to guarantee that the measures are identical if the 
+%      number generator to guarantee that the measures are identical if the
 %      analysis were replicated. If FLAG_RAND is set to true, then the clock
 %      is used to set the random number generator, and two runs of the pipeline
-%      can generate different results. 
+%      can generate different results.
 %
 %   FLAG_TEST
 %      (boolean, default false) If FLAG_TEST is true, the pipeline will
@@ -95,10 +95,10 @@ function [pipeline,opt] = niak_pipeline_connectome(files_in,opt)
 %      (boolean, default true) Print some advancement infos.
 %
 % _________________________________________________________________________
-% OUTPUTS : 
+% OUTPUTS :
 %
-% PIPELINE 
-%   (structure) describe all jobs that need to be performed in the 
+% PIPELINE
+%   (structure) describe all jobs that need to be performed in the
 %   pipeline. This structure is meant to be use in the function
 %   PSOM_RUN_PIPELINE.
 %
@@ -119,10 +119,10 @@ function [pipeline,opt] = niak_pipeline_connectome(files_in,opt)
 %
 % Some of the measures employed here depend on function from the "brain connectivity toolbox"
 %   https://sites.google.com/site/bctnet/Home/functions
-% This software has to be installed to generate the networks properties, and is described 
+% This software has to be installed to generate the networks properties, and is described
 % in the following paper:
-%   Rubinov, M., Sporns, O., Sep. 2010. 
-%   Complex network measures of brain connectivity: Uses and interpretations. 
+%   Rubinov, M., Sporns, O., Sep. 2010.
+%   Complex network measures of brain connectivity: Uses and interpretations.
 %   NeuroImage 52 (3), 1059-1069.
 %   URL http://dx.doi.org/10.1016/j.neuroimage.2009.10.003
 %
@@ -133,9 +133,9 @@ function [pipeline,opt] = niak_pipeline_connectome(files_in,opt)
 % NET1    ,  12 ,  7 , 33
 % NET2    ,  45 , -3 , 27
 %
-% With that method, the pipeline will load FILES_IN.NETWORK, extract the number 
+% With that method, the pipeline will load FILES_IN.NETWORK, extract the number
 % of the networks corresponding to the coordinates, and associate them to labels
-% NET1 and NET2. WARNING: the labels for the ROI must be acceptable as field names 
+% NET1 and NET2. WARNING: the labels for the ROI must be acceptable as field names
 % for matlab, i.e. no special characters (+ - / * space) and relatively short.
 %
 % Example 2, string and numeric labels:
@@ -144,14 +144,14 @@ function [pipeline,opt] = niak_pipeline_connectome(files_in,opt)
 % NET1   , 3010
 % NET2   , 3020
 %
-% In this case, the index refers to the number associated with one network. 
-% The labels will be attached. 
-% 
+% In this case, the index refers to the number associated with one network.
+% The labels will be attached.
+%
 % With both methods, the first row does not really matter. It is still important that the row is present,
 % and that the intersection of first column and first row is left empty.
 %
 % If two rows are associated with the same parcel, the pipeline will throw an error. This can
-% occur in particular with method 1. 
+% occur in particular with method 1.
 %
 % Copyright (c) Pierre Bellec
 %               Centre de recherche de l'institut de Griatrie de Montral
@@ -203,7 +203,7 @@ if opt.flag_sym
 else
     background.vol  = [GB_NIAK.path_niak filesep 'template' filesep 'mni-models_icbm152-nl-2009-1.0' filesep 'mni_icbm152_t1_tal_nlin_asym_09a.mnc.gz'];
     background.mask = [GB_NIAK.path_niak filesep 'template' filesep 'mni-models_icbm152-nl-2009-1.0' filesep 'mni_icbm152_t1_tal_nlin_asym_09a_mask.mnc.gz'];
-end  
+end
 
 %% Get the list of seeds and associated labels
 if ~strcmp(files_in.seeds,'gb_niak_omitted')
@@ -221,7 +221,7 @@ if ~strcmp(files_in.seeds,'gb_niak_omitted')
         list_seed = zeros(size(seeds,1),1);
         coord_v = niak_coord_world2vox(seeds,hdr.info.mat);
         for num_s = 1:length(list_seed)
-            list_seed(num_s) = mask(coord_v(num_s,1),coord_v(num_s,2),coord_v(num_s,3));            
+            list_seed(num_s) = mask(coord_v(num_s,1),coord_v(num_s,2),coord_v(num_s,3));
         end
     end
     %% Sanity check on the seeds
@@ -256,30 +256,30 @@ if opt.flag_global_prop
 end
 
 %% Add local network properties, if required
-if opt.flag_local_prop 
+if opt.flag_local_prop
 
     %% Add measures of degree centrality
-    for x = 1:length(list_seed) 
+    for x = 1:length(list_seed)
         opt.graph_prop.(['Dcentrality_' labels_seed{x}]).param = list_seed(x);
-        opt.graph_prop.(['Dcentrality_' labels_seed{x}]).type = 'Dcentrality'; 
+        opt.graph_prop.(['Dcentrality_' labels_seed{x}]).type = 'Dcentrality';
     end
-   
+
     %% Add measures of local clustering
-    for x = 1:length(list_seed) 
+    for x = 1:length(list_seed)
         opt.graph_prop.(['clustering_' labels_seed{x}]).param = list_seed(x);
-        opt.graph_prop.(['clustering_' labels_seed{x}]).type = 'clustering'; 
+        opt.graph_prop.(['clustering_' labels_seed{x}]).type = 'clustering';
     end
 
     %% Add measures of local efficiency
-    for x = 1:length(list_seed) 
+    for x = 1:length(list_seed)
         opt.graph_prop.(['local_eff_' labels_seed{x}]).param = list_seed(x);
-        opt.graph_prop.(['local_eff_' labels_seed{x}]).type = 'local_efficiency'; 
+        opt.graph_prop.(['local_eff_' labels_seed{x}]).type = 'local_efficiency';
     end
 end
 
 %% Add point-to-point connectivity, if required
 if opt.flag_p2p
-    for x = 1:length(list_seed) 
+    for x = 1:length(list_seed)
         for y = x:length(list_seed)
             opt.graph_prop.(['p2p_' labels_seed{x} '_X_' labels_seed{y}]).param(1) = list_seed(x);
             opt.graph_prop.(['p2p_' labels_seed{x} '_X_' labels_seed{y}]).param(2) = list_seed(y);
@@ -324,7 +324,7 @@ pipeline.(['select_' network]).command = ['[hdr,vol] = niak_read_vol(files_in); 
            'end; ' ...
            'hdr.file_name = files_out; ' ...
            'niak_write_vol(hdr,vol2);'];
-           
+
 %% Mask the background
 clear job_in job_out job_opt
 pipeline.mask_background.files_in = background;
@@ -334,7 +334,7 @@ pipeline.mask_background.command = ['[hdr,vol] = niak_read_vol(files_in.vol);' .
                                     'vol(~mask) = max(vol(:));' ...
                                     'hdr.file_name = files_out;' ...
                                     'niak_write_vol(hdr,vol);'];
-                                    
+
 %% Save the pipeline parameters
 pipeline.pipe_params.command = 'save(files_out,''-struct'',''opt'')';
 pipeline.pipe_params.files_out = [opt.folder_out 'pipe_parameters.mat'];
@@ -346,13 +346,13 @@ for num_s = 1:length(list_subject)
     clear in out jopt
     subject = list_subject{num_s};
     name_job = sprintf('connectome_%s',subject);
-    in.fmri = files_tseries.(subject);    
+    in.fmri = files_tseries.(subject);
     in.mask = pipeline.(['mask_' network]).files_out;
-    out = [folder_out 'connectomes' filesep 'connectome_' network '_' subject '.mat'];    
+    out = [folder_out 'connectomes' filesep 'connectome_' network '_' subject '.mat'];
     jopt = opt.connectome;
     pipeline = psom_add_job(pipeline,name_job,'niak_brick_connectome',in,out,jopt);
 end
-         
+
 %% Generate graph properties
 list_mes = fieldnames(opt.graph_prop);
 list_mes = list_mes(~ismember(list_mes,{'flag_verbose','flag_test'}));
@@ -360,8 +360,8 @@ if ~isempty(list_mes)
     for num_s = 1:length(list_subject)
         subject = list_subject{num_s};
         name_job_in = sprintf('connectome_%s',subject);
-        clear in out jopt        
-        name_job = sprintf('graph_prop_%s_%s',network,subject);        
+        clear in out jopt
+        name_job = sprintf('graph_prop_%s_%s',network,subject);
         in = pipeline.(name_job_in).files_out{1};
         out = [folder_out 'graph_prop' filesep name_job '.mat'];
         jopt = opt.graph_prop;
@@ -371,9 +371,9 @@ if ~isempty(list_mes)
             jopt.rand_seed = double(niak_datahash(subject));
             jopt.rand_seed = jopt.rand_seed(1:min(length(jopt.rand_seed),625));
         end
-        pipeline = psom_add_job(pipeline,name_job,'niak_brick_graph_prop',in,out,jopt);        
+        pipeline = psom_add_job(pipeline,name_job,'niak_brick_graph_prop',in,out,jopt);
     end
-    
+
     clear in out jopt
     name_job = ['summary_graph_prop_' network];
     for num_s = 1:length(list_subject)
@@ -382,15 +382,15 @@ if ~isempty(list_mes)
     end
     out = [folder_out name_job '.csv'];
     jopt.flag_verbose = true;
-    pipeline = psom_add_job(pipeline,name_job,'niak_brick_graph_summary',in,out,jopt);    
+    pipeline = psom_add_job(pipeline,name_job,'niak_brick_graph_summary',in,out,jopt);
 end
 
 %% Generate functional connectivity maps
 if opt.flag_rmap
 
     list_maps = cell(length(list_subject),length(labels_seed));
-    for num_s = 1:length(list_subject) 
-        subject = list_subject{num_s};        
+    for num_s = 1:length(list_subject)
+        subject = list_subject{num_s};
         clear in out jopt
         in.fmri = psom_files2cell(files_in.fmri.(subject));
         if num_s == 1
@@ -406,12 +406,12 @@ if opt.flag_rmap
             end
             out.maps.(seed)  = [folder_out 'rmap_seeds' filesep 'rmap_' subject '_' seed ext_f];
             list_maps{num_s,num_seed} = out.maps.(seed);
-        end        
+        end
         name_job = ['rmap_seeds_' subject];
         jopt = opt.rmap;
         pipeline = psom_add_job(pipeline,name_job,'niak_brick_rmap',in,out,jopt);
     end
-    
+
     %% Compute the average map for each seed
     for num_seed = 1:length(labels_seed)
         seed = labels_seed{num_seed};
@@ -422,7 +422,7 @@ if opt.flag_rmap
         pipeline = psom_add_job(pipeline,['average_rmap_' seed],'niak_brick_math_vol',in,out,jopt);
     end
 end
-   
+
 %% Generate report
 clear in jopt
 in.background = pipeline.mask_background.files_out;
@@ -431,9 +431,9 @@ in.params = pipeline.pipe_params.files_out;
 if opt.flag_rmap
     for num_seed = 1:length(labels_seed)
         in.average.(seed) = pipeline.(['average_rmap_' seed]).files_out;
-        for num_s = 1:length(list_subject) 
+        for num_s = 1:length(list_subject)
             seed = labels_seed{num_seed};
-            subject = list_subject{num_s};        
+            subject = list_subject{num_s};
             in.individual.(seed).(subject) = pipeline.(['rmap_seeds_' subject]).files_out.maps.(seed);
         end
     end
@@ -442,8 +442,8 @@ jopt = opt.report_rmap;
 jopt.folder_out = [opt.folder_out filesep 'report'];
 jopt.flag_test = true;
 pipeline = psom_merge_pipeline(pipeline,niak_report_connectome(in,jopt));
-    
-%% Run the pipeline 
+
+%% Run the pipeline
 if ~opt.flag_test
     psom_run_pipeline(pipeline,opt.psom);
 end
@@ -457,7 +457,7 @@ list_subject = fieldnames(files_tseries);
 for num_s = 1:length(list_subject)
     subject  = list_subject{num_s};
     files_subject = files_tseries.(subject);
-    list_session = fieldnames(files_subject);       
+    list_session = fieldnames(files_subject);
     nb_data = 1;
     for num_sess = 1:length(list_session)
         list_run = fieldnames(files_subject.(list_session{num_sess}));
@@ -466,5 +466,5 @@ for num_s = 1:length(list_subject)
              nb_data = nb_data + 1;
         end
     end
-    files_tseries.(subject) = files_tmp;    
+    files_tseries.(subject) = files_tmp;
 end

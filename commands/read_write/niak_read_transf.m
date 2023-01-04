@@ -3,7 +3,7 @@ function transf = niak_read_transf(file_name)
 %
 % SYNTAX:
 % TRANSF = NIAK_READ_TRANSF(FILE_NAME)
-% 
+%
 % FILE_NAME (string) the name of the xfm file (usually ends in .xfm)
 % TRANSF (matrix 4*4) a classical matrix representation of an lsq12
 %   transformation.

@@ -3,11 +3,11 @@ function [in,out,opt] = niak_brick_preproc_ind_motion2report(in,out,opt)
 %
 % SYNTAX: [IN,OUT,OPT] = NIAK_BRICK_PREPROC_IND_MOTION2REPORT(IN,OUT,OPT)
 %
-% IN.(SUBJECT) (string) The name of a .csv file with individual confound measures 
-%   for one run. 
+% IN.(SUBJECT) (string) The name of a .csv file with individual confound measures
+%   for one run.
 % OUT (string) the name of a .js file with three variables:
-%   tsl, rot and fd.  
-% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but 
+%   tsl, rot and fd.
+% OPT.FLAG_TEST (boolean, default false) if the flag is true, the brick does nothing but
 %    update IN, OUT and OPT.
 %
 % Copyright (c) Pierre Bellec
@@ -35,22 +35,22 @@ function [in,out,opt] = niak_brick_preproc_ind_motion2report(in,out,opt)
 % THE SOFTWARE.
 
 %% Defaults
-if ~ischar(in) 
+if ~ischar(in)
     error('IN should be a string');
 end
 
-if ~ischar(out) 
+if ~ischar(out)
     error('OUT should be a string');
 end
 
 if nargin < 3
     opt = struct;
-end    
+end
 opt = psom_struct_defaults ( opt , ...
     { 'flag_test' }, ...
     { false         });
 
-if opt.flag_test 
+if opt.flag_test
     return
 end
 

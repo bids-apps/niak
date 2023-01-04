@@ -7,15 +7,15 @@ function vec = niak_mat2vec(mat);
 % _________________________________________________________________________
 % INPUTS:
 %
-% MAT           
-%       (array) a square matrix. MAT should be symmetric. Diagonal elements 
+% MAT
+%       (array) a square matrix. MAT should be symmetric. Diagonal elements
 %       will be lost.
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% VEC           
-%       (vector) a vectorized version of mat. Only off-diagonal 
+% VEC
+%       (vector) a vectorized version of mat. Only off-diagonal
 %       low-triangular values are kept.
 %
 % _________________________________________________________________________
@@ -25,11 +25,11 @@ function vec = niak_mat2vec(mat);
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
-% Keywords : 
+% Keywords :
 
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal

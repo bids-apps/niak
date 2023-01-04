@@ -1,5 +1,5 @@
 function files = niak_grab_abide(path_data)
-% Grab the T1+fMRI datasets of the ABIDE database to process with the 
+% Grab the T1+fMRI datasets of the ABIDE database to process with the
 % NIAK fMRI preprocessing.
 %
 % SYNTAX:
@@ -9,27 +9,27 @@ function files = niak_grab_abide(path_data)
 % INPUTS:
 %
 % PATH_DATA
-%   (string, default [pwd filesep], aka './') full path to one site of 
+%   (string, default [pwd filesep], aka './') full path to one site of
 %   the ABIDE dataset
 %
 % _________________________________________________________________________
 % OUTPUTS:
 %
 % FILES
-%   (structure) with the following fields, ready to feed into 
+%   (structure) with the following fields, ready to feed into
 %   NIAK_PIPELINE_FMRI_PREPROCESS :
 %
-%   FILES_IN  
-%      (structure) with the following fields : 
+%   FILES_IN
+%      (structure) with the following fields :
 %
-%       <SUBJECT>.FMRI.<SESSION>   
-%          (cell of strings) a list of fMRI datasets, acquired in the 
-%          same session (small displacements). 
-%          The field names <SUBJECT> and <SESSION> can be any arbitrary 
+%       <SUBJECT>.FMRI.<SESSION>
+%          (cell of strings) a list of fMRI datasets, acquired in the
+%          same session (small displacements).
+%          The field names <SUBJECT> and <SESSION> can be any arbitrary
 %          strings.
 %
-%      <SUBJECT>.ANAT 
-%          (string) anatomical volume, from the same subject as in 
+%      <SUBJECT>.ANAT
+%          (string) anatomical volume, from the same subject as in
 %          FILES_IN.<SUBJECT>.FMRI
 % _________________________________________________________________________
 % SEE ALSO:
@@ -39,7 +39,7 @@ function files = niak_grab_abide(path_data)
 % COMMENTS:
 %
 % This "data grabber" is designed to work with the ABIDE database:
-% 
+%
 % Copyright (c) Pierre Bellec
 %               Centre de recherche de l'institut de Gériatrie de Montréal,
 %               Département d'informatique et de recherche opérationnelle,
@@ -93,14 +93,14 @@ for num_f = 1:length(list_files)
                         file_anat = files_anat{num_a};
                         flag_exist = true;
                     end
-                end 
+                end
                 if ~flag_exist
                     warning('Subject %s was excluded because no anatomical file could not be found',subject);
                 end
-                
+
                 if flag_exist
                     files.(subject).anat = file_anat;
-                
+
                 list_runs = dir(path_session);
                 nb_runs = 0;
                 for num_r = 1:length(list_runs)
@@ -112,7 +112,7 @@ for num_f = 1:length(list_files)
                             file_rest = [path_session list_runs(num_r).name filesep 'rest.nii.gz'];
                             if ~psom_exist(file_rest)
                                 warning('Subject %s session %s run %s was excluded because the resting-state file could not be found',subject,session,list_runs(num_r).name);
-                                flag_exist = false;                        
+                                flag_exist = false;
                             end
                         end
                         if flag_exist

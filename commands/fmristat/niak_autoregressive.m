@@ -4,21 +4,21 @@ function [rho_vol,opt] = niak_autoregressive(vol,mask,opt)
 %
 % Estimates an autoregressive model for each voxel time course and gives an
 % approximate value for the fwhm based on the model residuals (optional).
-% 
+%
 % SYNTAX:
 % [RHO_VOL,OPT] = NIAK_AUTOREGRESSIVE(VOL,MASK,OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% VOL         
+% VOL
 %       (4D array) a 3D+t dataset
 %
 % MASK
-%       (3D volume, default all voxels) a binary mask of the voxels that 
-%       will be included in the analysis. 
+%       (3D volume, default all voxels) a binary mask of the voxels that
+%       will be included in the analysis.
 %
-% OPT         
+% OPT
 %       structure with the following fields :
 %
 %       MATRIX_X
@@ -29,12 +29,12 @@ function [rho_vol,opt] = niak_autoregressive(vol,mask,opt)
 %            colum vector of the spatial average time courses, obtained
 %            from niak_make_trends.
 %
-%       PCNT: 
-%           if PCNT=1, then the data is converted to percentages 
+%       PCNT:
+%           if PCNT=1, then the data is converted to percentages
 %           before analysis by dividing each frame by its spatial average,* 100%.
 %
-%       EXCLUDE: 
-%           is a list of frames that should be excluded from the analysis. 
+%       EXCLUDE:
+%           is a list of frames that should be excluded from the analysis.
 %           Default is [].
 %
 %       NUMLAGS
@@ -46,34 +46,34 @@ function [rho_vol,opt] = niak_autoregressive(vol,mask,opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% RHO_VOL      
+% RHO_VOL
 %       (4D array) 3D + numlags dataset
 %       Estimated parameters of the autoregressive lineal model.
 %
-% OPT         
+% OPT
 %       Updated structure with the additional fields:
 %
-%       FWHM       
-%          (real number) Estimated value of the FWHM. 
+%       FWHM
+%          (real number) Estimated value of the FWHM.
 %
 %       DF
-%          Structure with the field 
+%          Structure with the field
 %
-%          RESID 
-%              degrees of freedom of the residuals. 
+%          RESID
+%              degrees of freedom of the residuals.
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -129,7 +129,7 @@ n = length(keep);
 indk1=((keep(2:n)-keep(1:n-1))==1);
 k1=find(indk1)+1;
 Diag1=diag(indk1,1)+diag(indk1,-1);
-  
+
 vol = reshape(vol,[nx*ny*nz nt]);
 vol = vol(:,keep);
 

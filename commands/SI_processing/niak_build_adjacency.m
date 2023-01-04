@@ -8,19 +8,19 @@ function adj = niak_build_adjacency(mask,neig)
 % _________________________________________________________________________
 % INPUTS :
 %
-% MASK    
+% MASK
 %       (3D array) binary mask of one 3D-region of interest (1s inside,
 %       0s outside)
 %
-% NEIG    
-%       (integer value, default 26) definition of 3D-connexity (possible 
+% NEIG
+%       (integer value, default 26) definition of 3D-connexity (possible
 %       value 6,26)
 %
 % _________________________________________________________________________
 % OUTPUTS :
 %
-% ADJ     
-%       (2D array) adjacency matrix of voxels inside the mask. Order of the 
+% ADJ
+%       (2D array) adjacency matrix of voxels inside the mask. Order of the
 %       voxels is given by FIND(MASK(:))
 %
 % _________________________________________________________________________

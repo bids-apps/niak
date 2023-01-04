@@ -5,14 +5,14 @@ function opt = niak_make_which_stats(opt)
 %
 % Constructs a binay matrix corresponding to the desired statistical
 % outputs.
-% 
+%
 % SYNTAX:
 % OPT = NIAK_MAKE_WHICH_STATS(OPT)
 %
 % _________________________________________________________________________
 % INPUTS:
 %
-% OPT         
+% OPT
 %       structure with the following fields :
 %
 %       WHICH_STATS
@@ -24,32 +24,32 @@ function opt = niak_make_which_stats(opt)
 % _________________________________________________________________________
 % OUTPUTS:
 %
-% OPT      
+% OPT
 %       Updated structure with the following fields :
-%       
+%
 %      WHICH_STATS
-%            Number of Contrasts X 9 binary matrix correspondings to the 
+%            Number of Contrasts X 9 binary matrix correspondings to the
 %            desired statistical outputs
 %
 %      CONTRASTS
 %            Matrix of full contrasts of the model.
 %
 %      CONTRAST_IS_DELAY
-%            Binary vector specifying the desired contrasts for delays 
+%            Binary vector specifying the desired contrasts for delays
 %            (to be used in NIAK_WHITEN_GLM)
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -104,7 +104,7 @@ if isnumeric(which_stats)
    contrast_is_delay = [contrast_is_delay; ...
         zeros(numcontrasts-length(contrast_is_delay),1)];
 else
-   ws=which_stats; 
+   ws=which_stats;
    which_stats=[];
    c = contrasts;
    contrasts=[];
@@ -115,7 +115,7 @@ else
       for k=1:2
          wsn=zeros(1,9);
          for j=1:(5-k)
-            wsn(j) = ~isempty(findstr(ws(i,:),[deblank(fmd(k,:)) deblank(fst(j,:))])); 
+            wsn(j) = ~isempty(findstr(ws(i,:),[deblank(fmd(k,:)) deblank(fst(j,:))]));
          end
          if any(wsn)
             which_stats = [which_stats; wsn];

@@ -11,24 +11,24 @@ function [pipe,opt] = niak_pipeline_stability_surf(in,opt)
 %   (string) full path to the structure containing the case by vertex value
 %   matrix of surface measures (i.e. cortical thickness). The values must be
 %   kept in a field with the name OPT.NAME_DATA
-%   
+%
 % IN.PART
 %   (string, optional, default 'gb_niak_omitted') path to .mat file that
 %   contains a matrix of VxK where V is the number of vertices on the
 %   surface and K is the number of scales to be computed.
 %
 % IN.NEIGH
-%   (string, optional, default 'gb_niak_omitted') path to .mat file, with a 
-%   variable called OPT.NAME_NEIGH. This is a VxW matrix, where each the 
-%   v-th row is the list of neighbours of vertex v (potentially paded with 
-%   zeros). If unspecified, the neighbourhood matrix is generated for the 
+%   (string, optional, default 'gb_niak_omitted') path to .mat file, with a
+%   variable called OPT.NAME_NEIGH. This is a VxW matrix, where each the
+%   v-th row is the list of neighbours of vertex v (potentially paded with
+%   zeros). If unspecified, the neighbourhood matrix is generated for the
 %   standard MNI surface with ~80k vertices.
 %
 % OPT
 %   (structure, optional) with the following fields:
 %
 %   NAME_DATA
-%       (string, default 'data') the name of the fieldname in IN.DATA that 
+%       (string, default 'data') the name of the fieldname in IN.DATA that
 %       contains the data.
 %
 %   NAME_PART
@@ -36,7 +36,7 @@ function [pipe,opt] = niak_pipeline_stability_surf(in,opt)
 %       contains the partition if one is provided.
 %
 %   NAME_NEIGH
-%       (string, default 'neigh') if IN.NEIGH is specified, the name 
+%       (string, default 'neigh') if IN.NEIGH is specified, the name
 %       of the variable coding for the neighbour matrix.
 %
 %   SCALE_GRID
@@ -101,7 +101,7 @@ function [pipe,opt] = niak_pipeline_stability_surf(in,opt)
 %               Available options : 'bootstrap' , 'jacknife'
 %
 %           OPT
-%               (structure, optional) the options of the sampling. Depends 
+%               (structure, optional) the options of the sampling. Depends
 %               on OPT.SAMPLING.TYPE:
 %                   bootstrap : None.
 %                   jacknife  : OPT.PERC is the percentage of observations
@@ -121,7 +121,7 @@ function [pipe,opt] = niak_pipeline_stability_surf(in,opt)
 %       PARAM
 %           (scalar, default 0.05) if PARAM is comprised between 0 and 1, it is
 %           the percentage of residual squares unexplained by the model.
-%           If PARAM is larger than 1, it is assumed to be an integer, which is 
+%           If PARAM is larger than 1, it is assumed to be an integer, which is
 %           used directly to set the number of components of the model.
 %
 %       NEIGH
@@ -134,20 +134,20 @@ function [pipe,opt] = niak_pipeline_stability_surf(in,opt)
 %
 %       TYPE
 %           (string, default 'kmeans') defines the method used to generate
-%           stable clusters. 
+%           stable clusters.
 %           Avalable options: 'highpass', 'kmeans'
 %
 %       OPT
 %           (structure, optional) the options of the stable cluster method.
 %           Depends on OPT.CORES.TYPE.
-%           
-%           highpass : THRE (scalar, default 0.5) THRE constitutes the 
+%
+%           highpass : THRE (scalar, default 0.5) THRE constitutes the
 %                           high-pass percentage cutoff for stability
 %                           values (range 0 - 1)
-%                      CONF (scalar, default 0.05) defines the confidence 
+%                      CONF (scalar, default 0.05) defines the confidence
 %                           interval with respect to the stability
 %                           threshold in percent (range 0 - 1)
-%                           
+%
 %           kmeans   : None
 %
 %   STABILITY_VERTEX
@@ -155,8 +155,8 @@ function [pipe,opt] = niak_pipeline_stability_surf(in,opt)
 %       using niak_brick_stability_surf.
 %
 %       NB_SAMPS
-%           (integer, default 10) the number of replications per batch. The 
-%           final effective number of bootstrap samples is NB_SAMPS x NB_BATCH 
+%           (integer, default 10) the number of replications per batch. The
+%           final effective number of bootstrap samples is NB_SAMPS x NB_BATCH
 %           (see below).
 %
 %       NB_BATCH
@@ -164,7 +164,7 @@ function [pipe,opt] = niak_pipeline_stability_surf(in,opt)
 %           run and subsequently averaged to generate the stability maps.
 %
 %   PSOM
-%       (structure) the options of the pipeline manager. See the OPT 
+%       (structure) the options of the pipeline manager. See the OPT
 %       argument of PSOM_RUN_PIPELINE. Default values can be used here.
 %       Note that the field PSOM.PATH_LOGS will be set up by the pipeline.
 %
@@ -190,17 +190,17 @@ function [pipe,opt] = niak_pipeline_stability_surf(in,opt)
 %       of the consensus partition.
 %
 %   FLAG_RAND
-%       (boolean, default false) if the flag is true, the random number 
-%       generator is initialized based on the clock. Otherwise, the seeds of 
-%       the random number generator are set to fix values, and the pipeline is 
-%       fully reproducible. 
+%       (boolean, default false) if the flag is true, the random number
+%       generator is initialized based on the clock. Otherwise, the seeds of
+%       the random number generator are set to fix values, and the pipeline is
+%       fully reproducible.
 %
 %   FLAG_VERBOSE
 %       (boolean, default true) turn on/off the verbose.
 %
 %   FLAG_TEST
 %       (boolean, default false) if the flag is true, the brick does not do
-%       anything but updating the values of IN, OUT and OPT. 
+%       anything but updating the values of IN, OUT and OPT.
 % ______________________________________________________________________________
 % COMMENTS:
 %
@@ -351,7 +351,7 @@ switch opt.target_type
                    'true but OPT.SCALE_GRID is empty. Please provide a grid '...
                    'scale for every supplied external partition to compute '...
                    'stable cores!\n']);
-               
+
         elseif opt.flag_cores
             % Stability cores will be estimated
             stab_est = sprintf(['The stability of the external partition '...
@@ -412,7 +412,7 @@ switch opt.target_type
                      'overwritten by the consensus clustering process.\n']);
             opt.scale_rep = [];
         end
-        
+
         if isempty(opt.scale_tar)
             % User has not specified a target scale - thus MSTEP will be
             % run to determine a target scale
@@ -427,7 +427,7 @@ switch opt.target_type
                 cores = ['The stable cores of the MSTEP derived partition '...
                          'will be used as targets.'];
             end
-            
+
         elseif ~isempty(opt.scale_tar)
             scale_finding = ['The optimal replication scales for the '...
                              'target scales specified in OPT.SCALE_TAR '...
@@ -502,7 +502,7 @@ if opt.flag_cores || strcmp(opt.target_type, 'cons')
     pipe_stab_est = niak_pipeline_stability_estimate(stab_est_in, stab_est_opt);
     % Merge back the stability estimation pipeline with this pipeline
     pipe = psom_merge_pipeline(pipe, pipe_stab_est);
-    
+
 end
 
 % See which target option is requested
@@ -546,7 +546,7 @@ switch opt.target_type
             in.part = pipe.msteps_part.files_out;
             core_in.stab = pipe.msteps_part.files_out;
         end
-        
+
     case 'plugin'
         % Perform Plugin Clustering
         plug_in = pipe.region_growing.files_out;
@@ -560,7 +560,7 @@ switch opt.target_type
         if opt.flag_cores
             core_in.stab = pipe.average_atom.files_out;
         end
-        
+
     case 'manual'
         % Manual Partition was supplied
         if opt.flag_cores

@@ -8,9 +8,9 @@ function [pipeline,opt,files_out] = niak_demo_motion_correction(path_demo,opt)
 % INPUTS:
 %
 % PATH_DEMO
-%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS) 
-%       the full path to the NIAK demo dataset. The dataset can be found in 
-%       multiple file formats at the following address : 
+%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS)
+%       the full path to the NIAK demo dataset. The dataset can be found in
+%       multiple file formats at the following address :
 %       http://www.bic.mni.mcgill.ca/users/pbellec/demo_niak/
 %
 % OPT
@@ -24,7 +24,7 @@ function [pipeline,opt,files_out] = niak_demo_motion_correction(path_demo,opt)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de 
+% Copyright (c) Pierre Bellec, Centre de recherche de l'institut de
 % geriatrie de Montreal, Montreal, Canada, 2010-2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -71,9 +71,9 @@ end
 
 %% Setting input/output files
 switch format_demo
-        
+
     case 'minc2' % If data are in minc2 format
-        
+
         %% The two datasets have actually been acquired in the same
         %% session, but this is just to demonstrate how the procedure works
         %% in general.
@@ -81,9 +81,9 @@ switch format_demo
         files_in.session1.motor = cat(2,GB_NIAK.path_demo,filesep,'func_motor_subject1.mnc');
         files_in.session2.run1  = cat(2,GB_NIAK.path_demo,filesep,'func_rest_subject2.mnc');
         files_in.session2.run2  = cat(2,GB_NIAK.path_demo,filesep,'func_motor_subject2.mnc');
-        
+
     case 'minc1'
-        
+
         %% The two datasets have actually been acquired in the same
         %% session, but this is just to demonstrate how the procedure works
         %% in general.
@@ -91,12 +91,11 @@ switch format_demo
         files_in.session1.motor = cat(2,GB_NIAK.path_demo,filesep,'func_motor_subject1.mnc.gz');
         files_in.session2.run1  = cat(2,GB_NIAK.path_demo,filesep,'func_rest_subject2.mnc.gz');
         files_in.session2.run2  = cat(2,GB_NIAK.path_demo,filesep,'func_motor_subject2.mnc.gz');
-        
-    otherwise 
-        
+
+    otherwise
+
         error('niak:demo','%s is an unsupported file format for this demo.',GB_NIAK.format_demo)
 end
 opt.subject = 'subject12';
 opt.folder_out = [GB_NIAK.path_demo 'motion_correction_subject12' filesep];
 [pipeline,opt,files_out] = niak_pipeline_motion_correction(files_in,opt);
-

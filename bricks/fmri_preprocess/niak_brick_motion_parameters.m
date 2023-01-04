@@ -20,8 +20,8 @@ function [files_in,files_out,opt] = niak_brick_motion_parameters(files_in,files_
 %       (string, default same as FILES_IN.RUN but without extension and
 %       with a '_mp.mat' suffix) the file name for the estimated motion
 %       parameters. It is a matlab file with one variable TRANSF.
-%       TRANSF(:,:,I) is the rigid-body transformation from volume number 
-%       I to the target. 
+%       TRANSF(:,:,I) is the rigid-body transformation from volume number
+%       I to the target.
 %
 %   OPT
 %       (structure) with the following fields:
@@ -35,7 +35,7 @@ function [files_in,files_out,opt] = niak_brick_motion_parameters(files_in,files_
 %           applied to all volumes.
 %
 %       INTERP
-%           (string, default 'trilinear') the type of spatial interpolation. 
+%           (string, default 'trilinear') the type of spatial interpolation.
 %           Available options: 'trilinear', 'tricubic', 'nearest_neighbour'
 %
 %       STEP
@@ -80,8 +80,8 @@ function [files_in,files_out,opt] = niak_brick_motion_parameters(files_in,files_
 % cost function.
 %
 % NOTE 3:
-% The TRANSF variables are standard 4*4 matrix array representation of 
-% an affine transformation [M T ; 0 0 0 1] for (y=M*x+T) 
+% The TRANSF variables are standard 4*4 matrix array representation of
+% an affine transformation [M T ; 0 0 0 1] for (y=M*x+T)
 %
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
@@ -283,7 +283,7 @@ for num_v = 1:nb_vol
         transf = niak_read_transf(file_xfm_tmp);
     else
         transf(:,:,num_v) = niak_read_transf(file_xfm_tmp);
-    end    
+    end
 end
 
 if flag_verbose

@@ -4,23 +4,23 @@ function [rot,tsl] = niak_transf2param(transf)
 % parameters.
 %
 % SYNTAX: [ROT,TSL] = NIAK_TRANSF2PARAM(TRANSF)
-% 
-% TRANSF (4*4*N array) TRANSF(:,:,n) is an lsq6 transformation, usually seen 
+%
+% TRANSF (4*4*N array) TRANSF(:,:,n) is an lsq6 transformation, usually seen
 %   as a "voxel-to-world" space transform.
-% ROT (array 3*N) the rotation parameters (in x, y and z planes). 
+% ROT (array 3*N) the rotation parameters (in x, y and z planes).
 %   Unit is degrees.
-% TSL 
-%   (array 3*N) the translation parameters. Unit is consistent with the units of 
+% TSL
+%   (array 3*N) the translation parameters. Unit is consistent with the units of
 %   TRANSF (generally mm).
 %
 % This code was written by Giampiero Campa,  PhD, Research Assistant Professor
-% West Virginia University, Aerospace Engineering Dept. 
+% West Virginia University, Aerospace Engineering Dept.
 % Morgantown, WV, 26506-6106, USA, Copyright 1/11/96
 % http://www.mathworks.com/matlabcentral/fileexchange/loadFile.do?objectId=956&objectType=File
 %
-% Modified by Pierre Bellec, McConnel Brain Imaging Center, Montreal 
+% Modified by Pierre Bellec, McConnel Brain Imaging Center, Montreal
 % Neurological Institute, McGill University, Montreal, Canada, 2008.
-% Centre de recherche de l'institut de geriatrie de Montreal, 
+% Centre de recherche de l'institut de geriatrie de Montreal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2008-2016
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -70,7 +70,7 @@ elseif d==-1
    p=pi/2;
    r=pi/2;
 
-else 
+else
    sg=vp([0 0 1]',R(:,1));
    j2=sg/sqrt(sg'*sg);
    k2=vp(R(:,1),j2);
@@ -89,7 +89,7 @@ r1=r+(1-sign(r)-sign(r)^2)*pi;
 if norm([y1 p1 r1]) < norm([y p r])
     rot = [r1;-p1;y1];
 else
-    rot = [r;p;y];       
+    rot = [r;p;y];
 end
 
 rot = (rot/pi)*180; % Conversion in degrees
@@ -100,11 +100,10 @@ function z=vp(x,y)
 % z=vp(x,y); z = 3d cross product of x and y
 % vp(x) is the 3d cross product matrix : vp(x)*y=vp(x,y).
 %
-% by Giampiero Campa.  
+% by Giampiero Campa.
 
 z=[  0    -x(3)   x(2);
     x(3)    0    -x(1);
    -x(2)   x(1)    0   ];
 
 if nargin>1, z=z*y; end
-

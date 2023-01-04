@@ -2,7 +2,7 @@ function [files_in,files_out,opt] = niak_brick_fmri_lm(files_in,files_out,opt)
 % Fits a linear model to fMRI time series data.
 %
 % The method is based on linear models with correlated AR(p) errors:
-% Y = hrf*X b + e, e_t=a_1 e_(t-1) + ... + a_p e_(t-p) + white noise_t. 
+% Y = hrf*X b + e, e_t=a_1 e_(t-1) + ... + a_p e_(t-p) + white noise_t.
 %
 % SYNTAX:
 % [FILES_IN,FILES_OUT,OPT] = NIAK_BRICK_FMRI_LM(FILES_IN,FILES_OUT,OPT)
@@ -10,77 +10,77 @@ function [files_in,files_out,opt] = niak_brick_fmri_lm(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-%  FILES_IN  
+%  FILES_IN
 %       (structure) with the following fields:
 %
-%       FMRI 
-%           (string) the name of a file containing an fMRI dataset. 
+%       FMRI
+%           (string) the name of a file containing an fMRI dataset.
 %
 %       MASK
-%           (string, default 'gb_niak_omitted') the name of a 3D binary 
+%           (string, default 'gb_niak_omitted') the name of a 3D binary
 %           volume that defines a mask of the brain. If non-specified (or
-%           equal to 'gb_niak_omitted'), a brain mask is computed 
+%           equal to 'gb_niak_omitted'), a brain mask is computed
 %           internally.
 %
 %       DESIGN
 %           (string) the name a matlab file containing a description of the
-%           design matrix. See the help of NIAK_BRICK_FMRI_DESIGN. 
+%           design matrix. See the help of NIAK_BRICK_FMRI_DESIGN.
 %
 %
 %  FILES_OUT
 %        (structure) of filenames with the following fields:
 %
 %        DF
-%           (string, default <BASE FMRI>_df.mat) 
+%           (string, default <BASE FMRI>_df.mat)
 %           The name a matlab file containing the variable DF
 %
 %        FWHM
-%           (string, default <BASE FMRI>_fwhm.mat) 
+%           (string, default <BASE FMRI>_fwhm.mat)
 %           The name a matlab file containing the variable FWHM
 %
-%        MAG_T 
-%           (string, default <BASE FMRI>_mag_t.<EXT FMRI>) 
-%           The name an image file containing the T statistic image =ef/sd 
+%        MAG_T
+%           (string, default <BASE FMRI>_mag_t.<EXT FMRI>)
+%           The name an image file containing the T statistic image =ef/sd
 %           for magnitudes. If T > 100, T = 100.
 %
-%        MAG_EF      
-%           (string, default <BASE FMRI>_mag_ef.<EXT FMRI>) 
-%           The name an image file containing the effect image for 
+%        MAG_EF
+%           (string, default <BASE FMRI>_mag_ef.<EXT FMRI>)
+%           The name an image file containing the effect image for
 %           magnitudes.
 %
-%        MAG_SD      
-%           (string, default <BASE FMRI>_mag_sd.<EXT FMRI>) 
-%           The name an image file containing the standard deviation of the 
-%           effect for magnitudes. 
+%        MAG_SD
+%           (string, default <BASE FMRI>_mag_sd.<EXT FMRI>)
+%           The name an image file containing the standard deviation of the
+%           effect for magnitudes.
 %
-%        MAG_F    
-%           (string, default <BASE FMRI>_mag_f.<EXT FMRI>) 
-%           The name an image file containing the F-statistic for test of 
-%           magnitudes of all rows of OPT.CONTRAST selected by MAG_F. 
+%        MAG_F
+%           (string, default <BASE FMRI>_mag_f.<EXT FMRI>)
+%           The name an image file containing the F-statistic for test of
+%           magnitudes of all rows of OPT.CONTRAST selected by MAG_F.
 %           The degrees of freedom are DF.F. If F > 1000, F = 1000.
 %
 %        COR
-%           (string, default <BASE FMRI>_cor.<EXT FMRI>) 
-%           The name an image file containing the temporal 
-%           autocorrelation(s). 
+%           (string, default <BASE FMRI>_cor.<EXT FMRI>)
+%           The name an image file containing the temporal
+%           autocorrelation(s).
 %
-%        RESID   
-%           (string, default <BASE FMRI>_resid.<EXT FMRI>) 
-%           The name an image file containing the residuals from the model, 
+%        RESID
+%           (string, default <BASE FMRI>_resid.<EXT FMRI>)
+%           The name an image file containing the residuals from the model,
 %           only for non-excluded frames.
 %
-%        WRESID  
-%           (string, default <BASE FMRI>_wresid.<EXT FMRI>) 
-%           The name an image file containing the whitened residuals from 
-%           the model normalized by dividing by their root sum of squares, 
+%        WRESID
+%           (string, default <BASE FMRI>_wresid.<EXT FMRI>)
+%           The name an image file containing the whitened residuals from
+%           the model normalized by dividing by their root sum of squares,
 %           only for non-excluded frames.
 %
 %        AR
-%           (string, default <BASE FMRI>_ar.<EXT FMRI>) 
-%           The name an image file containing the AR parameter(s) 
+%           (string, default <BASE FMRI>_ar.<EXT FMRI>)
+%           The name an image file containing the AR parameter(s)
 %           a_1 ... a_p.
-%         
-%  OPT   
+%
+%  OPT
 %       (structure) with the following fields.
 %       Note that if a field is omitted, it will be set to a default
 %       value if possible, or will issue an error otherwise.
@@ -91,7 +91,7 @@ function [files_in,files_out,opt] = niak_brick_fmri_lm(files_in,files_out,opt)
 %           mask. Note that the mask will not be computed if FILES_IN.MASK
 %           is specified.
 %
-%       CONTRAST         
+%       CONTRAST
 %            matrix of contrast of interest for the responses or a structure
 %            with fields x,c,t,s for the contrast associated to the responses,
 %            confounds, temporal trends and spatial trends, respectively.
@@ -100,60 +100,60 @@ function [files_in,files_out,opt] = niak_brick_fmri_lm(files_in,files_out,opt)
 %           (vector, default [] and NB_TRENDS_SPATIAL = 0)
 %           colum vector of the spatial average time courses.
 %
-%       CONFOUNDS 
+%       CONFOUNDS
 %           (matrix, default [] i.e. no confounds)
 %           A matrix or array of extra columns for the design matrix
-%           that are not convolved with the HRF, e.g. movement artifacts. 
+%           that are not convolved with the HRF, e.g. movement artifacts.
 %           If a matrix, the same columns are used for every slice; if an array,
 %           the first two dimensions are the matrix, the third is the slice.
 %           For functional connectivity with a single voxel, use
-%           FMRI_INTERP to resample the reference data at different slice 
+%           FMRI_INTERP to resample the reference data at different slice
 %           times, or apply NIAK_BRICK_SLICE_TIMING to the fMRI data as a
 %           preprocessing.
 %
-%       EXCLUDE 
-%           (vector, default []) 
+%       EXCLUDE
+%           (vector, default [])
 %           A list of frames that should be excluded from the
 %           analysis. This must be used with Siemens EPI scans to remove the
 %           first few frames, which do not represent steady-state images.
-%           If OPT.NUMLAGS=1, the excluded frames can be arbitrary, 
+%           If OPT.NUMLAGS=1, the excluded frames can be arbitrary,
 %           otherwise they should be from the beginning and/or end.
 %
-%       NB_TRENDS_SPATIAL 
-%           (scalar, default 0 will remove no spatial trends) 
-%           order of the polynomial in the spatial average (SPATIAL_AV)  
-%           weighted by first non-excluded frame; 
-%          
-%       NB_TRENDS_TEMPORAL 
+%       NB_TRENDS_SPATIAL
+%           (scalar, default 0 will remove no spatial trends)
+%           order of the polynomial in the spatial average (SPATIAL_AV)
+%           weighted by first non-excluded frame;
+%
+%       NB_TRENDS_TEMPORAL
 %           (scalar, default 0)
-%           number of cubic spline temporal trends to be removed per 6 
-%           minutes of scanner time. 
-%           Temporal  trends are modeled by cubic splines, so for a 6 
-%           minute run, N_TEMPORAL<=3 will model a polynomial trend of 
-%           degree N_TEMPORAL in frame times, and N_TEMPORAL>3 will add 
+%           number of cubic spline temporal trends to be removed per 6
+%           minutes of scanner time.
+%           Temporal  trends are modeled by cubic splines, so for a 6
+%           minute run, N_TEMPORAL<=3 will model a polynomial trend of
+%           degree N_TEMPORAL in frame times, and N_TEMPORAL>3 will add
 %           (N_TEMPORAL-3) equally spaced knots.
-%           N_TEMPORAL=0 will model just the constant level and no 
+%           N_TEMPORAL=0 will model just the constant level and no
 %           temporal trends.
-%           N_TEMPORAL=-1 will not remove anything, in which case the design matrix 
+%           N_TEMPORAL=-1 will not remove anything, in which case the design matrix
 %           is completely determined by X_CACHE.X.
 %
-%       NUM_HRF_BASES 
-%           (row vector; default [1; ... ;1]) 
-%           number of basis functions for the hrf for each response, 
-%           either 1 or 2 at the moment. At least one basis functions is 
-%           needed to estimate the magnitude, but two basis functions are 
+%       NUM_HRF_BASES
+%           (row vector; default [1; ... ;1])
+%           number of basis functions for the hrf for each response,
+%           either 1 or 2 at the moment. At least one basis functions is
+%           needed to estimate the magnitude, but two basis functions are
 %           needed to estimate the delay.
 %
-%       BASIS_TYPE 
-%           (string, 'spectral') 
-%           basis functions for the hrf used for delay estimation, or 
-%           whenever NUM_HRF_BASES = 2. 
-%           These are convolved with the stimulus to give the responses in 
+%       BASIS_TYPE
+%           (string, 'spectral')
+%           basis functions for the hrf used for delay estimation, or
+%           whenever NUM_HRF_BASES = 2.
+%           These are convolved with the stimulus to give the responses in
 %           Dim 3 of X_CACHE.X:
 %           'taylor' - use hrf and its first derivative (components 1&2)
-%           'spectral' - use first two spectral bases (components 3&4 of 
+%           'spectral' - use first two spectral bases (components 3&4 of
 %           Dim 3).
-%           Ignored if NUM_HRF_BASES = 1, in which case it always uses 
+%           Ignored if NUM_HRF_BASES = 1, in which case it always uses
 %           component 1, i.e. the hrf is convolved with the stimulus.
 %
 %       NUMLAGS
@@ -161,51 +161,51 @@ function [files_in,files_out,opt] = niak_brick_fmri_lm(files_in,files_out,opt)
 %
 %       PCNT
 %           (boolean, default 0)
-%           if PCNT=1, then the data is converted to percentages 
+%           if PCNT=1, then the data is converted to percentages
 %           before analysis by dividing each frame by its spatial average,* 100%.
 %
 %       FWHM
 %           (default [], which corresponds to achieving 100 df, but if
 %           CONTRAST is empty then the default is 0 i.e. no smoothing.)
 %           It is the fwhm in mm of a 3D Gaussian kernel used to smooth the
-%           autocorrelation of residuals. Setting it to Inf smooths the 
-%           autocorrelation to 0, i.e. it assumes the frames are 
-%           uncorrelated (useful for TR>10 seconds). Setting it to 0 does 
+%           autocorrelation of residuals. Setting it to Inf smooths the
+%           autocorrelation to 0, i.e. it assumes the frames are
+%           uncorrelated (useful for TR>10 seconds). Setting it to 0 does
 %           no smoothing.
-%           If FWHM_COR is negative, it is taken as the desired df, and the 
-%           fwhm is chosen to achive this df, or 90% of the residual df, 
-%           whichever is smaller, for every contrast, up to 50mm. 
-%           If a second component is supplied, it is the fwhm in mm of the 
-%           data, otherwise this is estimated quickly from the 
-%           least-squares residuals. 
+%           If FWHM_COR is negative, it is taken as the desired df, and the
+%           fwhm is chosen to achive this df, or 90% of the residual df,
+%           whichever is smaller, for every contrast, up to 50mm.
+%           If a second component is supplied, it is the fwhm in mm of the
+%           data, otherwise this is estimated quickly from the
+%           least-squares residuals.
 %           If FWHM_COR is a file name, e.g. the _cor.ext file created by a
-%           previous run, it is used for the autocorrelations - saves 
+%           previous run, it is used for the autocorrelations - saves
 %           execution time.
-%           If df.cor cannot be found in the header or _cor_df.txt file, 
-%           Inf is used.           
+%           If df.cor cannot be found in the header or _cor_df.txt file,
+%           Inf is used.
 %
-%       DF_LIMIT 
+%       DF_LIMIT
 %           (scalar, default 4)
-%           Controls which method is used for estimating FWHM. 
-%           If DF > DF_LIMIT, then the FWHM is calculated assuming the 
-%           Gaussian filter is arbitrary. However if DF is small, this 
-%           gives inaccurate results, so if DF <= DF_LIMIT, the FWHM is 
-%           calculated assuming that the axes of the Gaussian filter are 
-%           aligned with the x, y and z axes of the data. 
+%           Controls which method is used for estimating FWHM.
+%           If DF > DF_LIMIT, then the FWHM is calculated assuming the
+%           Gaussian filter is arbitrary. However if DF is small, this
+%           gives inaccurate results, so if DF <= DF_LIMIT, the FWHM is
+%           calculated assuming that the axes of the Gaussian filter are
+%           aligned with the x, y and z axes of the data.
 %
-%       FOLDER_OUT 
-%           (string, default: path of FILES_IN) 
-%           If present, all default outputs will be created in the folder 
+%       FOLDER_OUT
+%           (string, default: path of FILES_IN)
+%           If present, all default outputs will be created in the folder
 %           FOLDER_OUT. The folder needs to be created beforehand.
 %
-%       FLAG_VERBOSE 
-%           (boolean, default 1) 
-%           if the flag is 1, then the function prints some infos during 
+%       FLAG_VERBOSE
+%           (boolean, default 1)
+%           if the flag is 1, then the function prints some infos during
 %           the processing.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) 
-%           if FLAG_TEST equals 1, the brick does not do anything but 
+%       FLAG_TEST
+%           (boolean, default 0)
+%           if FLAG_TEST equals 1, the brick does not do anything but
 %           update the default values in FILES_IN, FILES_OUT and OPT.
 %
 % _________________________________________________________________________
@@ -218,14 +218,14 @@ function [files_in,files_out,opt] = niak_brick_fmri_lm(files_in,files_out,opt)
 % COMMENTS
 %
 % This function is a NIAKIFIED port of a part of the FMRILM function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -330,8 +330,8 @@ else
         opt.contrast_names{i} = ['_',opt.contrast_names{i}];
     end
 end
-    
-if flag_test 
+
+if flag_test
     return
 end
 
@@ -433,7 +433,7 @@ contrasts = niak_make_contrasts(opt.contrast,opt_contrast);
 clear opt_contrast
 
 opt_which.contrasts = contrasts;
-opt_which.which_stats = which_stats; 
+opt_which.which_stats = which_stats;
 opt_which = niak_make_which_stats(opt_which);
 contrasts = opt_which.contrasts;
 contrast_is_delay = opt_which.contrast_is_delay;
@@ -453,10 +453,10 @@ if isnumeric(fwhm.cor) && (fwhm.cor(1)<Inf)
     if length(fwhm.cor)==2
       fwhm.data = fwhm.cor(2);
     else
-      fwhm.data = opt_auto.fwhm;     
+      fwhm.data = opt_auto.fwhm;
     end
     clear opt_auto
-end  
+end
 
 %% Calculate df and fwhm_cor if not specified:
 disp('Estimating effective FWHMs...')
@@ -543,9 +543,9 @@ end
 for num_l = 7:length(list_outputs)
     field_name = lower(list_outputs{num_l}(2:end));
     if isfield(files_out,field_name)
-       if isempty(files_out.(field_name))           
+       if isempty(files_out.(field_name))
           full_name = cat(2,folder_f,filesep,name_f,list_outputs{num_l},ext_f);
-          files_out.(field_name) = full_name; 
+          files_out.(field_name) = full_name;
        end
     end
 end

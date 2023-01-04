@@ -1,5 +1,5 @@
 function csv_cell = niak_read_csv_cell(file_name,opt)
-% Read a table from a text file with comma-separated values (csv). 
+% Read a table from a text file with comma-separated values (csv).
 % All the values are stored in a cell of strings
 %
 % SYNTAX:
@@ -8,11 +8,11 @@ function csv_cell = niak_read_csv_cell(file_name,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-% FILE_NAME     
-%	(string) the name of the text file. This usually ends in .csv for comma-separated 
+% FILE_NAME
+%	(string) the name of the text file. This usually ends in .csv for comma-separated
 %   values, .tsv for tabulation-separated values and and can have a .gz extension for
 %   compressed files.
-% 
+%
 % OPT
 %   (structure, optional) with the following fields:
 %
@@ -20,8 +20,8 @@ function csv_cell = niak_read_csv_cell(file_name,opt)
 %      (boolean, default false) verbose on progress
 %
 %   SEPARATOR
-%      (string, default ',' for csv files, char(9) - tabulation - for .tsv files, ',' otherwise) 
-%      The character used to separate values. 
+%      (string, default ',' for csv files, char(9) - tabulation - for .tsv files, ',' otherwise)
+%      The character used to separate values.
 %
 %   FLAG_STRING
 %       (boolean, default true) remove the ' and " characters in strings.
@@ -43,12 +43,12 @@ function csv_cell = niak_read_csv_cell(file_name,opt)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% The extension of zipped files is assumed to be .gz. The tools used to zip 
-% files is 'gzip'. This setting can be changed by changing the variables 
+% The extension of zipped files is assumed to be .gz. The tools used to zip
+% files is 'gzip'. This setting can be changed by changing the variables
 % GB_NIAK_ZIP_EXT and GB_NIAK_UNZIP in the file NIAK_GB_VARS.
 %
-% Copyright (c) Pierre Bellec, 
-% Centre de recherche de l'institut de griatrie de Montral, 
+% Copyright (c) Pierre Bellec,
+% Centre de recherche de l'institut de griatrie de Montral,
 % Department of Computer Science and Operations Research
 % University of Montreal, Qubec, Canada, 2013-2015
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -111,7 +111,7 @@ if flag_zip
     [succ,msg] = system(cat(2,'cp "',file_name,'" ',file_tmp_gz));
     if succ~=0
         error(msg)
-    end            
+    end
     instr_unzip = cat(2,GB_NIAK.unzip,' "',file_tmp_gz,'"');
     [succ,msg] = system(instr_unzip);
     if succ ~= 0
@@ -144,7 +144,7 @@ for num_r = 1:length(cell_tab)
         else
             csv_cell{num_r,num_c} = cell_line{num_c};
         end
-    end 
+    end
 end
 if opt.flag_trim
     csv_cell = strtrim(csv_cell);
@@ -158,7 +158,7 @@ function cell_values = sub_csv(str_values,separator)
 
 if ~isempty(str_values)
     ind = findstr([separator str_values separator],separator);
-    
+
     cell_values = cell([length(ind)-1 1]);
     for num_i = 1:length(ind)-1
         cell_values{num_i} = str_values(ind(num_i):ind(num_i+1)-2);

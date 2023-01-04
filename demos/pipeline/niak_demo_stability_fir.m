@@ -8,7 +8,7 @@ function [pipeline,opt_pipe,files_in] = niak_demo_stability_fir(path_demo,opt)
 % INPUTS:
 %
 % PATH_DEMO
-%   (string) the full path to the preprocessed NIAK demo dataset. The dataset 
+%   (string) the full path to the preprocessed NIAK demo dataset. The dataset
 %   can be found at http://www.nitrc.org/frs/?group_id=411
 %
 % OPT
@@ -16,11 +16,11 @@ function [pipeline,opt_pipe,files_in] = niak_demo_stability_fir(path_demo,opt)
 %   will do here. The demo only changes one default:
 %
 %   FILES_IN.FMRI
-%      (structure, default grab the preprocessed demoniak) the input files 
+%      (structure, default grab the preprocessed demoniak) the input files
 %      from the preprocessing to be fed in the stability_fir pipeline.
 %
 %   FOLDER_OUT
-%      (string, default PATH_DEMO/stability_fir) where to store the 
+%      (string, default PATH_DEMO/stability_fir) where to store the
 %      results of the pipeline.
 %
 % _________________________________________________________________________
@@ -34,26 +34,26 @@ function [pipeline,opt_pipe,files_in] = niak_demo_stability_fir(path_demo,opt)
 %   (structure) the option to call NIAK_PIPELINE_STABILITY_FIR
 %
 % FILES_IN
-%   (structure) the description of input files used to call 
+%   (structure) the description of input files used to call
 %   NIAK_PIPELINE_STABILITY_FIR
 %
 % _________________________________________________________________________
 % COMMENTS
 %
 % Note 1:
-% The demo will apply the stability_fir pipeline on the preprocessed version 
-% of the DEMONIAK dataset. It is possible to configure the pipeline manager 
-% to use parallel computing using OPT.PSOM, see : 
+% The demo will apply the stability_fir pipeline on the preprocessed version
+% of the DEMONIAK dataset. It is possible to configure the pipeline manager
+% to use parallel computing using OPT.PSOM, see :
 % http://code.google.com/p/psom/wiki/PsomConfiguration
 %
 % NOTE 2:
-% The demo database exists in multiple file formats. NIAK looks into the demo 
-% path and is supposed to figure out which format you are intending to use 
-% by itself. 
+% The demo database exists in multiple file formats. NIAK looks into the demo
+% path and is supposed to figure out which format you are intending to use
+% by itself.
 %
 % _________________________________________________________________________
 % Copyright (c) Pierre Bellec
-% Centre de recherche de l'institut de gériatrie de Montréal, 
+% Centre de recherche de l'institut de gériatrie de Montréal,
 % Department of Computer Science and Operations Research
 % University of Montreal, Québec, Canada, 2013
 % Maintainer : pierre.bellec@criugm.qc.ca
@@ -93,7 +93,7 @@ opt = psom_struct_defaults(opt, ...
       false);
 
 %% Grab the results from the NIAK fMRI preprocessing pipeline
-if ~isempty(opt.files_in)&&~strcmp(opt.files_in,'gb_niak_omitted')    
+if ~isempty(opt.files_in)&&~strcmp(opt.files_in,'gb_niak_omitted')
     files_in = rmfield(opt.files_in,'fmri');
     [fmri_c,labels_f] = niak_fmri2cell(opt.files_in.fmri);
     for ee = 1:length(fmri_c)
@@ -103,10 +103,10 @@ if ~isempty(opt.files_in)&&~strcmp(opt.files_in,'gb_niak_omitted')
     end
 else
     %% Grab the results from the NIAK fMRI preprocessing pipeline
-    opt_g.min_nb_vol = 30; % the demo dataset is very short, so we have to lower considerably the minimum acceptable number of volumes per run 
+    opt_g.min_nb_vol = 30; % the demo dataset is very short, so we have to lower considerably the minimum acceptable number of volumes per run
     opt_g.type_files = 'fir'; % Specify to the grabber to prepare the files for the stability FIR pipeline
     opt_g.filter.run = {'motor'}; % Just grab the "motor" runs
-    files_in = niak_grab_fmri_preprocess(path_demo,opt_g); 
+    files_in = niak_grab_fmri_preprocess(path_demo,opt_g);
 end
 
 %% Set the timing of events;
@@ -118,13 +118,13 @@ opt.name_condition = 'motor';
 opt.name_baseline  = 'rest';
 
 %% Set the scales of analysis
-opt.grid_scales = [5 10]'; % Search for stable clusters in the range 10 to 500 
-opt.scales_maps = [  5  5  5  ; ...   % The scales that will be used to generate the maps of brain clusters and stability. 
-                    10 10 10  ];                   
+opt.grid_scales = [5 10]'; % Search for stable clusters in the range 10 to 500
+opt.scales_maps = [  5  5  5  ; ...   % The scales that will be used to generate the maps of brain clusters and stability.
+                    10 10 10  ];
 opt.stability_fir.nb_samps = 10;     % Number of bootstrap samples at the individual level. 100: the CI on indidividual stability is +/-0.1
-opt.stability_fir.std_noise = 0;     % The standard deviation of the judo noise. The value 0 will not use judo noise. 
+opt.stability_fir.std_noise = 0;     % The standard deviation of the judo noise. The value 0 will not use judo noise.
 opt.stability_group.nb_samps = 10;   % Number of bootstrap samples at the group level. 500: the CI on group stability is +/-0.05
-opt.stability_group.min_subject = 2; % Lower the min number of subject ... there are only two subjects in the demo_niak. 
+opt.stability_group.min_subject = 2; % Lower the min number of subject ... there are only two subjects in the demo_niak.
 
 %% FIR estimation
 opt.fir.nb_min_baseline = 1; % There is not much data in the demo_niak, so don't set a minimum on the number of points used to estimate the baseline

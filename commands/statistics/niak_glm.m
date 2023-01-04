@@ -1,5 +1,5 @@
 function [results,opt] = niak_glm(model,opt)
-% Least-square estimates in a linear model Y = X.BETA + E 
+% Least-square estimates in a linear model Y = X.BETA + E
 %
 % [RESULTS,OPT] = NIAK_GLM( MODEL , [OPT] )
 %
@@ -13,7 +13,7 @@ function [results,opt] = niak_glm(model,opt)
 %      (2D array size T*N) each column of Y are samples of one variable.
 %
 %   X
-%      (2D array size T*K) each column of X is a explaining factor with the 
+%      (2D array size T*K) each column of X is a explaining factor with the
 %      same number of rows as Y.
 %
 %   C
@@ -23,7 +23,7 @@ function [results,opt] = niak_glm(model,opt)
 % OPT
 %   (structure, optional) with the following fields:
 %
-%   TEST 
+%   TEST
 %      (string, default 'none') the type of test to be applied.
 %      Available options: 'ttest' , 'ftest', 'none'
 %
@@ -31,15 +31,15 @@ function [results,opt] = niak_glm(model,opt)
 %      (boolean, default false) if the flag is true, the R2 statistics of the
 %      regression is added to RESULTS (see below).
 %
-%   FLAG_RESIDUALS 
-%      (boolean, default false) if the flag is true, the residuals E of the 
+%   FLAG_RESIDUALS
+%      (boolean, default false) if the flag is true, the residuals E of the
 %      regression are added to RESULTS (see below).
 %
 %   FLAG_EFF
-%      (boolean, default false) if the flag is true, the estimated effects are 
+%      (boolean, default false) if the flag is true, the estimated effects are
 %      added to RESULTS (i.e. the regression coefficients times the contrast).
 %
-%   FLAG_BETA 
+%   FLAG_BETA
 %      (boolean, default false) if the flag is true, the regression coefficients
 %      BETA are added to RESULTS (see below).
 %
@@ -50,7 +50,7 @@ function [results,opt] = niak_glm(model,opt)
 %   (stucture) with the following fields:
 %
 %   BETA
-%      (vector size K*N) BETA(k,n) is the estimated coefficient regression 
+%      (vector size K*N) BETA(k,n) is the estimated coefficient regression
 %      estimate of X(:,k) on Y(:,n), using the least-square criterion.
 %      See OPT.FLAG_BETA above.
 %
@@ -66,16 +66,16 @@ function [results,opt] = niak_glm(model,opt)
 %
 %   TTEST
 %      (vector, size [1 N]) TTEST(n) is a t-test associated with the estimated
-%      weights and the specified contrast (see C above). (only available if 
+%      weights and the specified contrast (see C above). (only available if
 %      OPT.TEST is 'ttest')
 %
 %   FTEST
 %      (vector, size [1 N]) TTEST(n) is a F test associated with the estimated
-%      weights and the specified contrast (see C above). (only available if 
+%      weights and the specified contrast (see C above). (only available if
 %      OPT.TEST is 'ftest')
 %
 %   PCE
-%      (vector,size [1 N]) PCE(n) is the per-comparison error associated with 
+%      (vector,size [1 N]) PCE(n) is the per-comparison error associated with
 %      TTEST(n) (bilateral test). (unless OPT.TEST is 'none')
 %
 %   DEGFREE
@@ -83,7 +83,7 @@ function [results,opt] = niak_glm(model,opt)
 %      Will be 2 scalar values for ftest.
 %
 %   EFF
-%      (vector, size [1 N]) the effect associated with the contrast and the 
+%      (vector, size [1 N]) the effect associated with the contrast and the
 %      regression coefficients (only available if OPT.TEST is 'ttest')
 %
 %   STD_EFF
@@ -95,9 +95,9 @@ function [results,opt] = niak_glm(model,opt)
 %      explained by the model).
 %
 %   F2
-%      (vector, size 1*N) Cohen's f2 effect size for the effect of interest. This measure 
-%      makes sense in a F-test, or a t-test with a single variable of interest. 
-%      In other cases, F2 is set to NaN. 
+%      (vector, size 1*N) Cohen's f2 effect size for the effect of interest. This measure
+%      makes sense in a F-test, or a t-test with a single variable of interest.
+%      In other cases, F2 is set to NaN.
 %
 % _________________________________________________________________________
 % REFERENCES:
@@ -111,14 +111,14 @@ function [results,opt] = niak_glm(model,opt)
 %
 %
 % On the definition of the "local" variant of Cohen's f2 effect size (see Eq 2):
-%   Selya et al. A Practical Guide to Calculating Cohens f2, a Measure of Local 
+%   Selya et al. A Practical Guide to Calculating Cohens f2, a Measure of Local
 %   Effect Size, from PROC MIXED. Front Psychol. 2012; 3: 111.
 %   http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3328081/
 %
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, Christian L. Dansereau, 
+% Copyright (c) Pierre Bellec, Christian L. Dansereau,
 % Centre de recherche de l'Institut universitaire de griatrie de Montral, 2012.
 % Maintainer : pierre.bellec@criugm.qc.ca
 % See licensing information in the code.
@@ -157,14 +157,14 @@ K = size(x,2);
 if size(x,1)~=N
     error('X should have the same number of rows as Y');
 end
- 
-beta = (x'*x)\x'*y;   % Regression coefficient 
+
+beta = (x'*x)\x'*y;   % Regression coefficient
 e = y-x*beta;           % Residuals
 s = sum(e.^2,1); % Estimate of the residual sum-of-square of the full model
 SSt = sum((y-repmat(mean(y,1),[size(y,1) 1])).^2,1); % Total sum-of-squares (without the mean...)
 
 results = struct();
-s0 = sum(y.^2,1); 
+s0 = sum(y.^2,1);
 
 if isfield(opt,'test') && ~strcmp(opt.test,'none')
     c = model.c(:);
@@ -174,10 +174,10 @@ if isfield(opt,'test') && ~strcmp(opt.test,'none')
         beta0 = (x0'*x0)^(-1)*x0'*y; % Regression coefficients (restricted model)
         e0 = y-x0*beta0;             % Residuals (restricted model)
         s0 = sum(e0.^2,1); % Estimate of the residual sum-of-square of the restricted model
-    else 
+    else
         s0 = sum(y.^2,1);
     end
-                
+
     switch opt.test
 
         case 'ttest'
@@ -192,7 +192,7 @@ if isfield(opt,'test') && ~strcmp(opt.test,'none')
             pce = 2*(1-niak_cdf_t(abs(ttest),size(x,1)-size(x,2))); % two-tailed p-value
             eff = c'*beta;                          % The effect matrix
             std_eff = std_e*sqrt(c'*(x'*x)^(-1)*c); % The standard deviation of effect
-            
+
             results.std_e = std_e;
             results.ttest = ttest;
             results.pce = pce;
@@ -209,7 +209,7 @@ if isfield(opt,'test') && ~strcmp(opt.test,'none')
             results.ftest     = ((s0-s)/(K-p0))./(s/(N-K)); % F-Test
             results.pce       = 1-fcdf(results.ftest,K-p0,N-K); % p-value
             results.degfree = [K-p0,N-K]; % degrees of freedom
-                        
+
         otherwise,
             error('This test is not supported');
     end
@@ -217,9 +217,9 @@ end
 
 %% flags
 if ~strcmp(opt.test,'none')&&~(strcmp(opt.test,'ttest')&&(sum(model.c~=0)>1))
-    % (RAB^2-RA^2)/(1-RAB^2) 
+    % (RAB^2-RA^2)/(1-RAB^2)
     SSAB = sum((x*beta).^2);
-    if p0 > 0 
+    if p0 > 0
         SSA = sum((x0*beta0).^2);
     else
         SSA = zeros(size(SSAB));
@@ -243,7 +243,7 @@ end
 if opt.flag_eff
     if ~isfield(model,'c')
         error('Please specify MODEL.C to estimate the effects')
-    end        
+    end
     eff = (model.c(:))'*beta;                          % The effect matrix
     results.eff = eff; % Beta
 end

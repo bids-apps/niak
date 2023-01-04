@@ -192,7 +192,7 @@
         "optional": true,
         "command-line-flag": "--opt-size_output",
         "default-value": "quality_control"
-        
+
     }, {
         "id": "opt_motion_correction_suppress_vol",
         "name": "Motion correction suppress vol",
@@ -202,7 +202,7 @@
         "list": false,
         "optional": true,
         "command-line-flag": "--opt-motion_correction-suppress_vol",
-        "default-value": 0 
+        "default-value": 0
     }, {
         "id": "extra_args",
         "name": "Extra arguments",

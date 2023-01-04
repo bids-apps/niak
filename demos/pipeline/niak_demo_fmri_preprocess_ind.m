@@ -8,21 +8,21 @@ function [pipeline,opt] = niak_demo_fmri_preprocess_ind(path_demo,opt)
 % INPUTS:
 %
 % PATH_DEMO
-%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS) 
-%       the full path to the NIAK demo dataset. The dataset can be found in 
-%       multiple file formats at the following address : 
+%       (string, default GB_NIAK_PATH_DEMO in the file NIAK_GB_VARS)
+%       the full path to the NIAK demo dataset. The dataset can be found in
+%       multiple file formats at the following address :
 %       http://www.bic.mni.mcgill.ca/users/pbellec/demo_niak/
 %
 % OPT
-%       (structure, optional) with the following fields : 
+%       (structure, optional) with the following fields :
 %
 %       FLAG_TEST
-%           (boolean, default false) if FLAG_TEST == true, the demo will 
-%           just generate the PIPELINE and OPT structure, otherwise it will 
+%           (boolean, default false) if FLAG_TEST == true, the demo will
+%           just generate the PIPELINE and OPT structure, otherwise it will
 %           process the pipeline.
 %
-%       SIZE_OUTPUT 
-%           (string, default 'quality_control') possible values : 
+%       SIZE_OUTPUT
+%           (string, default 'quality_control') possible values :
 %           'quality_control’, ‘all’.
 %
 %       PSOM
@@ -45,16 +45,16 @@ function [pipeline,opt] = niak_demo_fmri_preprocess_ind(path_demo,opt)
 % COMMENTS:
 %
 % Note 1:
-% The demo will apply the full fMRI preprocessing pipeline on the 
-% functional data of subject 1 (rest and motor conditions) as well 
-% as their anatomical image. It is possible to configure the pipeline 
-% manager to use parallel computing using OPT.PSOM, see : 
+% The demo will apply the full fMRI preprocessing pipeline on the
+% functional data of subject 1 (rest and motor conditions) as well
+% as their anatomical image. It is possible to configure the pipeline
+% manager to use parallel computing using OPT.PSOM, see :
 % http://code.google.com/p/psom/wiki/PsomConfiguration
 %
 % NOTE 2:
-% The demo database exists in multiple file formats. NIAK looks into the demo 
-% path and is supposed to figure out which format you are intending to use 
-% by himself. 
+% The demo database exists in multiple file formats. NIAK looks into the demo
+% path and is supposed to figure out which format you are intending to use
+% by himself.
 %
 % Copyright (c) Pierre Bellec, Montreal Neurological Institute, 2008.
 % Maintainer : pbellec@bic.mni.mcgill.ca
@@ -117,23 +117,23 @@ elseif exist(cat(2,path_demo,'anat_subject1.img'))
 end
 
 switch format_demo
-    
+
     case 'minc1' % If data are in minc1 format
-                
-        files_in.anat             = cat(2,path_demo,filesep,'anat_subject1.mnc.gz');        
+
+        files_in.anat             = cat(2,path_demo,filesep,'anat_subject1.mnc.gz');
         files_in.fmri.session1{1} = cat(2,path_demo,filesep,'func_motor_subject1.mnc.gz');
         files_in.fmri.session1{2} = cat(2,path_demo,filesep,'func_rest_subject1.mnc.gz');
-        
+
     case 'minc2' % If data are in minc2 format
-        
-        files_in.anat             = cat(2,path_demo,filesep,'anat_subject1.mnc');        
+
+        files_in.anat             = cat(2,path_demo,filesep,'anat_subject1.mnc');
         files_in.fmri.session1{1} = cat(2,path_demo,filesep,'func_motor_subject1.mnc');
         files_in.fmri.session1{2} = cat(2,path_demo,filesep,'func_rest_subject1.mnc');
-        
-    otherwise 
-        
+
+    otherwise
+
         error('niak:demo','%s is an unsupported file format for this demo. See help to change that.',format_demo)
-        
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%

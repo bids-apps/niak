@@ -10,35 +10,35 @@ function [files_in,files_out,opt] = niak_brick_4d_to_3d(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS
 %
-%  * FILES_IN  
+%  * FILES_IN
 %       (string) a 4D dataset
 %
-%  * FILES_OUT 
+%  * FILES_OUT
 %       (cell of strings, default <BASE NAME INPUT>_<NUM COMP>.<EXT>)
 %       Each entry is the file name for a 3D dataset.
 %
-%  * OPT   
+%  * OPT
 %       (structure) with the following fields :
 %
-%       LIST 
-%           (vector, default all) the list of volume to extract from the 4D 
+%       LIST
+%           (vector, default all) the list of volume to extract from the 4D
 %           data. Volumes are numbered from 1 to the number of volumes.
 %
-%       FLAG_CORRECT 
+%       FLAG_CORRECT
 %           (boolean, default 0) If this flag is true (1), a mask
 %           will be extracted from the 4D dataset using NIAK_BRAIN_MASK, and
 %           the distribution for each volume within the mask will be asjusted
 %           to zero mean and unit variance using robust estimates (see
 %           NIAK_CORRECT_VOL).
 %
-%       FOLDER_OUT 
+%       FOLDER_OUT
 %           (string, default: path of FILES_IN) If present,
 %           all default outputs will be created in the folder FOLDER_OUT.
 %           The folder needs to be created beforehand.
 %
-%       FLAG_TEST 
-%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not 
-%           do anything but update the default values in FILES_IN, 
+%       FLAG_TEST
+%           (boolean, default 0) if FLAG_TEST equals 1, the brick does not
+%           do anything but update the default values in FILES_IN,
 %           FILES_OUT and OPT.
 %
 % _________________________________________________________________________
@@ -130,7 +130,7 @@ if ~iscell(files_out)
         end
     end
 end
-        
+
 if flag_test == 1
     return
 end
@@ -153,7 +153,7 @@ for num_c = opt.list
     else
         vol_write = vol(:,:,:,num_c);
     end
-    
+
     niak_write_vol(hdr,vol_write);
-    
+
 end

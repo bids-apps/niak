@@ -13,19 +13,19 @@ function [pipeline,opt] = niak_test_t1_preprocess_aging(path_test,opt)
 % INPUTS:
 %
 % PATH_TEST
-%       (string, default GB_NIAK_PATH_TEST_AGING in the file NIAK_TEST_GB_VARS) 
-%       the full path to the NIAK AGING test dataset. 
+%       (string, default GB_NIAK_PATH_TEST_AGING in the file NIAK_TEST_GB_VARS)
+%       the full path to the NIAK AGING test dataset.
 %
 % OPT
-%       (structure, optional) with the following fields : 
+%       (structure, optional) with the following fields :
 %
 %       NUM_SUBJECT
 %           (vector, default 1:86) the list of subjects that will be
 %           processed.
 %
 %       FLAG_TEST
-%           (boolean, default false) if FLAG_TEST == true, the test will 
-%           just generate the PIPELINE and OPT structure, otherwise it will 
+%           (boolean, default false) if FLAG_TEST == true, the test will
+%           just generate the PIPELINE and OPT structure, otherwise it will
 %           process the pipeline.
 %
 %       PSOM
@@ -47,9 +47,9 @@ function [pipeline,opt] = niak_test_t1_preprocess_aging(path_test,opt)
 % _________________________________________________________________________
 % COMMENTS:
 %
-% The test will use the brick NIAK_BRICK_T1_PREPROCESS to perform linear 
+% The test will use the brick NIAK_BRICK_T1_PREPROCESS to perform linear
 % and non-linear coregistration in the MNI152 r2009 space, as well as non
-% uniformity correction, intensity normalization, brain extraction and 
+% uniformity correction, intensity normalization, brain extraction and
 % tissue classification.
 %
 % _________________________________________________________________________

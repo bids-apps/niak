@@ -5,7 +5,7 @@ function [files_in,files_out,opt] = niak_brick_multistat(files_in,files_out,opt)
 %
 % Fits a mixed effects linear model.
 %
-% Combines effects (E) and their standard errors (S) using a linear mixed 
+% Combines effects (E) and their standard errors (S) using a linear mixed
 % effects model:     E = X b + e_fixed + e_random,     where
 %    b is a vector of unknown coefficients,
 %    e_fixed  is normal with mean zero, standard deviation S,
@@ -18,17 +18,17 @@ function [files_in,files_out,opt] = niak_brick_multistat(files_in,files_out,opt)
 % _________________________________________________________________________
 % INPUTS:
 %
-%  FILES_IN  
+%  FILES_IN
 %       (structure) with the following fields:
 %
-%       EF 
-%         (cell array) of string filenames for the fmri effect files, the 
+%       EF
+%         (cell array) of string filenames for the fmri effect files, the
 %         dependent variables.
 %
 %       SD
-%         (cell array) of string filenames for the standard deviations of 
-%         the dependent variables. If FILES_IN.SD=[], then FILES_IN.SD is 
-%         assumed to be zero for all voxels, OPT.DF.DATA is set to Inf, 
+%         (cell array) of string filenames for the standard deviations of
+%         the dependent variables. If FILES_IN.SD=[], then FILES_IN.SD is
+%         assumed to be zero for all voxels, OPT.DF.DATA is set to Inf,
 %         and OPT.FWHM.VARATIO now smoothes the voxel sd.
 %
 %
@@ -41,47 +41,47 @@ function [files_in,files_out,opt] = niak_brick_multistat(files_in,files_out,opt)
 %        FWHM
 %          The name a matlab file containing the variable FWHM
 %
-%        T 
+%        T
 %          The name an image file containing the T statistic image =ef/sd.
 %
-%        EF      
+%        EF
 %          The name an image file containing the effect image for magnitudes.
 %
-%        SD      
-%          The name an image file containing standard deviation of the effect 
-%          for magnitudes. 
+%        SD
+%          The name an image file containing standard deviation of the effect
+%          for magnitudes.
 %
-%        RFX     
-%          The name an image file containing the ratio of random to fixed 
-%          effects standard deviation. Note that rfx^2 is the F statistic 
+%        RFX
+%          The name an image file containing the ratio of random to fixed
+%          effects standard deviation. Note that rfx^2 is the F statistic
 %          for testing for random effects.
 %
 %        CONJ
-%          The name an image file containing the conjunction (minimum) of 
-%          the T statistics for the data, i.e. min(INPUT_FILES_EF/sd) using 
-%          a mixed effects sd. 
+%          The name an image file containing the conjunction (minimum) of
+%          the T statistics for the data, i.e. min(INPUT_FILES_EF/sd) using
+%          a mixed effects sd.
 %
-%        RESID   
+%        RESID
 %          The name an image file containing the residuals from the model.
 %
-%        WRESID  
-%          The name an image file containing the whitened residuals from 
+%        WRESID
+%          The name an image file containing the whitened residuals from
 %          the model normalized by dividing by their root sum of squares.
 %
-%  OPT   
+%  OPT
 %     (structure) with the following fields.
 %     Note that if a field is omitted, it will be set to a default
 %     value if possible, or will issue an error otherwise.
 %
-%     MATRIX_X 
+%     MATRIX_X
 %           is the design matrix, whose rows are the files, and columns
-%           are the explanatory (independent) variables of interest. 
-%           Default is X=[1; 1; 1; ..1] which just averages the files. 
-%           If the rank of X equals the number of files, e.g. if X is square, 
+%           are the explanatory (independent) variables of interest.
+%           Default is X=[1; 1; 1; ..1] which just averages the files.
+%           If the rank of X equals the number of files, e.g. if X is square,
 %           then the random effects cannot be estinmated, but the fixed effects
 %           sd's can be used for the standard error. This is done very quickly.
 %
-%     CONTRAST 
+%     CONTRAST
 %           is a matrix whose rows are contrasts for the statistic images.
 %           Default is [1 0 ... 0], i.e. it picks out the first column of X.
 %
@@ -89,26 +89,26 @@ function [files_in,files_out,opt] = niak_brick_multistat(files_in,files_out,opt)
 %         (structure) with the following fields.
 %
 %         DATA
-%            fwhm in mm of FILES_IN.EF. It is only used to calculate 
-%            the degrees of freedom. If empty (default), it is 
-%            estimated from the least-squares residuals, or it is read 
+%            fwhm in mm of FILES_IN.EF. It is only used to calculate
+%            the degrees of freedom. If empty (default), it is
+%            estimated from the least-squares residuals, or it is read
 %            from FILES_IN.FWHM if available.
 %
 %         VARATIO
 %            fwhm in mm of the Gaussian filter used to smooth the ratio
 %            of the random effects variance divided by the fixed effects variance.
 %            -0 will do no smoothing, and give a purely random effects analysis;
-%            -Inf will do complete smoothing to a global ratio of one, giving a 
-%            purely fixed effects analysis. 
+%            -Inf will do complete smoothing to a global ratio of one, giving a
+%            purely fixed effects analysis.
 %            The higher the FWHM.VARATIO, the higher the ultimate degrees of
-%            freedom DF of the tstat image, and the more sensitive the test. 
-%            However too much smoothing will bias the results. 
-%            Alternatively, if FWHM.VARATIO is negative, it is taken as 
-%            the desired df, and the fwhm is chosen to get as close to 
-%            this as possible (if fwhm>50, fwhm=Inf). Default is -100, 
+%            freedom DF of the tstat image, and the more sensitive the test.
+%            However too much smoothing will bias the results.
+%            Alternatively, if FWHM.VARATIO is negative, it is taken as
+%            the desired df, and the fwhm is chosen to get as close to
+%            this as possible (if fwhm>50, fwhm=Inf). Default is -100,
 %            i.e. the fwhm is chosen to achieve 100 df.
 %
-%     DF 
+%     DF
 %           (structure) with the following fields.
 %
 %           DATA
@@ -116,30 +116,30 @@ function [files_in,files_out,opt] = niak_brick_multistat(files_in,files_out,opt)
 %               If empty (default), these are read from FILES_IN.DF.
 %
 %           LIMIT
-%               controls which method is used for estimating FWHM. 
-%               If DF.RESID > DF.LIMIT, then the FWHM is calculated assuming 
-%               the Gaussian filter is arbitrary. However if DF is small, 
-%               this gives inaccurate results, so if DF.RESID <= DF.LIMIT, 
-%               the FWHM is calculated assuming that the axes of the Gaussian 
-%               filter are aligned with the x, y and z axes of the data. 
+%               controls which method is used for estimating FWHM.
+%               If DF.RESID > DF.LIMIT, then the FWHM is calculated assuming
+%               the Gaussian filter is arbitrary. However if DF is small,
+%               this gives inaccurate results, so if DF.RESID <= DF.LIMIT,
+%               the FWHM is calculated assuming that the axes of the Gaussian
+%               filter are aligned with the x, y and z axes of the data.
 %               Default is 4.
 %
 %     NB_ITER
 %             is the number of iterations of the EM algorithm. Default is 10.
 %
-%     FOLDER_OUT 
-%           (string, default: path of FILES_IN) 
-%           If present, all default outputs will be created in the folder 
+%     FOLDER_OUT
+%           (string, default: path of FILES_IN)
+%           If present, all default outputs will be created in the folder
 %           FOLDER_OUT. The folder needs to be created beforehand.
 %
-%     FLAG_VERBOSE 
-%           (boolean, default 1) 
-%           if the flag is 1, then the function prints some infos during 
+%     FLAG_VERBOSE
+%           (boolean, default 1)
+%           if the flag is 1, then the function prints some infos during
 %           the processing.
 %
-%     FLAG_TEST 
-%           (boolean, default 0) 
-%           if FLAG_TEST equals 1, the brick does not do anything but 
+%     FLAG_TEST
+%           (boolean, default 0)
+%           if FLAG_TEST equals 1, the brick does not do anything but
 %           update the default values in FILES_IN, FILES_OUT and OPT.
 %
 % _________________________________________________________________________
@@ -152,14 +152,14 @@ function [files_in,files_out,opt] = niak_brick_multistat(files_in,files_out,opt)
 % COMMENTS
 %
 % This function is a NIAKIFIED port of a part of the MULTISTAT function of the
-% fMRIstat project. The original license of fMRIstat was : 
+% fMRIstat project. The original license of fMRIstat was :
 %
 %############################################################################
 % COPYRIGHT:   Copyright 2002 K.J. Worsley
 %              Department of Mathematics and Statistics,
-%              McConnell Brain Imaging Center, 
+%              McConnell Brain Imaging Center,
 %              Montreal Neurological Institute,
-%              McGill University, Montreal, Quebec, Canada. 
+%              McGill University, Montreal, Quebec, Canada.
 %              worsley@math.mcgill.ca, liao@math.mcgill.ca
 %
 %              Permission to use, copy, modify, and distribute this
@@ -264,7 +264,7 @@ for num_l = 1:length(list_outputs)
     end
 end
 
-if flag_test 
+if flag_test
     return
 end
 
@@ -299,17 +299,17 @@ else
    for i=1:nfiles
     [hdr,vol_i] = niak_read_vol(files_in.sd{i});
     vol.sd(:,:,:,i) = vol_i;
-   end 
+   end
 end
 
 %% Auxiliary defaults:
 matrix_x = opt.matrix_x;
-if isempty(matrix_x); 
-    matrix_x = ones(nfiles,1); 
+if isempty(matrix_x);
+    matrix_x = ones(nfiles,1);
 end
 contrast = opt.contrast;
 if isempty(contrast)
-    contrast = [1 zeros(1,size(matrix_x,2)-1)]; 
+    contrast = [1 zeros(1,size(matrix_x,2)-1)];
 end
 fwhm = opt.fwhm;
 if isempty(fwhm)
@@ -371,7 +371,7 @@ end
 if df.resid>0
    % Degrees of freedom is greater than zero, so do mixed effects analysis:
    varatio_vol = zeros(numpix, nz);
-   
+
    if fwhm.varatio<0
       % find fwhm to achieve target df:
       df_target = -fwhm.varatio;
@@ -381,19 +381,19 @@ if df.resid>0
          fwhm.varatio = Inf;
       end
    end
-   
+
    disp('Computing Variance Ratio...')
    if fwhm.varatio<Inf
-      
+
       opt_var.matrix_x = matrix_x;
       opt_var.voxel_size = Steps;
       opt_var.df = df;
       opt_var.nb_iter = opt.nb_iter;
       [varatio_vol,opt_var] = niak_variance_ratio(vol,opt_var);
       fwhm.data  = opt_var.fwhm;
-      fwhm.data 
-      
-      
+      fwhm.data
+
+
       disp('Updating fwhm...')
       if fwhm.varatio<0
           % find fwhm to achieve target df:
@@ -435,7 +435,7 @@ if df.resid>0
       df.rfx = Inf;
       df.t = df.fixed;
    end
-   
+
    disp('Doing a random effect analysis...')
    % Second loop over slices to get statistics:
    opt_rand.matrix_x  = matrix_x ;
@@ -444,7 +444,7 @@ if df.resid>0
    opt_rand.df = df;
    opt_rand.fwhm = fwhm;
    stats_vol = niak_multi_rand_glm(vol,varatio_vol,opt_rand);
-   
+
 else
    disp('Doing a fixed effect analysis...')
    % If degrees of freedom is zero, estimate effects by least squares,
@@ -569,4 +569,3 @@ if which_stats(1,7) && isfield(stats_vol,'wresid')
 end
 
 clear stats_vol
-

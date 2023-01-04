@@ -12,7 +12,7 @@ function mat = niak_neig2mat(neig);
 % _________________________________________________________________________
 % INPUTS:
 %
-%       (2D array) NEIG(i,:) is the list of neighbours of voxel i. All 
+%       (2D array) NEIG(i,:) is the list of neighbours of voxel i. All
 %       numbers refer to a rwo of NEIG. Because all voxels
 %       do not necessarily have the same number of neighbours, 0 are
 %       used to pad each line.
@@ -32,11 +32,11 @@ function mat = niak_neig2mat(neig);
 % _________________________________________________________________________
 % COMMENTS:
 %
-% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal 
+% Copyright (c) Pierre Bellec, McConnell Brain Imaging Center, Montreal
 %               Neurological Institute, McGill University, 2007.
 % Maintainer : pbellec@bic.mni.mcgill.ca
 % See licensing information in the code.
-% Keywords : 
+% Keywords :
 
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal
