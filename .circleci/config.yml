@@ -2,7 +2,6 @@
 version: 2.1
 jobs:
   build:
-    working_directory: /niak
 
     machine:
       image: ubuntu-2204:2022.10.2
