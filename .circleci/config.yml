@@ -5,98 +5,96 @@ jobs:
     machine:
       image: ubuntu-2204:2022.10.2
     steps:
-    - checkout
-    - restore_cache:
-        keys:
-        - my_cache
-    - run:
-        name: Install dependencies
-        command: |
-          sudo apt-get update && sudo apt-get install openssl
-    - run:
-        name: Build Docker image
-        command: |
-          wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/circleci/build_docker.sh
-          bash build_docker.sh 
-    - run:
-        name: Set sample data
-        command: |
-          mkdir -p ${HOME}/data/
-          if [[ ! -e "${HOME}/data/bids_dataset" ]]; then
-            wget -c -P /caches https://github.com/BIDS-Apps/niak/releases/download/data_for_test/bids_dataset.tgz
-            cd ${HOME}/data/
-            tar -zxvf bids_dataset.tgz
-            rm bids_dataset.tgz
-          fi
-    - save_cache:
-        key: my_cache
-        paths:
-        - ~/docker
-        - ~/data
-    - persist_to_workspace:
-        root: /home/circleci
-        paths:
-        - data/bids_dataset
-        - docker/image.tar
+      - checkout
+      - restore_cache:
+          keys:
+            - my_cache
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get update && sudo apt-get install openssl
+      - run:
+          name: Build Docker image
+          command: |
+            wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/circleci/build_docker.sh
+            bash build_docker.sh
+      - run:
+          name: Set sample data
+          command: |
+            mkdir -p ${HOME}/data/
+            if [[ ! -e "${HOME}/data/bids_dataset" ]]; then
+              wget -c -P /caches https://github.com/BIDS-Apps/niak/releases/download/data_for_test/bids_dataset.tgz
+              cd ${HOME}/data/
+              tar -zxvf bids_dataset.tgz
+              rm bids_dataset.tgz
+            fi
+      - save_cache:
+          key: my_cache
+          paths:
+            - ~/docker
+            - ~/data
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - data/bids_dataset
+            - docker/image.tar
 
   test:
     machine:
       image: ubuntu-2204:2022.10.2
 
     steps:
-    - attach_workspace:
-        at: /tmp/workspace
-    - run:
-        command: |
-          docker load -i /tmp/workspace/docker/image.tar
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          command: |
+            docker load -i /tmp/workspace/docker/image.tar
 
-    - run: mkdir -p ${HOME}/outputs && chmod 777 ${HOME}/outputs
+      - run: mkdir -p ${HOME}/outputs && chmod 777 ${HOME}/outputs
 
-    - run:
-        name: Run tests participant
-        command: |
-          docker run -it \
-            -v /tmp/workspace/data/bids_dataset:/bids_dataset \
-            -v ${HOME}/outputs:/outputs \
-            bids/niak /bids_dataset /outputs participant --n_thread 2 --participant_label "275"
-    - run:
-        name: Run tests group
-        command: |
-          docker run -it \
-            -v /tmp/workspace/data/bids_dataset:/bids_dataset \
-            -v ${HOME}/outputs:/outputs \
-            bids/niak /bids_dataset /outputs group --n_thread 2 --participant_label "275"
-          docker cp data:/outputs /
-          chmod 777 -R /outputs
+      - run:
+          name: Run tests participant
+          command: |
+            docker run -it \
+              -v /tmp/workspace/data/bids_dataset:/bids_dataset \
+              -v ${HOME}/outputs:/outputs \
+              bids/niak /bids_dataset /outputs participant --n_thread 2 --participant_label "275"
+      - run:
+          name: Run tests group
+          command: |
+            docker run -it \
+              -v /tmp/workspace/data/bids_dataset:/bids_dataset \
+              -v ${HOME}/outputs:/outputs \
+              bids/niak /bids_dataset /outputs group --n_thread 2 --participant_label "275"
+            docker cp data:/outputs /
+            chmod 777 -R /outputs
 
-    - store_artifacts:
-        path: /outputs
+      - store_artifacts:
+          path: /outputs
 
   deploy:
     machine:
       image: ubuntu-2204:2022.10.2
     steps:
-    - attach_workspace:
-        at: /tmp/workspace
-    - run: docker load -i /tmp/workspace/docker/image.tar
-    - run:
-        name: push to dockerhub
-        command: |
-          wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/circleci/push_docker.sh
-          bash push_docker.sh  
-
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: docker load -i /tmp/workspace/docker/image.tar
+      - run:
+          name: push to dockerhub
+          command: |
+            wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/circleci/push_docker.sh
+            bash push_docker.sh
 
 workflows:
   build-test-deploy:
     jobs:
-    - build
-    - test:
-        requires:
-        - build
-    - deploy:
-        requires:
-        - test
-        filters:
-          tags:
-            only: /.*/
-# VS Code Extension Version: 1.5.1
+      - build
+      - test:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /.*/
