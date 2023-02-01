@@ -36,9 +36,17 @@ seems to come from NIAK itself, please
 To run NIAK Fmri preprocessing pipeline on your bids data set:
 
 ```
-docker run -it --rm  -v /path/to/bids_dataset:/bids_dataset:ro -v path_to_result_dir:/outputs  bids/niak /bids_dataset /outputs participant  --participant_label "XXX-YYY"
+docker run -it --rm  \
+    -v /path/to/bids_dataset:/bids_dataset:ro \
+    -v path_to_result_dir:/outputs  \
+    bids/niak /bids_dataset /outputs participant  \
+    --participant_label "XXX-YYY"
 
-docker run -it --rm  -v /path/to/bids_dataset:/bids_dataset:ro -v path_to_result_dir:/outputs  bids/niak /bids_dataset /outputs group  --participant_label "XXX-YYY"
+docker run -it --rm  \
+    -v /path/to/bids_dataset:/bids_dataset:ro \
+    -v path_to_result_dir:/outputs  bids/niak \
+    /bids_dataset /outputs group  \
+    --participant_label "XXX-YYY"
 ```
 
 For more details, type:
